@@ -2215,5 +2215,42 @@
    "pass": true,
    "category": "Bounded test evidence"
   }
+ ],
+ "v25": [
+  {
+   "id": "CQM-21R",
+   "group": "Prereg v2.5",
+   "name": "Differentiation of the creature's own network (not CQM-21)",
+   "metric": "cross-validated I(S; hidden-unit repertoire) (bits)",
+   "mechanism": "creature 6-unit stochastic recurrent network (cqm21rNet)",
+   "cmps": [
+    {
+     "control": "shuffled weights",
+     "full": 1.623532306740296,
+     "ctrl": 0.5145332686974101,
+     "d": 2.1024182421648354,
+     "t": 5.946536783700225,
+     "pass": true
+    },
+    {
+     "control": "lesioned recurrence (W=0)",
+     "full": 1.623532306740296,
+     "ctrl": 0.18070146743391838,
+     "d": 3.459669445948877,
+     "t": 9.785422903577427,
+     "pass": true
+    },
+    {
+     "control": "iid noise matched in rate/variance",
+     "full": 1.623532306740296,
+     "ctrl": 0.17854661874211,
+     "d": 3.466292232764951,
+     "t": 9.804154973449421,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  }
  ]
 }

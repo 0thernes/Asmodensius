@@ -39,7 +39,8 @@ def fd(x): return "∞" if x is None else f"{x:.2f}"
 def fv(x): return "—" if x is None else f"{x:.3f}"
 V22 = R.get("v22", [])
 V24 = R.get("v24", [])
-ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22] + [("v2.4", i) for i in V24]
+V25 = R.get("v25", [])
+ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22] + [("v2.4", i) for i in V24] + [("v2.5", i) for i in V25]
 def counts(lst):
     c = {"pass": 0, "fail": 0, "impl": 0}
     for i in lst: c[status(i)[0]] += 1
@@ -108,6 +109,7 @@ page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated fro
 <h2>v2.1: substrate pluralism, reproducibility, scale</h2>{table([("v2.1",i) for i in R["v21"]])}
 <h2>v2.2: held-out AST-1R and roadmap capability tests</h2>{table([("v2.2",i) for i in V22])}
 <h2>v2.4: 11 more roadmap capability tests</h2><p class="mut">These are small harness models of each capability, not behaviours of the rendered creature. Several are easy by construction (for example RM-29 gives the learner the task id; RM-52 uses a noiseless code). All 11 passed on their first run.</p>{table([("v2.4",i) for i in V24])}
+<h2>v2.5: CQM-21R, differentiation of the creature's own network</h2><p class="mut">A new test, not CQM-21: frozen v1 CQM-21 stays FAIL (its own toy network, ceiling control). CQM-21R decodes the stimulus from the creature network's hidden (undriven) units, against shuffled-weight, lesioned and rate-matched iid controls. First run (unchanged creatureNet) FAILED vs shuffled weights (d 0.62, t 1.74). Under addendum v2.5a a developmental Hebbian/anti-Hebbian plasticity phase was added (tuned on seeds 2000..2015 only), and the rerun is shown here. A 6-unit harness network, not the rendered creature's GPU brain.</p>{table([("v2.5",i) for i in V25])}
 <div class="card mut">v2.2 notes: {"; ".join(E(i["id"]+": "+i["note"]) for i in V22 if i.get("note"))}</div>
 <div class="card mut">GPU substrate: headless Chrome WebGL2 on ANGLE/SwiftShader, a software rasterizer, disclosed as pre-registered. Notes: {"; ".join(E(i.get("note","")) for i in R["v21"])}</div>""")
 
@@ -115,7 +117,7 @@ page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated fro
 groups = {}
 for ver, it in ALL: groups.setdefault(f'{ver} · {it["group"]}', []).append(it)
 tb = "".join(f'<h2>{E(g)}</h2><table><tr><th>ID</th><th>Name</th><th>Metric</th><th>Mechanism</th><th>Controls</th></tr>' + "".join(f'<tr><td>{E(i["id"])}</td><td>{E(i["name"])}</td><td>{E(i.get("metric",""))}</td><td>{E(i.get("mechanism",""))}</td><td>{"<br>".join(E(c["control"]) for c in i["cmps"])}</td></tr>' for i in its) + "</table>" for g, its in groups.items())
-page("tests.html", "Tests", f"""<h1>Tests and CI</h1><p>Pre-registrations: <code>creatures/001/preregistrations/</code> (v1, v2, v2.1, v2.2, v2.3, v2.4). Each one was committed before its test code was written.
+page("tests.html", "Tests", f"""<h1>Tests and CI</h1><p>Pre-registrations: <code>creatures/001/preregistrations/</code> (v1, v2, v2.1, v2.2, v2.3, v2.4, v2.5, v2.5a). Each one was committed before its test code was written.
 CI (<code>.github/workflows/harness.yml</code>) type-checks the page with tsc, runs the full harness, and runs the cross-process SHA-256 reproducibility check.</p>
 <p class="mut">Badges are wired to GitHub Actions and become live once the repository is published. It is not published yet.</p>{tb}""")
 

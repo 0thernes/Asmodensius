@@ -34,3 +34,8 @@
 - New mechanism module `harness/v24mech.ts` (mutable): PI thermostat, task-gated readout, RPE dopamine gate, energy-budget waiting, run-and-tumble, energy-budget risk rule, log-scale numerosity, Bouton two-process extinction, TMR genome scrubbing, dormancy switch, cosine population code.
 - New frozen test module `harness/v24tests.ts` follows preregistrations/v2.4.md (commit 4d820ee). Before the first full run, three in-progress edits were made so the tests match the prereg text: the RM-29 metric is pure retention; RM-52 uses the sample Var(s); the RM-97 energy cap was removed because the prereg doesn't specify one. Nothing has changed in it since the first full run (results/run10.txt).
 - Result: v2.4 passed 11/11 on the first run. Several tests are easy by construction, as stated on the site.
+
+## Round 10 (2026-10-29)
+- Preregistration v2.5 adds CQM-21R, differentiation measured on the creature's own network, with shuffled-weight, lesion and rate-matched iid controls. The first run FAILED vs shuffled weights (d 0.62, t 1.74). Addendum v2.5a adds developmental Hebbian/anti-Hebbian plasticity. The rerun PASSES: d 2.10/3.46/3.47, t 5.95/9.79/9.80. CQM-21R does not count as v1 CQM-21. CQM-21 stays FAIL.
+- Fixed the corrupted creature index.html (nested bundles caused a SyntaxError), so the live page now actually runs. Headless Chrome renders at about 0.6 fps on SwiftShader.
+- Site regenerated, with fresh screenshots.

@@ -126,3 +126,13 @@ v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1
 - New mechanism module `harness/v24mech.ts` (mutable): PI thermostat, task-gated readout, RPE dopamine gate, energy-budget waiting, run-and-tumble, energy-budget risk rule, log-scale numerosity, Bouton two-process extinction, TMR genome scrubbing, dormancy switch, cosine population code.
 - New frozen test module `harness/v24tests.ts` follows preregistrations/v2.4.md (commit 4d820ee). Before the first full run, three in-progress edits were made so the tests match the prereg text: the RM-29 metric is pure retention; RM-52 uses the sample Var(s); the RM-97 energy cap was removed because the prereg doesn't specify one. Nothing has changed in it since the first full run (results/run10.txt).
 - Result: v2.4 passed 11/11 on the first run. Several tests are easy by construction, as stated on the site.
+
+## Round 10 (2026-10-29, Asia/Manila): v2.5 CQM-21R
+- `creatureNet` in harness.ts is now exported, with no behaviour change.
+- preregistrations/v2.5.md (b226ded) was committed before any code. Frozen test: harness/v25tests.ts (297b24f).
+- First run on the unchanged creatureNet (results/run11_v25.txt): FAIL vs shuffled weights (full 1.261 vs 0.997 bits, d 0.62, t 1.74). It passed vs lesion (d 4.02) and vs iid (d 4.06).
+- Addendum v2.5a (2b4bf0b), committed before the rerun: harness/v25mech.ts adds a developmental phase (3000 steps on the creature's own stream, salt 2200) of Hebbian driven→hidden learning plus anti-Hebbian lateral decorrelation among the hidden units. It uses no labels and not the metric. Parameters were picked on tuning seeds 2000..2015 (harness/tune25.ts, 2 settings tried).
+- Rerun (results/run12_v25a.txt, and inside the full run13): PASS. Shuffled 1.624 vs 0.515, d 2.10, t 5.95. Lesion 0.181, d 3.46, t 9.79. iid 0.179, d 3.47, t 9.80.
+- v1 CQM-21 is unchanged and still FAIL. v1..v2.4 outputs are identical to run10.
+- index.html was corrupted. Earlier rebuilds had spliced each new bundle into React's own `"<script><\/script>"` string literal, which gave 3 nested bundles and an "Unexpected identifier 'object'" SyntaxError at load, so the app never ran. This is why the round-8 #livetest output never appeared. It is now rebuilt cleanly from src/page.tsx (esbuild --jsx=automatic, inserted without string replacement).
+- livecdp.mjs: the timeout can now be set with LIVE_TIMEOUT_MS. Node 20 needs `--experimental-websocket`.

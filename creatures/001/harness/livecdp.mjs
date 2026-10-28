@@ -8,5 +8,5 @@ const ws = new WebSocket(tabs.find((t) => t.type === "page").webSocketDebuggerUr
 ws.onmessage = (e) => { const m = JSON.parse(e.data); if (pend.has(m.id)) { pend.get(m.id)(m.result); pend.delete(m.id); } };
 await new Promise((r) => (ws.onopen = r)); const send = (method, params = {}) => new Promise((r) => { pend.set(++id, r); ws.send(JSON.stringify({ id, method, params })); });
 await send("Page.navigate", { url }); let out = null, t0 = Date.now();
-while (Date.now() - t0 < 600000) { await sleep(1000); const r = await send("Runtime.evaluate", { expression: "(document.getElementById('livetest')||{}).textContent||''" }); if (r?.result?.value) { out = r.result.value; break; } }
+while (Date.now() - t0 < Number(process.env.LIVE_TIMEOUT_MS || 600000)) { await sleep(1000); const r = await send("Runtime.evaluate", { expression: "(document.getElementById('livetest')||{}).textContent||''" }); if (r?.result?.value) { out = r.result.value; break; } }
 process.stdout.write(out ?? JSON.stringify({ error: "timeout" })); ws.close(); ch.kill("SIGKILL"); process.exit(0);
