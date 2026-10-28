@@ -172,7 +172,7 @@ claim = (f"On this rubric Creature #001 scores {cre_score:g}/12, the highest of 
          f"Creature #001 is NOT the most complete on this rubric. It scores {cre_score:g}/12, and {len(better)} of the {len(BENCH)} systems score higher (top: {E(ranked[0]['name'])}, {score(ranked[0]['caps'])}/12). The claim is not made.")
 hdr = "".join(f"<th title='{E(n)}'>{c}</th>" for c, n in CAPS)
 crow = "".join(f'<td class="{ {"tested":"pass","partial":"fail","roadmap":"impl"}[CRE[c]] }" title="{E(CREV[c])}">{CRE[c][0].upper()}</td>' for c, _ in CAPS)
-brows = "".join(f'<tr><td>{E(r["name"])}</td><td>{r["year"]}</td><td>{E(r["category"])}</td>' + "".join(f'<td class="pass">●</td>' if c in r["caps"].split() else "<td></td>" for c, _ in CAPS) + f'<td>{score(r["caps"])}</td><td class="mut">{E(r["reference"])}</td></tr>' for r in BENCH)
+brows = "".join(f'<tr><td>{E(r["name"])}</td><td>{r["year"]}</td><td>{E(r["category"])}</td>' + "".join(f'<td class="pass">●</td>' if c in r["caps"].split() else "<td></td>" for c, _ in CAPS) + f'<td>{score(r["caps"])}</td><td class="mut">{E(r["reference"])} <a href="{E(r["url"])}" rel="noopener">[link]</a></td></tr>' for r in BENCH)
 page("benchmark.html", "Benchmark", f"""<h1>ALife capability benchmark ({len(BENCH)} projects)</h1>
 <div class="card warn">Scores are <b>rubric-based</b>, assigned from each project's cited publication or documentation. They were <b>not run by us</b>. A ● means the capability is described in the cited source. The list is deduplicated by project name, one row per project.</div>
 <div class="card"><b>{claim}</b></div>
