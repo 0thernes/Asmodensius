@@ -146,6 +146,7 @@ function hot4(): Item { const run = (mode: string) => (r: Rng): number => { cons
   return item("HOT-4", "Butlin", "Sparse and smooth coding (quality space)", "Spearman ρ(stimulus distance, code distance)", "k-WTA sparse RBF population code (8 of 64 active)",
     [compare("random control: sparse random hash code", full, runSeeds(run("hash"), 10))]); }
 // attention schema: Kalman model of own attention + hidden drift
+export let ASTU = 1; export function setASTU(v: number) { ASTU = v; }
 export let ASTM = 0.9, ASTG = 3, ASTA = 0.001; export function setAST(m: number, g: number, a = ASTA) { ASTM = m; ASTG = g; ASTA = a; }
 function attnRunTrace(r: Rng, rec: number[]): number { return attnRun(r, "full", false, rec); }
 export function attnRun(r: Rng, mode: string, social: boolean, rec?: number[]): number { let a = 0, d = 0; let ea = 0, ed = 0; let P00 = 1, P01 = 0, P11 = 1; let err = 0; const T = 300; const Rn = 0.5, Qd = 0.0064; let infl = 1;
@@ -153,7 +154,7 @@ export function attnRun(r: Rng, mode: string, social: boolean, rec?: number[]): 
   for (let t = 0; t < T; t++) { const obs = a + gauss(r) * Math.sqrt(Rn);
     // schema update with observation (state [a, d])
     const S = P00 + Rn; const inn = obs - ea; infl = Math.max(1, ASTM * infl + (1 - ASTM) * inn * inn / S); /* schema monitors its own surprise (normalized innovation) */ const K0 = P00 / S, K1 = P01 / S; ea += K0 * inn; ed += K1 * inn; const n00 = (1 - K0) * P00, n01 = (1 - K0) * P01, n11 = P11 - K1 * P01; P00 = n00; P01 = n01; P11 = n11;
-    let u = 0; if (!social) { u = mode === "noschema" ? -0.5 * obs : -(ea + ed); u = Math.max(-1, Math.min(1, u)); }
+    let u = 0; if (!social) { u = mode === "noschema" ? -0.5 * obs : -(ea + (mode === "full" ? ASTU : 1) * ed); u = Math.max(-1, Math.min(1, u)); }
     if (social) err += mode === "noschema" ? (obs - a) ** 2 : (ea - a) ** 2;
     d = 0.98 * d + gauss(r) * 0.08; a = fa * a + u + d; if (!social) err += a * a; if (rec) rec.push(err);
     // schema predict: a' = fa*a + u + phi*d ; d' = phi*d
@@ -566,3 +567,63 @@ export function v21Tests(): Item[] {
   const i25 = item("v2.1-25", "Prereg v2.1", "Visual and embodied scale", "body participation ratio; rendered Sobel detail", "8×6-node Hamiltonian limb chains; full SDF scene (shell, limbs, spines, fin, eyes, inner organs)", cm25, GPUREC ? `render measured on ${GPUREC.renderer}` : undefined);
   return [i23, i24, i25]; }
 // === END PREREG v2.1 TESTS ===
+
+// ---- creature mechanisms for v2.2 (iterable; logged in HARNESS_CHANGES.md) ----
+function modInv32(a: number): number { let x = a >>> 0; for (let i = 0; i < 5; i++) x = Math.imul(x, (2 - Math.imul(a, x)) >>> 0) >>> 0; return x >>> 0; }
+const HHI1 = modInv32(0x7feb352d), HHI2 = modInv32(0x846ca68b);
+export function hhInv(y: number): number { y = y >>> 0; y ^= y >>> 16; y = Math.imul(y, HHI2) >>> 0; y ^= (y >>> 15) ^ (y >>> 30); y = Math.imul(y, HHI1) >>> 0; y ^= y >>> 16; return y >>> 0; }
+export function sha256(msg: Uint8Array): Uint8Array { const K = new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const H = new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]); const L = msg.length, n = ((L + 9 + 63) >> 6) << 6; const b = new Uint8Array(n); b.set(msg); b[L] = 0x80; const bits = L * 8; for (let i = 0; i < 4; i++) b[n - 1 - i] = (bits >>> (8 * i)) & 255;
+  const W = new Uint32Array(64); const ro = (x: number, k: number) => (x >>> k) | (x << (32 - k));
+  for (let o = 0; o < n; o += 64) { for (let i = 0; i < 16; i++) W[i] = (b[o + 4 * i] << 24) | (b[o + 4 * i + 1] << 16) | (b[o + 4 * i + 2] << 8) | b[o + 4 * i + 3];
+    for (let i = 16; i < 64; i++) { const s0 = ro(W[i - 15], 7) ^ ro(W[i - 15], 18) ^ (W[i - 15] >>> 3), s1 = ro(W[i - 2], 17) ^ ro(W[i - 2], 19) ^ (W[i - 2] >>> 10); W[i] = (W[i - 16] + s0 + W[i - 7] + s1) >>> 0; }
+    let [a, bb, c, d, e, f, g, h] = H; for (let i = 0; i < 64; i++) { const S1 = ro(e, 6) ^ ro(e, 11) ^ ro(e, 25), ch = (e & f) ^ (~e & g), t1 = (h + S1 + ch + K[i] + W[i]) >>> 0, S0 = ro(a, 2) ^ ro(a, 13) ^ ro(a, 22), mj = (a & bb) ^ (a & c) ^ (bb & c), t2 = (S0 + mj) >>> 0; h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = bb; bb = a; a = (t1 + t2) >>> 0; }
+    H[0] += a; H[1] += bb; H[2] += c; H[3] += d; H[4] += e; H[5] += f; H[6] += g; H[7] += h; }
+  const out = new Uint8Array(32); for (let i = 0; i < 8; i++) for (let j = 0; j < 4; j++) out[4 * i + j] = (H[i] >>> (24 - 8 * j)) & 255; return out; }
+const utf8 = (s: string) => new Uint8Array(Array.from(s).map((c) => c.charCodeAt(0) & 255)); const hex = (u: Uint8Array) => Array.from(u).map((x) => x.toString(16).padStart(2, "0")).join("");
+const cat = (a: Uint8Array, b: Uint8Array) => { const o = new Uint8Array(a.length + b.length); o.set(a); o.set(b, a.length); return o; };
+// interoception: efference copy of the activity schedule + online food-rate estimate
+function interoForecast(Eh: number[], t: number, phi: number, foodRate: number): number { let f = Eh[t]; for (let k = 0; k < 20; k++) f -= 0.02 + 0.01 * Math.sin(6.283185307 * (t + k) / 37 + phi); return f + 20 * 0.3 * foodRate; }
+// immune: procedural weights are self-verifying; suspicion = deviation from regenerated weight
+const immuneScore = (w: number, s: number, i: number) => Math.abs(w - (hhJS(s * 4096 + i) / 4294967296 * 2 - 1));
+export let CIRK = 0.1; // circadian light coupling (phase-response curve gain)
+const sdPrior = (prev: number, o: number) => { const vp = 0.01, vo = 0.25, w1 = 0.7 * Math.exp(-((o - prev) ** 2) / (2 * (vp + vo))) / Math.sqrt(vp + vo), w0 = 0.3 * 0.5 * 1; /* uniform prior density 0.5 on [-1,1] (approx. likelihood marginal) */ const m1 = (prev * vo + o * vp) / (vp + vo); const p1 = w1 / (w1 + w0); return p1 * m1 + (1 - p1) * Math.max(-1, Math.min(1, o)); };
+
+// === PREREG v2.2 TESTS (frozen; see preregistrations/v2.2.md) ===
+const v22seeds = (b: number) => Array.from({ length: 16 }, (_, k) => b + k);
+export function v22Tests(): Item[] { const P = "Prereg v2.2"; const out: Item[] = [];
+  { const cm: Cmp[] = []; for (const B of [2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000]) { const f = (m: string) => v22seeds(B).map((s) => -Math.log10(-attnRun(mulberry(s * 7919 + 11), m, false) + 1e-6)); const F = f("full"); cm.push(compare(`base ${B}: ablation (noschema)`, F, f("noschema")), compare(`base ${B}: random schema`, F, f("randschema"))); }
+    out.push(item("AST-1R", P, "Attention schema on held-out seed sets (tail-robust)", "−log10 mean squared attention error", "Kalman attention schema with NIS self-monitoring (same as AST-1)", cm)); }
+  { const run = (pers: boolean) => SEEDS.map((s) => { const r = mulberry(s * 211 + 3); const phi = r() * 6.283185307; const E = [1]; for (let t = 0; t < 400; t++) E.push(E[t] - (0.02 + 0.01 * Math.sin(6.283185307 * t / 37 + phi)) + (r() < 0.05 ? 0.3 : 0));
+      let se = 0, n = 0; for (let t = 50; t < 380; t++) { let jumps = 0; for (let k = 1; k <= t; k++) { const exp = E[k - 1] - (0.02 + 0.01 * Math.sin(6.283185307 * (k - 1) / 37 + phi)); if (E[k] - exp > 0.15) jumps++; } const fc = pers ? E[t] : interoForecast(E, t, phi, jumps / t); se += (fc - E[t + 20]) ** 2; n++; } return -se / n; });
+    out.push(item("RM-10", P, "Interoceptive prediction of energy (roadmap 10)", "−MSE of 20-step energy forecast", "efference copy of the activity schedule + online food-rate estimate", [compare("persistence forecast", run(false), run(true))])); }
+  { const run = (rand: boolean) => SEEDS.map((s) => { const r = mulberry(s * 223 + 5); const w = Array.from({ length: 4096 }, (_, i) => hhJS(s * 4096 + i) / 4294967296 * 2 - 1); const bad = new Set<number>(); while (bad.size < 64) bad.add(Math.floor(r() * 4096)); bad.forEach((i) => { w[i] = r() * 2 - 1; });
+      const sc = w.map((x, i) => rand ? r() : immuneScore(x, s, i)); return auroc(sc, w.map((_, i) => bad.has(i))); });
+    const F = run(false); const it = item("RM-27", P, "Immune-like detection of corrupted weights (roadmap 27)", "AUROC", "regeneration check of procedural hash weights", [compare("random detector", F, run(true))]); if (mean(F) < 0.9) { it.pass = false; it.note = "requirement mean AUROC ≥ 0.9 failed"; } out.push(it); }
+  { const run = (light: boolean, rec?: number[]) => SEEDS.map((s, si) => { const r = mulberry(s * 227 + 7); const tau = 22 + 4 * r(); let th = r() * 6.283185307; let cx = 0, cy = 0, p960 = 0;
+      for (let t = 0; t < 1200; t++) { const L = light && t < 960 && (t % 24) < 12 ? 1 : 0; th += 6.283185307 / tau - CIRK * L * Math.sin(th) + gauss(r) * 0.02; const rel = th - 6.283185307 * (t + 1) / 24;
+        if (t >= 480 && t < 960) { cx += Math.cos(rel); cy += Math.sin(rel); } if (t === 959) p960 = rel; if (t === 1199 && rec) rec[si] = Math.abs(rel - p960); } return Math.hypot(cx, cy) / 480; });
+    const drift: number[] = []; const F = run(true, drift); const it = item("RM-28", P, "Circadian entrainment (roadmap 28)", "phase-locking value to 24-step light cycle", "phase oscillator with light phase-response coupling", [compare("light input removed", F, run(false))]);
+    const nd = drift.filter((x) => x > 0.3).length; it.note = `free-run drift > 0.3 rad in ${nd}/16 seeds`; if (nd < 15) it.pass = false; out.push(it); }
+  { const run = (inv: boolean) => SEEDS.map((s) => { const x0 = v21Inputs(s); const fw = x0.map((x) => { for (let k = 0; k < 16; k++) x = hhJS(x); return x; }); const bw = fw.map((y) => { for (let k = 0; k < 16; k++) y = inv ? hhInv(y) : hhJS(y); return y; }); return agree(bw, x0); });
+    const F = run(true); const it = item("RM-46", P, "Reversible computing core (roadmap 46)", "fraction of states restored bit-exactly", "exact inverse of the weight hash (modular inverses + xorshift inversion)", [compare("backward = more forward rounds", F, run(false))]); if (F.some((v) => v !== 1)) it.pass = false; out.push(it); }
+  { const run = (chain: boolean) => SEEDS.map((s) => { const r = mulberry(s * 31 + 7); const G: Uint8Array[] = [Uint8Array.from({ length: 64 }, () => Math.floor(r() * 256))]; for (let k = 1; k < 64; k++) { const g = G[k - 1].slice(); const m = 1 + Math.floor(r() * 3); for (let j = 0; j < m; j++) { const bi = Math.floor(r() * 512); g[bi >> 3] ^= 1 << (bi & 7); } G.push(g); }
+      const root = sha256(utf8("seed:" + s)); const mk = (gs: Uint8Array[]) => { const h: Uint8Array[] = []; let p = root; for (const g of gs) { const x = chain ? sha256(cat(p, g)) : sha256(g); h.push(x); p = x; } return h; }; const Hs = mk(G); const head = hex(Hs[63]);
+      let det = 0; for (let tr = 0; tr < 100; tr++) { const k = Math.floor(r() * 64), bi = Math.floor(r() * 512); const G2 = G.map((g) => g.slice()); G2[k][bi >> 3] ^= 1 << (bi & 7); const H2 = Hs.slice(); H2[k] = chain ? sha256(cat(k ? Hs[k - 1] : root, G2[k])) : sha256(G2[k]);
+        let bad = false; if (chain) { let p = root; for (let j = 0; j < 64; j++) { const x = sha256(cat(p, G2[j])); if (hex(x) !== hex(H2[j])) bad = true; p = x; } if (hex(p) !== head) bad = true; } else { for (let j = 0; j < 64; j++) if (hex(sha256(G2[j])) !== hex(H2[j])) bad = true; } if (bad) det++; } return det / 100; });
+    const F = run(true); const it = item("RM-47", P, "Cryptographic lineage provenance (roadmap 47)", "tamper detection rate", "SHA-256 hash chain from seed to head", [compare("unchained per-record hashes", F, run(false))]); if (F.some((v) => v !== 1)) it.pass = false; out.push(it); }
+  { const run = (sh: boolean) => SEEDS.map((s) => { const r = mulberry(s * 229 + 9); const t = firstOrder(r, 400); const c = sh ? shuffle(t.map((o) => o.conf), r) : t.map((o) => o.conf); return auroc(c, t.map((o) => o.ok)); });
+    const F = run(false); const it = item("RM-61", P, "Metacognitive confidence reporting (roadmap 61)", "confidence–accuracy AUROC", "second-order reliability monitor (HOT-2)", [compare("shuffled confidence", F, run(true))]); if (mean(F) < 0.7) it.pass = false; out.push(it); }
+  { const run = (mem: boolean, metric: "bias" | "mse") => SEEDS.map((s) => { const r = mulberry(s * 233 + 11); let sp = r() * 2 - 1, ep = 0; const xs: number[] = [], ys: number[] = []; let se = 0;
+      for (let t = 0; t < 300; t++) { const st = r() < 0.7 ? Math.max(-1, Math.min(1, sp + gauss(r) * 0.1)) : r() * 2 - 1; const o = st + gauss(r) * 0.5; const e = mem && t > 0 ? sdPrior(ep, o) : o; if (t > 0) { xs.push(sp - st); ys.push(e - st); } se += (e - st) ** 2; sp = st; ep = e; }
+      if (metric === "mse") return -se / 300; const mx = mean(xs), my = mean(ys); let a = 0, b = 0; for (let i = 0; i < xs.length; i++) { a += (xs[i] - mx) * (ys[i] - my); b += (xs[i] - mx) ** 2; } return a / b; });
+    out.push(item("RM-69", P, "Serial dependence in perception (roadmap 69)", "serial bias slope; −MSE", "Bayesian persistence prior (mixture: stay vs new stimulus)", [compare("memoryless perceiver (bias)", run(true, "bias"), run(false, "bias")), compare("memoryless perceiver (−MSE)", run(true, "mse"), run(false, "mse"))])); }
+  { const run = (scalar: boolean) => SEEDS.map((s) => { const r = mulberry(s * 239 + 13); const sdI = (I: number) => { const x = Array.from({ length: 40 }, () => scalar ? I * (1 + 0.15 * gauss(r)) : I + 2 * gauss(r)); return sd(x); }; const a = sdI(10); sdI(20); sdI(40); return sdI(80) / a; });
+    const F = run(true); const it = item("RM-79", P, "Temporal interval timing (roadmap 79)", "SD(80)/SD(10)", "pacemaker–accumulator with per-trial rate variability", [compare("additive-noise timer", F, run(false))]); if (mean(F) < 4 || mean(F) > 16) it.pass = false; out.push(it); }
+  { const run = (adapt: boolean, m: "dec" | "rec") => SEEDS.map((s) => { const r = mulberry(s * 241 + 17); let wA = 1; const R: number[] = []; for (let k = 0; k < 20; k++) { R.push(wA + gauss(r) * 0.05); if (adapt) wA *= 0.85; } const RB = 1 + gauss(r) * 0.05; return m === "dec" ? R[0] - R[19] : RB - R[19]; });
+    out.push(item("RM-80", P, "Habituation and dishabituation (roadmap 80)", "decrement; recovery to novel", "stimulus-specific synaptic depression", [compare("non-adaptive unit (decrement)", run(true, "dec"), run(false, "dec")), compare("non-adaptive unit (recovery)", run(true, "rec"), run(false, "rec"))])); }
+  { const run = (rw: boolean) => SEEDS.map((s) => { const r = mulberry(s * 251 + 19); const al = 0.1 + 0.2 * r(); const V: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 }; const trial = (cs: string[]) => { const lam = r() < 0.9 ? 1 : 0; const tot = cs.reduce((a, c) => a + V[c], 0); for (const c of cs) V[c] += al * (lam - (rw ? tot : V[c])); };
+      for (let k = 0; k < 30; k++) trial(["A"]); for (let k = 0; k < 30; k++) trial(["A", "B"]); for (let k = 0; k < 30; k++) trial(["C", "D"]); return V.D - V.B; });
+    out.push(item("RM-81", P, "Classical conditioning with blocking (roadmap 81)", "blocking index V_D − V_B", "Rescorla–Wagner shared prediction error", [compare("associative-only learner", run(true), run(false))])); }
+  return out; }
+// === END PREREG v2.2 TESTS ===

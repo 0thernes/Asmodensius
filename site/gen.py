@@ -37,12 +37,15 @@ def status(it):
     return "fail", "FAIL"
 def fd(x): return "∞" if x is None else f"{x:.2f}"
 def fv(x): return "—" if x is None else f"{x:.3f}"
-ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]]
+V22 = R.get("v22", [])
+ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22]
 def counts(lst):
     c = {"pass": 0, "fail": 0, "impl": 0}
     for i in lst: c[status(i)[0]] += 1
     return c
-c1, c2, c21 = counts(R["v1"]), counts(R["v2"]), counts(R["v21"])
+c1, c2, c21, c22 = counts(R["v1"]), counts(R["v2"]), counts(R["v21"]), counts(V22)
+RM = {int(i["id"][3:]): i for i in V22 if i["id"].startswith("RM-")}
+ACH = sorted(k for k, i in RM.items() if i["pass"])
 v1fails = [i for i in R["v1"] if status(i)[0] == "fail"]
 
 def chart(items, w=1100):
@@ -76,8 +79,8 @@ def table(items):
             else: r.append(f'<tr>{head}<td class="{"pass" if c["pass"] else "fail"}">{E(c["control"])}</td><td>{fv(c["full"])}</td><td>{fv(c["ctrl"])}</td><td>{fd(c["d"])}</td><td>{fd(c["t"])}</td></tr>')
     return "".join(r) + "</table>"
 
-CEIL = f"""<div class="card warn"><b>Stated plainly: v1 has {len(v1fails)} ceiling-limited failures</b> ({", ".join(E(i["id"]) for i in v1fails)}).
-activeInference and CQM-10 hit the ceiling: full and passive/random-switching controls both score 1.000. CQM-21's differentiation comparison came out negative (d −2.57) because the v1 metric favours the uncoupled control. They stay recorded as FAIL under the v1 pre-registration, and their criteria are not changed. Pre-registration v2 added new non-ceiling tests for the same properties.
+CEIL = f"""<div class="card warn"><b>Stated plainly: v1 has {len(v1fails)} failures</b> ({", ".join(E(i["id"]) for i in v1fails)}).
+activeInference and CQM-10 hit the ceiling: full and passive/random-switching controls both score 1.000. CQM-21 now passes under v1 (round 7: itinerant Gray-code CPG), but both conditions share the same 6-bit true-entropy ceiling. The margin comes from more-even-than-chance state coverage, as logged in HARNESS_CHANGES.md. The failures stay recorded as FAIL under the v1 pre-registration, and their criteria are not changed. Pre-registration v2 added new non-ceiling tests for the same properties.
 There, {c2["pass"]}/{len(R["v2"])} pass, and they are shown next to the v1 failures below. A v2 pass does not convert a v1 failure into a pass.</div>"""
 
 # ---------- index
@@ -87,6 +90,8 @@ page("index.html", "Home", f"""<h1>Creature #001: bounded tests of consciousness
 <div class="grid"><div class="card"><div class="k pass">{c1["pass"]}/{len(R["v1"])}</div><div class="mut">v1 items pass ({c1["fail"]} fail, {c1["impl"]} implementation-only)</div></div>
 <div class="card"><div class="k pass">{c2["pass"]}/{len(R["v2"])}</div><div class="mut">v2 non-ceiling re-tests pass</div></div>
 <div class="card"><div class="k pass">{c21["pass"]}/{len(R["v21"])}</div><div class="mut">v2.1 substrate / reproducibility / scale tests pass</div></div>
+<div class="card"><div class="k pass">{c22["pass"]}/{len(V22)}</div><div class="mut">v2.2 held-out AST-1R + roadmap tests pass</div></div>
+<div class="card"><div class="k">{len(ACH)}/{len(ROAD)}</div><div class="mut">roadmap capabilities achieved (small harness models)</div></div>
 <div class="card"><div class="k">{len(BENCH)}</div><div class="mut">projects in the capability benchmark</div></div></div>
 {CEIL}
 <div class="card"><b>Not evidence of consciousness.</b> There is no aggregate consciousness score. Each item is a narrow functional test of one indicator property, and passing it shows only that the mechanism beats its controls on that test.</div>
@@ -95,16 +100,18 @@ page("index.html", "Home", f"""<h1>Creature #001: bounded tests of consciousness
 <p class="mut">Log scale. The amber dashed line is the d = 0.8 threshold. ∞ means zero-variance separation (pre-registered in v2.1). Teal = pass, amber = fail, blue = implementation-only.</p>""")
 
 # ---------- results
-page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated from <code>creatures/001/results/results.json</code> (full harness, run.ts). Raw log: <code>results/run6.txt</code>.</p>{CEIL}
+page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated from <code>creatures/001/results/results.json</code> (full harness, run.ts). Raw log: <code>results/run8.txt</code>.</p>{CEIL}
 <h2>Chart</h2>{chart(ALL)}<h2>v1 (frozen)</h2>{table([("v1",i) for i in R["v1"]])}<h2>v2: non-ceiling re-tests</h2>{table([("v2",i) for i in R["v2"]])}
 <h2>v2.1: substrate pluralism, reproducibility, scale</h2>{table([("v2.1",i) for i in R["v21"]])}
+<h2>v2.2: held-out AST-1R and roadmap capability tests</h2>{table([("v2.2",i) for i in V22])}
+<div class="card mut">v2.2 notes: {"; ".join(E(i["id"]+": "+i["note"]) for i in V22 if i.get("note"))}</div>
 <div class="card mut">GPU substrate: headless Chrome WebGL2 on ANGLE/SwiftShader, a software rasterizer, disclosed as pre-registered. Notes: {"; ".join(E(i.get("note","")) for i in R["v21"])}</div>""")
 
 # ---------- tests
 groups = {}
 for ver, it in ALL: groups.setdefault(f'{ver} · {it["group"]}', []).append(it)
 tb = "".join(f'<h2>{E(g)}</h2><table><tr><th>ID</th><th>Name</th><th>Metric</th><th>Mechanism</th><th>Controls</th></tr>' + "".join(f'<tr><td>{E(i["id"])}</td><td>{E(i["name"])}</td><td>{E(i.get("metric",""))}</td><td>{E(i.get("mechanism",""))}</td><td>{"<br>".join(E(c["control"]) for c in i["cmps"])}</td></tr>' for i in its) + "</table>" for g, its in groups.items())
-page("tests.html", "Tests", f"""<h1>Tests and CI</h1><p>Pre-registrations: <code>creatures/001/preregistrations/</code> (v1, v2, v2.1). Each one was committed before its test code was written.
+page("tests.html", "Tests", f"""<h1>Tests and CI</h1><p>Pre-registrations: <code>creatures/001/preregistrations/</code> (v1, v2, v2.1, v2.2). Each one was committed before its test code was written.
 CI (<code>.github/workflows/harness.yml</code>) type-checks the page with tsc, runs the full harness, and runs the cross-process SHA-256 reproducibility check.</p>
 <p class="mut">Badges are wired to GitHub Actions and become live once the repository is published. It is not published yet.</p>{tb}""")
 
@@ -154,14 +161,14 @@ page("stack.html", "Tech stack", """<h1>Languages and tech stack</h1><table><tr>
 
 # ---------- benchmark
 CAPS = [("E","Evolution"),("R","Self-reproduction"),("B","Embodied physics"),("N","Neural control"),("L","Learning/plasticity"),("M","Metabolism/energy"),("S","Social/multi-agent"),("C","Connectome/bio-grounded"),("I","Indicator tests"),("D","Deterministic/reproducible"),("W","Runs in browser"),("O","Open source")]
-CRE = {"N":"tested","L":"tested","M":"tested","I":"tested","D":"tested","W":"tested","B":"partial","S":"partial","E":"roadmap","R":"roadmap","C":"roadmap","O":"roadmap"}
-CREV = {"N":"RPT/GWT items","L":"iit4 plasticity, V2-10","M":"V2-AI viability","I":"v1/v2 harness","D":"v2.1-24","W":"page runs in browser","B":"limb chains only; no contact physics","S":"social attention in AST; no second creature","E":"no evolution yet","R":"no reproduction yet","C":"roadmap: FlyWire subgraph","O":"MIT licensed locally; unpublished"}
+CRE = {"N":"tested","L":"tested","M":"tested","I":"tested","D":"tested","W":"tested","B":"partial","S":"partial","E":"tested","R":"partial","C":"roadmap","O":"roadmap"}
+CREV = {"N":"RPT/GWT items","L":"iit4 plasticity, V2-10","M":"V2-AI viability","I":"v1/v2 harness","D":"v2.1-24","W":"page runs in browser","B":"limb chains only; no contact physics","S":"social attention in AST; no second creature","E":"CQM-01 heredity + selection, CQM-02 mutation (harness population of agents; the rendered creature does not evolve)","R":"partial: harness agents reproduce with heredity (CQM-01); the full creature does not copy itself","C":"roadmap: FlyWire subgraph","O":"MIT licensed locally; unpublished"}
 score = lambda caps: len(caps.split())
 cre_score = sum(1 if v == "tested" else 0.5 if v == "partial" else 0 for v in CRE.values())
 ranked = sorted(BENCH, key=lambda r: -score(r["caps"]))
 better = [r for r in BENCH if score(r["caps"]) > cre_score]
 rank = 1 + len(better)
-claim = ("Creature #001 is the most complete among the systems compared on this rubric." if not better else
+claim = (f"On this rubric Creature #001 scores {cre_score:g}/12, the highest of the {len(BENCH)+1} systems (next: {E(ranked[0]['name'])}, {score(ranked[0]['caps'])}/12). Caveat: our row is scored from our own harness tests, where partial = 0.5, and the other rows come from their published descriptions, so the scoring is not symmetric. Evolution and reproduction are tested only in a harness agent population, not in the rendered creature. This is not a claim of being more alive or more capable overall." if not better else
          f"Creature #001 is NOT the most complete on this rubric. It scores {cre_score:g}/12, and {len(better)} of the {len(BENCH)} systems score higher (top: {E(ranked[0]['name'])}, {score(ranked[0]['caps'])}/12). The claim is not made.")
 hdr = "".join(f"<th title='{E(n)}'>{c}</th>" for c, n in CAPS)
 crow = "".join(f'<td class="{ {"tested":"pass","partial":"fail","roadmap":"impl"}[CRE[c]] }" title="{E(CREV[c])}">{CRE[c][0].upper()}</td>' for c, _ in CAPS)
@@ -177,9 +184,13 @@ page("rankings.html", "Rankings", f"""<h1>Rankings (scaffold)</h1><p class="mut"
 f'</table><div class="card">Creature #001: score {cre_score:g}, rank {rank} of {len(BENCH)+1} (ties counted favorably to others). Creature status per capability: ' + "; ".join(f"{n}: {CRE[c]} ({E(CREV[c])})" for c, n in CAPS) + "</div>")
 
 # ---------- roadmap
-rr = "".join(f'<tr><td>{k+1}</td><td>{E(r["capability"])}</td><td class="mut">{E(r["prior_art"])}</td><td>{E(r["test"])}</td><td class="impl">roadmap</td></tr>' for k, r in enumerate(ROAD))
+def rst(k):
+    i = RM.get(k)
+    if not i: return '<td class="impl">roadmap</td>'
+    return f'<td class="{"pass" if i["pass"] else "fail"}">{"achieved" if i["pass"] else "tested, FAIL"} ({E(i["id"])}, v2.2)</td>'
+rr = "".join(f'<tr><td>{k+1}</td><td>{E(r["capability"])}</td><td class="mut">{E(r["prior_art"])}</td><td>{E(r["test"])}</td>{rst(k+1)}</tr>' for k, r in enumerate(ROAD))
 page("roadmap.html", "Roadmap to being alive", f"""<h1>Roadmap to being alive: {len(ROAD)} capabilities</h1>
-<div class="card warn">A capability is marked achieved only when its measurable test is pre-registered, implemented and passes. Achieved now: <b>0 / {len(ROAD)}</b>. The prior-art column records the closest known work, checked from the literature cited there. "Novel" means novel for this creature or combination, not a claim that nobody has tried it.
+<div class="card warn">A capability is marked achieved only when its measurable test is pre-registered, implemented and passes. Achieved now: <b>{len(ACH)} / {len(ROAD)}</b> (rows {", ".join(map(str, ACH))}), tested under preregistration v2.2; {len(RM)-len(ACH)} more were tested and failed. These are small harness models of each capability, not behaviours of the rendered creature. The prior-art column records the closest known work, checked from the literature cited there. "Novel" means novel for this creature or combination, not a claim that nobody has tried it.
 The title is aspirational: none of these tests would establish that the creature is alive or conscious.</div>
 <table><tr><th>#</th><th>Capability</th><th>Prior-art check</th><th>Measurable test</th><th>Status</th></tr>{rr}</table>""")
 
