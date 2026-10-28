@@ -110,3 +110,9 @@ v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1
 ## Round 8
 ### (1) CQM-21 mechanism reverted
 - `creatureCPGEntropy` and `diffCtrl` were removed (reverse-applied from 9646901). CQM-21 uses the original network again and fails (differentiation d −2.57), as in run6. See CHANGELOG round 8.
+
+## Round 8
+- CQM-21: the binary-counter mechanism is reverted (creatureCPGEntropy, diffCtrl). CQM-21 is FAIL. A genuine network cannot beat iid coins on the frozen unconditioned entropy metric.
+- AST-1R base 3000: d 0.75, still FAIL. The full schema is already the LQG-optimal Kalman + deadbeat controller. Tuning ASTM/ASTG/ASTA/ASTU on bases 10000–17000 gave no held-out gain, and no genuine improvement was found. Reported as failing.
+- RM-10: still FAIL. Even the true food rate (0.05) only reaches d 0.44, and the shrinkage estimator reaches d 0.38. Food arrivals are iid Bernoulli, so the remaining forecast error is irreducible within the frozen world. The test is unchanged.
+- Added an Organs class (circadian, habituation, SHA-256 lineage chain), wired into src/app.tsx's live loop. It adds a ?livetest mode and harness/livecdp.mjs. The prereg v2.3 LIVE tests are committed (47c8264) but NOT RUN: the headless run timed out (the #livetest output never appeared in 10 min), and later debug runs were refused by the tool sandbox.

@@ -23,3 +23,8 @@
 ## Round 8 (2026-10-28)
 - REVERTED the round-7 CQM-21 mechanism (Gray-code binary counter). It passed only because a deterministic state cycle covers states more evenly than iid sampling, which is not genuine differentiation. CQM-21 is reported as FAIL again under v1.
   Why no real mechanism can pass this frozen test: its metric is the unconditioned plug-in state entropy of 6 binary units, and its control is iid fair coins, the maximum-entropy source. Any genuine stochastic network, including stimulus-dependent repertoires, has true entropy ≤ 6 bits. Its expected plug-in estimate cannot exceed the iid control except through super-uniform (counter-like) coverage. The non-ceiling differentiation test v2-21 (C_N, I(S;X)) passes.
+
+### Round 8 (continued)
+- CQM-21 is reported FAIL. The counter mechanism was reverted because a deterministic state cycle that games entropy coverage is not genuine differentiation.
+- AST-1R (base 3000) and RM-10 are still FAIL and are reported honestly (see HARNESS_CHANGES.md).
+- The live creature now has circadian arousal (modulates limb reach, HUD day/night), stimulus-specific habituation of the poke startle, and a tamper-evident lineage chain driven by the RV32I mutation word. Prereg v2.3 LIVE tests: NOT RUN yet.
