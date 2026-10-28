@@ -1,0 +1,5 @@
+FAIL CQM-21R
+  - shuffled weights 1.261 0.997 d=0.62 t=1.74
+  + lesioned recurrence (W=0) 1.261 0.181 d=4.02 t=11.37
+  + iid noise matched in rate/variance 1.261 0.170 d=4.06 t=11.49
+

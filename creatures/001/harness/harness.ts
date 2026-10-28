@@ -484,7 +484,7 @@ class CreatureGoal implements GoalAgent { pH = -1; rate = 0.03; last = -1; act(H
     const val = (h: number, f: number, ss: number, d: number): number => { if (d === 0) return cost(h, f); let m = Infinity; for (let a = 0; a < 3; a++) { const [h2, f2, s2] = sim(a, h, f, ss); m = Math.min(m, cost(h2, f2) + 0.95 * val(h2, f2, s2, d - 1)); } return m; };
     let best = 0, bv = Infinity; for (let a = 0; a < 3; a++) { const [h2, f2, s2] = sim(a, H, F, s); const v = cost(h2, f2) + 0.95 * val(h2, f2, s2, 3); if (v < bv) { bv = v; best = a; } }
     this.pH = H; this.last = best; return best as 0 | 1 | 2; } }
-function creatureNet(seed: number): Net6 { const r = mulberry(seed * 101 + 9); const mask = Array.from({ length: 6 }, (_, i) => Array.from({ length: 6 }, (_, j) => i !== j && r() < 0.6));
+export function creatureNet(seed: number): Net6 { const r = mulberry(seed * 101 + 9); const mask = Array.from({ length: 6 }, (_, i) => Array.from({ length: 6 }, (_, j) => i !== j && r() < 0.6));
   let W = mask.map((row) => row.map((m) => (m ? gauss(r) * 0.5 : 0))); const b = new Array(6).fill(0);
   const score = (w: number[][]) => { let s = 0; for (let k = 0; k < 2; k++) { const m = v2NetMeasures({ W: w, b }, mulberry(seed * 977 + k * 31 + 3)); s += m.cn + m.isx; } return s / 2; };
   let sc = score(W); for (let it = 0; it < 150; it++) { const W2 = W.map((row, i) => row.map((v, j) => (mask[i][j] && r() < 0.3 ? Math.max(-3, Math.min(3, v + gauss(r) * 0.5)) : v))); const s2 = score(W2); if (s2 > sc) { W = W2; sc = s2; } }
