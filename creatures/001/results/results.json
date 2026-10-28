@@ -1924,5 +1924,296 @@
    "pass": true,
    "category": "Bounded test evidence"
   }
+ ],
+ "v24": [
+  {
+   "id": "RM-9",
+   "group": "Prereg v2.4",
+   "name": "Homeostatic regulation (roadmap 9)",
+   "metric": "fraction of steps in band",
+   "mechanism": "PI thermostat",
+   "cmps": [
+    {
+     "control": "open loop",
+     "full": 0.9548125000000001,
+     "ctrl": 0.2234375,
+     "d": 17.479149294250306,
+     "t": 49.438499981345785,
+     "pass": true
+    },
+    {
+     "control": "Additional: full ≥ 2× control",
+     "full": 0.9548125000000001,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-29",
+   "group": "Prereg v2.4",
+   "name": "Lifelong learning without catastrophic forgetting (roadmap 29)",
+   "metric": "task-A R² after task B",
+   "mechanism": "context-dependent gating of readout",
+   "cmps": [
+    {
+     "control": "plain SGD",
+     "full": 0.9999999999999968,
+     "ctrl": -1.3657151067933828,
+     "d": 1.8538779627761426,
+     "t": 5.243558715885249,
+     "pass": true
+    },
+    {
+     "control": "Additional: full retention ≥ 0.8 and task-B R² ≥ 0.8",
+     "full": 0.9999999999996156,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-36",
+   "group": "Prereg v2.4",
+   "name": "Neuromodulated plasticity (roadmap 36)",
+   "metric": "mean reward, trials 200–299",
+   "mechanism": "dopamine-like RPE gate",
+   "cmps": [
+    {
+     "control": "ungated Hebbian",
+     "full": 0.78375,
+     "ctrl": 0.580625,
+     "d": 1.438868412907326,
+     "t": 4.069734448007582,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-42",
+   "group": "Prereg v2.4",
+   "name": "Delayed gratification (roadmap 42)",
+   "metric": "mean payoff",
+   "mechanism": "energy-budget gated waiting",
+   "cmps": [
+    {
+     "control": "myopic",
+     "full": 2.4787500000000002,
+     "ctrl": 1,
+     "d": 30.974671937654808,
+     "t": 87.60960228857748,
+     "pass": true
+    },
+    {
+     "control": "Additional: larger-later ≥ 50% of trials",
+     "full": 0.739375,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-53",
+   "group": "Prereg v2.4",
+   "name": "Chemotaxis (roadmap 53)",
+   "metric": "−final distance to source",
+   "mechanism": "run-and-tumble temporal comparison",
+   "cmps": [
+    {
+     "control": "random walk",
+     "full": -6.715517285938995,
+     "ctrl": -48.91476018669685,
+     "d": 5.02157764844118,
+     "t": 14.20316642987022,
+     "pass": true
+    },
+    {
+     "control": "ablated circuit (dc=0)",
+     "full": -6.715517285938995,
+     "ctrl": -58.62422723866416,
+     "d": 2.7143430191642377,
+     "t": 7.677321421269597,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-73",
+   "group": "Prereg v2.4",
+   "name": "Hunger-driven risk sensitivity (roadmap 73)",
+   "metric": "P(risky|low E) − P(risky|high E)",
+   "mechanism": "energy-budget rule",
+   "cmps": [
+    {
+     "control": "fixed policy",
+     "full": 1,
+     "ctrl": 0.02009475906548072,
+     "d": 19.18771722620727,
+     "t": 54.271059864564364,
+     "pass": true
+    },
+    {
+     "control": "Additional: sign flip P(risky|low) > 0.5 > P(risky|high)",
+     "full": 1,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-78",
+   "group": "Prereg v2.4",
+   "name": "Numerosity with Weber-law scaling (roadmap 78)",
+   "metric": "slope of log sd vs log n",
+   "mechanism": "log-scale noisy number code",
+   "cmps": [
+    {
+     "control": "flat noise",
+     "full": 1.0248461805339573,
+     "ctrl": 0.03182629935341535,
+     "d": 13.869362891866126,
+     "t": 39.22848220630241,
+     "pass": true
+    },
+    {
+     "control": "Additional: mean slope in [0.7,1.3]",
+     "full": 1.0248461805339573,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-82",
+   "group": "Prereg v2.4",
+   "name": "Extinction and spontaneous recovery (roadmap 82)",
+   "metric": "test response − end-of-extinction response",
+   "mechanism": "two-process excitatory/inhibitory memory",
+   "cmps": [
+    {
+     "control": "Rescorla–Wagner unlearning",
+     "full": 0.629783387345705,
+     "ctrl": 0,
+     "d": 10.188088345730725,
+     "t": 28.816265426375324,
+     "pass": true
+    },
+    {
+     "control": "Additional: end-of-extinction response < 0.3m",
+     "full": 0,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-96",
+   "group": "Prereg v2.4",
+   "name": "Radiation-tolerant genome repair (roadmap 96)",
+   "metric": "fraction of genome bits intact after 10× dose",
+   "mechanism": "TMR majority scrubbing",
+   "cmps": [
+    {
+     "control": "no repair",
+     "full": 0.97314453125,
+     "ctrl": 0.55859375,
+     "d": 15.705713686951619,
+     "t": 44.42246660567145,
+     "pass": true
+    },
+    {
+     "control": "Additional: ≥0.95 in ≥15/16 seeds",
+     "full": 0,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-97",
+   "group": "Prereg v2.4",
+   "name": "Dormancy / cryptobiosis (roadmap 97)",
+   "metric": "steps alive",
+   "mechanism": "food-absence-triggered dormancy",
+   "cmps": [
+    {
+     "control": "no dormancy",
+     "full": 2000,
+     "ctrl": 1523.125,
+     "d": 3.516385426818552,
+     "t": 9.945839922275802,
+     "pass": true
+    },
+    {
+     "control": "Additional: alive and active at t=2000 in ≥15/16",
+     "full": 16,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-52",
+   "group": "Prereg v2.4",
+   "name": "Graceful degradation under neuron loss (roadmap 52)",
+   "metric": "−max drop in P(k) per 8 units lost",
+   "mechanism": "distributed cosine population code",
+   "cmps": [
+    {
+     "control": "non-redundant code",
+     "full": 0,
+     "ctrl": -1.0068366325170166,
+     "d": 240.6436481162147,
+     "t": 680.643021729779,
+     "pass": true
+    },
+    {
+     "control": "Additional: P(32) ≥ 0.5",
+     "full": 1,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  }
  ]
 }

@@ -28,3 +28,9 @@
 - CQM-21 is reported FAIL. The counter mechanism was reverted because a deterministic state cycle that games entropy coverage is not genuine differentiation.
 - AST-1R (base 3000) and RM-10 are still FAIL and are reported honestly (see HARNESS_CHANGES.md).
 - The live creature now has circadian arousal (modulates limb reach, HUD day/night), stimulus-specific habituation of the poke startle, and a tamper-evident lineage chain driven by the RV32I mutation word. Prereg v2.3 LIVE tests: NOT RUN yet.
+
+## Round 9 (2026-10-29, Asia/Manila): v2.4
+- `item()` in harness.ts is now exported, with no behaviour change, so the v2.4 tests can reuse it.
+- New mechanism module `harness/v24mech.ts` (mutable): PI thermostat, task-gated readout, RPE dopamine gate, energy-budget waiting, run-and-tumble, energy-budget risk rule, log-scale numerosity, Bouton two-process extinction, TMR genome scrubbing, dormancy switch, cosine population code.
+- New frozen test module `harness/v24tests.ts` follows preregistrations/v2.4.md (commit 4d820ee). Before the first full run, three in-progress edits were made so the tests match the prereg text: the RM-29 metric is pure retention; RM-52 uses the sample Var(s); the RM-97 energy cap was removed because the prereg doesn't specify one. Nothing has changed in it since the first full run (results/run10.txt).
+- Result: v2.4 passed 11/11 on the first run. Several tests are easy by construction, as stated on the site.

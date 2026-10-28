@@ -38,13 +38,15 @@ def status(it):
 def fd(x): return "∞" if x is None else f"{x:.2f}"
 def fv(x): return "—" if x is None else f"{x:.3f}"
 V22 = R.get("v22", [])
-ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22]
+V24 = R.get("v24", [])
+ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22] + [("v2.4", i) for i in V24]
 def counts(lst):
     c = {"pass": 0, "fail": 0, "impl": 0}
     for i in lst: c[status(i)[0]] += 1
     return c
 c1, c2, c21, c22 = counts(R["v1"]), counts(R["v2"]), counts(R["v21"]), counts(V22)
-RM = {int(i["id"][3:]): i for i in V22 if i["id"].startswith("RM-")}
+c24 = counts(V24)
+RM = {int(i["id"][3:]): dict(i, ver=v) for v, L in (("v2.2", V22), ("v2.4", V24)) for i in L if i["id"].startswith("RM-")}
 ACH = sorted(k for k, i in RM.items() if i["pass"])
 v1fails = [i for i in R["v1"] if status(i)[0] == "fail"]
 
@@ -91,6 +93,7 @@ page("index.html", "Home", f"""<h1>Creature #001: bounded tests of consciousness
 <div class="card"><div class="k pass">{c2["pass"]}/{len(R["v2"])}</div><div class="mut">v2 non-ceiling re-tests pass</div></div>
 <div class="card"><div class="k pass">{c21["pass"]}/{len(R["v21"])}</div><div class="mut">v2.1 substrate / reproducibility / scale tests pass</div></div>
 <div class="card"><div class="k pass">{c22["pass"]}/{len(V22)}</div><div class="mut">v2.2 held-out AST-1R + roadmap tests pass</div></div>
+<div class="card"><div class="k pass">{c24["pass"]}/{len(V24)}</div><div class="mut">v2.4 roadmap tests pass (toy harness models)</div></div>
 <div class="card"><div class="k">{len(ACH)}/{len(ROAD)}</div><div class="mut">roadmap capabilities achieved (small harness models)</div></div>
 <div class="card"><div class="k">{len(BENCH)}</div><div class="mut">projects in the capability benchmark</div></div></div>
 {CEIL}
@@ -104,6 +107,7 @@ page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated fro
 <h2>Chart</h2>{chart(ALL)}<h2>v1 (frozen)</h2>{table([("v1",i) for i in R["v1"]])}<h2>v2: non-ceiling re-tests</h2>{table([("v2",i) for i in R["v2"]])}
 <h2>v2.1: substrate pluralism, reproducibility, scale</h2>{table([("v2.1",i) for i in R["v21"]])}
 <h2>v2.2: held-out AST-1R and roadmap capability tests</h2>{table([("v2.2",i) for i in V22])}
+<h2>v2.4: 11 more roadmap capability tests</h2><p class="mut">These are small harness models of each capability, not behaviours of the rendered creature. Several are easy by construction (for example RM-29 gives the learner the task id; RM-52 uses a noiseless code). All 11 passed on their first run.</p>{table([("v2.4",i) for i in V24])}
 <div class="card mut">v2.2 notes: {"; ".join(E(i["id"]+": "+i["note"]) for i in V22 if i.get("note"))}</div>
 <div class="card mut">GPU substrate: headless Chrome WebGL2 on ANGLE/SwiftShader, a software rasterizer, disclosed as pre-registered. Notes: {"; ".join(E(i.get("note","")) for i in R["v21"])}</div>""")
 
@@ -111,7 +115,7 @@ page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated fro
 groups = {}
 for ver, it in ALL: groups.setdefault(f'{ver} · {it["group"]}', []).append(it)
 tb = "".join(f'<h2>{E(g)}</h2><table><tr><th>ID</th><th>Name</th><th>Metric</th><th>Mechanism</th><th>Controls</th></tr>' + "".join(f'<tr><td>{E(i["id"])}</td><td>{E(i["name"])}</td><td>{E(i.get("metric",""))}</td><td>{E(i.get("mechanism",""))}</td><td>{"<br>".join(E(c["control"]) for c in i["cmps"])}</td></tr>' for i in its) + "</table>" for g, its in groups.items())
-page("tests.html", "Tests", f"""<h1>Tests and CI</h1><p>Pre-registrations: <code>creatures/001/preregistrations/</code> (v1, v2, v2.1, v2.2). Each one was committed before its test code was written.
+page("tests.html", "Tests", f"""<h1>Tests and CI</h1><p>Pre-registrations: <code>creatures/001/preregistrations/</code> (v1, v2, v2.1, v2.2, v2.3, v2.4). Each one was committed before its test code was written.
 CI (<code>.github/workflows/harness.yml</code>) type-checks the page with tsc, runs the full harness, and runs the cross-process SHA-256 reproducibility check.</p>
 <p class="mut">Badges are wired to GitHub Actions and become live once the repository is published. It is not published yet.</p>{tb}""")
 
@@ -187,10 +191,10 @@ f'</table><div class="card">Creature #001: score {cre_score:g}, rank {rank} of {
 def rst(k):
     i = RM.get(k)
     if not i: return '<td class="impl">roadmap</td>'
-    return f'<td class="{"pass" if i["pass"] else "fail"}">{"achieved" if i["pass"] else "tested, FAIL"} ({E(i["id"])}, v2.2)</td>'
+    return f'<td class="{"pass" if i["pass"] else "fail"}">{"achieved" if i["pass"] else "tested, FAIL"} ({E(i["id"])}, {i["ver"]})</td>'
 rr = "".join(f'<tr><td>{k+1}</td><td>{E(r["capability"])}</td><td class="mut">{E(r["prior_art"])}</td><td>{E(r["test"])}</td>{rst(k+1)}</tr>' for k, r in enumerate(ROAD))
 page("roadmap.html", "Roadmap to being alive", f"""<h1>Roadmap to being alive: {len(ROAD)} capabilities</h1>
-<div class="card warn">A capability is marked achieved only when its measurable test is pre-registered, implemented and passes. Achieved now: <b>{len(ACH)} / {len(ROAD)}</b> (rows {", ".join(map(str, ACH))}), tested under preregistration v2.2; {len(RM)-len(ACH)} more were tested and failed. These are small harness models of each capability, not behaviours of the rendered creature. The prior-art column records the closest known work, checked from the literature cited there. "Novel" means novel for this creature or combination, not a claim that nobody has tried it.
+<div class="card warn">A capability is marked achieved only when its measurable test is pre-registered, implemented and passes. Achieved now: <b>{len(ACH)} / {len(ROAD)}</b> (rows {", ".join(map(str, ACH))}), tested under preregistrations v2.2 and v2.4; {len(RM)-len(ACH)} more were tested and failed. These are small harness models of each capability, not behaviours of the rendered creature. The prior-art column records the closest known work, checked from the literature cited there. "Novel" means novel for this creature or combination, not a claim that nobody has tried it.
 The title is aspirational: none of these tests would establish that the creature is alive or conscious.</div>
 <table><tr><th>#</th><th>Capability</th><th>Prior-art check</th><th>Measurable test</th><th>Status</th></tr>{rr}</table>""")
 
