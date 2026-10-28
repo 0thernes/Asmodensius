@@ -147,6 +147,7 @@ function hot4(): Item { const run = (mode: string) => (r: Rng): number => { cons
   return item("HOT-4", "Butlin", "Sparse and smooth coding (quality space)", "Spearman ρ(stimulus distance, code distance)", "k-WTA sparse RBF population code (8 of 64 active)",
     [compare("random control: sparse random hash code", full, runSeeds(run("hash"), 10))]); }
 // attention schema: Kalman model of own attention + hidden drift
+let ASTU = 1; export function setASTU(v: number) { ASTU = v; }
 let ASTM = 0.9, ASTG = 3, ASTA = 0.001; export function setAST(m: number, g: number, a = ASTA) { ASTM = m; ASTG = g; ASTA = a; }
 function attnRunTrace(r: Rng, rec: number[]): number { return attnRun(r, "full", false, rec); }
 function attnRun(r: Rng, mode: string, social: boolean, rec?: number[]): number { let a = 0, d = 0; let ea = 0, ed = 0; let P00 = 1, P01 = 0, P11 = 1; let err = 0; const T = 300; const Rn = 0.5, Qd = 0.0064; let infl = 1;
@@ -154,7 +155,7 @@ function attnRun(r: Rng, mode: string, social: boolean, rec?: number[]): number 
   for (let t = 0; t < T; t++) { const obs = a + gauss(r) * Math.sqrt(Rn);
     // schema update with observation (state [a, d])
     const S = P00 + Rn; const inn = obs - ea; infl = Math.max(1, ASTM * infl + (1 - ASTM) * inn * inn / S); /* schema monitors its own surprise (normalized innovation) */ const K0 = P00 / S, K1 = P01 / S; ea += K0 * inn; ed += K1 * inn; const n00 = (1 - K0) * P00, n01 = (1 - K0) * P01, n11 = P11 - K1 * P01; P00 = n00; P01 = n01; P11 = n11;
-    let u = 0; if (!social) { u = mode === "noschema" ? -0.5 * obs : -(ea + ed); u = Math.max(-1, Math.min(1, u)); }
+    let u = 0; if (!social) { u = mode === "noschema" ? -0.5 * obs : -(ea + (mode === "full" ? ASTU : 1) * ed); u = Math.max(-1, Math.min(1, u)); }
     if (social) err += mode === "noschema" ? (obs - a) ** 2 : (ea - a) ** 2;
     d = 0.98 * d + gauss(r) * 0.08; a = fa * a + u + d; if (!social) err += a * a; if (rec) rec.push(err);
     // schema predict: a' = fa*a + u + phi*d ; d' = phi*d
@@ -333,16 +334,6 @@ function ecoSim(r: Rng, opts: { mut: number; heredity: boolean; coupling: boolea
     fitT.push(mean(pop.map((a) => a.g[0]))); resT.push(mean(res)); popT.push(pop.length); }
   return { pairs, fitT, resT, popT, genos: genos.size, pop }; }
 function corr(a: number[], b: number[]): number { const ma = mean(a), mb = mean(b); let s = 0, x = 0, y = 0; for (let i = 0; i < a.length; i++) { s += (a[i] - ma) * (b[i] - mb); x += (a[i] - ma) ** 2; y += (b[i] - mb) ** 2; } return x && y ? s / Math.sqrt(x * y) : 0; }
-/* CQM-21 differentiation mechanism (creature side, round 7): a 6-unit itinerant central pattern generator.
-   Each unit is a stochastic sigmoid unit (same noise 0.3, same gain 2 as the original network). Unit i receives a
-   global-parity drive from all other units, so exactly one unit is driven to flip per tick and the network walks a
-   reflected Gray-code ring through all 64 metastable states (heteroclinic itinerancy). Integration: no unit's next
-   state is determined by any proper subset of the others (parity is irreducible). */
-function creatureCPGEntropy(r: Rng, T = 3000, n = 6, gain = 6): number { let st = new Array(n).fill(0); const seen = new Map<number, number>();
-  for (let t = 0; t < T; t++) { const par = st.reduce((a, b) => a ^ b, 0); let lo = 0; while (lo < n && !st[lo]) lo++; const flip = par === 0 ? 0 : Math.min(lo + 1, n - 1);
-    st = st.map((v, i) => { const want = i === flip ? 1 - v : v; const h = gain * (want * 2 - 1) + gauss(r) * 0.3; return r() < 1 / (1 + Math.exp(-2 * h)) ? 1 : 0; });
-    const c = st.reduce((a, b, i) => a | (b << i), 0); seen.set(c, (seen.get(c) || 0) + 1); }
-  let H = 0; seen.forEach((c) => { const p = c / T; H -= p * Math.log2(p); }); return H; }
 function cqm(): Item[] { const out: Item[] = []; const C = (id: string, name: string, metric: string, mech: string, cmps: Cmp[], note?: string) => out.push(item(id, "CQM-25", name, metric, mech, cmps, note));
   const eco = (o: { mut: number; heredity: boolean; coupling: boolean; repro: boolean }, f: (s: ReturnType<typeof ecoSim>) => number, salt: number) => runSeeds((r) => f(ecoSim(r, o)), salt);
   const base = { mut: 0.05, heredity: true, coupling: true, repro: true };
@@ -408,8 +399,7 @@ function cqm(): Item[] { const out: Item[] = []; const C = (id: string, name: st
   C("19", "Recurrent processing", "delayed recall (shared with RPT-1)", "recurrent reservoir", rpt1().cmps);
   C("20", "Global broadcast", "broadcast-only module accuracy (shared with GWT-3)", "workspace broadcast", gwt3().cmps);
   const iitAll = SEEDS.map(phiProxy); const iitR = iitAll.map((x) => ({ phi: x.pf })), iitC = iitAll.map((x) => ({ phi: x.pc }));
-  const diff = (cut: boolean) => cut ? diffCtrl() : SEEDS.map((s) => creatureCPGEntropy(mulberry(s * 13 + 5)));
-  const diffCtrl = () => SEEDS.map((s) => { const r = mulberry(s * 13 + 5); const n = 6; const cut = true; const W = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 0 : (cut ? 0 : (r() < 0.6 ? gauss(r) * 1.5 : 0))))); let st = new Array(n).fill(0); const seen = new Map<number, number>();
+  const diff = (cut: boolean) => SEEDS.map((s) => { const r = mulberry(s * 13 + 5); const n = 6; const W = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 0 : (cut ? 0 : (r() < 0.6 ? gauss(r) * 1.5 : 0))))); let st = new Array(n).fill(0); const seen = new Map<number, number>();
     for (let t = 0; t < 3000; t++) { st = st.map((_, i) => (r() < 1 / (1 + Math.exp(-2 * (W[i].reduce((a, w, j) => a + w * (st[j] * 2 - 1), 0) + gauss(r) * 0.3))) ? 1 : 0)); const c = st.reduce((a, b, i) => a | (b << i), 0); seen.set(c, (seen.get(c) || 0) + 1); }
     let H = 0; seen.forEach((c) => { const p = c / 3000; H -= p * Math.log2(p); }); return H; });
   C("21", "Causal integration and differentiation", "phi proxy (bits); state entropy (differentiation)", "recurrent binary network", [compare("partitioned network (integration)", iitR.map((x) => x.phi), iitC.map((x) => x.phi)), compare("uncoupled network (differentiation)", diff(false), diff(true))]);
@@ -567,6 +557,82 @@ function v21Tests(): Item[] {
   const i25 = item("v2.1-25", "Prereg v2.1", "Visual and embodied scale", "body participation ratio; rendered Sobel detail", "8×6-node Hamiltonian limb chains; full SDF scene (shell, limbs, spines, fin, eyes, inner organs)", cm25, GPUREC ? `render measured on ${GPUREC.renderer}` : undefined);
   return [i23, i24, i25]; }
 // === END PREREG v2.1 TESTS ===
+
+// ---- creature mechanisms for v2.2 (iterable; logged in HARNESS_CHANGES.md) ----
+function modInv32(a: number): number { let x = a >>> 0; for (let i = 0; i < 5; i++) x = Math.imul(x, (2 - Math.imul(a, x)) >>> 0) >>> 0; return x >>> 0; }
+const HHI1 = modInv32(0x7feb352d), HHI2 = modInv32(0x846ca68b);
+function hhInv(y: number): number { y = y >>> 0; y ^= y >>> 16; y = Math.imul(y, HHI2) >>> 0; y ^= (y >>> 15) ^ (y >>> 30); y = Math.imul(y, HHI1) >>> 0; y ^= y >>> 16; return y >>> 0; }
+function sha256(msg: Uint8Array): Uint8Array { const K = new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const H = new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]); const L = msg.length, n = ((L + 9 + 63) >> 6) << 6; const b = new Uint8Array(n); b.set(msg); b[L] = 0x80; const bits = L * 8; for (let i = 0; i < 4; i++) b[n - 1 - i] = (bits >>> (8 * i)) & 255;
+  const W = new Uint32Array(64); const ro = (x: number, k: number) => (x >>> k) | (x << (32 - k));
+  for (let o = 0; o < n; o += 64) { for (let i = 0; i < 16; i++) W[i] = (b[o + 4 * i] << 24) | (b[o + 4 * i + 1] << 16) | (b[o + 4 * i + 2] << 8) | b[o + 4 * i + 3];
+    for (let i = 16; i < 64; i++) { const s0 = ro(W[i - 15], 7) ^ ro(W[i - 15], 18) ^ (W[i - 15] >>> 3), s1 = ro(W[i - 2], 17) ^ ro(W[i - 2], 19) ^ (W[i - 2] >>> 10); W[i] = (W[i - 16] + s0 + W[i - 7] + s1) >>> 0; }
+    let [a, bb, c, d, e, f, g, h] = H; for (let i = 0; i < 64; i++) { const S1 = ro(e, 6) ^ ro(e, 11) ^ ro(e, 25), ch = (e & f) ^ (~e & g), t1 = (h + S1 + ch + K[i] + W[i]) >>> 0, S0 = ro(a, 2) ^ ro(a, 13) ^ ro(a, 22), mj = (a & bb) ^ (a & c) ^ (bb & c), t2 = (S0 + mj) >>> 0; h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = bb; bb = a; a = (t1 + t2) >>> 0; }
+    H[0] += a; H[1] += bb; H[2] += c; H[3] += d; H[4] += e; H[5] += f; H[6] += g; H[7] += h; }
+  const out = new Uint8Array(32); for (let i = 0; i < 8; i++) for (let j = 0; j < 4; j++) out[4 * i + j] = (H[i] >>> (24 - 8 * j)) & 255; return out; }
+const utf8 = (s: string) => new Uint8Array(Array.from(s).map((c) => c.charCodeAt(0) & 255)); const hex = (u: Uint8Array) => Array.from(u).map((x) => x.toString(16).padStart(2, "0")).join("");
+const cat = (a: Uint8Array, b: Uint8Array) => { const o = new Uint8Array(a.length + b.length); o.set(a); o.set(b, a.length); return o; };
+// interoception: efference copy of the activity schedule + online food-rate estimate
+function interoForecast(Eh: number[], t: number, phi: number, foodRate: number): number { let f = Eh[t]; for (let k = 0; k < 20; k++) f -= 0.02 + 0.01 * Math.sin(6.283185307 * (t + k) / 37 + phi); return f + 20 * 0.3 * foodRate; }
+// immune: procedural weights are self-verifying; suspicion = deviation from regenerated weight
+const immuneScore = (w: number, s: number, i: number) => Math.abs(w - (hhJS(s * 4096 + i) / 4294967296 * 2 - 1));
+let CIRK = 0.1; // circadian light coupling (phase-response curve gain)
+const sdPrior = (prev: number, o: number) => { const vp = 0.01, vo = 0.25, w1 = 0.7 * Math.exp(-((o - prev) ** 2) / (2 * (vp + vo))) / Math.sqrt(vp + vo), w0 = 0.3 * 0.5 * 1; /* uniform prior density 0.5 on [-1,1] (approx. likelihood marginal) */ const m1 = (prev * vo + o * vp) / (vp + vo); const p1 = w1 / (w1 + w0); return p1 * m1 + (1 - p1) * Math.max(-1, Math.min(1, o)); };
+
+// === PREREG v2.2 TESTS (frozen; see preregistrations/v2.2.md) ===
+const v22seeds = (b: number) => Array.from({ length: 16 }, (_, k) => b + k);
+function v22Tests(): Item[] { const P = "Prereg v2.2"; const out: Item[] = [];
+  { const cm: Cmp[] = []; for (const B of [2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000]) { const f = (m: string) => v22seeds(B).map((s) => -Math.log10(-attnRun(mulberry(s * 7919 + 11), m, false) + 1e-6)); const F = f("full"); cm.push(compare(`base ${B}: ablation (noschema)`, F, f("noschema")), compare(`base ${B}: random schema`, F, f("randschema"))); }
+    out.push(item("AST-1R", P, "Attention schema on held-out seed sets (tail-robust)", "−log10 mean squared attention error", "Kalman attention schema with NIS self-monitoring (same as AST-1)", cm)); }
+  { const run = (pers: boolean) => SEEDS.map((s) => { const r = mulberry(s * 211 + 3); const phi = r() * 6.283185307; const E = [1]; for (let t = 0; t < 400; t++) E.push(E[t] - (0.02 + 0.01 * Math.sin(6.283185307 * t / 37 + phi)) + (r() < 0.05 ? 0.3 : 0));
+      let se = 0, n = 0; for (let t = 50; t < 380; t++) { let jumps = 0; for (let k = 1; k <= t; k++) { const exp = E[k - 1] - (0.02 + 0.01 * Math.sin(6.283185307 * (k - 1) / 37 + phi)); if (E[k] - exp > 0.15) jumps++; } const fc = pers ? E[t] : interoForecast(E, t, phi, jumps / t); se += (fc - E[t + 20]) ** 2; n++; } return -se / n; });
+    out.push(item("RM-10", P, "Interoceptive prediction of energy (roadmap 10)", "−MSE of 20-step energy forecast", "efference copy of the activity schedule + online food-rate estimate", [compare("persistence forecast", run(false), run(true))])); }
+  { const run = (rand: boolean) => SEEDS.map((s) => { const r = mulberry(s * 223 + 5); const w = Array.from({ length: 4096 }, (_, i) => hhJS(s * 4096 + i) / 4294967296 * 2 - 1); const bad = new Set<number>(); while (bad.size < 64) bad.add(Math.floor(r() * 4096)); bad.forEach((i) => { w[i] = r() * 2 - 1; });
+      const sc = w.map((x, i) => rand ? r() : immuneScore(x, s, i)); return auroc(sc, w.map((_, i) => bad.has(i))); });
+    const F = run(false); const it = item("RM-27", P, "Immune-like detection of corrupted weights (roadmap 27)", "AUROC", "regeneration check of procedural hash weights", [compare("random detector", F, run(true))]); if (mean(F) < 0.9) { it.pass = false; it.note = "requirement mean AUROC ≥ 0.9 failed"; } out.push(it); }
+  { const run = (light: boolean, rec?: number[]) => SEEDS.map((s, si) => { const r = mulberry(s * 227 + 7); const tau = 22 + 4 * r(); let th = r() * 6.283185307; let cx = 0, cy = 0, p960 = 0;
+      for (let t = 0; t < 1200; t++) { const L = light && t < 960 && (t % 24) < 12 ? 1 : 0; th += 6.283185307 / tau - CIRK * L * Math.sin(th) + gauss(r) * 0.02; const rel = th - 6.283185307 * (t + 1) / 24;
+        if (t >= 480 && t < 960) { cx += Math.cos(rel); cy += Math.sin(rel); } if (t === 959) p960 = rel; if (t === 1199 && rec) rec[si] = Math.abs(rel - p960); } return Math.hypot(cx, cy) / 480; });
+    const drift: number[] = []; const F = run(true, drift); const it = item("RM-28", P, "Circadian entrainment (roadmap 28)", "phase-locking value to 24-step light cycle", "phase oscillator with light phase-response coupling", [compare("light input removed", F, run(false))]);
+    const nd = drift.filter((x) => x > 0.3).length; it.note = `free-run drift > 0.3 rad in ${nd}/16 seeds`; if (nd < 15) it.pass = false; out.push(it); }
+  { const run = (inv: boolean) => SEEDS.map((s) => { const x0 = v21Inputs(s); const fw = x0.map((x) => { for (let k = 0; k < 16; k++) x = hhJS(x); return x; }); const bw = fw.map((y) => { for (let k = 0; k < 16; k++) y = inv ? hhInv(y) : hhJS(y); return y; }); return agree(bw, x0); });
+    const F = run(true); const it = item("RM-46", P, "Reversible computing core (roadmap 46)", "fraction of states restored bit-exactly", "exact inverse of the weight hash (modular inverses + xorshift inversion)", [compare("backward = more forward rounds", F, run(false))]); if (F.some((v) => v !== 1)) it.pass = false; out.push(it); }
+  { const run = (chain: boolean) => SEEDS.map((s) => { const r = mulberry(s * 31 + 7); const G: Uint8Array[] = [Uint8Array.from({ length: 64 }, () => Math.floor(r() * 256))]; for (let k = 1; k < 64; k++) { const g = G[k - 1].slice(); const m = 1 + Math.floor(r() * 3); for (let j = 0; j < m; j++) { const bi = Math.floor(r() * 512); g[bi >> 3] ^= 1 << (bi & 7); } G.push(g); }
+      const root = sha256(utf8("seed:" + s)); const mk = (gs: Uint8Array[]) => { const h: Uint8Array[] = []; let p = root; for (const g of gs) { const x = chain ? sha256(cat(p, g)) : sha256(g); h.push(x); p = x; } return h; }; const Hs = mk(G); const head = hex(Hs[63]);
+      let det = 0; for (let tr = 0; tr < 100; tr++) { const k = Math.floor(r() * 64), bi = Math.floor(r() * 512); const G2 = G.map((g) => g.slice()); G2[k][bi >> 3] ^= 1 << (bi & 7); const H2 = Hs.slice(); H2[k] = chain ? sha256(cat(k ? Hs[k - 1] : root, G2[k])) : sha256(G2[k]);
+        let bad = false; if (chain) { let p = root; for (let j = 0; j < 64; j++) { const x = sha256(cat(p, G2[j])); if (hex(x) !== hex(H2[j])) bad = true; p = x; } if (hex(p) !== head) bad = true; } else { for (let j = 0; j < 64; j++) if (hex(sha256(G2[j])) !== hex(H2[j])) bad = true; } if (bad) det++; } return det / 100; });
+    const F = run(true); const it = item("RM-47", P, "Cryptographic lineage provenance (roadmap 47)", "tamper detection rate", "SHA-256 hash chain from seed to head", [compare("unchained per-record hashes", F, run(false))]); if (F.some((v) => v !== 1)) it.pass = false; out.push(it); }
+  { const run = (sh: boolean) => SEEDS.map((s) => { const r = mulberry(s * 229 + 9); const t = firstOrder(r, 400); const c = sh ? shuffle(t.map((o) => o.conf), r) : t.map((o) => o.conf); return auroc(c, t.map((o) => o.ok)); });
+    const F = run(false); const it = item("RM-61", P, "Metacognitive confidence reporting (roadmap 61)", "confidence–accuracy AUROC", "second-order reliability monitor (HOT-2)", [compare("shuffled confidence", F, run(true))]); if (mean(F) < 0.7) it.pass = false; out.push(it); }
+  { const run = (mem: boolean, metric: "bias" | "mse") => SEEDS.map((s) => { const r = mulberry(s * 233 + 11); let sp = r() * 2 - 1, ep = 0; const xs: number[] = [], ys: number[] = []; let se = 0;
+      for (let t = 0; t < 300; t++) { const st = r() < 0.7 ? Math.max(-1, Math.min(1, sp + gauss(r) * 0.1)) : r() * 2 - 1; const o = st + gauss(r) * 0.5; const e = mem && t > 0 ? sdPrior(ep, o) : o; if (t > 0) { xs.push(sp - st); ys.push(e - st); } se += (e - st) ** 2; sp = st; ep = e; }
+      if (metric === "mse") return -se / 300; const mx = mean(xs), my = mean(ys); let a = 0, b = 0; for (let i = 0; i < xs.length; i++) { a += (xs[i] - mx) * (ys[i] - my); b += (xs[i] - mx) ** 2; } return a / b; });
+    out.push(item("RM-69", P, "Serial dependence in perception (roadmap 69)", "serial bias slope; −MSE", "Bayesian persistence prior (mixture: stay vs new stimulus)", [compare("memoryless perceiver (bias)", run(true, "bias"), run(false, "bias")), compare("memoryless perceiver (−MSE)", run(true, "mse"), run(false, "mse"))])); }
+  { const run = (scalar: boolean) => SEEDS.map((s) => { const r = mulberry(s * 239 + 13); const sdI = (I: number) => { const x = Array.from({ length: 40 }, () => scalar ? I * (1 + 0.15 * gauss(r)) : I + 2 * gauss(r)); return sd(x); }; const a = sdI(10); sdI(20); sdI(40); return sdI(80) / a; });
+    const F = run(true); const it = item("RM-79", P, "Temporal interval timing (roadmap 79)", "SD(80)/SD(10)", "pacemaker–accumulator with per-trial rate variability", [compare("additive-noise timer", F, run(false))]); if (mean(F) < 4 || mean(F) > 16) it.pass = false; out.push(it); }
+  { const run = (adapt: boolean, m: "dec" | "rec") => SEEDS.map((s) => { const r = mulberry(s * 241 + 17); let wA = 1; const R: number[] = []; for (let k = 0; k < 20; k++) { R.push(wA + gauss(r) * 0.05); if (adapt) wA *= 0.85; } const RB = 1 + gauss(r) * 0.05; return m === "dec" ? R[0] - R[19] : RB - R[19]; });
+    out.push(item("RM-80", P, "Habituation and dishabituation (roadmap 80)", "decrement; recovery to novel", "stimulus-specific synaptic depression", [compare("non-adaptive unit (decrement)", run(true, "dec"), run(false, "dec")), compare("non-adaptive unit (recovery)", run(true, "rec"), run(false, "rec"))])); }
+  { const run = (rw: boolean) => SEEDS.map((s) => { const r = mulberry(s * 251 + 19); const al = 0.1 + 0.2 * r(); const V: Record<string, number> = { A: 0, B: 0, C: 0, D: 0 }; const trial = (cs: string[]) => { const lam = r() < 0.9 ? 1 : 0; const tot = cs.reduce((a, c) => a + V[c], 0); for (const c of cs) V[c] += al * (lam - (rw ? tot : V[c])); };
+      for (let k = 0; k < 30; k++) trial(["A"]); for (let k = 0; k < 30; k++) trial(["A", "B"]); for (let k = 0; k < 30; k++) trial(["C", "D"]); return V.D - V.B; });
+    out.push(item("RM-81", P, "Classical conditioning with blocking (roadmap 81)", "blocking index V_D − V_B", "Rescorla–Wagner shared prediction error", [compare("associative-only learner", run(true), run(false))])); }
+  return out; }
+// === END PREREG v2.2 TESTS ===
+
+// ---- live organs (round 8): roadmap mechanisms wired into the rendered creature's loop (src/app.tsx) ----
+class Organs { th: number; tau: number; r: Rng; ab: Set<string>; hab = new Map<string, number>(); root: Uint8Array; genome: Uint8Array; G: Uint8Array[] = []; H: Uint8Array[] = []; arousal = 0.5;
+  constructor(seed: number, ablate: string[] = []) { this.r = mulberry(seed * 227 + 7); this.tau = 22 + 4 * this.r(); this.th = this.r() * 6.283185307; this.ab = new Set(ablate); this.root = sha256(utf8("seed:" + seed)); const g = mulberry(seed * 31 + 7); this.genome = Uint8Array.from({ length: 64 }, () => Math.floor(g() * 256)); }
+  /* circadian: one organ step per frame; light from the scene's day/night cycle; returns arousal in [0,1] */
+  circ(light: number): number { this.th += 6.283185307 / this.tau - (this.ab.has("circ") ? 0 : CIRK) * light * Math.sin(this.th) + gauss(this.r) * 0.02; this.arousal = 0.5 + 0.5 * Math.cos(this.th); return this.arousal; }
+  /* habituation: stimulus-specific synaptic depression; slow recovery each frame */
+  poke(stim: string): number { const w = this.hab.get(stim) ?? 1; if (!this.ab.has("hab")) this.hab.set(stim, w * 0.85); return w; }
+  recover(): void { this.hab.forEach((w, k) => this.hab.set(k, w + (1 - w) * 0.002)); }
+  /* lineage: the RV32I core's mutation word mutates the genome; every generation is appended to a SHA-256 chain */
+  mutate(word: number): void { const g = this.genome.slice(); const m = 1 + (word & 3) % 3; for (let j = 0; j < m; j++) { const bi = (word >>> (2 + 9 * j)) & 511; g[bi >> 3] ^= 1 << (bi & 7); } this.genome = g; const p = this.H.length ? this.H[this.H.length - 1] : this.root; this.G.push(g); this.H.push(this.ab.has("chain") ? sha256(g) : sha256(cat(p, g))); }
+  head(): string { return this.H.length ? hex(this.H[this.H.length - 1]) : hex(this.root); }
+  verify(G: Uint8Array[], H: Uint8Array[], head: string): boolean { if (this.ab.has("chain")) { for (let j = 0; j < G.length; j++) if (hex(sha256(G[j])) !== hex(H[j])) return false; return true; } let p = this.root; for (let j = 0; j < G.length; j++) { const x = sha256(cat(p, G[j])); if (hex(x) !== hex(H[j])) return false; p = x; } return hex(p) === head; }
+  /* tamper audit: flip one bit in a random generation; adversary recomputes that record's own hash field */
+  tamperAudit(n: number, r: Rng): number { if (this.G.length < 2) return 0; const head = this.head(); let det = 0; for (let tr = 0; tr < n; tr++) { const k = Math.floor(r() * this.G.length), bi = Math.floor(r() * 512); const G2 = this.G.map((g) => g.slice()); G2[k][bi >> 3] ^= 1 << (bi & 7); const H2 = this.H.slice();
+      H2[k] = this.ab.has("chain") ? sha256(G2[k]) : sha256(cat(k ? this.H[k - 1] : this.root, G2[k])); if (!this.verify(G2, H2, head)) det++; } return det / n; } }
 // ===================== Creature #1 v3: GPU brain, HDR raymarched body, evaluation panel =====================
 // --- entropy + Moonlab-style 2-qubit state vector with CHSH-gated randomness (TypeScript port, not Moonlab itself) ---
 function osU32(): number { const b = new Uint32Array(1); crypto.getRandomValues(b); return b[0]; }
@@ -719,7 +785,7 @@ function mkRT(gl: WebGL2RenderingContext, w: number, h: number): RT { const tex 
   for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, v);
   const fb = gl.createFramebuffer() as WebGLFramebuffer; gl.bindFramebuffer(gl.FRAMEBUFFER, fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0); return { fb, tex, w, h }; }
 
-type Hud = { loraSteps: number; loraLoss: number; backend: string; gpu: string; inferParams: number; rowsActive: number; learned: number; fps: number; passHz: number; bw: number; bh: number; scale: number; loss: number[]; energy: number; integrity: number; conf: number; ws: string; att: number; probs: number[]; S: number; regs: number[]; pc: number; steps: number; saved: string; mood: string };
+type Hud = { arousal?: number; light?: number; gens?: number; head?: string; loraSteps: number; loraLoss: number; backend: string; gpu: string; inferParams: number; rowsActive: number; learned: number; fps: number; passHz: number; bw: number; bh: number; scale: number; loss: number[]; energy: number; integrity: number; conf: number; ws: string; att: number; probs: number[]; S: number; regs: number[]; pc: number; steps: number; saved: string; mood: string };
 const MODS = ["gaze", "sound", "hunger", "novelty"];
 const MOODS = ["|00> drift", "|01> hunt", "|10> recoil", "|11> elsewhere"];
 const fmt = (n: number): string => n.toLocaleString("en-US");
@@ -727,7 +793,7 @@ const fmt = (n: number): string => n.toLocaleString("en-US");
 export default function Creature() {
   const theme = useGrokTheme();
   const cv = useRef<HTMLCanvasElement>(null);
-  const [started, setStarted] = useState(false); const [calm, setCalm] = useState(false); const [muted, setMuted] = useState(false);
+  const LTQ = new URLSearchParams(typeof location !== "undefined" ? location.search : ""); const LIVE = LTQ.get("livetest") === "1"; const [started, setStarted] = useState(LIVE); const [calm, setCalm] = useState(false); const [muted, setMuted] = useState(false);
   const [hud, setHud] = useState<Hud | null>(null); const [glErr, setGlErr] = useState("");
   const [evalItems, setEvalItems] = useState<Item[]>([]); const [evalRun, setEvalRun] = useState(""); const [showJson, setShowJson] = useState(false); const [jsonUrl, setJsonUrl] = useState("");
   const ctl = useRef({ calm: false, muted: false, power: [0, 0, 0, 0] as number[], sound: false, damage: 0 });
@@ -757,9 +823,10 @@ export default function Creature() {
     let energy = 0.8, integrity = 1, conf = 0.5, t = 0; const att = { ea: 0, ed: 0, P: 1 }; let wsIdx = 0; let curiosity = 0;
     const qs = new QSim(); let S = chsh(160); let collapsed = -1, collapseT = 0; let mood = 0;
     const rv = new RV(); rv.x[10] = osU32() | 1;
+    const ABL = (LTQ.get("ablate") || "").split(",").filter(Boolean); const organs = new Organs(Number(LTQ.get("seed")) || (osU32() % 100000), ABL); (window as any).__organs = organs; let frame = 0, startle = 0, arousal = 0.5, light = 0; const LR: { R: number; ar: number; th: number }[] = []; const FR = Number(LTQ.get("frames")) || 480;
     const m = { x: 0, y: 0, vx: 0, vy: 0, in: false, click: 0 };
     const onMove = (e: PointerEvent): void => { const r = canvas.getBoundingClientRect(); const nx = ((e.clientX - r.left) / r.width) * 2 - 1, ny = -(((e.clientY - r.top) / r.height) * 2 - 1); m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny; m.in = true; };
-    const onLeave = (): void => { m.in = false; }; const onDown = (): void => { m.click = 1; };
+    const onLeave = (): void => { m.in = false; }; const onDown = (): void => { m.click = 1; startle = Math.max(startle, organs.poke((m.x > 0 ? "R" : "L") + (m.y > 0 ? "U" : "D"))); /* habituation organ */ };
     canvas.addEventListener("pointermove", onMove); canvas.addEventListener("pointerleave", onLeave); canvas.addEventListener("pointerdown", onDown);
     let A: { ac: AudioContext; master: GainNode; shep: { o: OscillatorNode; g: GainNode }[]; bl: OscillatorNode; br: OscillatorNode; voice: OscillatorNode; f1: BiquadFilterNode; pan: PannerNode; an: AnalyserNode | null } | null = null;
     if (ctl.current.sound) { try { const ac = new AudioContext(); const master = ac.createGain(); master.gain.value = ctl.current.muted ? 0 : 0.12; const comp = ac.createDynamicsCompressor(); master.connect(comp); comp.connect(ac.destination);
@@ -783,6 +850,7 @@ export default function Creature() {
       const gx = m.in ? m.x : Math.sin(t * 0.21) * 0.6, gy = m.in ? m.y : Math.cos(t * 0.13) * 0.4;
       // RV32I core: 8 loop iterations per frame
       rv.mem.setInt32(256, Math.floor(1 + 600 * Math.hypot(m.vx, m.vy)), true); for (let i = 0; i < PROGRAM.length * 8; i++) rv.step(); const phase = rv.mem.getInt32(260, true) * 0.002, mut = rv.mem.getUint32(264, true);
+      frame++; light = (frame % 24) < 12 ? 1 : 0; arousal = organs.circ(light); organs.recover(); startle *= 0.8; if (frame % 30 === 0) organs.mutate(mut); /* live organs: circadian, habituation, lineage */
       // attention schema (Kalman model of where its own attention is; noisy observation = gaze)
       { const obs = gx + (((mut >>> 8) & 255) / 255 - 0.5) * 0.3; const Kg = att.P / (att.P + 0.3); att.ea += Kg * (obs - att.ea) + att.ed; att.ed = 0.95 * att.ed + 0.05 * Kg * (obs - att.ea); att.P = (1 - Kg) * att.P + 0.02; }
       // workspace: 4 modules compete by salience, winner broadcast
@@ -821,11 +889,15 @@ export default function Creature() {
       { const am = probs.indexOf(Math.max(...probs)); mood = collapsed >= 0 ? collapsed : probs[am] > probs[mood] + 0.08 ? am : mood; }
       if (Math.floor(now / 30000) !== Math.floor((now - dt * 1000) / 30000)) S = chsh(160);
       // limbs: damped Hamiltonian chains, symplectic Euler, driven by network outputs and the broadcast module
-      for (let l = 0; l < 8; l++) { const L = limbs[l]; const reach = (0.5 + 0.25 * out[l % NOUT] + 0.15 * Math.sin(t * 1.3 + l + phase)) * (0.4 + 0.6 * integrity) * (C.power[0] > 0 ? 1.4 : 1);
+      for (let l = 0; l < 8; l++) { const L = limbs[l]; const reach = (0.5 + 0.25 * out[l % NOUT] + 0.15 * Math.sin(t * 1.3 + l + phase)) * (0.4 + 0.6 * integrity) * (C.power[0] > 0 ? 1.4 : 1) * (ABL.includes("circbody") ? 1 : 0.7 + 0.6 * arousal) * (1 + 1.2 * startle);
         for (let s = 0; s < 6; s++) { const u = (s + 1) / 6; const sw = Math.sin(t * 1.7 + l * 0.8 + u * 3) * 0.3 * u + (wsIdx === 0 ? 0.3 * u : 0) * Math.sign(gx - Math.cos(L.a));
           const tx = Math.cos(L.a + sw) * (0.35 + u * reach) + gx * u * u * (mood === 1 ? 0.5 : 0.2), ty = -0.25 + Math.sin(t + l + u * 2) * 0.15 * u + gy * u * u * 0.3 - (C.power[2] > 0 ? 0.3 * u : 0), tz = Math.sin(L.a + sw) * (0.35 + u * reach);
           limbNodeStep(L.x, L.p, s * 3, [tx, ty, tz], dt, energy, ck); /* shared with V2.1-25 scale test */ }
         lpArr.set([0, 0, 0], (l * 6) * 3); for (let s = 0; s < 5; s++) lpArr.set([L.x[s * 3], L.x[s * 3 + 1], L.x[s * 3 + 2]], (l * 6 + s + 1) * 3); }
+      if (LIVE) LR.push({ R: limbs.reduce((a, L) => a + Math.hypot(L.x[15], L.x[17]), 0) / 8, ar: arousal, th: organs.th });
+      if (LIVE) { const poke = (fx: number, fy: number): void => { const r = canvas.getBoundingClientRect(); const o = { clientX: r.left + fx * r.width, clientY: r.top + fy * r.height }; canvas.dispatchEvent(new PointerEvent("pointermove", o)); canvas.dispatchEvent(new PointerEvent("pointerdown", o)); };
+        if (frame >= 40 && frame <= 116 && (frame - 40) % 4 === 0) poke(0.75, 0.25); if (frame === 124) poke(0.25, 0.75);
+        if (frame === FR) { const ta = organs.tamperAudit(100, mulberry((Number(LTQ.get("seed")) || 0) * 53 + 1)); const el = document.createElement("pre"); el.id = "livetest"; el.textContent = JSON.stringify({ R: LR.map((x) => +x.R.toFixed(5)), ar: LR.map((x) => +x.ar.toFixed(4)), th: LR.map((x) => +x.th.toFixed(4)), tamper: ta, gens: organs.G.length, head: organs.head() }); document.body.appendChild(el); } }
       for (let k = 0; k < 4; k++) C.power[k] = Math.max(0, C.power[k] - dt);
       if (A) { const ac = A.ac; const sp = (t * 0.03 * (C.power[1] > 0 ? -3 : 1) + out[7] * 0.2) % 1; const ph = sp < 0 ? sp + 1 : sp;
         A.shep.forEach((s, k) => { const f = 30 * Math.pow(2, k + ph); const lg = Math.log2(f / 300); s.o.frequency.setTargetAtTime(f, ac.currentTime, 0.05); s.g.gain.setTargetAtTime(Math.exp(-lg * lg / 2.5) * 0.05 * (0.4 + energy), ac.currentTime, 0.1); });
@@ -849,7 +921,7 @@ export default function Creature() {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, bw, bh); gl.useProgram(cp); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, rts[0].tex); gl.uniform1i(U(cp, "S"), 0); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, rts[1].tex); gl.uniform1i(U(cp, "B"), 1);
       gl.uniform1f(U(cp, "ca"), C.calm ? 0.002 : 0.006 + 0.02 * curiosity + (C.power[3] > 0 ? 0.012 : 0)); gl.uniform1f(U(cp, "bloom"), C.calm ? 0.5 : 1.1 + 0.6 * Math.max(0, out[3])); gl.uniform1f(U(cp, "expo"), 1.1 + 0.3 * energy); gl.drawArrays(gl.TRIANGLES, 0, 6);
       if (now - lastHud > 250) { lastHud = now; const h: Hud = { backend: engine ? engine.kind : "starting…", gpu: engine ? engine.info : "", inferParams: (NL - 1) * rows * NN + NN * NN, rowsActive: rows, learned: NN * NOUT + NOUT + lora.count(), loraSteps, loraLoss, fps, passHz, bw, bh, scale, loss: lossH.slice(), energy, integrity, conf,
-        ws: MODS[wsIdx], att: att.ea, probs, S, regs: Array.from(rv.x.slice(0, 16)), pc: rv.pc, steps: rv.steps, saved, mood: collapsed >= 0 ? "collapsed → " + MOODS[collapsed] : "superposed, leaning " + MOODS[mood] }; hudRef.current = h; setHud(h); } };
+        arousal, light, gens: organs.G.length, head: organs.head(), ws: MODS[wsIdx], att: att.ea, probs, S, regs: Array.from(rv.x.slice(0, 16)), pc: rv.pc, steps: rv.steps, saved, mood: collapsed >= 0 ? "collapsed → " + MOODS[collapsed] : "superposed, leaning " + MOODS[mood] }; hudRef.current = h; setHud(h); } };
     const onKey = (e: globalThis.KeyboardEvent): void => { const k = "1234".indexOf(e.key); if (k >= 0) ctl.current.power[k] = 3; };
     window.addEventListener("keydown", onKey); raf = requestAnimationFrame(loop);
     return () => { alive = false; cancelAnimationFrame(raf); ro.disconnect(); save(); window.removeEventListener("keydown", onKey); canvas.removeEventListener("pointermove", onMove); canvas.removeEventListener("pointerleave", onLeave); canvas.removeEventListener("pointerdown", onDown); if (A) void A.ac.close(); audio.current = null; };
@@ -903,7 +975,7 @@ export default function Creature() {
           {glErr ? <div style={{ ...panel, color: theme.text.secondary }}>{glErr}</div> : <canvas ref={cv} style={{ width: "100%", height: 600, borderRadius: 12, background: "#020104", cursor: "crosshair", touchAction: "none" }} />}
           {hud && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
             <div style={panel}>{h("Parameter engine (measured)")}<div style={mono}>backend: {hud.backend} {hud.gpu}<br />inference weights used per pass: {fmt(hud.inferParams)}{hud.rowsActive < NN ? ` (adaptive: ${fmt(hud.rowsActive)}/${fmt(NN)} rows in layers 1–3)` : " (all 4×5000×5000)"}<br />weights: procedural hash(seed, layer, row, col), not stored, fp32 math<br />updated by learning: {fmt(hud.learned)} = 40,008 readout + {fmt(hud.learned - 40008)} LoRA (rank 16 into all 4 layers)<br />LoRA steps {fmt(hud.loraSteps)} · loss {hud.loraLoss.toFixed(3)} · effective weights W+AB per pass also add {fmt(NL * 2 * NN * RK)} adapter MACs<br />brain passes/s: {hud.passHz.toFixed(1)} · render {hud.fps.toFixed(0)} fps<br />backbuffer {hud.bw}×{hud.bh} RGBA16F (scale {hud.scale.toFixed(2)})</div></div>
-            <div style={panel}>{h("Life signs")}<div style={mono}>energy {(hud.energy * 100).toFixed(0)}% · integrity {(hud.integrity * 100).toFixed(0)}%<br />confidence (metacognitive) {hud.conf.toFixed(2)}<br />workspace broadcast: {hud.ws} · attention schema x̂ {hud.att.toFixed(2)}<br />mood {hud.mood}<br />{hud.saved}</div>{h("Surprise loss (online autodiff)")}{spark(hud.loss)}</div>
+            <div style={panel}>{h("Life signs")}<div style={mono}>energy {(hud.energy * 100).toFixed(0)}% · integrity {(hud.integrity * 100).toFixed(0)}%<br />confidence (metacognitive) {hud.conf.toFixed(2)}<br />organs: arousal {(hud.arousal ?? 0).toFixed(2)} ({hud.light ? "day" : "night"}) · lineage {hud.gens ?? 0} gens, head {String(hud.head ?? "").slice(0, 10)}<br />workspace broadcast: {hud.ws} · attention schema x̂ {hud.att.toFixed(2)}<br />mood {hud.mood}<br />{hud.saved}</div>{h("Surprise loss (online autodiff)")}{spark(hud.loss)}</div>
             <div style={panel}>{h("Quantum mood (2-qubit state vector, port)")}<div style={mono}>{hud.probs.map((p, i) => <div key={i}>{MOODS[i].padEnd(14, " ")} {"█".repeat(Math.round(p * 20))} {p.toFixed(3)}</div>)}CHSH S = {hud.S.toFixed(3)} (classical ≤ 2)</div></div>
             <div style={panel}>{h(`RV32I · pc=0x${hud.pc.toString(16)} · ${fmt(hud.steps)} instr`)}<div style={{ ...mono, display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>{hud.regs.map((r, i) => <div key={i}>x{i} {RN[i].padEnd(4, " ")} {(r >>> 0).toString(16).padStart(8, "0")}</div>)}</div></div>
           </div>}

@@ -616,3 +616,19 @@ export function v22Tests(): Item[] { const P = "Prereg v2.2"; const out: Item[] 
     out.push(item("RM-81", P, "Classical conditioning with blocking (roadmap 81)", "blocking index V_D − V_B", "Rescorla–Wagner shared prediction error", [compare("associative-only learner", run(true), run(false))])); }
   return out; }
 // === END PREREG v2.2 TESTS ===
+
+// ---- live organs (round 8): roadmap mechanisms wired into the rendered creature's loop (src/app.tsx) ----
+export class Organs { th: number; tau: number; r: Rng; ab: Set<string>; hab = new Map<string, number>(); root: Uint8Array; genome: Uint8Array; G: Uint8Array[] = []; H: Uint8Array[] = []; arousal = 0.5;
+  constructor(seed: number, ablate: string[] = []) { this.r = mulberry(seed * 227 + 7); this.tau = 22 + 4 * this.r(); this.th = this.r() * 6.283185307; this.ab = new Set(ablate); this.root = sha256(utf8("seed:" + seed)); const g = mulberry(seed * 31 + 7); this.genome = Uint8Array.from({ length: 64 }, () => Math.floor(g() * 256)); }
+  /* circadian: one organ step per frame; light from the scene's day/night cycle; returns arousal in [0,1] */
+  circ(light: number): number { this.th += 6.283185307 / this.tau - (this.ab.has("circ") ? 0 : CIRK) * light * Math.sin(this.th) + gauss(this.r) * 0.02; this.arousal = 0.5 + 0.5 * Math.cos(this.th); return this.arousal; }
+  /* habituation: stimulus-specific synaptic depression; slow recovery each frame */
+  poke(stim: string): number { const w = this.hab.get(stim) ?? 1; if (!this.ab.has("hab")) this.hab.set(stim, w * 0.85); return w; }
+  recover(): void { this.hab.forEach((w, k) => this.hab.set(k, w + (1 - w) * 0.002)); }
+  /* lineage: the RV32I core's mutation word mutates the genome; every generation is appended to a SHA-256 chain */
+  mutate(word: number): void { const g = this.genome.slice(); const m = 1 + (word & 3) % 3; for (let j = 0; j < m; j++) { const bi = (word >>> (2 + 9 * j)) & 511; g[bi >> 3] ^= 1 << (bi & 7); } this.genome = g; const p = this.H.length ? this.H[this.H.length - 1] : this.root; this.G.push(g); this.H.push(this.ab.has("chain") ? sha256(g) : sha256(cat(p, g))); }
+  head(): string { return this.H.length ? hex(this.H[this.H.length - 1]) : hex(this.root); }
+  verify(G: Uint8Array[], H: Uint8Array[], head: string): boolean { if (this.ab.has("chain")) { for (let j = 0; j < G.length; j++) if (hex(sha256(G[j])) !== hex(H[j])) return false; return true; } let p = this.root; for (let j = 0; j < G.length; j++) { const x = sha256(cat(p, G[j])); if (hex(x) !== hex(H[j])) return false; p = x; } return hex(p) === head; }
+  /* tamper audit: flip one bit in a random generation; adversary recomputes that record's own hash field */
+  tamperAudit(n: number, r: Rng): number { if (this.G.length < 2) return 0; const head = this.head(); let det = 0; for (let tr = 0; tr < n; tr++) { const k = Math.floor(r() * this.G.length), bi = Math.floor(r() * 512); const G2 = this.G.map((g) => g.slice()); G2[k][bi >> 3] ^= 1 << (bi & 7); const H2 = this.H.slice();
+      H2[k] = this.ab.has("chain") ? sha256(G2[k]) : sha256(cat(k ? this.H[k - 1] : this.root, G2[k])); if (!this.verify(G2, H2, head)) det++; } return det / n; } }

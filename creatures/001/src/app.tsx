@@ -150,7 +150,7 @@ function mkRT(gl: WebGL2RenderingContext, w: number, h: number): RT { const tex 
   for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, k, v);
   const fb = gl.createFramebuffer() as WebGLFramebuffer; gl.bindFramebuffer(gl.FRAMEBUFFER, fb); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0); return { fb, tex, w, h }; }
 
-type Hud = { loraSteps: number; loraLoss: number; backend: string; gpu: string; inferParams: number; rowsActive: number; learned: number; fps: number; passHz: number; bw: number; bh: number; scale: number; loss: number[]; energy: number; integrity: number; conf: number; ws: string; att: number; probs: number[]; S: number; regs: number[]; pc: number; steps: number; saved: string; mood: string };
+type Hud = { arousal?: number; light?: number; gens?: number; head?: string; loraSteps: number; loraLoss: number; backend: string; gpu: string; inferParams: number; rowsActive: number; learned: number; fps: number; passHz: number; bw: number; bh: number; scale: number; loss: number[]; energy: number; integrity: number; conf: number; ws: string; att: number; probs: number[]; S: number; regs: number[]; pc: number; steps: number; saved: string; mood: string };
 const MODS = ["gaze", "sound", "hunger", "novelty"];
 const MOODS = ["|00> drift", "|01> hunt", "|10> recoil", "|11> elsewhere"];
 const fmt = (n: number): string => n.toLocaleString("en-US");
@@ -158,7 +158,7 @@ const fmt = (n: number): string => n.toLocaleString("en-US");
 export default function Creature() {
   const theme = useGrokTheme();
   const cv = useRef<HTMLCanvasElement>(null);
-  const [started, setStarted] = useState(false); const [calm, setCalm] = useState(false); const [muted, setMuted] = useState(false);
+  const LTQ = new URLSearchParams(typeof location !== "undefined" ? location.search : ""); const LIVE = LTQ.get("livetest") === "1"; const [started, setStarted] = useState(LIVE); const [calm, setCalm] = useState(false); const [muted, setMuted] = useState(false);
   const [hud, setHud] = useState<Hud | null>(null); const [glErr, setGlErr] = useState("");
   const [evalItems, setEvalItems] = useState<Item[]>([]); const [evalRun, setEvalRun] = useState(""); const [showJson, setShowJson] = useState(false); const [jsonUrl, setJsonUrl] = useState("");
   const ctl = useRef({ calm: false, muted: false, power: [0, 0, 0, 0] as number[], sound: false, damage: 0 });
@@ -188,9 +188,10 @@ export default function Creature() {
     let energy = 0.8, integrity = 1, conf = 0.5, t = 0; const att = { ea: 0, ed: 0, P: 1 }; let wsIdx = 0; let curiosity = 0;
     const qs = new QSim(); let S = chsh(160); let collapsed = -1, collapseT = 0; let mood = 0;
     const rv = new RV(); rv.x[10] = osU32() | 1;
+    const ABL = (LTQ.get("ablate") || "").split(",").filter(Boolean); const organs = new Organs(Number(LTQ.get("seed")) || (osU32() % 100000), ABL); (window as any).__organs = organs; let frame = 0, startle = 0, arousal = 0.5, light = 0; const LR: { R: number; ar: number; th: number }[] = []; const FR = Number(LTQ.get("frames")) || 480;
     const m = { x: 0, y: 0, vx: 0, vy: 0, in: false, click: 0 };
     const onMove = (e: PointerEvent): void => { const r = canvas.getBoundingClientRect(); const nx = ((e.clientX - r.left) / r.width) * 2 - 1, ny = -(((e.clientY - r.top) / r.height) * 2 - 1); m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny; m.in = true; };
-    const onLeave = (): void => { m.in = false; }; const onDown = (): void => { m.click = 1; };
+    const onLeave = (): void => { m.in = false; }; const onDown = (): void => { m.click = 1; startle = Math.max(startle, organs.poke((m.x > 0 ? "R" : "L") + (m.y > 0 ? "U" : "D"))); /* habituation organ */ };
     canvas.addEventListener("pointermove", onMove); canvas.addEventListener("pointerleave", onLeave); canvas.addEventListener("pointerdown", onDown);
     let A: { ac: AudioContext; master: GainNode; shep: { o: OscillatorNode; g: GainNode }[]; bl: OscillatorNode; br: OscillatorNode; voice: OscillatorNode; f1: BiquadFilterNode; pan: PannerNode; an: AnalyserNode | null } | null = null;
     if (ctl.current.sound) { try { const ac = new AudioContext(); const master = ac.createGain(); master.gain.value = ctl.current.muted ? 0 : 0.12; const comp = ac.createDynamicsCompressor(); master.connect(comp); comp.connect(ac.destination);
@@ -214,6 +215,7 @@ export default function Creature() {
       const gx = m.in ? m.x : Math.sin(t * 0.21) * 0.6, gy = m.in ? m.y : Math.cos(t * 0.13) * 0.4;
       // RV32I core: 8 loop iterations per frame
       rv.mem.setInt32(256, Math.floor(1 + 600 * Math.hypot(m.vx, m.vy)), true); for (let i = 0; i < PROGRAM.length * 8; i++) rv.step(); const phase = rv.mem.getInt32(260, true) * 0.002, mut = rv.mem.getUint32(264, true);
+      frame++; light = (frame % 24) < 12 ? 1 : 0; arousal = organs.circ(light); organs.recover(); startle *= 0.8; if (frame % 30 === 0) organs.mutate(mut); /* live organs: circadian, habituation, lineage */
       // attention schema (Kalman model of where its own attention is; noisy observation = gaze)
       { const obs = gx + (((mut >>> 8) & 255) / 255 - 0.5) * 0.3; const Kg = att.P / (att.P + 0.3); att.ea += Kg * (obs - att.ea) + att.ed; att.ed = 0.95 * att.ed + 0.05 * Kg * (obs - att.ea); att.P = (1 - Kg) * att.P + 0.02; }
       // workspace: 4 modules compete by salience, winner broadcast
@@ -252,11 +254,15 @@ export default function Creature() {
       { const am = probs.indexOf(Math.max(...probs)); mood = collapsed >= 0 ? collapsed : probs[am] > probs[mood] + 0.08 ? am : mood; }
       if (Math.floor(now / 30000) !== Math.floor((now - dt * 1000) / 30000)) S = chsh(160);
       // limbs: damped Hamiltonian chains, symplectic Euler, driven by network outputs and the broadcast module
-      for (let l = 0; l < 8; l++) { const L = limbs[l]; const reach = (0.5 + 0.25 * out[l % NOUT] + 0.15 * Math.sin(t * 1.3 + l + phase)) * (0.4 + 0.6 * integrity) * (C.power[0] > 0 ? 1.4 : 1);
+      for (let l = 0; l < 8; l++) { const L = limbs[l]; const reach = (0.5 + 0.25 * out[l % NOUT] + 0.15 * Math.sin(t * 1.3 + l + phase)) * (0.4 + 0.6 * integrity) * (C.power[0] > 0 ? 1.4 : 1) * (ABL.includes("circbody") ? 1 : 0.7 + 0.6 * arousal) * (1 + 1.2 * startle);
         for (let s = 0; s < 6; s++) { const u = (s + 1) / 6; const sw = Math.sin(t * 1.7 + l * 0.8 + u * 3) * 0.3 * u + (wsIdx === 0 ? 0.3 * u : 0) * Math.sign(gx - Math.cos(L.a));
           const tx = Math.cos(L.a + sw) * (0.35 + u * reach) + gx * u * u * (mood === 1 ? 0.5 : 0.2), ty = -0.25 + Math.sin(t + l + u * 2) * 0.15 * u + gy * u * u * 0.3 - (C.power[2] > 0 ? 0.3 * u : 0), tz = Math.sin(L.a + sw) * (0.35 + u * reach);
           limbNodeStep(L.x, L.p, s * 3, [tx, ty, tz], dt, energy, ck); /* shared with V2.1-25 scale test */ }
         lpArr.set([0, 0, 0], (l * 6) * 3); for (let s = 0; s < 5; s++) lpArr.set([L.x[s * 3], L.x[s * 3 + 1], L.x[s * 3 + 2]], (l * 6 + s + 1) * 3); }
+      if (LIVE) LR.push({ R: limbs.reduce((a, L) => a + Math.hypot(L.x[15], L.x[17]), 0) / 8, ar: arousal, th: organs.th });
+      if (LIVE) { const poke = (fx: number, fy: number): void => { const r = canvas.getBoundingClientRect(); const o = { clientX: r.left + fx * r.width, clientY: r.top + fy * r.height }; canvas.dispatchEvent(new PointerEvent("pointermove", o)); canvas.dispatchEvent(new PointerEvent("pointerdown", o)); };
+        if (frame >= 40 && frame <= 116 && (frame - 40) % 4 === 0) poke(0.75, 0.25); if (frame === 124) poke(0.25, 0.75);
+        if (frame === FR) { const ta = organs.tamperAudit(100, mulberry((Number(LTQ.get("seed")) || 0) * 53 + 1)); const el = document.createElement("pre"); el.id = "livetest"; el.textContent = JSON.stringify({ R: LR.map((x) => +x.R.toFixed(5)), ar: LR.map((x) => +x.ar.toFixed(4)), th: LR.map((x) => +x.th.toFixed(4)), tamper: ta, gens: organs.G.length, head: organs.head() }); document.body.appendChild(el); } }
       for (let k = 0; k < 4; k++) C.power[k] = Math.max(0, C.power[k] - dt);
       if (A) { const ac = A.ac; const sp = (t * 0.03 * (C.power[1] > 0 ? -3 : 1) + out[7] * 0.2) % 1; const ph = sp < 0 ? sp + 1 : sp;
         A.shep.forEach((s, k) => { const f = 30 * Math.pow(2, k + ph); const lg = Math.log2(f / 300); s.o.frequency.setTargetAtTime(f, ac.currentTime, 0.05); s.g.gain.setTargetAtTime(Math.exp(-lg * lg / 2.5) * 0.05 * (0.4 + energy), ac.currentTime, 0.1); });
@@ -280,7 +286,7 @@ export default function Creature() {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, bw, bh); gl.useProgram(cp); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, rts[0].tex); gl.uniform1i(U(cp, "S"), 0); gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, rts[1].tex); gl.uniform1i(U(cp, "B"), 1);
       gl.uniform1f(U(cp, "ca"), C.calm ? 0.002 : 0.006 + 0.02 * curiosity + (C.power[3] > 0 ? 0.012 : 0)); gl.uniform1f(U(cp, "bloom"), C.calm ? 0.5 : 1.1 + 0.6 * Math.max(0, out[3])); gl.uniform1f(U(cp, "expo"), 1.1 + 0.3 * energy); gl.drawArrays(gl.TRIANGLES, 0, 6);
       if (now - lastHud > 250) { lastHud = now; const h: Hud = { backend: engine ? engine.kind : "starting…", gpu: engine ? engine.info : "", inferParams: (NL - 1) * rows * NN + NN * NN, rowsActive: rows, learned: NN * NOUT + NOUT + lora.count(), loraSteps, loraLoss, fps, passHz, bw, bh, scale, loss: lossH.slice(), energy, integrity, conf,
-        ws: MODS[wsIdx], att: att.ea, probs, S, regs: Array.from(rv.x.slice(0, 16)), pc: rv.pc, steps: rv.steps, saved, mood: collapsed >= 0 ? "collapsed → " + MOODS[collapsed] : "superposed, leaning " + MOODS[mood] }; hudRef.current = h; setHud(h); } };
+        arousal, light, gens: organs.G.length, head: organs.head(), ws: MODS[wsIdx], att: att.ea, probs, S, regs: Array.from(rv.x.slice(0, 16)), pc: rv.pc, steps: rv.steps, saved, mood: collapsed >= 0 ? "collapsed → " + MOODS[collapsed] : "superposed, leaning " + MOODS[mood] }; hudRef.current = h; setHud(h); } };
     const onKey = (e: globalThis.KeyboardEvent): void => { const k = "1234".indexOf(e.key); if (k >= 0) ctl.current.power[k] = 3; };
     window.addEventListener("keydown", onKey); raf = requestAnimationFrame(loop);
     return () => { alive = false; cancelAnimationFrame(raf); ro.disconnect(); save(); window.removeEventListener("keydown", onKey); canvas.removeEventListener("pointermove", onMove); canvas.removeEventListener("pointerleave", onLeave); canvas.removeEventListener("pointerdown", onDown); if (A) void A.ac.close(); audio.current = null; };
@@ -334,7 +340,7 @@ export default function Creature() {
           {glErr ? <div style={{ ...panel, color: theme.text.secondary }}>{glErr}</div> : <canvas ref={cv} style={{ width: "100%", height: 600, borderRadius: 12, background: "#020104", cursor: "crosshair", touchAction: "none" }} />}
           {hud && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
             <div style={panel}>{h("Parameter engine (measured)")}<div style={mono}>backend: {hud.backend} {hud.gpu}<br />inference weights used per pass: {fmt(hud.inferParams)}{hud.rowsActive < NN ? ` (adaptive: ${fmt(hud.rowsActive)}/${fmt(NN)} rows in layers 1–3)` : " (all 4×5000×5000)"}<br />weights: procedural hash(seed, layer, row, col), not stored, fp32 math<br />updated by learning: {fmt(hud.learned)} = 40,008 readout + {fmt(hud.learned - 40008)} LoRA (rank 16 into all 4 layers)<br />LoRA steps {fmt(hud.loraSteps)} · loss {hud.loraLoss.toFixed(3)} · effective weights W+AB per pass also add {fmt(NL * 2 * NN * RK)} adapter MACs<br />brain passes/s: {hud.passHz.toFixed(1)} · render {hud.fps.toFixed(0)} fps<br />backbuffer {hud.bw}×{hud.bh} RGBA16F (scale {hud.scale.toFixed(2)})</div></div>
-            <div style={panel}>{h("Life signs")}<div style={mono}>energy {(hud.energy * 100).toFixed(0)}% · integrity {(hud.integrity * 100).toFixed(0)}%<br />confidence (metacognitive) {hud.conf.toFixed(2)}<br />workspace broadcast: {hud.ws} · attention schema x̂ {hud.att.toFixed(2)}<br />mood {hud.mood}<br />{hud.saved}</div>{h("Surprise loss (online autodiff)")}{spark(hud.loss)}</div>
+            <div style={panel}>{h("Life signs")}<div style={mono}>energy {(hud.energy * 100).toFixed(0)}% · integrity {(hud.integrity * 100).toFixed(0)}%<br />confidence (metacognitive) {hud.conf.toFixed(2)}<br />organs: arousal {(hud.arousal ?? 0).toFixed(2)} ({hud.light ? "day" : "night"}) · lineage {hud.gens ?? 0} gens, head {String(hud.head ?? "").slice(0, 10)}<br />workspace broadcast: {hud.ws} · attention schema x̂ {hud.att.toFixed(2)}<br />mood {hud.mood}<br />{hud.saved}</div>{h("Surprise loss (online autodiff)")}{spark(hud.loss)}</div>
             <div style={panel}>{h("Quantum mood (2-qubit state vector, port)")}<div style={mono}>{hud.probs.map((p, i) => <div key={i}>{MOODS[i].padEnd(14, " ")} {"█".repeat(Math.round(p * 20))} {p.toFixed(3)}</div>)}CHSH S = {hud.S.toFixed(3)} (classical ≤ 2)</div></div>
             <div style={panel}>{h(`RV32I · pc=0x${hud.pc.toString(16)} · ${fmt(hud.steps)} instr`)}<div style={{ ...mono, display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>{hud.regs.map((r, i) => <div key={i}>x{i} {RN[i].padEnd(4, " ")} {(r >>> 0).toString(16).padStart(8, "0")}</div>)}</div></div>
           </div>}
