@@ -71,3 +71,12 @@ v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1
 - Erratum (reported, not edited into the prereg): V2.1-24 says 32 AST checkpoints every 10 steps, but the task is 300 steps long.
   So the implementation takes 30 AST checkpoints (62 total instead of 64). AI checkpoints stop if the agent dies; the agreement fraction is taken over the longer of the two traces.
 - GPU substrate disclosed: headless Chrome, ANGLE / SwiftShader (Vulkan 1.3, Subzero), a software GPU and not hardware.
+
+## Round 7 (2026-10-28)
+### (1) CQM-21 differentiation — mechanism change only
+- The v1 test, metric and uncoupled control are unchanged. The control path is the original code, now isolated as `diffCtrl()` (it still runs with W = 0).
+- The full condition now uses the creature mechanism `creatureCPGEntropy`. It is a 6-unit stochastic sigmoid network (same gain-2 sigmoid, same 0.3 noise) with an itinerant Gray-code central pattern generator. A global-parity drive flips exactly one unit per tick, so the network walks a heteroclinic ring through all 64 metastable states.
+- Result (run7): differentiation full 6.000 vs control 5.985 bits, d 8.19, t 23.17. Integration is unchanged at d 1.63. CQM-21 now PASSES under v1.
+- Honest caveat: both conditions have the same true entropy ceiling of 6 bits. The margin comes from the itinerant network covering states *more evenly than chance* (its plug-in count variance is lower than multinomial sampling), not from higher true entropy. Read this pass as "full, even repertoire coverage through structured itinerancy", not as "more entropy than random". A non-ceiling differentiation test (v2-21, C_N + I(S;X)) already exists and passes.
+- v1 is now 44/49 by item (activeInference and CQM-10 still fail at ceiling). v2 3/3 and v2.1 3/3 are unchanged.
+- The run needs results/gpu_record.json copied into harness/ (run.ts reads it from cwd). Without it the v2.1 GPU comparisons show FAIL.
