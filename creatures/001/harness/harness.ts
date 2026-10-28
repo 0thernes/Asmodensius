@@ -14,7 +14,7 @@ export function compare(name: string, full: number[], ctrl: number[], higherBett
 export const SEEDS = Array.from({ length: 16 }, (_, k) => 1000 + k);
 const runSeeds = (f: (r: Rng, seed: number) => number, salt: number): number[] => SEEDS.map((s) => f(mulberry(s * 7919 + salt), s));
 export type Item = { id: string; group: string; name: string; metric: string; mechanism: string; cmps: Cmp[]; pass: boolean; category?: string; note?: string };
-function item(id: string, group: string, name: string, metric: string, mechanism: string, cmps: Cmp[], note?: string): Item {
+export function item(id: string, group: string, name: string, metric: string, mechanism: string, cmps: Cmp[], note?: string): Item {
   const pass = cmps.length > 0 && cmps.every((c) => c.pass); const any = cmps.some((c) => c.pass);
   const category = cmps.length === 0 ? "Implementation identified" : pass ? "Bounded test evidence" : any ? "Mixed or restricted" : "Not established";
   return { id, group, name, metric, mechanism, cmps, pass, category, note };
