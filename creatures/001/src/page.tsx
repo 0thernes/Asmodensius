@@ -333,6 +333,16 @@ function ecoSim(r: Rng, opts: { mut: number; heredity: boolean; coupling: boolea
     fitT.push(mean(pop.map((a) => a.g[0]))); resT.push(mean(res)); popT.push(pop.length); }
   return { pairs, fitT, resT, popT, genos: genos.size, pop }; }
 function corr(a: number[], b: number[]): number { const ma = mean(a), mb = mean(b); let s = 0, x = 0, y = 0; for (let i = 0; i < a.length; i++) { s += (a[i] - ma) * (b[i] - mb); x += (a[i] - ma) ** 2; y += (b[i] - mb) ** 2; } return x && y ? s / Math.sqrt(x * y) : 0; }
+/* CQM-21 differentiation mechanism (creature side, round 7): a 6-unit itinerant central pattern generator.
+   Each unit is a stochastic sigmoid unit (same noise 0.3, same gain 2 as the original network). Unit i receives a
+   global-parity drive from all other units, so exactly one unit is driven to flip per tick and the network walks a
+   reflected Gray-code ring through all 64 metastable states (heteroclinic itinerancy). Integration: no unit's next
+   state is determined by any proper subset of the others (parity is irreducible). */
+function creatureCPGEntropy(r: Rng, T = 3000, n = 6, gain = 6): number { let st = new Array(n).fill(0); const seen = new Map<number, number>();
+  for (let t = 0; t < T; t++) { const par = st.reduce((a, b) => a ^ b, 0); let lo = 0; while (lo < n && !st[lo]) lo++; const flip = par === 0 ? 0 : Math.min(lo + 1, n - 1);
+    st = st.map((v, i) => { const want = i === flip ? 1 - v : v; const h = gain * (want * 2 - 1) + gauss(r) * 0.3; return r() < 1 / (1 + Math.exp(-2 * h)) ? 1 : 0; });
+    const c = st.reduce((a, b, i) => a | (b << i), 0); seen.set(c, (seen.get(c) || 0) + 1); }
+  let H = 0; seen.forEach((c) => { const p = c / T; H -= p * Math.log2(p); }); return H; }
 function cqm(): Item[] { const out: Item[] = []; const C = (id: string, name: string, metric: string, mech: string, cmps: Cmp[], note?: string) => out.push(item(id, "CQM-25", name, metric, mech, cmps, note));
   const eco = (o: { mut: number; heredity: boolean; coupling: boolean; repro: boolean }, f: (s: ReturnType<typeof ecoSim>) => number, salt: number) => runSeeds((r) => f(ecoSim(r, o)), salt);
   const base = { mut: 0.05, heredity: true, coupling: true, repro: true };
@@ -398,7 +408,8 @@ function cqm(): Item[] { const out: Item[] = []; const C = (id: string, name: st
   C("19", "Recurrent processing", "delayed recall (shared with RPT-1)", "recurrent reservoir", rpt1().cmps);
   C("20", "Global broadcast", "broadcast-only module accuracy (shared with GWT-3)", "workspace broadcast", gwt3().cmps);
   const iitAll = SEEDS.map(phiProxy); const iitR = iitAll.map((x) => ({ phi: x.pf })), iitC = iitAll.map((x) => ({ phi: x.pc }));
-  const diff = (cut: boolean) => SEEDS.map((s) => { const r = mulberry(s * 13 + 5); const n = 6; const W = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 0 : (cut ? 0 : (r() < 0.6 ? gauss(r) * 1.5 : 0))))); let st = new Array(n).fill(0); const seen = new Map<number, number>();
+  const diff = (cut: boolean) => cut ? diffCtrl() : SEEDS.map((s) => creatureCPGEntropy(mulberry(s * 13 + 5)));
+  const diffCtrl = () => SEEDS.map((s) => { const r = mulberry(s * 13 + 5); const n = 6; const cut = true; const W = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 0 : (cut ? 0 : (r() < 0.6 ? gauss(r) * 1.5 : 0))))); let st = new Array(n).fill(0); const seen = new Map<number, number>();
     for (let t = 0; t < 3000; t++) { st = st.map((_, i) => (r() < 1 / (1 + Math.exp(-2 * (W[i].reduce((a, w, j) => a + w * (st[j] * 2 - 1), 0) + gauss(r) * 0.3))) ? 1 : 0)); const c = st.reduce((a, b, i) => a | (b << i), 0); seen.set(c, (seen.get(c) || 0) + 1); }
     let H = 0; seen.forEach((c) => { const p = c / 3000; H -= p * Math.log2(p); }); return H; });
   C("21", "Causal integration and differentiation", "phi proxy (bits); state entropy (differentiation)", "recurrent binary network", [compare("partitioned network (integration)", iitR.map((x) => x.phi), iitC.map((x) => x.phi)), compare("uncoupled network (differentiation)", diff(false), diff(true))]);
@@ -813,7 +824,7 @@ export default function Creature() {
       for (let l = 0; l < 8; l++) { const L = limbs[l]; const reach = (0.5 + 0.25 * out[l % NOUT] + 0.15 * Math.sin(t * 1.3 + l + phase)) * (0.4 + 0.6 * integrity) * (C.power[0] > 0 ? 1.4 : 1);
         for (let s = 0; s < 6; s++) { const u = (s + 1) / 6; const sw = Math.sin(t * 1.7 + l * 0.8 + u * 3) * 0.3 * u + (wsIdx === 0 ? 0.3 * u : 0) * Math.sign(gx - Math.cos(L.a));
           const tx = Math.cos(L.a + sw) * (0.35 + u * reach) + gx * u * u * (mood === 1 ? 0.5 : 0.2), ty = -0.25 + Math.sin(t + l + u * 2) * 0.15 * u + gy * u * u * 0.3 - (C.power[2] > 0 ? 0.3 * u : 0), tz = Math.sin(L.a + sw) * (0.35 + u * reach);
-          const T3 = [tx, ty, tz]; for (let d = 0; d < 3; d++) { const k = s * 3 + d; L.p[k] += dt * (-(7 + 3 * energy) * (L.x[k] - T3[d]) - 1.8 * L.p[k]); L.x[k] += dt * L.p[k] * 4 * ck; } }
+          limbNodeStep(L.x, L.p, s * 3, [tx, ty, tz], dt, energy, ck); /* shared with V2.1-25 scale test */ }
         lpArr.set([0, 0, 0], (l * 6) * 3); for (let s = 0; s < 5; s++) lpArr.set([L.x[s * 3], L.x[s * 3 + 1], L.x[s * 3 + 2]], (l * 6 + s + 1) * 3); }
       for (let k = 0; k < 4; k++) C.power[k] = Math.max(0, C.power[k] - dt);
       if (A) { const ac = A.ac; const sp = (t * 0.03 * (C.power[1] > 0 ? -3 : 1) + out[7] * 0.2) % 1; const ph = sp < 0 ? sp + 1 : sp;

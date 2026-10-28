@@ -255,7 +255,7 @@ export default function Creature() {
       for (let l = 0; l < 8; l++) { const L = limbs[l]; const reach = (0.5 + 0.25 * out[l % NOUT] + 0.15 * Math.sin(t * 1.3 + l + phase)) * (0.4 + 0.6 * integrity) * (C.power[0] > 0 ? 1.4 : 1);
         for (let s = 0; s < 6; s++) { const u = (s + 1) / 6; const sw = Math.sin(t * 1.7 + l * 0.8 + u * 3) * 0.3 * u + (wsIdx === 0 ? 0.3 * u : 0) * Math.sign(gx - Math.cos(L.a));
           const tx = Math.cos(L.a + sw) * (0.35 + u * reach) + gx * u * u * (mood === 1 ? 0.5 : 0.2), ty = -0.25 + Math.sin(t + l + u * 2) * 0.15 * u + gy * u * u * 0.3 - (C.power[2] > 0 ? 0.3 * u : 0), tz = Math.sin(L.a + sw) * (0.35 + u * reach);
-          const T3 = [tx, ty, tz]; for (let d = 0; d < 3; d++) { const k = s * 3 + d; L.p[k] += dt * (-(7 + 3 * energy) * (L.x[k] - T3[d]) - 1.8 * L.p[k]); L.x[k] += dt * L.p[k] * 4 * ck; } }
+          limbNodeStep(L.x, L.p, s * 3, [tx, ty, tz], dt, energy, ck); /* shared with V2.1-25 scale test */ }
         lpArr.set([0, 0, 0], (l * 6) * 3); for (let s = 0; s < 5; s++) lpArr.set([L.x[s * 3], L.x[s * 3 + 1], L.x[s * 3 + 2]], (l * 6 + s + 1) * 3); }
       for (let k = 0; k < 4; k++) C.power[k] = Math.max(0, C.power[k] - dt);
       if (A) { const ac = A.ac; const sp = (t * 0.03 * (C.power[1] > 0 ? -3 : 1) + out[7] * 0.2) % 1; const ph = sp < 0 ? sp + 1 : sp;
