@@ -11,3 +11,11 @@
 - v3 creature: shader body, limb chains, photosensitivity gate, calm mode, mute.
 ## [0.1.0]–[0.2.0]
 - v1 harness: Butlin 14, 10 frameworks, CQM-25 dimensions.
+
+## Round 7 (2026-10-28)
+- CQM-21 now passes under v1 via an itinerant Gray-code CPG mechanism (caveat logged). v1 is 44/49.
+- AST-1 held-out diagnostics: an oracle bound shows the frozen metric cannot pass bases 2000/3000. AST-1R was preregistered in v2.2 and fails at base 3000 only.
+- The app limb motion uses the shared `limbNodeStep`.
+- Preregistration v2.2: 9 of 11 pass; 9 of 100 roadmap capabilities are achieved as small harness models.
+- Benchmark rubric: 7 → 8.5. E is tested (CQM-01/02) and R is partial; the asymmetric-scoring caveat is shown on the page.
+- Link check (2026-10-28): the benchmark TSV citations are plain-text references with no URLs, so there were no citation links to check. The site's only outbound links are github.com/tsotchke/eshkol and github.com/tsotchke/moonlab; both returned HTTP 200. The README CI badge still points at a placeholder OWNER repo, because the repo is unpublished by design.
