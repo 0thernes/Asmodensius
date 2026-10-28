@@ -1,0 +1,21 @@
+name: harness
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Install
+        run: npm i --no-save typescript@5 esbuild@0.28 @types/react@18 react@18 react-dom@18 puppeteer-core@24
+      - name: Type-check (tsc strict)
+        run: |
+          mkdir -p node_modules/grok && cp creatures/001/src/shim/canvas.* node_modules/grok/ && echo '{"name":"grok","main":"canvas.js","types":"canvas.d.ts"}' > node_modules/grok/package.json
+          npx tsc --noEmit --strict --jsx react-jsx --target es2020 --lib es2020,dom,dom.iterable --skipLibCheck --moduleResolution node creatures/001/src/page.tsx
+      - name: GPU substrate record (headless Chrome, SwiftShader)
+        run: cd creatures/001/harness && npx esbuild measure_gpu.ts --bundle --platform=node --external:puppeteer-core --outfile=/tmp/g.js && CHROME=$(which google-chrome) node /tmp/g.js
+      - name: Full harness + cross-process reproducibility (V2.1-24)
+        run: cd creatures/001/harness && ./repro.sh && cat repro.txt 2>/dev/null; grep -E '^(PASS|FAIL|IMPL)' run6.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: results, path: creatures/001/harness/results.json }

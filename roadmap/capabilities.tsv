@@ -1,0 +1,101 @@
+capability	prior_art	test
+Self-repair of a damaged limb chain without retraining	Bongard 2006 self-modeling robots (physical); none in a browser creature	After cutting 1 of 8 chains, locomotion recovers to ≥80% of baseline within 300 steps vs no-repair ablation (d≥0.8)
+Metabolic closure: energy budget from internal autocatalytic set	Hutton 2007 cells; Ono-Ikegami protocells	Creature survives 10k steps with no external energy term only when the autocatalytic set is intact vs knocked-out set
+Heritable variation across page reloads	Avida, Tierra (in-memory only)	Offspring genome Hamming distance >0 and parent–offspring trait r≥0.5 vs shuffled-parent control
+Self-reproduction of the full creature state	Langton loops; Evoloops	Child instance regenerates the parent's network with ≥99% weight fidelity vs random-init control
+Open-ended morphological novelty	Chromaria; POET	Novelty archive keeps growing (slope >0) over 10^5 steps vs fixed-environment control
+Connectome-seeded controller from FlyWire subgraph	Shiu et al. 2024 LIF model	Steering task accuracy from FlyWire-derived weights exceeds degree-preserving shuffled connectome (d≥0.8)
+C. elegans locomotion circuit transplant	c302; BAAIWorm	Forward/backward switching matches published reversal rates within 20% vs shuffled-synapse control
+Sleep-like offline consolidation	Wake-sleep algorithm (Hinton 1995); NCA	Post-"sleep" recall improves vs no-sleep control on held-out cues
+Homeostatic temperature regulation	Ashby Homeostat; Daisyworld	Internal variable stays within band 2× longer than open-loop control under drifting external temperature
+Interoceptive prediction of energy	Seth interoceptive inference (theory)	Energy forecast error at 20 steps lower than persistence baseline (d≥0.8)
+Pain-avoidance learning with one-shot generalization	DishBrain (in vitro feedback)	After one noxious contact, approach rate to novel same-feature stimuli falls vs control without feature binding
+Curiosity that decays with mastery	Schmidhuber 1991; OMNI	Visit entropy over learnable vs unlearnable regions diverges vs count-based curiosity control
+Social learning by observation of a second creature	Neural MMO; Generative Agents	Naive creature acquires a foraging route faster when observing a trained peer vs a random peer
+Theory-of-mind of a second creature's attention	Wilterson & Graziano 2021	Predicts peer's attended item above chance and above ablated-schema control
+Vocalization channel with emergent signalling	Emergent communication (Lazaridou 2017)	Signal–referent mutual information > 0.5 bits vs shuffled-signal control
+Tool use: moving an object to reach food	OpenAI hide-and-seek	Success rate with object manipulation enabled vs object-frozen control
+Planning over 50-step horizons	MuZero (Schrittwieser 2020)	Return on delayed-reward maze exceeds 4-step MPC agent (d≥0.8)
+Episodic memory of specific events	Generative Agents memory stream	Recall of event order beats recency-only control
+Counterfactual self-model ("what if I had moved left")	Bongard 2006; world models (Ha 2018)	Counterfactual prediction error lower than a model without action conditioning
+Bit-reproducible evolution across machines	Avida (deterministic mode)	Same seed on two OSes gives identical lineage hash
+Substrate-independent genome (RV32I, GPU, JS)	None known with bit identity in an ALife creature	Genome decodes to identical phenotype hash on all three substrates vs mismatched-decoder control
+Quantum-sampled mutation operator (Moonlab)	Moonlab quantum simulator (tsotchke)	Mutation distribution passes chi-square vs specified amplitude distribution; ablation uses PRNG
+Eshkol-compiled controller with autodiff	Eshkol (tsotchke)	Controller compiled via Eshkol matches TS reference output bit-for-bit
+Morphogenesis from a single seed cell	Growing NCA (Mordvintsev 2020)	Grows target body with IoU≥0.9 vs untrained NCA
+Regeneration after 50% cell removal	Growing NCA regeneration	Regrown IoU≥0.85 vs non-regenerating control
+Bioelectric patterning of body axis	BETSE (Pietak & Levin 2016)	Reversing voltage gradient flips head-tail axis in ≥80% of seeds vs no-gradient control
+Immune-like anomaly detection of corrupted weights	Artificial immune systems (Forrest 1994)	Detects injected corruption with AUC≥0.9 vs random detector
+Circadian rhythm entrainment	Kuramoto/circadian models	Phase-locks to a 24-unit light cycle; free-runs with drift when light removed
+Lifelong learning without catastrophic forgetting	EWC (Kirkpatrick 2017)	Task-A retention after task B ≥80% vs plain SGD control
+Developmental curriculum (growing network size)	Cascade-correlation; DERL	Final performance higher than fixed-size network with equal parameters
+Ecological niche construction	Laland niche construction theory; Sugarscape	Creature-modified terrain increases its fitness vs reset-terrain control
+Predator–prey coevolution in browser	Polyworld; Bibites	Lotka–Volterra-like oscillation (spectral peak) vs no-predation control
+Multi-cellular division of labour	Volvox models; Hutton cells	Specialized cells increase colony fitness vs undifferentiated control
+Sexual recombination with mate choice	Polyworld	Recombining population adapts faster than asexual control
+Genome-to-connectome developmental encoding	HyperNEAT	Indirect encoding yields higher fitness per genome bit than direct encoding control
+Neuromodulation (dopamine-like) gating plasticity	Izhikevich 2007 dopamine-STDP	Reward-gated learning beats ungated Hebbian control
+Spiking implementation of the full controller	Brian2, NEST	Spiking controller matches rate-coded behavior within 5% vs random spiking net
+Energy-accurate neuron cost accounting	Laughlin & Sejnowski 2003 (theory)	Behavior under metabolic penalty reduces spikes ≥30% at ≤5% fitness cost vs no-penalty
+Vision from raw pixels of its own render	Polyworld vision	Pixel-based policy reaches food above chance and above blind control
+Proprioceptive body schema learning	Bongard 2006	Predicts limb positions after random babbling vs untrained model
+Mirror self-recognition analogue	Gallup 1970 (animal test); robot mirror tests (Hart 2012)	Distinguishes own-motion-contingent display vs replayed display above chance
+Delayed-gratification choice	Mischel (behavioral); RL discounting	Chooses larger-later reward more than myopic control when energy allows
+Play behavior without extrinsic reward	Theory (Burghardt 2005)	Generates non-functional repeated varied actions when sated vs hungry state
+Emotion-like global modulators with measured effects	Creatures (Grand 1996)	Modulator ablation changes exploration/exploitation ratio (d≥0.8)
+Language grounding from human text input	LLM agents; Voyager	Follows 20 novel instructions above chance vs ungrounded embedding control
+Reversible computing core for zero-entropy replay	Bennett 1973 (theory)	Running backward restores initial state bit-exactly
+Cryptographic lineage provenance	None known in ALife	Every individual has verifiable hash chain to the seed; tampering detected 100%
+Deterministic multi-tab ecosystem via BroadcastChannel	Network Tierra (concept)	Two tabs exchange migrants and stay bit-identical to single-process reference
+WebGPU compute for 10^6-cell substrate	ALIEN (CUDA)	≥30 steps/s at 10^6 cells with identical results to CPU reference on 10^3 sample
+Automatic discovery of its own novel behaviors via embeddings	ASAL (Kumar 2024)	Behavior-embedding archive diversity exceeds random-parameter control
+Self-modeling of its own failure modes	Bongard 2006	Predicts which perturbation will cause collapse with AUC≥0.8
+Graceful degradation under neuron loss	Lesion studies; dropout	Performance falls linearly, not abruptly, vs a non-redundant control
+Chemotaxis using a gradient-estimating circuit	C. elegans AIY/AIZ models	Climbs gradient faster than random walk and than ablated-circuit control
+Anticipatory postural adjustment	Motor control literature (theory)	Balance perturbation corrected before disturbance onset vs reactive control
+Central pattern generator gait switching	Ijspeert 2007 salamander robot	Switches gait at speed threshold; ablated CPG fails to switch
+Swimming in simulated fluid	Sibernetic; Artificial Fishes	Forward speed in SPH fluid exceeds flailing control
+Collective construction with peers	Termes robots (Werfel 2014)	Group builds target structure faster than individuals summed
+Cultural transmission across generations	Kirby iterated learning	Behavior persists ≥5 generations after originator removed vs no-teaching control
+Moral-like inequity aversion in sharing game	Primate inequity studies; MARL	Rejects unfair splits more than self-interested control
+Self-generated goals with measurable completion	OMNI; autotelic agents (Colas 2022)	Achieves ≥50% of self-proposed goals vs random goal proposals
+Metacognitive confidence reporting	HOT-2 analogue; Fleming 2012	Confidence–accuracy AUROC ≥0.7 vs shuffled confidence
+Blindsight-like dissociation	Weiskrantz (clinical)	Lesioned reporting path keeps above-chance forced choice while reports drop to chance
+Global ignition threshold dynamics	Dehaene 2005 ignition	Bimodal broadcast amplitude vs unimodal in no-recurrence control
+Perceptual bistability (Necker-like)	Binocular rivalry models	Dominance durations gamma-distributed vs Poisson control
+Attentional blink	Shapiro 1997; GW models	T2 detection dips at lag 2–3 vs flat curve in control
+Change blindness	Rensink 1997	Change detection drops under flicker vs no-flicker control
+Masking-dependent reportability	Backward masking literature	Report rate falls with mask SOA while discrimination persists
+Working memory capacity limit ~4	Cowan 2001	Recall curve plateaus at 3–5 items vs unbounded control
+Serial dependence in perception	Fischer & Whitney 2014	Bias toward previous stimulus vs memoryless control
+Anesthesia-like collapse of integration	Casali 2013 PCI	PCI analogue falls under global inhibition vs baseline
+Perturbational complexity index on the creature	Casali 2013	PCI > threshold in wake and < threshold in "sleep" state
+Dream-like replay of experience	Hippocampal replay (Wilson & McNaughton 1994)	Replayed sequences match experienced order above shuffled control
+Hunger-driven risk sensitivity	Optimal foraging theory	Risk-prone when energy low, risk-averse when high (sign flip) vs fixed-policy
+Navigation with grid-cell-like code	Banino 2018	Spatial periodicity score >0.3 vs untrained network
+Place-cell remapping in new arenas	O'Keefe; RL models	Remapping index higher between arenas than within
+Object permanence	Piaget; Baillargeon (infant)	Searches at hidden location vs last-seen-only control
+Causal intervention learning	Pearl do-calculus; causal RL	Distinguishes cause from correlate after interventions vs observational control
+Numerosity estimation	Nieder 2016	Weber-law error scaling vs flat control
+Temporal interval timing	Scalar timing theory	Timing error proportional to interval
+Habituation and dishabituation	Thompson & Spencer 1966	Response decrement with repetition, recovery on novel stimulus
+Classical conditioning with blocking	Rescorla–Wagner 1972	Blocking effect present vs absent in associative-only control
+Extinction and spontaneous recovery	Pavlov; Bouton 2004	Recovery after delay vs none in unlearning control
+Latent learning	Tolman 1948	Faster route after reward introduced vs naive control
+Detour behavior around barriers	Köhler; insect detour studies	Takes detour when direct path blocked above chance
+Mate-choice-driven ornament evolution	Fisherian runaway models	Ornament size increases only with choice enabled
+Speciation by geographic isolation	Allopatric speciation models	Reproductive incompatibility emerges between isolated subpopulations
+Evolution of evolvability	Wagner & Altenberg 1996	Mutational robustness rises over generations vs fixed-mutation control
+Endosymbiosis event in simulation	Margulis (biology); Avida symbiont studies	Merged host–symbiont outcompetes both alone
+Horizontal gene transfer	Bacterial HGT models	Adaptive allele spreads faster than vertical-only control
+Viral parasite coevolution	Tierra parasites	Host defense diversity rises with parasites present
+Red Queen dynamics	Van Valen 1973	Continual fitness relative change with constant absolute fitness
+Body-size scaling laws (Kleiber)	Kleiber 1932	Emergent metabolic rate exponent within 0.6–0.85 across evolved sizes
+Allometric limb scaling	Biomechanics literature	Limb length scales with mass^(1/3) in evolved bodies
+Astrobiology: non-carbon chemistry parameterization	Theorized (Bains 2004)	Alternate solvent parameters still yield self-maintaining set vs null chemistry
+Survival in Titan-like methane environment model	Stevenson 2015 azotosome (theorized)	Membrane analogue stable at 94 K parameters vs water-membrane control
+Radiation-tolerant genome repair	Deinococcus repair (biology)	Survives 10× mutation dose with repair vs without
+Dormancy/cryptobiosis state	Tardigrade cryptobiosis (biology)	Revives after zero-energy period ≥1000 steps vs no-dormancy control
+Explainable internal state dashboard verified against ablation	Interpretability probes (Alain & Bengio 2016)	Probe-identified variable ablation changes behavior as predicted
+Public replication by an independent runner	Open science replication practice	External replication reproduces results.json SHA-256
+Thermotaxis with learned set point	C. elegans AFD thermotaxis (Mori & Ohshima 1995)	Migrates to trained temperature vs untrained control

@@ -1,0 +1,156 @@
+PASS RPT-1            Algorithmic recurrence
+     + recurrence ablated (W=0)                                     full=1.000 ctrl=0.495 d=18.06 t=51.09
+     + random control: shuffled labels                              full=1.000 ctrl=0.473 d=7.80 t=22.05
+FAIL RPT-2            Integrated perceptual representations
+     - ablation: channels segregated (block-diagonal)               full=0.510 ctrl=0.512 d=-0.06 t=-0.18
+     - random control: shuffled labels                              full=0.510 ctrl=0.489 d=0.45 t=1.26
+PASS GWT-1            Specialized parallel modules
+     + random control: unspecialized mixed pool                     full=0.993 ctrl=0.773 d=16.07 t=45.46
+PASS GWT-2            Limited-capacity workspace with selection
+     + ablation: no bottleneck (average all modules)                full=0.931 ctrl=0.847 d=4.46 t=12.60
+     + random control: random module enters workspace               full=0.931 ctrl=0.621 d=13.76 t=38.93
+PASS GWT-3            Global broadcast
+     + ablation: broadcast cut                                      full=0.993 ctrl=0.492 d=24.11 t=68.20
+     + random control: random broadcast                             full=0.993 ctrl=0.499 d=24.77 t=70.06
+PASS GWT-4            State-dependent attention (sequential queries)
+     + ablation: fixed attention                                    full=1.000 ctrl=0.759 d=17.41 t=49.25
+     + random control: random attention                             full=1.000 ctrl=0.753 d=15.92 t=45.04
+PASS HOT-1            Generative, top-down / noisy perception
+     + ablation: bottom-up only                                     full=-0.134 ctrl=-1.013 d=41.54 t=117.51
+     + random control: random generative prior                      full=-0.134 ctrl=-0.944 d=21.05 t=59.52
+PASS HOT-2            Metacognitive monitoring
+     + ablation: monitor removed (constant confidence)              full=0.777 ctrl=0.498 d=9.03 t=25.54
+     + random control: shuffled confidence                          full=0.777 ctrl=0.499 d=9.73 t=27.51
+PASS HOT-3            Agency guided by metacognitive belief
+     + ablation: no metacognitive gating                            full=0.587 ctrl=0.532 d=1.25 t=3.53
+     + random control: random opt-out at same rate                  full=0.587 ctrl=0.422 d=4.33 t=12.24
+PASS HOT-4            Sparse and smooth coding (quality space)
+     + random control: sparse random hash code                      full=0.888 ctrl=0.017 d=20.61 t=58.29
+FAIL AST-1            Predictive model of attention (attention schema)
+     - ablation: schema removed (raw reactive control)              full=-0.443 ctrl=-0.993 d=0.76 t=2.16
+     + random control: random schema parameters                     full=-0.443 ctrl=-2.090 d=1.80 t=5.08
+PASS PP-1             Predictive coding input module
+     + ablation: prediction errors not used (frozen)                full=-0.329 ctrl=-1.138 d=3.02 t=8.54
+     + random control: trained on time-shuffled input               full=-0.329 ctrl=-1.140 d=3.26 t=9.21
+PASS AE-1             Agency: learning from feedback to pursue goals
+     + ablation: feedback replaced by noise                         full=0.710 ctrl=0.504 d=5.88 t=16.63
+     + random control: random policy                                full=0.710 ctrl=0.495 d=8.47 t=23.96
+PASS AE-2             Embodiment: modelling output→input contingencies
+     + ablation: action-sensory contingency scrambled               full=-0.007 ctrl=-4.090 d=4.22 t=11.93
+PASS thaler9          Thaler creativity machine (DABUS-style)
+     + inverted-U: mid noise vs low noise                           full=0.194 ctrl=0.021 d=5.19 t=14.68
+     + inverted-U: mid noise vs high noise                          full=0.194 ctrl=0.103 d=2.55 t=7.22
+     + valence-steered learning vs shuffled valence                 full=-0.269 ctrl=-1.490 d=6.37 t=18.03
+FAIL iit4             IIT 4.0 (phi proxy, coarse-grained 6-node subsyste
+     + partition reduces integration (cut vs intact)                full=0.420 ctrl=0.125 d=2.05 t=5.81
+     - partition reduces behavior (XOR decoding)                    full=0.564 ctrl=0.624 d=-0.77 t=-2.17
+FAIL activeInference  Free energy / active inference
+     + viability vs random policy                                   full=0.996 ctrl=0.624 d=13.76 t=38.91
+     - viability vs passive policy                                  full=0.996 ctrl=1.000 d=-0.79 t=-2.24
+     - prediction error vs random policy                            full=-2.336 ctrl=-2.218 d=-0.68 t=-1.92
+     - prediction error vs passive policy                           full=-2.336 ctrl=-1.543 d=-4.87 t=-13.76
+PASS attentionSchema  Attention Schema Theory
+     + control: schema removed, attention kept                      full=-0.345 ctrl=-0.835 d=2.10 t=5.93
+     + social: schema removed                                       full=-0.200 ctrl=-0.505 d=12.55 t=35.50
+PASS fieldIntegration CEMI field integration (oscillator-field model)
+     + phase-shuffled field                                         full=0.991 ctrl=0.512 d=12.12 t=34.27
+     + coherence alters behavior: ρ(coupling→coherence, accuracy) v full=0.906 ctrl=0.000 d=8.92 t=25.24
+FAIL ual              Unlimited Associative Learning
+     - compound (negative patterning) vs simple conditioning (Resco full=1.000 ctrl=1.000 d=0.00 t=0.00
+     + trace (delayed) conditioning vs simple conditioning          full=1.000 ctrl=0.493 d=13.10 t=37.04
+     - serial reversal errors vs simple conditioning                full=-0.514 ctrl=-0.623 d=0.76 t=2.16
+PASS sensorimotor     Sensorimotor enactivism
+     + perception: scrambled laws                                   full=-0.003 ctrl=-0.668 d=6.13 t=17.34
+     + planning: scrambled laws                                     full=-0.014 ctrl=-3.686 d=2.39 t=6.77
+     + adaptation after gain reversal: scrambled laws               full=-0.155 ctrl=-3.700 d=3.84 t=10.87
+PASS projective       Projective Consciousness Model
+     + perspective: projective frame vs flat egocentric             full=0.983 ctrl=0.491 d=21.32 t=60.30
+     + ownership: projective efference model vs flat magnitude      full=0.853 ctrl=0.537 d=9.47 t=26.77
+PASS ctm              Conscious Turing Machine
+     + reportability vs no competition                              full=1.000 ctrl=0.634 d=17.54 t=49.60
+     + stream coherence vs no competition                           full=0.975 ctrl=0.163 d=49.42 t=139.78
+FAIL butlin14         Butlin et al. 14 indicators (all must pass)
+     + recurrence ablated (W=0)                                     full=1.000 ctrl=0.495 d=18.06 t=51.09
+     + random control: shuffled labels                              full=1.000 ctrl=0.473 d=7.80 t=22.05
+     - ablation: channels segregated (block-diagonal)               full=0.510 ctrl=0.512 d=-0.06 t=-0.18
+     - random control: shuffled labels                              full=0.510 ctrl=0.489 d=0.45 t=1.26
+     + random control: unspecialized mixed pool                     full=0.993 ctrl=0.773 d=16.07 t=45.46
+     + ablation: no bottleneck (average all modules)                full=0.931 ctrl=0.847 d=4.46 t=12.60
+     + random control: random module enters workspace               full=0.931 ctrl=0.621 d=13.76 t=38.93
+     + ablation: broadcast cut                                      full=0.993 ctrl=0.492 d=24.11 t=68.20
+     + random control: random broadcast                             full=0.993 ctrl=0.499 d=24.77 t=70.06
+     + ablation: fixed attention                                    full=1.000 ctrl=0.759 d=17.41 t=49.25
+     + random control: random attention                             full=1.000 ctrl=0.753 d=15.92 t=45.04
+     + ablation: bottom-up only                                     full=-0.134 ctrl=-1.013 d=41.54 t=117.51
+     + random control: random generative prior                      full=-0.134 ctrl=-0.944 d=21.05 t=59.52
+     + ablation: monitor removed (constant confidence)              full=0.777 ctrl=0.498 d=9.03 t=25.54
+     + random control: shuffled confidence                          full=0.777 ctrl=0.499 d=9.73 t=27.51
+     + ablation: no metacognitive gating                            full=0.587 ctrl=0.532 d=1.25 t=3.53
+     + random control: random opt-out at same rate                  full=0.587 ctrl=0.422 d=4.33 t=12.24
+     + random control: sparse random hash code                      full=0.888 ctrl=0.017 d=20.61 t=58.29
+     - ablation: schema removed (raw reactive control)              full=-0.443 ctrl=-0.993 d=0.76 t=2.16
+     + random control: random schema parameters                     full=-0.443 ctrl=-2.090 d=1.80 t=5.08
+     + ablation: prediction errors not used (frozen)                full=-0.329 ctrl=-1.138 d=3.02 t=8.54
+     + random control: trained on time-shuffled input               full=-0.329 ctrl=-1.140 d=3.26 t=9.21
+     + ablation: feedback replaced by noise                         full=0.710 ctrl=0.504 d=5.88 t=16.63
+     + random control: random policy                                full=0.710 ctrl=0.495 d=8.47 t=23.96
+     + ablation: action-sensory contingency scrambled               full=-0.007 ctrl=-4.090 d=4.22 t=11.93
+FAIL 01               Reproduction and heredity
+     + heredity removed (offspring get random genomes)              full=0.936 ctrl=0.053 d=6.61 t=18.69
+     - selection: foraging gene rises vs no heredity                full=0.157 ctrl=0.077 d=0.45 t=1.27
+PASS 02               Open-endedness
+     + mutation off                                                 full=13.500 ctrl=7.250 d=3.37 t=9.54
+PASS 03               Ecological coupling
+     + coupling removed (agents don't deplete)                      full=-0.251 ctrl=-1.000 d=7.26 t=20.54
+PASS 04               Morphology and development
+     + random morphology (no developmental program)                 full=4.036 ctrl=1.752 d=21.49 t=60.79
+PASS 05               Embodied dynamics and internal consistency
+     + explicit Euler integrator                                    full=-0.050 ctrl=-439286204.050 d=446461698233307.00 t=1262784377443333.50
+PASS 06               Perceptual integration
+     + best single sense (sight)                                    full=-0.191 ctrl=-0.240 d=2.97 t=8.40
+     + other single sense (hearing)                                 full=-0.191 ctrl=-0.981 d=10.06 t=28.47
+PASS 07               Learning and plasticity
+     + ablation: prediction errors not used (frozen)                full=-0.329 ctrl=-1.138 d=3.02 t=8.54
+PASS 08               Memory and continual retention
+     + no replay (sequential training)                              full=-4.713 ctrl=-16.292 d=2.01 t=5.68
+PASS 09               Predictive/causal world models
+     + correlational (non-causal) model                             full=-0.094 ctrl=-9.903 d=11.06 t=31.28
+FAIL 10               Autonomous goal regulation
+     + fixed goal                                                   full=1.000 ctrl=0.024 d=808.10 t=2285.66
+     - random goal switching                                        full=1.000 ctrl=1.000 d=0.00 t=0.00
+PASS 11               Reasoning and planning
+     + greedy heuristic                                             full=0.682 ctrl=0.057 d=1.90 t=5.37
+     + random walk                                                  full=0.682 ctrl=0.071 d=1.91 t=5.41
+PASS 12               Transfer and compositional generalization
+     + holistic lookup representation                               full=-0.040 ctrl=-1.675 d=2.13 t=6.01
+PASS 13               Metacognition and self-modeling
+     + ablation: monitor removed (constant confidence)              full=0.777 ctrl=0.498 d=9.03 t=25.54
+     + random control: shuffled confidence                          full=0.777 ctrl=0.499 d=9.73 t=27.51
+PASS 14               Social cognition and communication
+     + communication channel cut                                    full=0.809 ctrl=0.253 d=8.31 t=23.50
+     + social: schema removed                                       full=-0.200 ctrl=-0.505 d=12.55 t=35.50
+PASS 15               Individuality and maintained boundary
+     + no maintenance                                               full=0.204 ctrl=0.014 d=4.55 t=12.86
+PASS 16               Resource-dependent self-maintenance
+     + blind foraging (no resource sensing)                         full=8.073 ctrl=4.504 d=11.58 t=32.75
+PASS 17               Homeostatic regulation
+     + open loop                                                    full=-0.006 ctrl=-0.626 d=2.78 t=7.86
+     + random corrections                                           full=-0.006 ctrl=-0.736 d=1.90 t=5.39
+PASS 18               Repair and functional resilience
+     + no repair                                                    full=-0.000 ctrl=-5.773 d=2.35 t=6.66
+PASS 19               Recurrent processing
+     + recurrence ablated (W=0)                                     full=1.000 ctrl=0.495 d=18.06 t=51.09
+     + random control: shuffled labels                              full=1.000 ctrl=0.473 d=7.80 t=22.05
+PASS 20               Global broadcast
+     + ablation: broadcast cut                                      full=0.993 ctrl=0.492 d=24.11 t=68.20
+     + random control: random broadcast                             full=0.993 ctrl=0.499 d=24.77 t=70.06
+FAIL 21               Causal integration and differentiation
+     + partitioned network (integration)                            full=0.420 ctrl=0.125 d=2.05 t=5.81
+     - uncoupled network (differentiation)                          full=4.995 ctrl=5.985 d=-2.57 t=-7.27
+PASS 22               Valence control and motivational trade-offs
+     + valence ablated (flat values)                                full=0.208 ctrl=0.000 d=16.21 t=45.86
+     + random choices                                               full=0.208 ctrl=-0.004 d=9.87 t=27.91
+IMPL 23               Substrate pluralism
+IMPL 24               Instrumentation and reproducibility
+IMPL 25               Visual and embodied scale
+ms 6696

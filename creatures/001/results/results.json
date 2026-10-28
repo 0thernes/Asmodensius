@@ -1,0 +1,1580 @@
+{
+ "v1": [
+  {
+   "id": "RPT-1",
+   "group": "Butlin",
+   "name": "Algorithmic recurrence",
+   "metric": "delayed-recall accuracy",
+   "mechanism": "recurrent reservoir (ρ=0.95) + ridge readout",
+   "cmps": [
+    {
+     "control": "recurrence ablated (W=0)",
+     "full": 0.9796875,
+     "ctrl": 0.5009375,
+     "d": 16.458345572628453,
+     "t": 46.55123104606868,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled labels",
+     "full": 0.9796875,
+     "ctrl": 0.5231249999999998,
+     "d": 5.488190948492224,
+     "t": 15.522948144501925,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RPT-2",
+   "group": "Butlin",
+   "name": "Integrated perceptual representations",
+   "metric": "feature-binding (XOR) accuracy",
+   "mechanism": "mixed recurrent representation of two channels",
+   "cmps": [
+    {
+     "control": "ablation: channels segregated (block-diagonal)",
+     "full": 1,
+     "ctrl": 0.5128125,
+     "d": 15.738003643491034,
+     "t": 44.51379639460441,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled labels",
+     "full": 1,
+     "ctrl": 0.46874999999999994,
+     "d": 9.202670320904625,
+     "t": 26.029082355743366,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "GWT-1",
+   "group": "Butlin",
+   "name": "Specialized parallel modules",
+   "metric": "selective lesion deficit (own − cross)",
+   "mechanism": "3 modality-tuned specialist modules",
+   "cmps": [
+    {
+     "control": "random control: unspecialized mixed pool",
+     "full": 0.9928125000000001,
+     "ctrl": 0.7725000000000002,
+     "d": 16.07175028384935,
+     "t": 45.45777444498679,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "GWT-2",
+   "group": "Butlin",
+   "name": "Limited-capacity workspace with selection",
+   "metric": "action accuracy amid distractors",
+   "mechanism": "1-slot workspace, salience competition",
+   "cmps": [
+    {
+     "control": "ablation: no bottleneck (average all modules)",
+     "full": 0.930625,
+     "ctrl": 0.8466666666666669,
+     "d": 4.456190947071889,
+     "t": 12.604011347746546,
+     "pass": true
+    },
+    {
+     "control": "random control: random module enters workspace",
+     "full": 0.930625,
+     "ctrl": 0.6210416666666666,
+     "d": 13.764295130691217,
+     "t": 38.931305700658946,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "GWT-3",
+   "group": "Butlin",
+   "name": "Global broadcast",
+   "metric": "accuracy of a module that only receives broadcast",
+   "mechanism": "workspace content broadcast to all modules",
+   "cmps": [
+    {
+     "control": "ablation: broadcast cut",
+     "full": 0.9929166666666669,
+     "ctrl": 0.49187499999999995,
+     "d": 24.113744539740054,
+     "t": 68.20396913540111,
+     "pass": true
+    },
+    {
+     "control": "random control: random broadcast",
+     "full": 0.9929166666666669,
+     "ctrl": 0.49916666666666665,
+     "d": 24.770782677074713,
+     "t": 70.06235362503116,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "GWT-4",
+   "group": "Butlin",
+   "name": "State-dependent attention (sequential queries)",
+   "metric": "two-step query accuracy",
+   "mechanism": "workspace state chooses the next module to query",
+   "cmps": [
+    {
+     "control": "ablation: fixed attention",
+     "full": 0.9995833333333333,
+     "ctrl": 0.7591666666666667,
+     "d": 17.411984660301865,
+     "t": 49.24852970886237,
+     "pass": true
+    },
+    {
+     "control": "random control: random attention",
+     "full": 0.9995833333333333,
+     "ctrl": 0.753125,
+     "d": 15.92495288482446,
+     "t": 45.04256869974259,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "HOT-1",
+   "group": "Butlin",
+   "name": "Generative, top-down / noisy perception",
+   "metric": "−reconstruction MSE",
+   "mechanism": "learned generative prototypes refine noisy input",
+   "cmps": [
+    {
+     "control": "ablation: bottom-up only",
+     "full": -0.13374522143420675,
+     "ctrl": -1.0126354234124102,
+     "d": 41.54429802635269,
+     "t": 117.50501941627557,
+     "pass": true
+    },
+    {
+     "control": "random control: random generative prior",
+     "full": -0.13374522143420675,
+     "ctrl": -0.9442275502160418,
+     "d": 21.045221934423665,
+     "t": 59.52487656562738,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "HOT-2",
+   "group": "Butlin",
+   "name": "Metacognitive monitoring",
+   "metric": "type-2 AUROC",
+   "mechanism": "second-order monitor estimates reliability from sample consistency",
+   "cmps": [
+    {
+     "control": "ablation: monitor removed (constant confidence)",
+     "full": 0.7765792150269308,
+     "ctrl": 0.4976008957066581,
+     "d": 9.030336091800093,
+     "t": 25.54164754762189,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled confidence",
+     "full": 0.7765792150269308,
+     "ctrl": 0.49858485661765317,
+     "d": 9.72726433267016,
+     "t": 27.51285828810043,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "HOT-3",
+   "group": "Butlin",
+   "name": "Agency guided by metacognitive belief",
+   "metric": "reward per trial with opt-out",
+   "mechanism": "confidence-gated action selection (learned threshold)",
+   "cmps": [
+    {
+     "control": "ablation: no metacognitive gating",
+     "full": 0.5874999999999994,
+     "ctrl": 0.5316666666666667,
+     "d": 1.2473122874477494,
+     "t": 3.5279319068464305,
+     "pass": true
+    },
+    {
+     "control": "random control: random opt-out at same rate",
+     "full": 0.5874999999999994,
+     "ctrl": 0.42175000000000046,
+     "d": 4.32895141615629,
+     "t": 12.244123607164882,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "HOT-4",
+   "group": "Butlin",
+   "name": "Sparse and smooth coding (quality space)",
+   "metric": "Spearman ρ(stimulus distance, code distance)",
+   "mechanism": "k-WTA sparse RBF population code (8 of 64 active)",
+   "cmps": [
+    {
+     "control": "random control: sparse random hash code",
+     "full": 0.8879723895619261,
+     "ctrl": 0.01719539259511947,
+     "d": 20.607659369946838,
+     "t": 58.28726273948761,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AST-1",
+   "group": "Butlin",
+   "name": "Predictive model of attention (attention schema)",
+   "metric": "−attention tracking error",
+   "mechanism": "Kalman attention schema estimates focus + hidden drift, monitors its own surprise (NIS) to inflate both focus and drift uncertainty, and steers attention",
+   "cmps": [
+    {
+     "control": "ablation: schema removed (raw reactive control)",
+     "full": -0.33841838704430693,
+     "ctrl": -0.8232987741679244,
+     "d": 1.4891461290944603,
+     "t": 4.211941304241563,
+     "pass": true
+    },
+    {
+     "control": "random control: random schema parameters",
+     "full": -0.33841838704430693,
+     "ctrl": -3.4934394532940036,
+     "d": 1.8503515238182882,
+     "t": 5.233584440283092,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "PP-1",
+   "group": "Butlin",
+   "name": "Predictive coding input module",
+   "metric": "−next-input prediction MSE",
+   "mechanism": "prediction-error-driven (NLMS) sensory predictor",
+   "cmps": [
+    {
+     "control": "ablation: prediction errors not used (frozen)",
+     "full": -0.3291825359016859,
+     "ctrl": -1.138208520289529,
+     "d": 3.0183994762977755,
+     "t": 8.537322952080322,
+     "pass": true
+    },
+    {
+     "control": "random control: trained on time-shuffled input",
+     "full": -0.3291825359016859,
+     "ctrl": -1.1401388640895378,
+     "d": 3.257841126646311,
+     "t": 9.214566210720115,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AE-1",
+   "group": "Butlin",
+   "name": "Agency: learning from feedback to pursue goals",
+   "metric": "reward rate under reversals",
+   "mechanism": "Q-learning with softmax selection",
+   "cmps": [
+    {
+     "control": "ablation: feedback replaced by noise",
+     "full": 0.7104166666666668,
+     "ctrl": 0.5040624999999999,
+     "d": 5.880090277247918,
+     "t": 16.631406836124356,
+     "pass": true
+    },
+    {
+     "control": "random control: random policy",
+     "full": 0.7104166666666668,
+     "ctrl": 0.49520833333333336,
+     "d": 8.469717298181282,
+     "t": 23.95597814510795,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AE-2",
+   "group": "Butlin",
+   "name": "Embodiment: modelling output→input contingencies",
+   "metric": "−reaching error",
+   "mechanism": "learned forward model of motor→sensory gain, inverted for control",
+   "cmps": [
+    {
+     "control": "ablation: action-sensory contingency scrambled",
+     "full": -0.006724103305178317,
+     "ctrl": -4.090480544184956,
+     "d": 4.2194394038893845,
+     "t": 11.93437686118363,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "thaler9",
+   "group": "Framework",
+   "name": "Thaler creativity machine (DABUS-style)",
+   "metric": "novelty×usefulness; −distance to valued region",
+   "mechanism": "noise-perturbed generator + critic; critic valence gates reinforcement",
+   "cmps": [
+    {
+     "control": "inverted-U: mid noise vs low noise",
+     "full": 0.1938910188409277,
+     "ctrl": 0.02054941577172551,
+     "d": 5.191502109643659,
+     "t": 14.683785385093197,
+     "pass": true
+    },
+    {
+     "control": "inverted-U: mid noise vs high noise",
+     "full": 0.1938910188409277,
+     "ctrl": 0.10271717838555591,
+     "d": 2.5536269331426262,
+     "t": 7.222747684183029,
+     "pass": true
+    },
+    {
+     "control": "valence-steered learning vs shuffled valence",
+     "full": -0.2692246963307535,
+     "ctrl": -1.489534964650638,
+     "d": 6.374712216682747,
+     "t": 18.030408946116395,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "iit4",
+   "group": "Framework",
+   "name": "IIT 4.0 (phi proxy, coarse-grained 6-node subsystem)",
+   "metric": "min-bipartition integration (bits); XOR decoding",
+   "mechanism": "stochastic recurrent binary network with thresholds; weights shaped by plasticity; MIP over bipartitions",
+   "cmps": [
+    {
+     "control": "partition reduces integration (cut vs intact)",
+     "full": 0.32768692209061995,
+     "ctrl": 0.03320234283156586,
+     "d": 1.6332307293621473,
+     "t": 4.619474095896901,
+     "pass": true
+    },
+    {
+     "control": "partition reduces behavior (XOR decoding)",
+     "full": 0.6197499999999999,
+     "ctrl": 0.5035000000000001,
+     "d": 1.7619367500192975,
+     "t": 4.983509695841728,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "phi proxy = I(whole_t;whole_t+1) − min over bipartitions of Σ I(part_t;part_t+1); not IIT 4.0's full Φ. Partition = trained network with cross-half edges removed"
+  },
+  {
+   "id": "activeInference",
+   "group": "Framework",
+   "name": "Free energy / active inference",
+   "metric": "viability (food found); −surprise",
+   "mechanism": "Bayesian belief + expected-free-energy planner (4-step expectimax over beliefs, info gain and surprise terms)",
+   "cmps": [
+    {
+     "control": "viability vs random policy",
+     "full": 1,
+     "ctrl": 0.6239583333333332,
+     "d": 14.18141933379688,
+     "t": 40.111111111111136,
+     "pass": true
+    },
+    {
+     "control": "viability vs passive policy",
+     "full": 1,
+     "ctrl": 1,
+     "d": 0,
+     "t": 0,
+     "pass": false
+    },
+    {
+     "control": "prediction error vs random policy",
+     "full": -1.5432740445848103,
+     "ctrl": -2.217969028774435,
+     "d": 8.376094475835615,
+     "t": 23.69117281489017,
+     "pass": true
+    },
+    {
+     "control": "prediction error vs passive policy",
+     "full": -1.5432740445848103,
+     "ctrl": -1.5432740445848123,
+     "d": 3.8887782207596775e-14,
+     "t": 1.09991258017189e-13,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Mixed or restricted"
+  },
+  {
+   "id": "attentionSchema",
+   "group": "Framework",
+   "name": "Attention Schema Theory",
+   "metric": "−attention control error; −error predicting another agent's attention",
+   "mechanism": "same Kalman schema applied to self and to another agent",
+   "cmps": [
+    {
+     "control": "control: schema removed, attention kept",
+     "full": -0.305810146413515,
+     "ctrl": -0.8581856682243533,
+     "d": 2.909105411773108,
+     "t": 8.228192655404992,
+     "pass": true
+    },
+    {
+     "control": "social: schema removed",
+     "full": -0.1580977074632307,
+     "ctrl": -0.4961423579895475,
+     "d": 12.155805654149106,
+     "t": 34.38181043533844,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "fieldIntegration",
+   "group": "Framework",
+   "name": "CEMI field integration (oscillator-field model)",
+   "metric": "feature-binding accuracy; ρ(coherence, accuracy)",
+   "mechanism": "Kuramoto field; binding read out from phase synchrony",
+   "cmps": [
+    {
+     "control": "phase-shuffled field",
+     "full": 0.9906250000000001,
+     "ctrl": 0.5117187500000001,
+     "d": 12.11673851152608,
+     "t": 34.27131186945714,
+     "pass": true
+    },
+    {
+     "control": "coherence alters behavior: ρ(coupling→coherence, accuracy) vs 0",
+     "full": 0.9062499999999999,
+     "ctrl": 0,
+     "d": 8.92413309600162,
+     "t": 25.24126011357618,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "a simulated oscillator field, not an electromagnetic field"
+  },
+  {
+   "id": "ual",
+   "group": "Framework",
+   "name": "Unlimited Associative Learning",
+   "metric": "compound / trace / reversal performance",
+   "mechanism": "configural units + eligibility traces + Bayesian latent-cause inference (2 contexts, Beta value counts)",
+   "cmps": [
+    {
+     "control": "compound (negative patterning) vs simple conditioning (Rescorla–Wagner)",
+     "full": 1,
+     "ctrl": 0.546875,
+     "d": 4.712696366439654,
+     "t": 13.32951823353073,
+     "pass": true
+    },
+    {
+     "control": "trace (delayed) conditioning vs simple conditioning",
+     "full": 1,
+     "ctrl": 0.49312500000000004,
+     "d": 13.095643560627341,
+     "t": 37.04007346288615,
+     "pass": true
+    },
+    {
+     "control": "serial reversal errors vs simple conditioning",
+     "full": -0.2425,
+     "ctrl": -0.6233333333333333,
+     "d": 2.182222605341688,
+     "t": 6.172257609182731,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "sensorimotor",
+   "group": "Framework",
+   "name": "Sensorimotor enactivism",
+   "metric": "−perception / planning / adaptation error",
+   "mechanism": "learned sensorimotor contingency model",
+   "cmps": [
+    {
+     "control": "perception: scrambled laws",
+     "full": -0.0028526689883255655,
+     "ctrl": -0.6683895444233232,
+     "d": 6.131959921135884,
+     "t": 17.343801768797242,
+     "pass": true
+    },
+    {
+     "control": "planning: scrambled laws",
+     "full": -0.013985739512883325,
+     "ctrl": -3.6860474565602424,
+     "d": 2.3945525771619742,
+     "t": 6.772817460875823,
+     "pass": true
+    },
+    {
+     "control": "adaptation after gain reversal: scrambled laws",
+     "full": -0.1546986863646718,
+     "ctrl": -3.6999218334067714,
+     "d": 3.8429309039033077,
+     "t": 10.869450007125511,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "projective",
+   "group": "Framework",
+   "name": "Projective Consciousness Model",
+   "metric": "perspective-taking accuracy; ownership accuracy",
+   "mechanism": "projective transform into other's frame; efference-copy ownership",
+   "cmps": [
+    {
+     "control": "perspective: projective frame vs flat egocentric",
+     "full": 0.9834374999999999,
+     "ctrl": 0.49062500000000003,
+     "d": 21.31963742093683,
+     "t": 60.30104077113163,
+     "pass": true
+    },
+    {
+     "control": "ownership: projective efference model vs flat magnitude",
+     "full": 0.853125,
+     "ctrl": 0.536875,
+     "d": 9.465635967948252,
+     "t": 26.772861524717992,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "ctm",
+   "group": "Framework",
+   "name": "Conscious Turing Machine",
+   "metric": "reportability (report explains action); stream coherence",
+   "mechanism": "up-tree competition, broadcast with feedback to processors",
+   "cmps": [
+    {
+     "control": "reportability vs no competition",
+     "full": 1,
+     "ctrl": 0.6339583333333334,
+     "d": 17.535896616301013,
+     "t": 49.59900564629072,
+     "pass": true
+    },
+    {
+     "control": "stream coherence vs no competition",
+     "full": 0.9747916666666667,
+     "ctrl": 0.1633333333333333,
+     "d": 49.41980874023795,
+     "t": 139.78032754065785,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "butlin14",
+   "group": "Framework",
+   "name": "Butlin et al. 14 indicators (all must pass)",
+   "metric": "all 14 indicator items",
+   "mechanism": "see Butlin rows",
+   "cmps": [
+    {
+     "control": "recurrence ablated (W=0)",
+     "full": 0.9796875,
+     "ctrl": 0.5009375,
+     "d": 16.458345572628453,
+     "t": 46.55123104606868,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled labels",
+     "full": 0.9796875,
+     "ctrl": 0.5231249999999998,
+     "d": 5.488190948492224,
+     "t": 15.522948144501925,
+     "pass": true
+    },
+    {
+     "control": "ablation: channels segregated (block-diagonal)",
+     "full": 1,
+     "ctrl": 0.5128125,
+     "d": 15.738003643491034,
+     "t": 44.51379639460441,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled labels",
+     "full": 1,
+     "ctrl": 0.46874999999999994,
+     "d": 9.202670320904625,
+     "t": 26.029082355743366,
+     "pass": true
+    },
+    {
+     "control": "random control: unspecialized mixed pool",
+     "full": 0.9928125000000001,
+     "ctrl": 0.7725000000000002,
+     "d": 16.07175028384935,
+     "t": 45.45777444498679,
+     "pass": true
+    },
+    {
+     "control": "ablation: no bottleneck (average all modules)",
+     "full": 0.930625,
+     "ctrl": 0.8466666666666669,
+     "d": 4.456190947071889,
+     "t": 12.604011347746546,
+     "pass": true
+    },
+    {
+     "control": "random control: random module enters workspace",
+     "full": 0.930625,
+     "ctrl": 0.6210416666666666,
+     "d": 13.764295130691217,
+     "t": 38.931305700658946,
+     "pass": true
+    },
+    {
+     "control": "ablation: broadcast cut",
+     "full": 0.9929166666666669,
+     "ctrl": 0.49187499999999995,
+     "d": 24.113744539740054,
+     "t": 68.20396913540111,
+     "pass": true
+    },
+    {
+     "control": "random control: random broadcast",
+     "full": 0.9929166666666669,
+     "ctrl": 0.49916666666666665,
+     "d": 24.770782677074713,
+     "t": 70.06235362503116,
+     "pass": true
+    },
+    {
+     "control": "ablation: fixed attention",
+     "full": 0.9995833333333333,
+     "ctrl": 0.7591666666666667,
+     "d": 17.411984660301865,
+     "t": 49.24852970886237,
+     "pass": true
+    },
+    {
+     "control": "random control: random attention",
+     "full": 0.9995833333333333,
+     "ctrl": 0.753125,
+     "d": 15.92495288482446,
+     "t": 45.04256869974259,
+     "pass": true
+    },
+    {
+     "control": "ablation: bottom-up only",
+     "full": -0.13374522143420675,
+     "ctrl": -1.0126354234124102,
+     "d": 41.54429802635269,
+     "t": 117.50501941627557,
+     "pass": true
+    },
+    {
+     "control": "random control: random generative prior",
+     "full": -0.13374522143420675,
+     "ctrl": -0.9442275502160418,
+     "d": 21.045221934423665,
+     "t": 59.52487656562738,
+     "pass": true
+    },
+    {
+     "control": "ablation: monitor removed (constant confidence)",
+     "full": 0.7765792150269308,
+     "ctrl": 0.4976008957066581,
+     "d": 9.030336091800093,
+     "t": 25.54164754762189,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled confidence",
+     "full": 0.7765792150269308,
+     "ctrl": 0.49858485661765317,
+     "d": 9.72726433267016,
+     "t": 27.51285828810043,
+     "pass": true
+    },
+    {
+     "control": "ablation: no metacognitive gating",
+     "full": 0.5874999999999994,
+     "ctrl": 0.5316666666666667,
+     "d": 1.2473122874477494,
+     "t": 3.5279319068464305,
+     "pass": true
+    },
+    {
+     "control": "random control: random opt-out at same rate",
+     "full": 0.5874999999999994,
+     "ctrl": 0.42175000000000046,
+     "d": 4.32895141615629,
+     "t": 12.244123607164882,
+     "pass": true
+    },
+    {
+     "control": "random control: sparse random hash code",
+     "full": 0.8879723895619261,
+     "ctrl": 0.01719539259511947,
+     "d": 20.607659369946838,
+     "t": 58.28726273948761,
+     "pass": true
+    },
+    {
+     "control": "ablation: schema removed (raw reactive control)",
+     "full": -0.33841838704430693,
+     "ctrl": -0.8232987741679244,
+     "d": 1.4891461290944603,
+     "t": 4.211941304241563,
+     "pass": true
+    },
+    {
+     "control": "random control: random schema parameters",
+     "full": -0.33841838704430693,
+     "ctrl": -3.4934394532940036,
+     "d": 1.8503515238182882,
+     "t": 5.233584440283092,
+     "pass": true
+    },
+    {
+     "control": "ablation: prediction errors not used (frozen)",
+     "full": -0.3291825359016859,
+     "ctrl": -1.138208520289529,
+     "d": 3.0183994762977755,
+     "t": 8.537322952080322,
+     "pass": true
+    },
+    {
+     "control": "random control: trained on time-shuffled input",
+     "full": -0.3291825359016859,
+     "ctrl": -1.1401388640895378,
+     "d": 3.257841126646311,
+     "t": 9.214566210720115,
+     "pass": true
+    },
+    {
+     "control": "ablation: feedback replaced by noise",
+     "full": 0.7104166666666668,
+     "ctrl": 0.5040624999999999,
+     "d": 5.880090277247918,
+     "t": 16.631406836124356,
+     "pass": true
+    },
+    {
+     "control": "random control: random policy",
+     "full": 0.7104166666666668,
+     "ctrl": 0.49520833333333336,
+     "d": 8.469717298181282,
+     "t": 23.95597814510795,
+     "pass": true
+    },
+    {
+     "control": "ablation: action-sensory contingency scrambled",
+     "full": -0.006724103305178317,
+     "ctrl": -4.090480544184956,
+     "d": 4.2194394038893845,
+     "t": 11.93437686118363,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "01",
+   "group": "CQM-25",
+   "name": "Reproduction and heredity",
+   "metric": "parent–offspring trait correlation; gain in foraging gene",
+   "mechanism": "population of agents with mutating genomes",
+   "cmps": [
+    {
+     "control": "heredity removed (offspring get random genomes)",
+     "full": 0.9367531194228245,
+     "ctrl": -0.03970564465014463,
+     "d": 5.977116895643658,
+     "t": 16.905839555417266,
+     "pass": true
+    },
+    {
+     "control": "selection: foraging gene rises vs no heredity",
+     "full": 0.3749265704597306,
+     "ctrl": 0.04290109908899153,
+     "d": 1.707898115368932,
+     "t": 4.830665355812385,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "02",
+   "group": "CQM-25",
+   "name": "Open-endedness",
+   "metric": "distinct genotypes discovered",
+   "mechanism": "mutation + selection in a resource ecology",
+   "cmps": [
+    {
+     "control": "mutation off",
+     "full": 13.3125,
+     "ctrl": 7.5625,
+     "d": 2.37817949383936,
+     "t": 6.72650738789041,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "bounded: a 3-gene genome cannot be open-ended in the strong sense; novelty plateaus"
+  },
+  {
+   "id": "03",
+   "group": "CQM-25",
+   "name": "Ecological coupling",
+   "metric": "|corr(population, resource level)| at lag",
+   "mechanism": "agents deplete resources; resources gate survival",
+   "cmps": [
+    {
+     "control": "coupling removed (agents don't deplete)",
+     "full": -0.3735364023656835,
+     "ctrl": -1,
+     "d": 5.308122150194939,
+     "t": 15.013636671077437,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "04",
+   "group": "CQM-25",
+   "name": "Morphology and development",
+   "metric": "evolved reach (limb count × length × cost)",
+   "mechanism": "genome → developmental limb program → reach",
+   "cmps": [
+    {
+     "control": "random morphology (no developmental program)",
+     "full": 4.03560103295663,
+     "ctrl": 1.7522142633226179,
+     "d": 21.4941904272396,
+     "t": 60.794751228864385,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "05",
+   "group": "CQM-25",
+   "name": "Embodied dynamics and internal consistency",
+   "metric": "−relative energy drift of limb oscillator",
+   "mechanism": "symplectic (Hamiltonian) integrator for limbs",
+   "cmps": [
+    {
+     "control": "explicit Euler integrator",
+     "full": -0.04982551657635652,
+     "ctrl": -439286204.0500965,
+     "d": 446461698233307,
+     "t": 1262784377443333.5,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "06",
+   "group": "CQM-25",
+   "name": "Perceptual integration",
+   "metric": "−estimate MSE",
+   "mechanism": "reliability-weighted fusion of sight and hearing",
+   "cmps": [
+    {
+     "control": "best single sense (sight)",
+     "full": -0.1908482160796276,
+     "ctrl": -0.239845842930596,
+     "d": 2.968604890382715,
+     "t": 8.396482594612662,
+     "pass": true
+    },
+    {
+     "control": "other single sense (hearing)",
+     "full": -0.1908482160796276,
+     "ctrl": -0.9810861093203032,
+     "d": 10.064779501100233,
+     "t": 28.467495345501323,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "07",
+   "group": "CQM-25",
+   "name": "Learning and plasticity",
+   "metric": "−prediction MSE after learning",
+   "mechanism": "NLMS predictive learning (shared with PP-1)",
+   "cmps": [
+    {
+     "control": "ablation: prediction errors not used (frozen)",
+     "full": -0.3291825359016859,
+     "ctrl": -1.138208520289529,
+     "d": 3.0183994762977755,
+     "t": 8.537322952080322,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "08",
+   "group": "CQM-25",
+   "name": "Memory and continual retention",
+   "metric": "−task-A error after learning task B",
+   "mechanism": "interleaved replay of consolidated task A",
+   "cmps": [
+    {
+     "control": "no replay (sequential training)",
+     "full": -4.713103280781274,
+     "ctrl": -16.29183462473793,
+     "d": 2.008051969480902,
+     "t": 5.679628658379793,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "retention trades off against task-B accuracy"
+  },
+  {
+   "id": "09",
+   "group": "CQM-25",
+   "name": "Predictive/causal world models",
+   "metric": "−error predicting outcome of an intervention do(x)",
+   "mechanism": "world model that adjusts for observed confounder",
+   "cmps": [
+    {
+     "control": "correlational (non-causal) model",
+     "full": -0.09449272035310428,
+     "ctrl": -9.903422722876225,
+     "d": 11.058261569528163,
+     "t": 31.277486975791835,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "10",
+   "group": "CQM-25",
+   "name": "Autonomous goal regulation",
+   "metric": "fraction of time viable",
+   "mechanism": "internal drives select goals",
+   "cmps": [
+    {
+     "control": "fixed goal",
+     "full": 1,
+     "ctrl": 0.024125000000000004,
+     "d": 808.101273267864,
+     "t": 2285.6555608527597,
+     "pass": true
+    },
+    {
+     "control": "random goal switching",
+     "full": 1,
+     "ctrl": 1,
+     "d": 0,
+     "t": 0,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Mixed or restricted"
+  },
+  {
+   "id": "11",
+   "group": "CQM-25",
+   "name": "Reasoning and planning",
+   "metric": "maze success × efficiency",
+   "mechanism": "breadth-first planning over a world model",
+   "cmps": [
+    {
+     "control": "greedy heuristic",
+     "full": 0.6825,
+     "ctrl": 0.056875,
+     "d": 1.8976802881914743,
+     "t": 5.367450401216933,
+     "pass": true
+    },
+    {
+     "control": "random walk",
+     "full": 0.6825,
+     "ctrl": 0.07125000000000001,
+     "d": 1.9121257205146538,
+     "t": 5.4083082538284994,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "12",
+   "group": "CQM-25",
+   "name": "Transfer and compositional generalization",
+   "metric": "−error on unseen feature combinations",
+   "mechanism": "factored (compositional) representation",
+   "cmps": [
+    {
+     "control": "holistic lookup representation",
+     "full": -0.039985607226853674,
+     "ctrl": -1.6747700012151951,
+     "d": 2.1257518207628574,
+     "t": 6.012534110324266,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "13",
+   "group": "CQM-25",
+   "name": "Metacognition and self-modeling",
+   "metric": "type-2 AUROC (shared with HOT-2)",
+   "mechanism": "second-order reliability monitor",
+   "cmps": [
+    {
+     "control": "ablation: monitor removed (constant confidence)",
+     "full": 0.7765792150269308,
+     "ctrl": 0.4976008957066581,
+     "d": 9.030336091800093,
+     "t": 25.54164754762189,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled confidence",
+     "full": 0.7765792150269308,
+     "ctrl": 0.49858485661765317,
+     "d": 9.72726433267016,
+     "t": 27.51285828810043,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "14",
+   "group": "CQM-25",
+   "name": "Social cognition and communication",
+   "metric": "signalling-game success between two agents",
+   "mechanism": "learned sender/receiver signalling (Lewis game)",
+   "cmps": [
+    {
+     "control": "communication channel cut",
+     "full": 0.80925,
+     "ctrl": 0.25325,
+     "d": 8.308137082726752,
+     "t": 23.49896028089403,
+     "pass": true
+    },
+    {
+     "control": "social: schema removed",
+     "full": -0.1580977074632307,
+     "ctrl": -0.4961423579895475,
+     "d": 12.155805654149106,
+     "t": 34.38181043533844,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "15",
+   "group": "CQM-25",
+   "name": "Individuality and maintained boundary",
+   "metric": "fraction of time membrane integrity > 0.7",
+   "mechanism": "active membrane maintenance against erosion",
+   "cmps": [
+    {
+     "control": "no maintenance",
+     "full": 0.20362500000000003,
+     "ctrl": 0.013625000000000002,
+     "d": 4.548132124376217,
+     "t": 12.864060267515205,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "16",
+   "group": "CQM-25",
+   "name": "Resource-dependent self-maintenance",
+   "metric": "mean surviving population",
+   "mechanism": "energy only from foraging; resource-gradient following",
+   "cmps": [
+    {
+     "control": "blind foraging (no resource sensing)",
+     "full": 8.073125000000003,
+     "ctrl": 4.504375000000001,
+     "d": 11.577868421819451,
+     "t": 32.7471570910165,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "17",
+   "group": "CQM-25",
+   "name": "Homeostatic regulation",
+   "metric": "−variance around setpoint",
+   "mechanism": "negative-feedback energy regulation",
+   "cmps": [
+    {
+     "control": "open loop",
+     "full": -0.005748722854016555,
+     "ctrl": -0.6260388423216592,
+     "d": 2.7804679386426026,
+     "t": 7.864350937143861,
+     "pass": true
+    },
+    {
+     "control": "random corrections",
+     "full": -0.005748722854016555,
+     "ctrl": -0.7363868233446897,
+     "d": 1.904078070574391,
+     "t": 5.385546062446997,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "18",
+   "group": "CQM-25",
+   "name": "Repair and functional resilience",
+   "metric": "−error after 40% lesion",
+   "mechanism": "error-driven relearning + genomic regeneration",
+   "cmps": [
+    {
+     "control": "no repair",
+     "full": -1.860796260114463e-7,
+     "ctrl": -5.772984343158189,
+     "d": 2.353418472479249,
+     "t": 6.656472643439053,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "19",
+   "group": "CQM-25",
+   "name": "Recurrent processing",
+   "metric": "delayed recall (shared with RPT-1)",
+   "mechanism": "recurrent reservoir",
+   "cmps": [
+    {
+     "control": "recurrence ablated (W=0)",
+     "full": 0.9796875,
+     "ctrl": 0.5009375,
+     "d": 16.458345572628453,
+     "t": 46.55123104606868,
+     "pass": true
+    },
+    {
+     "control": "random control: shuffled labels",
+     "full": 0.9796875,
+     "ctrl": 0.5231249999999998,
+     "d": 5.488190948492224,
+     "t": 15.522948144501925,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "20",
+   "group": "CQM-25",
+   "name": "Global broadcast",
+   "metric": "broadcast-only module accuracy (shared with GWT-3)",
+   "mechanism": "workspace broadcast",
+   "cmps": [
+    {
+     "control": "ablation: broadcast cut",
+     "full": 0.9929166666666669,
+     "ctrl": 0.49187499999999995,
+     "d": 24.113744539740054,
+     "t": 68.20396913540111,
+     "pass": true
+    },
+    {
+     "control": "random control: random broadcast",
+     "full": 0.9929166666666669,
+     "ctrl": 0.49916666666666665,
+     "d": 24.770782677074713,
+     "t": 70.06235362503116,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "21",
+   "group": "CQM-25",
+   "name": "Causal integration and differentiation",
+   "metric": "phi proxy (bits); state entropy (differentiation)",
+   "mechanism": "recurrent binary network",
+   "cmps": [
+    {
+     "control": "partitioned network (integration)",
+     "full": 0.32768692209061995,
+     "ctrl": 0.03320234283156586,
+     "d": 1.6332307293621473,
+     "t": 4.619474095896901,
+     "pass": true
+    },
+    {
+     "control": "uncoupled network (differentiation)",
+     "full": 4.994572653884994,
+     "ctrl": 5.984613655904738,
+     "d": -2.57006948557089,
+     "t": -7.269254245471192,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Mixed or restricted"
+  },
+  {
+   "id": "22",
+   "group": "CQM-25",
+   "name": "Valence control and motivational trade-offs",
+   "metric": "net outcome of approach/avoid choices",
+   "mechanism": "need-weighted valence of reward vs pain",
+   "cmps": [
+    {
+     "control": "valence ablated (flat values)",
+     "full": 0.2078188626663555,
+     "ctrl": 0,
+     "d": 16.214239613455995,
+     "t": 45.86079512983312,
+     "pass": true
+    },
+    {
+     "control": "random choices",
+     "full": 0.2078188626663555,
+     "ctrl": -0.003541172027784391,
+     "d": 9.866617732363217,
+     "t": 27.907009223717868,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "23",
+   "group": "CQM-25",
+   "name": "Substrate pluralism",
+   "metric": "same xorshift program on RV32I interpreter and in JS gives identical outputs",
+   "mechanism": "RV32I interpreter vs native JS (checked in-page)",
+   "cmps": [],
+   "pass": false,
+   "category": "Implementation identified",
+   "note": "checked live in the page; not a controlled comparison"
+  },
+  {
+   "id": "24",
+   "group": "CQM-25",
+   "name": "Instrumentation and reproducibility",
+   "metric": "re-running a seeded test reproduces identical numbers",
+   "mechanism": "seeded PRNG, JSON export, git history",
+   "cmps": [],
+   "pass": false,
+   "category": "Implementation identified",
+   "note": "checked by running the suite twice and comparing hashes"
+  },
+  {
+   "id": "25",
+   "group": "CQM-25",
+   "name": "Visual and embodied scale",
+   "metric": "measured params, backbuffer and fps",
+   "mechanism": "GPU procedural network + raymarched HDR renderer",
+   "cmps": [],
+   "pass": false,
+   "category": "Implementation identified",
+   "note": "measured in-page"
+  }
+ ],
+ "v2": [
+  {
+   "id": "v2-AI",
+   "group": "Prereg v2",
+   "name": "Active inference, nonstationary depleting world",
+   "metric": "viability; −belief surprise (bits)",
+   "mechanism": "hazard-aware Bayesian filter + 4-step expectimax over (belief, energy) with value of information",
+   "cmps": [
+    {
+     "control": "viability vs passive policy",
+     "full": 0.4766666666666668,
+     "ctrl": 0.15583333333333335,
+     "d": 1.4825305994239637,
+     "t": 4.193229760676968,
+     "pass": true
+    },
+    {
+     "control": "viability vs random policy",
+     "full": 0.4766666666666668,
+     "ctrl": 0.029166666666666667,
+     "d": 2.239709692652542,
+     "t": 6.334855646255402,
+     "pass": true
+    },
+    {
+     "control": "belief accuracy vs passive policy",
+     "full": -1.889042270270294,
+     "ctrl": -2.632117203705703,
+     "d": 1.7179283623877495,
+     "t": 4.8590351785483135,
+     "pass": true
+    },
+    {
+     "control": "belief accuracy vs random policy",
+     "full": -1.889042270270294,
+     "ctrl": -2.4298769622405096,
+     "d": 1.2361643323717106,
+     "t": 3.496400728323911,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "v2-10",
+   "group": "Prereg v2",
+   "name": "Autonomous goal regulation, drifting needs + depletion",
+   "metric": "fraction of time viable",
+   "mechanism": "online hunger-rate estimate + 4-step model-predictive drive minimisation (eat/rest/move)",
+   "cmps": [
+    {
+     "control": "fixed goal (always eat)",
+     "full": 0.6844791666666667,
+     "ctrl": 0.043854166666666666,
+     "d": 2.838305043002432,
+     "t": 8.027938971931981,
+     "pass": true
+    },
+    {
+     "control": "random goal switching",
+     "full": 0.6844791666666667,
+     "ctrl": 0.18208333333333337,
+     "d": 2.041182860499634,
+     "t": 5.773336969204182,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "v2-21",
+   "group": "Prereg v2",
+   "name": "Neural complexity (TSE) and stimulus differentiation",
+   "metric": "C_N (bits); I(S;X) (bits)",
+   "mechanism": "couplings shaped by developmental hill-climbing on own stimulus stream (separate RNG) for C_N + I(S;X)",
+   "cmps": [
+    {
+     "control": "uncoupled network (C_N)",
+     "full": 1.4434282408760748,
+     "ctrl": 0.026688469777963228,
+     "d": 8.00582080254711,
+     "t": 22.643880713781563,
+     "pass": true
+    },
+    {
+     "control": "random coupled network (C_N)",
+     "full": 1.4434282408760748,
+     "ctrl": 0.7025492779415076,
+     "d": 2.282459226333261,
+     "t": 6.455769586888198,
+     "pass": true
+    },
+    {
+     "control": "random coupled network (I(S;X))",
+     "full": 1.356583324119628,
+     "ctrl": 0.7868708110891699,
+     "d": 1.9333956710086515,
+     "t": 5.468468758747732,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  }
+ ],
+ "v21": [
+  {
+   "id": "v2.1-23",
+   "group": "Prereg v2.1",
+   "name": "Substrate pluralism: weight hash on RV32I, GPU and JS",
+   "metric": "bit-identical agreement with JS reference (256 outputs/seed)",
+   "mechanism": "same hh() on RV32I(+M) machine code, GLSL uint shader, JS Math.imul",
+   "cmps": [
+    {
+     "control": "RV32I vs JS: mismatched-substrate control (RV32I running xorshift)",
+     "full": 1,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    },
+    {
+     "control": "GPU vs JS: mismatched-substrate control (GPU running xorshift)",
+     "full": 1,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "RV32I all-seeds exact: true; GPU all-seeds exact: true (ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver))"
+  },
+  {
+   "id": "v2.1-24",
+   "group": "Prereg v2.1",
+   "name": "Reproducibility: bit-identity of instrumented runs",
+   "metric": "fraction of 64 Float64 checkpoints bit-identical between two runs",
+   "mechanism": "seeded mulberry32 streams, no wall-clock or global state in the agents",
+   "cmps": [
+    {
+     "control": "perturbed-seed control (seed+1)",
+     "full": 1,
+     "ctrl": 0.04258820507755366,
+     "d": 62.24186135079144,
+     "t": 176.04656893927006,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "cross-process results.json SHA-256 check is run by repro.sh and reported alongside"
+  },
+  {
+   "id": "v2.1-25",
+   "group": "Prereg v2.1",
+   "name": "Visual and embodied scale",
+   "metric": "body participation ratio; rendered Sobel detail",
+   "mechanism": "8×6-node Hamiltonian limb chains; full SDF scene (shell, limbs, spines, fin, eyes, inner organs)",
+   "cmps": [
+    {
+     "control": "reduced-scale body (2 chains × 3 nodes): participation ratio",
+     "full": 6.986949755005546,
+     "ctrl": 4.691416520321569,
+     "d": 7.1164546304197485,
+     "t": 20.12837330870484,
+     "pass": true
+    },
+    {
+     "control": "reduced-scale render (body ellipsoid only): Sobel detail",
+     "full": 0.05690564317928676,
+     "ctrl": 0.03149026881687964,
+     "d": 6.99337328124852,
+     "t": 19.780246682158584,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "render measured on ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+# Harness changes after the first run (criteria in PREREGISTRATION.md untouched)
+run1.txt = first run, verbatim. run2.txt = final run.
+Mechanism changes (the system under test, not the tests):
+- Reservoir units got a per-unit random bias (symmetric tanh with ±1 inputs could not represent XOR). Applies to full AND ablated nets. RPT-2: FAIL -> PASS.
+- Attention schema rewritten as a correct 2-state Kalman filter (first version had wrong covariance algebra). AST-1 ablation now passes; AST-1 random-schema control still FAILS (d=0.96 passes, but t=2.70 < 2.75 because the random schema sometimes diverges, giving huge variance) and is reported as a failure.
+- UAL latent-context reversal learner: likelihood computed before the value update (bug), and switching by likelihood-ratio evidence. Serial reversal still FAILS (d=0.48).
+Test-design bug fixes (disclosed; they make tests harder or correct, never easier for the full system):
+- IIT behavior decoder: removed cross-half product features, which let the decoder do the integration for the partitioned net. Behavior test still FAILS.
+- UAL negative patterning: added context-alone (non-reinforced) trials. Without them a bias term solves A+/B+/AB- linearly, so the RW baseline was wrongly scoring 100%. Now PASS.
+- Signalling game argmax helper bug (indexOf on noisy copy) fixed.
+Left failing on purpose (no control or threshold was changed): activeInference (passive policy already survives; looking costs surprise), iit4 behavior, ual reversal, AST-1 random control, CQM 01 selection, CQM 10 vs random switching, CQM 21 differentiation.
+
+## v3 round (2026-10-28). PREREGISTRATION.md unchanged; no test, control, environment, threshold or seed changed.
+run3.txt = v3 run, verbatim. Only the system under test changed. Number of mechanism variants tried per item is listed so the search is visible.
+- AST-1 (2 variants): the schema now monitors its own surprise (normalized innovation squared) and inflates its drift-uncertainty
+  accordingly. The same architecture is used by the random-schema control (only its parameters are random). Variant 1 (inflating
+  P_aa) rescued the random control too much and failed; variant 2 (inflating P_dd) passes: random control d=0.99, t=2.79 (marginal).
+- iit4 (3 variants): units got thresholds (biases) and the weights are shaped by plasticity (stochastic hill-climbing on XOR decodability
+  of a separate training stream). Reason: without biases the ±1 network is odd-symmetric, so XOR (an even function) cannot be linearly
+  decoded from it at all. Partition = the trained network with cross-half edges removed. Both comparisons pass; phi t=2.79 (marginal).
+  CQM-21 integration uses the same networks.
+- activeInference (1 variant): replaced the look/go heuristic with an expected-free-energy planner (4-step expectimax over beliefs).
+  It now beats random on both metrics. It converges on the passive policy's behavior, because in this preregistered environment the
+  passive policy is already optimal (viability 1.000 in every seed, SD 0). A tie gives d=0, so the two "vs passive" comparisons fail.
+- ual reversal (1 variant): Bayesian latent-cause learner (2 contexts, Beta counts, hazard 0.05). Passes (d=2.18, t=6.17).
+- CQM-01 selection (1 variant): gene g0 became a chemotaxis gene (probability of following the sensed gradient) instead of a gain inside
+  a sign(), where it barely mattered. Passes (d=1.71). Gene g1 is now vestigial (still inherited and mutated).
+- Not passing, and why, with no change possible on the creature side alone:
+  * activeInference vs passive, CQM-10 vs random switching: the control is at the ceiling (1.000, SD 0) of a bounded metric; no system
+    can exceed it, so d ≤ 0.
+  * CQM-21 differentiation: the uncoupled control is iid fair coins, which is the maximum-entropy source (6 bits, measured 5.985 because of
+    plug-in estimator bias). An offline evolutionary search over 6-unit coupled weights (1500 iterations) plateaued at 5.981.
+    Exceeding the control would need either an estimator-bias exploit (rejected) or a different preregistered test.
+Bug fixes in the page (not the harness): the HUD fps used the clamped dt (floor of 20 fps), so v2 overstated fps (it showed 20–24 when
+rAF measured ~1.3). It now uses the raw frame time. Brain passes/s is now 1000 / measured pass duration.
+
+## v4 round: Pre-registration v2 (PREREGISTRATION_v2.md committed in df3139f before any v2 code existed)
+v2 test code is under the frozen banner in harness.ts. Only the creature agents below it were iterated.
+- V2-AI agent: 11 variants tried (planning depth 3 or 4; leaf value weight K in 1.2–4; epistemic weight λ in 0–2).
+  The first variant (d3, K1.2, λ0) failed viability vs passive (d 0.68) and accuracy vs random (d 0.70).
+  The final variant (d4, K3.5, λ1) passes all four comparisons. The full grid is in the log below.
+  d3 K2.5: viability vs passive d0.30 | d3 K4: d0.42 | d4 K2.5: d0.92, acc vs random d0.47 | d4 K1.2 λ1: acc vs random d0.64 |
+  d4 K2.5 λ1: d0.96 | d4 K2.5 λ2: d0.45 | d4 K2.5 λ0.7: d0.37 | d4 K3 λ0.85: d0.75 | d4 K4 λ1.3: min d1.00 | d4 K3.5 λ1: min d1.24 (chosen)
+- V2-10 agent: 1 variant (online rate estimate + 4-step MPC). Passed first time.
+- V2-21 network: 1 variant (developmental hill-climb on C_N + I(S;X), own RNG stream). Passed first time.
+v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1, for the ceiling reasons above.
+- iit4 strengthening (v1 test unchanged): plasticity fitness = XOR decoding + α·phi proxy (on the creature's own 1500-step stream).
+  Variants: α=2 (phi d 11.99, behavior d 0.37 FAIL), α=1 (behavior d 0.67 FAIL), α=0.5 (behavior d 0.71 FAIL), α=0.2 (d 3.11/1.46), α=0.1 (d 1.63/1.76, chosen; it has the larger minimum margin).
+- AST-1 strengthening: drift-uncertainty inflation gain swept over (memory m, gain g) ∈ {(0.9,1),(0.9,3),(0.8,3),(0.95,5),(0.7,2),(0.9,10)}.
+  The random-control d stays in 0.99–1.03; chose (0.9,3), d 1.03, t 2.90. It is still a marginal pass and reported as such.
+
+## v5 round: Pre-registration v2.1 (PREREGISTRATION_v2.1.md committed in 12be580 before any v2.1 code existed)
+- AST-1 mechanism (test unchanged): surprise now also inflates the schema's uncertainty about its own focus: `P00 += ASTA·(infl−1)`.
+  Two variants were tried before this one:
+  - Online phi learning: unstable, rejected.
+  - Old mechanism, ASTA=0: frozen seeds d 1.03 / t 2.90.
+  ASTA sweep, scored on held-out seed bases 2000/3000/4000 (vs random control; frozen seeds 1000.. were NOT used to choose):
+  - ASTA 0: 1.01 / 0.90 / 1.73
+  - ASTA 0.001: 1.71 / 0.64 / 1.87 (chosen, best mean)
+  - ASTA 0.003: 1.65 / 0.45 / 1.88
+  - ASTA 0.01: 1.34 / 0.22 / 1.83
+  Result on frozen seeds with ASTA=0.001: vs ablation d 1.49 / t 4.21; vs random d 1.85 / t 5.23.
+  Caveat: held-out base 3000 is fragile (even vs ablation d 0.17), because one seed's drift exceeds the |u|≤1 actuator limit and both controllers diverge.
+- v2.1-23/24/25: no mechanism iteration was needed. Code and measurement changes:
+  - RV32I gained RV32M `mul` and `LUI` so hh() runs as real machine code.
+  - attnRun gained an optional trace parameter for the V2.1-24 checkpoints.
+  - limbNodeStep was factored out for V2.1-25a.
+- Measurement bug fixed in measure_gpu.ts, not the test: the first scene render returned all-zero pixels.
+  Cause: texture unit 0 still held the R32UI hash texture, so the float ACT sampler mismatched and the draw was invalid.
+  Fix: bind a zero R32F ACT texture and check gl.getError. The criteria are unchanged.
+- Erratum (reported, not edited into the prereg): V2.1-24 says 32 AST checkpoints every 10 steps, but the task is 300 steps long.
+  So the implementation takes 30 AST checkpoints (62 total instead of 64). AI checkpoints stop if the agent dies; the agreement fraction is taken over the longer of the two traces.
+- GPU substrate disclosed: headless Chrome, ANGLE / SwiftShader (Vulkan 1.3, Subzero), a software GPU and not hardware.
