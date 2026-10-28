@@ -1321,15 +1321,15 @@
     },
     {
      "control": "uncoupled network (differentiation)",
-     "full": 5.999963899568402,
+     "full": 4.994572653884994,
      "ctrl": 5.984613655904738,
-     "d": 8.191394184851216,
-     "t": 23.168761501921388,
-     "pass": true
+     "d": -2.57006948557089,
+     "t": -7.269254245471192,
+     "pass": false
     }
    ],
-   "pass": true,
-   "category": "Bounded test evidence"
+   "pass": false,
+   "category": "Mixed or restricted"
   },
   {
    "id": "22",
