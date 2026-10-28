@@ -148,7 +148,7 @@ function hot4(): Item { const run = (mode: string) => (r: Rng): number => { cons
 // attention schema: Kalman model of own attention + hidden drift
 export let ASTM = 0.9, ASTG = 3, ASTA = 0.001; export function setAST(m: number, g: number, a = ASTA) { ASTM = m; ASTG = g; ASTA = a; }
 function attnRunTrace(r: Rng, rec: number[]): number { return attnRun(r, "full", false, rec); }
-function attnRun(r: Rng, mode: string, social: boolean, rec?: number[]): number { let a = 0, d = 0; let ea = 0, ed = 0; let P00 = 1, P01 = 0, P11 = 1; let err = 0; const T = 300; const Rn = 0.5, Qd = 0.0064; let infl = 1;
+export function attnRun(r: Rng, mode: string, social: boolean, rec?: number[]): number { let a = 0, d = 0; let ea = 0, ed = 0; let P00 = 1, P01 = 0, P11 = 1; let err = 0; const T = 300; const Rn = 0.5, Qd = 0.0064; let infl = 1;
   const phi = mode === "randschema" ? r() * 0.5 : 0.98; const fa = social ? 0.9 : 1;
   for (let t = 0; t < T; t++) { const obs = a + gauss(r) * Math.sqrt(Rn);
     // schema update with observation (state [a, d])

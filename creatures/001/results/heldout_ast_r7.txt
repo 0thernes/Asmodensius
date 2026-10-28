@@ -1,0 +1,18 @@
+base 2000: vs ablation d 0.62 t 1.74 | vs random d 1.71 t 4.84 FAIL  minFull -3.90
+base 3000: vs ablation d 0.17 t 0.47 | vs random d 0.64 t 1.82 FAIL  minFull -16.82
+base 4000: vs ablation d 1.19 t 3.37 | vs random d 1.87 t 5.28 PASS  minFull -0.52
+base 5000: vs ablation d 1.49 t 4.22 | vs random d 1.90 t 5.38 PASS  minFull -0.38
+base 6000: vs ablation d 3.24 t 9.16 | vs random d 3.48 t 9.84 PASS  minFull -0.39
+base 7000: vs ablation d 2.32 t 6.56 | vs random d 1.61 t 4.55 PASS  minFull -0.39
+base 8000: vs ablation d 1.38 t 3.90 | vs random d 2.84 t 8.04 PASS  minFull -0.79
+base 9000: vs ablation d 2.23 t 6.29 | vs random d 2.04 t 5.78 PASS  minFull -0.39
+worst d 0.17
+1000 oracle vs ablation d 2.52 t 7.12
+2000 oracle vs ablation d 0.97 t 2.74
+3000 oracle vs ablation d 0.29 t 0.81
+4000 oracle vs ablation d 1.82 t 5.14
+5000 oracle vs ablation d 2.67 t 7.55
+6000 oracle vs ablation d 5.90 t 16.68
+7000 oracle vs ablation d 4.00 t 11.32
+8000 oracle vs ablation d 2.53 t 7.15
+9000 oracle vs ablation d 3.45 t 9.77

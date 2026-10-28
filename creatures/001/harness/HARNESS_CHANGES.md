@@ -80,3 +80,11 @@ v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1
 - Honest caveat: both conditions have the same true entropy ceiling of 6 bits. The margin comes from the itinerant network covering states *more evenly than chance* (its plug-in count variance is lower than multinomial sampling), not from higher true entropy. Read this pass as "full, even repertoire coverage through structured itinerancy", not as "more entropy than random". A non-ceiling differentiation test (v2-21, C_N + I(S;X)) already exists and passes.
 - v1 is now 44/49 by item (activeInference and CQM-10 still fail at ceiling). v2 3/3 and v2.1 3/3 are unchanged.
 - The run needs results/gpu_record.json copied into harness/ (run.ts reads it from cwd). Without it the v2.1 GPU comparisons show FAIL.
+
+### (2) AST-1 held-out robustness — diagnosed; no mechanism can fix it under the frozen metric
+- New diagnostics (not tests): `harness/heldout_ast.ts` scores AST-1 on held-out seed bases 2000–9000. `harness/heldout_oracle.ts` scores an oracle controller that knows the true focus and drift. Output is in results/heldout_ast_r7.txt.
+- Current mechanism (ASTA 0.001): bases 4000–9000 pass; 2000 fails (d 0.62 vs ablation) and 3000 fails (d 0.17).
+- The full schema beats the ablation on every seed in every base. The failures come from seeds whose drift exceeds the |u|≤1 actuator (seed 3012: drift above 1 for about 55 steps). On those seeds the frozen metric (−mean a²) has a heavy tail, which inflates the pooled SD.
+- Even the oracle fails bases 2000 (d 0.97, t 2.74) and 3000 (d 0.29) against the same ablation. So no attention-schema mechanism can make AST-1 pass on those bases under the frozen v1 metric.
+- Mechanism tried and rejected: a saturation-aware MPC (horizon 30–60, drift inflated by 0–2 SD). It gave no gain on 2000/3000 and was worse on 4000/5000, so it was reverted.
+- What was done instead: a tail-robust held-out test, AST-1R, preregistered in v2.2 before any v2.2 code was written. The frozen v1 AST-1 result is reported unchanged.
