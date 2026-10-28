@@ -19,3 +19,7 @@
 - Preregistration v2.2: 9 of 11 pass; 9 of 100 roadmap capabilities are achieved as small harness models.
 - Benchmark rubric: 7 → 8.5. E is tested (CQM-01/02) and R is partial; the asymmetric-scoring caveat is shown on the page.
 - Link check (2026-10-28): the benchmark TSV citations are plain-text references with no URLs, so there were no citation links to check. The site's only outbound links are github.com/tsotchke/eshkol and github.com/tsotchke/moonlab; both returned HTTP 200. The README CI badge still points at a placeholder OWNER repo, because the repo is unpublished by design.
+
+## Round 8 (2026-10-28)
+- REVERTED the round-7 CQM-21 mechanism (Gray-code binary counter). It passed only because a deterministic state cycle covers states more evenly than iid sampling, which is not genuine differentiation. CQM-21 is reported as FAIL again under v1.
+  Why no real mechanism can pass this frozen test: its metric is the unconditioned plug-in state entropy of 6 binary units, and its control is iid fair coins, the maximum-entropy source. Any genuine stochastic network, including stimulus-dependent repertoires, has true entropy ≤ 6 bits. Its expected plug-in estimate cannot exceed the iid control except through super-uniform (counter-like) coverage. The non-ceiling differentiation test v2-21 (C_N, I(S;X)) passes.

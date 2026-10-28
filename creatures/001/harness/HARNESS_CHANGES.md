@@ -106,3 +106,7 @@ v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1
 - E (evolution) moves from roadmap to tested, backed by CQM-01 (heredity + selection) and CQM-02 (mutation), both passing.
 - R (self-reproduction) moves to partial: harness agents reproduce with heredity, but the full creature does not copy itself.
 - The score goes from 7 to 8.5 and the rank from 2 to 1 (Polyworld 8). The benchmark page now states that the scoring is asymmetric (self-tested vs. from published descriptions) and makes no claim of being more alive.
+
+## Round 8
+### (1) CQM-21 mechanism reverted
+- `creatureCPGEntropy` and `diffCtrl` were removed (reverse-applied from 9646901). CQM-21 uses the original network again and fails (differentiation d −2.57), as in run6. See CHANGELOG round 8.

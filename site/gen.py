@@ -80,7 +80,7 @@ def table(items):
     return "".join(r) + "</table>"
 
 CEIL = f"""<div class="card warn"><b>Stated plainly: v1 has {len(v1fails)} failures</b> ({", ".join(E(i["id"]) for i in v1fails)}).
-activeInference and CQM-10 hit the ceiling: full and passive/random-switching controls both score 1.000. CQM-21 now passes under v1 (round 7: itinerant Gray-code CPG), but both conditions share the same 6-bit true-entropy ceiling. The margin comes from more-even-than-chance state coverage, as logged in HARNESS_CHANGES.md. The failures stay recorded as FAIL under the v1 pre-registration, and their criteria are not changed. Pre-registration v2 added new non-ceiling tests for the same properties.
+activeInference and CQM-10 hit the ceiling: full and passive/random-switching controls both score 1.000. CQM-21 fails on differentiation: the uncoupled control is iid fair coins, the maximum-entropy source. A round-7 binary-counter mechanism that passed only by covering states more evenly than chance was reverted in round 8, because a deterministic state cycle is not genuine differentiation. CQM-21 stays FAIL until a real mechanism passes the frozen test. The failures stay recorded as FAIL under the v1 pre-registration, and their criteria are not changed. Pre-registration v2 added new non-ceiling tests for the same properties.
 There, {c2["pass"]}/{len(R["v2"])} pass, and they are shown next to the v1 failures below. A v2 pass does not convert a v1 failure into a pass.</div>"""
 
 # ---------- index
