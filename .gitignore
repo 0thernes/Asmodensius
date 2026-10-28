@@ -1,1 +1,4 @@
 node_modules/
+creatures/001/harness/results.json
+creatures/001/harness/run6.txt
+creatures/001/harness/gpu_record.json
