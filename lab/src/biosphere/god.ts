@@ -22,6 +22,11 @@ export type WorldDials = {
   recycling: number;         // fraction of detritus decomposed back into the local patch per tick (0 = waste is a sink)
   parasites: number;         // kJ/tick drained from each host's blood glucose into parasite biomass
   game: "none" | "pd" | "stag"; // payoff game played on contact; payoffs are harvested from the shared local patch
+  // v0.5
+  gameStrategy: "fixed" | "learned"; // fixed: cooperate iff DA > 0.25. learned: p(C) = sigmoid(w), w updated by the creature's own dopamine response to the payoff
+  ph: number;                // chemistry: water/soil pH (7 neutral). Digestive loss 0.004*|pH-7| kJ/tick from blood glucose into detritus
+  singularity: number;       // anomaly: strength of a point attractor at the dome centre (units/tick pull at r=1, ~1/r); creatures within 0.7 are teleported by the dice
+  grazers: number;           // ecology: number of grazer agents (second, non-neural species) competing for patch food; dead grazer mass -> detritus
 };
 export type CreatureDials = {
   modShift: { name: string; perTick: number } | null;   // neuromodulator shift
@@ -29,7 +34,7 @@ export type CreatureDials = {
   lesionDice: boolean;       // dice: one random mechanism lesion at birth
   mutationSigma: number;     // dice: genes ~ exp(N(0, sigma)) at birth
 };
-export const BASE_WORLD: WorldDials = { foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none" };
+export const BASE_WORLD: WorldDials = { foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none", gameStrategy: "fixed", ph: 7, singularity: 0, grazers: 0 };
 export const BASE_CREATURE: CreatureDials = { modShift: null, rewireFrac: 0, lesionDice: false, mutationSigma: 0 };
 export const PRESETS: Record<string, Partial<WorldDials>> = {
   utopia: { foodCapScale: 2, growthScale: 3, gravity: 0.5 },

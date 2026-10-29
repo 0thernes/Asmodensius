@@ -21,6 +21,8 @@ export class Creature001 implements CreatureLab {
     if (part.startsWith("nm:")) { const m = o.nm[part.slice(3)]; return Float64Array.from([m.P, m.E]); }
     if (part === "body") return Float64Array.from([o.blood.glc, o.blood.ffa, o.blood.aa, o.fat, o.hr, o.atp]);
     if (part === "value") return Float64Array.from(o.wSite);
+    if (part === "regionRates") return Float64Array.from(REGIONS.map(([r]) => o.regionRate[r] ?? 0)); // v0.5: smoothed per-region firing rates (what HYP hunger is computed from)
+    if (part === "rateAvg") { const out: number[] = []; for (const r of ["HYP", "CTX", "STR", "MOT", "INS"]) for (let i = R0[r]; i < R0[r] + RN[r]; i++) out.push(o.rateAvg[i]); return Float64Array.from(out); } // v0.5: slow per-neuron rates
     const a = R0[part], n = RN[part];
     if (mode === "slow") { const x = new Float64Array(2 * n); for (let i = 0; i < n; i++) { x[i] = o.rate[a + i]; x[n + i] = o.v[a + i]; } return x; }
     // full: every per-neuron array, plus plasticity: incoming synaptic weights and e-prop eligibility traces
