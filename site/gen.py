@@ -23,7 +23,7 @@ main{max-width:1180px;margin:0 auto;padding:24px 28px 60px}h1{font-size:26px;mar
 
 PAGES = [("index.html","Home"),("results.html","Results"),("tests.html","Tests"),("diagrams.html","Diagrams"),("docs.html","Docs"),("glossary.html","Glossary"),
          ("versions.html","Versions"),("stack.html","Tech stack"),("benchmark.html","Benchmark"),("rankings.html","Rankings"),("roadmap.html","Roadmap to being alive"),
-         ("grounding.html","Biological grounding"),("sitemap.html","Index")]
+         ("grounding.html","Biological grounding"),("systems.html","Systems"),("sitemap.html","Index")]
 
 def page(fn, title, body):
     nav = "".join(f'<a href="{f}">{E(t)}</a>' for f, t in PAGES)
@@ -239,5 +239,37 @@ LC = {"established":"pass","theorized":"impl","speculative":"fail"}
 gb = "".join(f'<h2>{E(t)}</h2><table><tr><th>Label</th><th>Feature</th><th>Citation</th></tr>' + "".join(f'<tr><td><span class="tag {LC[l]}">{l}</span></td><td>{E(f)}</td><td class="mut">{E(c)}</td></tr>' for l, f, c in rows) + "</table>" for t, rows in G)
 page("grounding.html", "Biological grounding", f"<h1>Biological grounding</h1><p class='mut'>Every feature is labeled established, theorized or speculative, with a citation.</p>{gb}")
 
+
+# ---- Systems page (Round 13 organism): coupling-matrix diagram + v3.0 prereg results ----
+CPL = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_coupling.json")))
+V30 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v30.json")))
+def systems_page():
+    P = CPL["parts"]; n = len(P); M = {(a, b): l for a, b, l in CPL["edges"]}; c = 16; off = 150
+    cells = []
+    for i, a in enumerate(P):
+        cells.append(f'<text x="{off-4}" y="{off+i*c+12}" font-size="10" text-anchor="end" fill="#bbb">{E(a)}</text>')
+        cells.append(f'<text transform="translate({off+i*c+11},{off-4}) rotate(-60)" font-size="10" fill="#bbb">{E(a)}</text>')
+        for j, b in enumerate(P):
+            l = M.get((a, b)); fill = "#e8804f" if l else "rgba(127,127,127,0.08)"
+            cells.append(f'<rect x="{off+j*c}" y="{off+i*c}" width="{c-1}" height="{c-1}" fill="{fill}"><title>{E(a)} → {E(b)}: {E(l or "no direct coupling")}</title></rect>')
+    W = off + n * c + 10
+    svg = f'<svg viewBox="0 0 {W} {W}" style="max-width:760px;width:100%">{"".join(cells)}</svg>'
+    rows = ""
+    for it in V30["items"]:
+        for k, cm in enumerate(it["cmps"]):
+            rows += f'<tr><td>{E(it["id"]) if k==0 else ""}</td><td>{E(it["name"]) if k==0 else ""}</td><td>{E(cm["control"])}</td><td>{fv(cm["full"])}</td><td>{fv(cm["ctrl"])}</td><td>{fd(cm["d"])}</td><td>{fd(cm["t"])}</td><td>{"PASS" if cm["pass"] else "FAIL"}</td></tr>'
+        if not it["cmps"]: rows += f'<tr><td>{E(it["id"])}</td><td>{E(it["name"])}</td><td colspan="5">{E(it.get("metric",""))}</td><td>{"PASS" if it["pass"] else "FAIL"}</td></tr>'
+    npass = sum(1 for it in V30["items"] if it["pass"])
+    pc = CPL["params"]
+    body = f"""<h1>Systems: the integrated organism (Round 13)</h1>
+<p>One deterministic, seedable TypeScript module (<code>creatures/001/organism/organism.ts</code>) couples a {pc['synapses']}-synapse LIF spiking CNS + ENS, seven neuromodulators, an exact kJ metabolic ledger, hormones, a circadian/two-process sleep system with NREM replay and REM recombination, a latent-curvature interoceptive loop, and a 3-qubit state-vector noise source. The node test suite and the browser creature run the <em>same</em> file. Organism parameters (seed 2000): {pc['total']:,}. In the browser it is coupled both ways to the 100M procedural-weight GPU net and its 680,008 learned parameters (≈100.68M in total, counted honestly: the 100M weights are fixed hash functions, not trained).</p>
+<h2>Coupling matrix</h2><p class="mut">Row → column means the row subsystem directly changes the column subsystem in code. Hover a cell for the mechanism. {len(CPL['edges'])} directed couplings.</p>{svg}
+<h2>Pre-registration v3.0 results (test seeds {V30['seeds'][0]}–{V30['seeds'][-1]}, frozen before running)</h2>
+<p>Pass rule: Cohen's d ≥ 0.8 and Welch t ≥ 2.75 against every control (C9 is an equivalence test, |d| &lt; 0.5). {npass}/{len(V30['items'])} pass. Failures are reported as they came out; no criteria were changed after the run.</p>
+<table><tr><th>ID</th><th>Test</th><th>Control</th><th>full</th><th>ctrl</th><th>d</th><th>t</th><th></th></tr>{rows}</table>
+<h2>Caveats</h2><ul><li>C5, C6 and C7 test couplings that are wired directly, so passing confirms the wiring works end to end; it is not a discovery.</li><li>C2 failed: sleep beats forced wake (d 1.98), but against "sleep with replay off" t = 2.63 &lt; 2.75. C8b failed: a higher intelligence level does not measurably improve choice (d 0.22).</li><li>The quantum layer is a classical simulation of a 3-qubit state vector. C9 found no quantum advantage, as preregistered.</li><li>Ports from tsotchke (QGT definition, NIST RCT/APT health tests) are re-implementations of the definitions, not the original code.</li></ul>
+<p>Full design: <code>creatures/001/organism/SYSTEMS_DESIGN.md</code>. Live inspector: open the creature, wake it, and use the Organism inspector panel.</p>"""
+    page("systems.html", "Systems", body)
+systems_page()
 page("sitemap.html", "Index", "<h1>Site index</h1><ul>" + "".join(f'<li><a href="{f}">{E(t)}</a></li>' for f, t in PAGES) + '<li><a href="../creatures/001/index.html">Creature #001 (standalone)</a></li></ul>' + f'<p class="mut">Generated {datetime.date.today().isoformat()} from results.json.</p>')
 print("site written:", len(PAGES), "pages; creature score", cre_score, "rank", rank)

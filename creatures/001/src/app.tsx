@@ -164,7 +164,7 @@ export default function Creature() {
   const ctl = useRef({ calm: false, muted: false, power: [0, 0, 0, 0] as number[], sound: false, damage: 0 });
   ctl.current.calm = calm; ctl.current.muted = muted;
   const audio = useRef<{ master: GainNode } | null>(null);
-  const hudRef = useRef<Hud | null>(null);
+  const hudRef = useRef<Hud | null>(null); const orgRef = useRef<Organism | null>(null); const [orgReady, setOrgReady] = useState(false); const [speed, setSpeedS] = useState(2); const speedRef = useRef(2);
   useEffect(() => { if (audio.current) audio.current.master.gain.value = muted ? 0 : 0.12; }, [muted]);
 
   useEffect(() => {
@@ -188,7 +188,7 @@ export default function Creature() {
     let energy = 0.8, integrity = 1, conf = 0.5, t = 0; const att = { ea: 0, ed: 0, P: 1 }; let wsIdx = 0; let curiosity = 0;
     const qs = new QSim(); let S = chsh(160); let collapsed = -1, collapseT = 0; let mood = 0;
     const rv = new RV(); rv.x[10] = osU32() | 1;
-    const ABL = (LTQ.get("ablate") || "").split(",").filter(Boolean); const organs = new Organs(Number(LTQ.get("seed")) || (osU32() % 100000), ABL); (window as any).__organs = organs; let frame = 0, startle = 0, arousal = 0.5, light = 0; const LR: { R: number; ar: number; th: number }[] = []; const FR = Number(LTQ.get("frames")) || 480;
+    const ABL = (LTQ.get("ablate") || "").split(",").filter(Boolean); const organs = new Organs(Number(LTQ.get("seed")) || (osU32() % 100000), ABL); (window as any).__organs = organs; const org = new Organism({ seed: Number(LTQ.get("seed")) || (osU32() % 100000), entropy: "crypto" }); orgRef.current = org; (window as any).__org = org; setOrgReady(true); let ov = org.view(); let frame = 0, startle = 0, arousal = 0.5, light = 0; const LR: { R: number; ar: number; th: number }[] = []; const FR = Number(LTQ.get("frames")) || 480;
     const m = { x: 0, y: 0, vx: 0, vy: 0, in: false, click: 0 };
     const onMove = (e: PointerEvent): void => { const r = canvas.getBoundingClientRect(); const nx = ((e.clientX - r.left) / r.width) * 2 - 1, ny = -(((e.clientY - r.top) / r.height) * 2 - 1); m.vx = nx - m.x; m.vy = ny - m.y; m.x = nx; m.y = ny; m.in = true; };
     const onLeave = (): void => { m.in = false; }; const onDown = (): void => { m.click = 1; startle = Math.max(startle, organs.poke((m.x > 0 ? "R" : "L") + (m.y > 0 ? "U" : "D"))); /* habituation organ */ };
@@ -215,13 +215,13 @@ export default function Creature() {
       const gx = m.in ? m.x : Math.sin(t * 0.21) * 0.6, gy = m.in ? m.y : Math.cos(t * 0.13) * 0.4;
       // RV32I core: 8 loop iterations per frame
       rv.mem.setInt32(256, Math.floor(1 + 600 * Math.hypot(m.vx, m.vy)), true); for (let i = 0; i < PROGRAM.length * 8; i++) rv.step(); const phase = rv.mem.getInt32(260, true) * 0.002, mut = rv.mem.getUint32(264, true);
-      frame++; light = (frame % 24) < 12 ? 1 : 0; arousal = organs.circ(light); organs.recover(); startle *= 0.8; if (frame % 30 === 0) organs.mutate(mut); /* live organs: circadian, habituation, lineage */
+      frame++; light = (frame % 24) < 12 ? 1 : 0; organs.circ(light); /* legacy v2.3 oscillator kept for the lineage chain; arousal/light now come from the organism */ for (let k = 0; k < speedRef.current; k++) org.step(); ov = org.view(); light = ov.light; arousal = Math.max(0, Math.min(1, ov.NE / 0.6)); organs.recover(); startle *= 0.8; if (frame % 30 === 0) organs.mutate(mut); /* live organs: circadian, habituation, lineage */
       // attention schema (Kalman model of where its own attention is; noisy observation = gaze)
       { const obs = gx + (((mut >>> 8) & 255) / 255 - 0.5) * 0.3; const Kg = att.P / (att.P + 0.3); att.ea += Kg * (obs - att.ea) + att.ed; att.ed = 0.95 * att.ed + 0.05 * Kg * (obs - att.ea); att.P = (1 - Kg) * att.P + 0.02; }
       // workspace: 4 modules compete by salience, winner broadcast
       const salience = [Math.hypot(m.vx, m.vy) * 40 + (m.in ? 0.3 : 0), mic * 2, Math.max(0, 0.6 - energy) * 3, curiosity * 8];
       wsIdx = salience.indexOf(Math.max(...salience));
-      const senses = [gx, gy, m.vx * 20, m.vy * 20, m.click, mic, energy * 2 - 1, integrity * 2 - 1, conf, curiosity * 4, ...qs.probs(), Math.sin(phase), Math.cos(phase), wsIdx / 3, att.ea, att.ed * 10, Math.sin(t * 0.3), Math.cos(t * 0.17), ((mut >>> 4) & 255) / 128 - 1, C.power[0] > 0 ? 1 : 0, C.power[1] > 0 ? 1 : 0];
+      const senses = [gx, gy, m.vx * 20, m.vy * 20, m.click, mic, energy * 2 - 1, integrity * 2 - 1, conf, curiosity * 4, ...qs.probs(), Math.sin(phase), Math.cos(phase), wsIdx / 3, att.ea, att.ed * 10, ov.DA, ov.kappa, /* organism state into the 100M net's senses (replaced two clock sinusoids) */ ((mut >>> 4) & 255) / 128 - 1, C.power[0] > 0 ? 1 : 0, C.power[1] > 0 ? 1 : 0];
       // GPU brain: asynchronous forward pass of the 100M procedural network; readout learns online
       if (engine && !busy) { busy = true; const x = new Float32Array(NN); for (let i = 0; i < NN; i++) x[i] = senses[proj[i][0]] * proj[i][1] * (1 - C.damage * ((i * 7919) % 100 < 40 ? 1 : 0));
         const eng = engine; const tgt = lastTarget.slice(); const pStart = performance.now(); void (async () => { const hs: Float32Array[] = [x]; const zs: Float32Array[] = []; const ro = (l: number): number => (l === NL - 1 ? NN : rows);
@@ -242,11 +242,11 @@ export default function Creature() {
       if (now - passT > 1000) { passHz = passMs ? 1000 / passMs : 0; passes = 0; passT = now; /* from measured pass duration (forward + LoRA backward) */ if (passHz < 2 && rows > 1250) rows = Math.floor(rows * 0.75); else if (passHz > 20 && rows < NN) rows = Math.min(NN, Math.floor(rows * 1.25)); }
       const target = [gx, gy, energy * 2 - 1, integrity * 2 - 1]; lastTarget = target;
       if (lastPredT) { const Ls = mseTn(lastPredT, target); backwardTn(Ls); const lr = 0.0006 * (0.3 + energy) * (integrity > 0.3 ? 1 : 0.3); for (const P of [Wr, br]) { for (let k = 0; k < P.v.length; k++) P.v[k] -= lr * Math.max(-1, Math.min(1, P.g[k])); P.g.fill(0); }
-        curiosity = curiosity * 0.95 + Ls.v[0] * 0.05; conf = conf * 0.95 + 0.05 * Math.exp(-Ls.v[0] * 4); lossH.push(Ls.v[0]); if (lossH.length > 120) lossH.shift(); }
+        curiosity = curiosity * 0.95 + Ls.v[0] * 0.05; org.predErr = Math.max(org.predErr, Math.min(1, Ls.v[0])); /* GPU net prediction error → LC */ conf = conf * 0.95 + 0.05 * Math.exp(-Ls.v[0] * 4); lossH.push(Ls.v[0]); if (lossH.length > 120) lossH.shift(); }
       const xin = new Tn(NN); xin.v.set(feat); const pred = tanhTn(linT(xin, Wr, br, NN, NOUT)); lastPredT = pred; out = pred.v;
       // metabolism, homeostasis, damage & repair
       const activity = Math.abs(out[4]) * 0.4 + C.power.reduce((a, b) => a + (b > 0 ? 0.5 : 0), 0) + m.click;
-      energy = Math.max(0, Math.min(1, energy + dt * (0.03 * (1 - activity) - 0.03 * activity + 0.03 * (0.7 - energy))));
+      void activity; energy = Math.max(0, Math.min(1, 0.5 * Math.min(1, ov.atp / 2) + 0.5 * Math.min(1, ov.glc / 5))); /* energy = organism brain ATP + blood glucose */
       if (C.damage > 0) { integrity = Math.max(0, integrity - dt * 0.4); C.damage = Math.max(0, C.damage - dt * 0.05 * energy); } else integrity = Math.min(1, integrity + dt * 0.05 * energy);
       // quantum mood
       qs.reset(); qs.ry(0, (out[5] + 1) * 1.57 + curiosity * 2); qs.ry(1, (out[6] + 1) * 1.57 * energy + m.click); qs.cx(); const probs = qs.probs();
@@ -272,13 +272,13 @@ export default function Creature() {
       m.click = 0; m.vx *= 0.8; m.vy *= 0.8;
       // ---- render ----
       const sp = progs.scene as WebGLProgram; gl.bindFramebuffer(gl.FRAMEBUFFER, rts[0].fb); gl.viewport(0, 0, bw, bh); gl.useProgram(sp);
-      gl.uniform2f(U(sp, "R"), bw, bh); gl.uniform1f(U(sp, "T"), t); gl.uniform3fv(U(sp, "Lp"), lpArr); gl.uniform4f(U(sp, "N"), out[0], out[1], out[2], out[3]); gl.uniform4f(U(sp, "N2"), integrity < 0.7 ? 1 - integrity : 0, C.calm ? 0 : Math.max(0, out[4]) * 0.5, 0, wsIdx === 1 ? 1 : 0.2);
-      gl.uniform4f(U(sp, "Q"), collapsed >= 0 ? 1 : probs[3], probs[1] + (C.power[3] > 0 ? 1 : 0), 0, 0); gl.uniform2f(U(sp, "M"), att.ea, gy); gl.uniform1f(U(sp, "calm"), C.calm ? 1 : 0);
+      gl.uniform2f(U(sp, "R"), bw, bh); gl.uniform1f(U(sp, "T"), t); gl.uniform3fv(U(sp, "Lp"), lpArr); gl.uniform4f(U(sp, "N"), out[0], out[1], out[2], out[3]); gl.uniform4f(U(sp, "N2"), integrity < 0.7 ? 1 - integrity : 0, C.calm || ov.stage > 0 ? 0 : Math.max(0, out[4]) * 0.5, Math.min(1, ov.kappa), wsIdx === 1 ? 1 : 0.2);
+      gl.uniform4f(U(sp, "Q"), collapsed >= 0 ? 1 : probs[3], probs[1] + (C.power[3] > 0 ? 1 : 0), 0, 0); gl.uniform2f(U(sp, "M"), att.ea, gy); gl.uniform1f(U(sp, "calm"), C.calm ? 1 : ov.stage > 0 ? 0.7 : 0); /* asleep → calm visuals */
       gl.uniform4f(U(sp, "W4"), 0.3 * out[5], t * 0.11 * ck + (C.power[0] > 0 ? t * 0.5 : 0), t * 0.07 * ck + out[6] * 0.5, 0); if (layerActs.length === NL && layerActs !== actShown) { actShown = layerActs; const a = new Float32Array(100 * 200); for (let l = 0; l < NL; l++) a.set(layerActs[l].subarray(0, 5000), l * 5000); gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, actTex); gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, 100, 200, gl.RED, gl.FLOAT, a); }
       gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, actTex); gl.uniform1i(U(sp, "ACT"), 2); gl.activeTexture(gl.TEXTURE0);
       gl.uniform1uiv(U(sp, "RG"), new Uint32Array(Array.from(rv.x.slice(0, 16), (v) => v >>> 0))); gl.uniform4f(U(sp, "QP"), probs[0], probs[1], probs[2], probs[3]); gl.uniform1f(U(sp, "EN"), energy); gl.uniform1f(U(sp, "WS"), wsIdx);
       { const yaw = att.ea * 0.7 + t * 0.05 * (C.calm ? 0.3 : 1) + 0.6; const nx = Math.sin(yaw), nz = Math.cos(yaw), ny = 0.25, nl = Math.hypot(nx, ny, nz); gl.uniform4f(U(sp, "CUT"), nx / nl, ny / nl, nz / nl, 0.04 + 0.08 * Math.sin(t * 0.1)); }
-      gl.uniform1f(U(sp, "SIG"), (4 + 6 * Math.min(1, passHz / 2)) * (C.calm ? 0.5 : 1)); /* fiber pulse ≤ 10 rad/s = 1.6 Hz at any pixel, below the 3 Hz limit */
+      gl.uniform1f(U(sp, "SIG"), (4 + 6 * Math.min(1, ov.ctx * 4)) * (C.calm ? 0.5 : 1)); /* fiber pulse ≤ 10 rad/s = 1.6 Hz at any pixel, below the 3 Hz limit */
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       const bp = progs.bright as WebGLProgram, bl = progs.blur as WebGLProgram, cp = progs.comp as WebGLProgram;
       gl.bindFramebuffer(gl.FRAMEBUFFER, rts[1].fb); gl.viewport(0, 0, rts[1].w, rts[1].h); gl.useProgram(bp); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, rts[0].tex); gl.uniform1i(U(bp, "S"), 0); gl.drawArrays(gl.TRIANGLES, 0, 6);
@@ -338,6 +338,7 @@ export default function Creature() {
             <Button label="Forget learned readout" onClick={() => { try { localStorage.removeItem("creature1.v2.readout"); } catch { /* none */ } }} />
           </div>
           {glErr ? <div style={{ ...panel, color: theme.text.secondary }}>{glErr}</div> : <canvas ref={cv} style={{ width: "100%", height: 600, borderRadius: 12, background: "#020104", cursor: "crosshair", touchAction: "none" }} />}
+          {orgReady && orgRef.current && <Inspector org={orgRef.current} theme={theme} speed={speed} setSpeed={(n) => { speedRef.current = n; setSpeedS(n); }} />}
           {hud && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
             <div style={panel}>{h("Parameter engine (measured)")}<div style={mono}>backend: {hud.backend} {hud.gpu}<br />inference weights used per pass: {fmt(hud.inferParams)}{hud.rowsActive < NN ? ` (adaptive: ${fmt(hud.rowsActive)}/${fmt(NN)} rows in layers 1–3)` : " (all 4×5000×5000)"}<br />weights: procedural hash(seed, layer, row, col), not stored, fp32 math<br />updated by learning: {fmt(hud.learned)} = 40,008 readout + {fmt(hud.learned - 40008)} LoRA (rank 16 into all 4 layers)<br />LoRA steps {fmt(hud.loraSteps)} · loss {hud.loraLoss.toFixed(3)} · effective weights W+AB per pass also add {fmt(NL * 2 * NN * RK)} adapter MACs<br />brain passes/s: {hud.passHz.toFixed(1)} · render {hud.fps.toFixed(0)} fps<br />backbuffer {hud.bw}×{hud.bh} RGBA16F (scale {hud.scale.toFixed(2)})</div></div>
             <div style={panel}>{h("Life signs")}<div style={mono}>energy {(hud.energy * 100).toFixed(0)}% · integrity {(hud.integrity * 100).toFixed(0)}%<br />confidence (metacognitive) {hud.conf.toFixed(2)}<br />organs: arousal {(hud.arousal ?? 0).toFixed(2)} ({hud.light ? "day" : "night"}) · lineage {hud.gens ?? 0} gens, head {String(hud.head ?? "").slice(0, 10)}<br />workspace broadcast: {hud.ws} · attention schema x̂ {hud.att.toFixed(2)}<br />mood {hud.mood}<br />{hud.saved}</div>{h("Surprise loss (online autodiff)")}{spark(hud.loss)}</div>

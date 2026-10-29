@@ -124,3 +124,6 @@ The audit (`MECHANISM_AUDIT.tsv`) found that 76 of 85 frozen indicator tests run
 - agency = efference copy from MOT.
 
 Each should be preregistered before code, with organism lesions as controls. This round moves the metabolic, sleep, neuromodulatory and behavioural mechanisms into code shared by browser and node. It does **not** yet migrate the workspace, attention-schema, RV32I or LoRA code, which stay in app.tsx.
+
+## v3.0 outcome (test seeds 1000–1015)
+10/12 pass. C2 fails: sleep beats forced wake (d 1.98, t 5.60), but against sleep with replay disabled d is 0.93 and t is 2.63 (< 2.75). C8b fails (d 0.22, t 0.61), as it already did on tuning seeds. Full table: `results/organism_v30_run.txt`, `docs/systems.html`.

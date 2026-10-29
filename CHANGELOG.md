@@ -1,4 +1,10 @@
 # Changelog
+## Round 13 (2026-10-29): integrated organism
+- New `creatures/001/organism/`: one deterministic, seedable organism (224-neuron LIF CNS + 48-neuron ENS, 7 neuromodulators, an exact kJ metabolic ledger, hormones with PID allostasis, SCN and two-process sleep, NREM replay and REM recombination, latent curvature into the insula and LC, a 3-qubit noise layer with QGT and NIST health tests ported from tsotchke). About 2.3k organism parameters. The browser couples it both ways to the 100M procedural net and its 680,008 learned parameters.
+- Pre-registration v3.0, committed before the test run (d767098). Test seeds 1000–1015: 10 of 12 pass. **Failures:** C2 (against the replay-off control, t = 2.63 < 2.75) and C8b (level → choice, d 0.22). Results commit: 52b3e8b.
+- The browser creature now runs the same organism.ts as the tests. Visuals (energy, arousal, light, sleep calm, κ, fibre pulse) read organism state. The GPU net's prediction error drives LC, and organism DA and κ feed the net's senses. A live inspector covers every subsystem: coupling graph (click to isolate), connectome, NT, metabolism, sleep, quantum, and behaviour. It also has controls to feed, stimulate, lesion a region, inject, and switch on vagotomy, SCN, insula, sympathectomy, replay, forceWake, starve and level.
+- The build goes to `creatures/001/index.v3.html` (`src/build_html.sh`). `index.html` was not overwritten because the v2.3 live suite is still reading it. Promote it with `sh build_html.sh ../index.html` after that suite finishes.
+- Site: new Systems page with the coupling matrix and the v3.0 table.
 ## [0.5.0] - 2026-10-28
 - Pre-registration v2.1, committed before any code: CQM-23 substrate pluralism (RV32IM / GLSL / JS), CQM-24 bit reproducibility, CQM-25 embodied and visual scale. All pass.
 - AST-1: surprise-inflated focus uncertainty (ASTA=0.001, chosen on held-out seeds). Against the random control, d went from 1.03 to 1.85.
