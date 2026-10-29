@@ -1,0 +1,46 @@
+# Rename verification (Round 15): v3.1 + v3.3 test suites re-run on post-freeze renamed code (commit before v3.4 changes), compared arm-by-arm to results/v31_parts and results/v33_parts
+# code: commit 67faba3 (renames from 742e482, before any v3.4 code); seeds 1000-1015
+v31/test_AE1.json: IDENTICAL
+v31/test_AE2.json: IDENTICAL
+v31/test_AINF.json: IDENTICAL
+v31/test_ASO.json: IDENTICAL
+v31/test_AST1.json: IDENTICAL
+v31/test_C05.json: IDENTICAL
+v31/test_C06.json: IDENTICAL
+v31/test_C07.json: IDENTICAL
+v31/test_C08.json: IDENTICAL
+v31/test_C09.json: IDENTICAL
+v31/test_C10.json: IDENTICAL
+v31/test_C11.json: IDENTICAL
+v31/test_C14.json: IDENTICAL
+v31/test_C15.json: IDENTICAL
+v31/test_C16.json: IDENTICAL
+v31/test_C17.json: IDENTICAL
+v31/test_C18.json: IDENTICAL
+v31/test_C22.json: IDENTICAL
+v31/test_C24.json: IDENTICAL
+v31/test_CTM.json: IDENTICAL
+v31/test_EVO.json: IDENTICAL
+v31/test_FIELD.json: IDENTICAL
+v31/test_GWT1.json: IDENTICAL
+v31/test_GWT2.json: IDENTICAL
+v31/test_GWT3.json: IDENTICAL
+v31/test_GWT4.json: IDENTICAL
+v31/test_HOT1.json: IDENTICAL
+v31/test_HOT2.json: IDENTICAL
+v31/test_HOT3.json: IDENTICAL
+v31/test_HOT4.json: IDENTICAL
+v31/test_IIT.json: IDENTICAL
+v31/test_NOVEL.json: IDENTICAL
+v31/test_PP1.json: IDENTICAL
+v31/test_PROJ.json: IDENTICAL
+v31/test_RPT1.json: IDENTICAL
+v31/test_RPT2.json: IDENTICAL
+v31/test_SM.json: IDENTICAL
+v31/test_UAL.json: IDENTICAL
+v33/test_L1.json: IDENTICAL
+v33/test_L2.json: IDENTICAL
+v33/test_L3.json: IDENTICAL
+v33/test_L4.json: IDENTICAL
+v33/test_L5.json: IDENTICAL
+identical 43, differ 0
