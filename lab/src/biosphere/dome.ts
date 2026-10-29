@@ -8,7 +8,7 @@ export type DomeConfig = { radius: number; cell: number; foodCap: number; growth
 export const DEFAULT_DOME: DomeConfig = { radius: 12, cell: 1, foodCap: 30, growth: 0.004, seed: 1, touchRadius: 1.2 };
 export type Inhabitant = { dials?: CreatureDials; id: string; c: CreatureLab; x: number; y: number; heading: number; path: number; eaten0: number };
 export class Dome {
-  cfg: DomeConfig; dials: WorldDials = { ...BASE_WORLD }; dice: DiceSource; kicks = 0; detritus = 0; parasiteBiomass = 0; recycled = 0; games = 0; coop = 0; windDir = 0; teleports = 0; lr = 30; grazerEat = 0.03; grazerBiomass = 0; grazerHeat = 0; localFoodAcc = 0; grazersXY: { x: number; y: number }[] = []; learn = new Map<string, { w: number; base: number; daBase: number; pend?: { c: boolean; p: number; acc?: number; k?: number } }>(); coopLog: number[] = []; n: number; patches: { food: number }[]; t = 0; grown = 0; r: () => number; pop: Inhabitant[] = []; E0 = 0;
+  cfg: DomeConfig; dials: WorldDials = { ...BASE_WORLD }; dice: DiceSource; kicks = 0; detritus = 0; parasiteBiomass = 0; recycled = 0; games = 0; coop = 0; windDir = 0; teleports = 0; lr = 30; rewardWindow = 15; grazerEat = 0.03; grazerBiomass = 0; grazerHeat = 0; localFoodAcc = 0; grazersXY: { x: number; y: number }[] = []; learn = new Map<string, { w: number; base: number; daBase: number; pend?: { c: boolean; p: number; acc?: number; k?: number } }>(); coopLog: number[] = []; n: number; patches: { food: number }[]; t = 0; grown = 0; r: () => number; pop: Inhabitant[] = []; E0 = 0;
   constructor(cfg: Partial<DomeConfig> = {}, dials: Partial<WorldDials> = {}) { this.cfg = { ...DEFAULT_DOME, ...cfg }; this.dials = { ...BASE_WORLD, ...dials }; this.dice = seededDice(this.cfg.seed + 101); this.r = mulberry(this.cfg.seed); this.n = Math.ceil((2 * this.cfg.radius) / this.cfg.cell);
     this.patches = Array.from({ length: this.n * this.n }, (_, i) => ({ food: this.inside(i) ? this.cfg.foodCap * this.dials.foodCapScale * (0.5 + 0.5 * this.r()) : 0 })); }
   private inside(i: number) { const x = (i % this.n + 0.5) * this.cfg.cell - this.cfg.radius, y = (Math.floor(i / this.n) + 0.5) * this.cfg.cell - this.cfg.radius; return x * x + y * y <= this.cfg.radius ** 2; }
@@ -34,9 +34,9 @@ export class Dome {
       if (D.parasites) this.parasiteBiomass += h.c.drain!(D.parasites);
       if (D.ph !== 7) this.detritus += h.c.drain!(0.004 * Math.abs(D.ph - 7));
       this.localFoodAcc += patch.food / this.pop.length;
-      const L2 = this.learn.get(h.id); if (L2?.pend) { const P2 = L2.pend; P2.acc = (P2.acc ?? 0) + h.c.metrics().DA; P2.k = (P2.k ?? 0) + 1; if (P2.k >= 15) { const delta = P2.acc / P2.k - L2.daBase; const g = P2.c ? 1 - P2.p : -P2.p; L2.w = Math.max(-6, Math.min(6, L2.w + this.lr * delta * g)); L2.pend = undefined; } } // REINFORCE on the creature's own DA response over the 15 ticks after the payoff burst
-      else if (L2) L2.daBase += 0.02 * (h.c.metrics().DA - L2.daBase);
-      h.c.step(1);
+      if (!this.rewardPhasic) this.learnTick(h);
+      { const k = D.timeWarp !== 1 && Math.hypot(h.x, h.y) < D.timeWarpR ? D.timeWarp : 1; if (k > 0) h.c.step(k); this.warpTicks += k; }
+      if (this.rewardPhasic) this.learnTick(h); // v0.6 phasic mode: read DA after the creature has stepped on the payoff burst
       const a = h.c.act!(); if (Number.isFinite(a.heading)) h.heading = a.heading; else h.heading += 0.3 * (this.r() - 0.5);
       const sp = (a.speed * h.c.body!().maxSpeed) / Math.sqrt(this.dials.gravity); if (sp > 0) h.c.work!(0.002 * this.dials.gravity * h.c.body!().mass * sp); let nx = h.x + sp * Math.cos(h.heading), ny = h.y + sp * Math.sin(h.heading); const R = this.cfg.radius - 0.5;
       if (nx * nx + ny * ny > R * R) { h.heading += Math.PI; const k = R / Math.hypot(nx, ny); nx *= k; ny *= k; } if (this.dials.wind) { nx += this.dials.wind * Math.cos(this.windDir); ny += this.dials.wind * Math.sin(this.windDir); const k = Math.hypot(nx, ny); if (k > R) { nx *= R / k; ny *= R / k; } }
@@ -53,8 +53,14 @@ export class Dome {
     for (const g of this.grazersXY) { g.x += 0.2 * (this.r() - 0.5); g.y += 0.2 * (this.r() - 0.5); const k = Math.hypot(g.x, g.y); if (k > R) { g.x *= R / k; g.y *= R / k; } const p = this.cellAt(g.x, g.y), e = Math.min(this.grazerEat, p.food); p.food -= e; this.grazerBiomass += e; }
     const resp = 0.01 * this.grazerBiomass, shed = 0.002 * this.grazerBiomass; this.grazerBiomass -= resp + shed; this.grazerHeat += resp; this.detritus += shed;
     if (this.dials.recycling && this.dials.recycling > 0 && this.grazersXY.length) { /* decomposers also return grazer litter where grazers are */ } }
+  warpTicks = 0; rewardPhasic = false;
+  private learnTick(h: Inhabitant) { const L2 = this.learn.get(h.id); if (L2?.pend) { const P2 = L2.pend; P2.acc = (P2.acc ?? 0) + h.c.metrics().DA; P2.k = (P2.k ?? 0) + 1; if (P2.k >= this.rewardWindow) { const delta = P2.acc / P2.k - L2.daBase; const g = P2.c ? 1 - P2.p : -P2.p; L2.w = Math.max(-6, Math.min(6, L2.w + this.lr * delta * g)); L2.pend = undefined; } } // REINFORCE on the creature's own DA response over the 15 ticks after the payoff burst
+    else if (L2) L2.daBase += 0.02 * (h.c.metrics().DA - L2.daBase); }
+  private pairs(): [Inhabitant, Inhabitant][] { const out: [Inhabitant, Inhabitant][] = [];
+    if (this.dials.oneShot) { const s = this.pop.slice(); for (let i = s.length - 1; i > 0; i--) { const j = Math.floor(this.dice.next() * (i + 1)); [s[i], s[j]] = [s[j], s[i]]; } for (let i = 0; i + 1 < s.length; i += 2) out.push([s[i], s[i + 1]]); return out; }
+    for (let i = 0; i < this.pop.length; i++) for (let j = i + 1; j < this.pop.length; j++) { const a = this.pop[i], b = this.pop[j]; if (Math.hypot(a.x - b.x, a.y - b.y) <= this.cfg.touchRadius) out.push([a, b]); } return out; }
   private playGames() { const P = PAYOFF[this.dials.game as "pd" | "stag"];
-    for (let i = 0; i < this.pop.length; i++) for (let j = i + 1; j < this.pop.length; j++) { const a = this.pop[i], b = this.pop[j]; if (Math.hypot(a.x - b.x, a.y - b.y) > this.cfg.touchRadius) continue;
+    for (const [a, b] of this.pairs()) {
       // strategy read from the creature's own state: cooperate when dopamine is above 0.25 (reward-expectant), else defect
       const pick = (h: Inhabitant) => { if (this.dials.gameStrategy !== "learned") return h.c.metrics().DA > 0.25 ? "C" : "D"; const L = this.learn.get(h.id) ?? this.learn.set(h.id, { w: 0, base: 0, daBase: h.c.metrics().DA }).get(h.id)!; const p = 1 / (1 + Math.exp(-L.w)); const c = this.dice.next() < p; L.pend = { c, p }; this.coopLog.push(p); return c ? "C" : "D"; };
       const sa = pick(a), sb = pick(b); const pay = (P as any)[sa + sb] as number[]; const patch = this.cellAt(a.x, a.y);
