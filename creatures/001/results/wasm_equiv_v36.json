@@ -1,0 +1,25 @@
+{
+ "moonlabMaxAbsProbDiff": 6.661338147750939e-16,
+ "moonlabCircuits": 5000,
+ "eshkolRuleMismatches": 0,
+ "eshkolCases": 2000,
+ "twoDayFullStateIdentical": [
+  {
+   "seed": 1000,
+   "identical": true
+  },
+  {
+   "seed": 1001,
+   "identical": true
+  },
+  {
+   "seed": 1002,
+   "identical": true
+  },
+  {
+   "seed": 1003,
+   "identical": true
+  }
+ ],
+ "pass": true
+}

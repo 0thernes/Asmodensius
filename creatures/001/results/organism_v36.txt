@@ -1,0 +1,138 @@
+PASS RPT-1 recurrence: delayed recall [Bounded test evidence]
+   vs recurrent CTX synapses lesioned: full 0.6500 ctrl 0.2365 d 5.15 t 14.57
+FAIL RPT-2 integration: XOR readout [Not established]
+   vs cross-module CTX synapses lesioned: full 0.5344 ctrl 0.5187 d 0.26 t 0.74
+PASS GWT-1 specialist modules [Bounded test evidence]
+   vs topography scrambled at build: full 0.6753 ctrl 0.04323 d 5.62 t 15.90
+PASS GWT-2 limited-capacity selection [Bounded test evidence]
+   vs workspace lesioned (action reads module average): full 0.8896 ctrl 0.5177 d 6.98 t 19.74
+FAIL GWT-3 global broadcast [Ceiling] (fails non-ceiling rule)
+   vs broadcast lesioned: full 0.9740 ctrl 0.2198 d 19.45 t 55.01
+PASS GWT-4 state-dependent attention [Bounded test evidence]
+   vs attention not driven by workspace state: full 0.9010 ctrl 0.1865 d 16.47 t 46.58
+FAIL HOT-1 generative top-down [Not established]
+   vs top-down lesioned: full -0.08815 ctrl -0.09586 d 0.45 t 1.28
+PASS HOT-2 metacognitive monitoring (AUROC) [Bounded test evidence]
+   vs confidence shuffled (S): full 0.6951 ctrl 0.4996 d 3.59 t 10.16
+FAIL HOT-3 metacognitive agency (opt-out) [Not established]
+   vs no opt-out: full 0.6814 ctrl 0.6856 d -0.06 t -0.17
+   vs random opt-out at same rate: full 0.6814 ctrl 0.6559 d 0.39 t 1.11
+PASS HOT-4 quality space (Spearman) [Bounded test evidence]
+   vs sensory lines permuted every trial: full 0.7689 ctrl 0.004051 d 20.57 t 58.19
+PASS AST-1 attention schema [Bounded test evidence]
+   vs schema lesioned (raw observation): full -0.04502 ctrl -0.06862 d 1.33 t 3.75
+PASS PP-1 predictive coding [Bounded test evidence]
+   vs predictor lesioned (running mean): full -0.02396 ctrl -0.04435 d 5.75 t 16.26
+FAIL AE-1 agency / RL under reversals [Not established]
+   vs RPE learning lesioned: full 0.3162 ctrl 0.2960 d 0.47 t 1.33
+PASS AE-2 embodiment: reaching [Bounded test evidence]
+   vs forward model lesioned (gain fixed at prior): full -0.01253 ctrl -0.3031 d 1.99 t 5.63
+FAIL thaler9 creative recombination [Not established] (shares mechanism with V3-C3)
+   vs thaler9:dreams with shuffled content: full 0.2962 ctrl 0.2949 d 0.01 t 0.03
+PASS iit4 phi proxy [Bounded test evidence]
+   vs recurrent + cross-module CTX lesioned: full 0.5743 ctrl 0.4418 d 3.23 t 9.13
+FAIL activeInference EFE choice in depleting world [Not established]
+   vs epistemic term lesioned: full 44.00 ctrl 42.75 d 0.19 t 0.53
+PASS attentionSchema model of another's attention [Bounded test evidence]
+   vs last-observation predictor: full -0.03001 ctrl -0.08787 d 10.22 t 28.91
+PASS fieldIntegration binding by phase locking [Bounded test evidence]
+   vs field coupling lesioned: full 0.5708 ctrl 0.3167 d 2.86 t 8.08
+PASS ual trace conditioning [Bounded test evidence]
+   vs eligibility traces lesioned: full 0.3954 ctrl 0.2755 d 1.84 t 5.21
+PASS sensorimotor efference prediction [Bounded test evidence]
+   vs efference copy lesioned: full -0.02206 ctrl -0.6499 d 3.88 t 10.99
+FAIL projective self/other ownership [Ceiling] (fails non-ceiling rule)
+   vs efference copy lesioned: full 1.000 ctrl 0.4885 d 10.77 t 30.47
+FAIL ctm report agrees with action [Ceiling] (fails non-ceiling rule)
+   vs broadcast lesioned: full 0.9729 ctrl 0.2510 d 19.20 t 54.30
+PASS CQM01 heredity [Bounded test evidence]
+   vs CQM01:offspring genomes random: full 0.6424 ctrl 0.2112 d 2.07 t 5.85
+PASS CQM02 open-endedness [Bounded test evidence]
+   vs CQM02:no mutation: full 50.81 ctrl 6.000 d 18.80 t 53.18
+FAIL CQM03 ecological coupling [Ceiling] (control correlation is 0 by construction (constant population); fails non-ceiling rule)
+   vs CQM03:births on a fixed schedule: full 0.9582 ctrl 0.000 d 8.19 t 23.18
+FAIL CQM04 morphology (reach gene) [Not established]
+   vs CQM04:random survival: full 1.172 ctrl 1.050 d 0.30 t 0.84
+PASS CQM05 embodied consistency (−ledger error) [Bounded test evidence]
+   vs leaky ledger: full -1.714e-15 ctrl -0.004392 d 87.72 t 248.10
+PASS CQM06 perceptual integration [Bounded test evidence]
+   vs integration lesion (modality 0 only): full -0.03401 ctrl -0.04294 d 1.01 t 2.85
+PASS CQM07 learning/plasticity [Bounded test evidence]
+   vs plasticity frozen: full -0.02396 ctrl -0.06250 d 10.87 t 30.74
+FAIL CQM08 continual retention [Ceiling] (fails non-ceiling rule)
+   vs replay lesioned: full 0.9656 ctrl 0.9438 d 0.52 t 1.47
+PASS CQM09 causal interoceptive model [Bounded test evidence]
+   vs persistence forecast: full -0.6489 ctrl -1.312 d 7.44 t 21.05
+FAIL CQM10 goal regulation (viable fraction) [Ceiling] (fails non-ceiling rule)
+   vs fixed foraging drive: full 0.9920 ctrl 0.9604 d 1.12 t 3.16
+PASS CQM11 planning [Bounded test evidence]
+   vs model-free only: full 0.7973 ctrl 0.1856 d 6.71 t 18.99
+PASS CQM12 compositional transfer [Bounded test evidence]
+   vs CQM12:dreams shuffled: full -0.01165 ctrl -0.02281 d 1.21 t 3.41
+PASS CQM14 signalling game [Bounded test evidence]
+   vs signal line cut: full 0.7917 ctrl 0.2563 d 8.84 t 25.02
+PASS CQM15 boundary (integrity>0.7) [Bounded test evidence]
+   vs repair lesioned: full 0.3551 ctrl 0.09312 d 2.27 t 6.42
+PASS CQM16 self-maintenance (alive fraction) [Bounded test evidence]
+   vs allostatic (PID) lesion: full 0.2645 ctrl 0.2271 d 19.54 t 55.28
+PASS CQM17 homeostasis (−glucose variance) [Bounded test evidence]
+   vs PID lesioned: full -0.2710 ctrl -148.3 d 1.72 t 4.86
+FAIL CQM18 resilience after 40% CTX lesion [Ceiling] (fails non-ceiling rule)
+   vs plasticity frozen after lesion: full 0.9927 ctrl 0.9969 d -0.54 t -1.53
+PASS CQM22 valence trade-off [Bounded test evidence]
+   vs aversive learning lesioned: full -63.66 ctrl -232.2 d 1.16 t 3.29
+FAIL butlin14 rollup of 14 Butlin items [9/14 pass] (rollup)
+PASS CQM24 reproducibility (state hash) [Tolerance test]
+PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":3276,"plasticSynapses":372,"valueSynapses":2186,"kinetics":390,"quantum":19,"total":5871})
+FAIL CQM23 substrate pluralism [Not applicable] (JS only)
+FAIL K1a immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs v3.1 cortex: full 0.9615 ctrl 0.5250 d 6.86 t 19.40
+FAIL K1b immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no developmental waves: full 0.9615 ctrl 0.9469 d 0.45 t 1.28
+FAIL K1c immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no STDP: full 0.9615 ctrl 0.4854 d 6.55 t 18.51
+FAIL K1d immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no homeostasis (intrinsic + inhibitory): full 0.9615 ctrl 0.9167 d 1.12 t 3.16
+FAIL K1e immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs E/I loops lesioned: full 0.9615 ctrl 0.9844 d -0.94 t -2.65
+PASS K2 persistence: centroid probe 2 blank ticks after stimulus [Bounded test evidence]
+   vs NMDA-like current lesioned: full 0.6677 ctrl 0.2365 d 5.82 t 16.46
+FAIL V3.4-L1a memory-guided choice (C2 metric) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.3258 ctrl 0.3742 d -0.50 t -1.40
+FAIL V3.4-L1b memory-guided choice (C2 metric) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.3854 ctrl 0.3742 d 0.13 t 0.37
+FAIL V3.4-L2a sleep effect (sleep − forced wake) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full -0.02357 ctrl 0.04206 d -0.51 t -1.45
+FAIL V3.4-L2b sleep effect (sleep − forced wake) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.04049 ctrl 0.04206 d -0.01 t -0.04
+FAIL V3.4-L3a level benefit (C8b metric) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full -0.08158 ctrl -0.04063 d -0.33 t -0.94
+FAIL V3.4-L3b level benefit (C8b metric) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full -0.08646 ctrl -0.04063 d -0.30 t -0.84
+FAIL V3.4-L4a delayed recall (RPT-1) — learned-gate LTC vs fixed [LTC hurts]
+   vs fixed-tau LIF: full 0.5219 ctrl 0.6500 d -1.49 t -4.20
+FAIL V3.4-L4b delayed recall (RPT-1) — hand-set LTC vs fixed [LTC hurts]
+   vs fixed-tau LIF: full 0.5156 ctrl 0.6500 d -1.33 t -3.77
+FAIL V3.4-L5a robustness to tau scale x0.5/x2 — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.01006 ctrl -0.01940 d 0.24 t 0.69
+FAIL V3.4-L5b robustness to tau scale x0.5/x2 — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full -0.03483 ctrl -0.01940 d -0.16 t -0.46
+PASS GWT-3R global broadcast, degraded stimuli [Bounded test evidence]
+   vs broadcast lesioned: full 0.6365 ctrl 0.2333 d 5.68 t 16.06
+PASS ctm-R report agrees with action, degraded stimuli [Bounded test evidence]
+   vs broadcast lesioned: full 0.6979 ctrl 0.2865 d 5.21 t 14.73
+PASS CQM08R continual retention, degraded stimuli [Bounded test evidence]
+   vs replay lesioned: full 0.7000 ctrl 0.04063 d 12.05 t 34.08
+PASS SNAP snapshot()/restore() into a different-seed organism reproduces the run (JSON round trip) [Tolerance test 16/16]
+PASS NOISESIGN decision-noise sign bias on a biased qubit state, |P(+)-0.5| [v3.6 0.022 vs v3.5 0.295 (tolerance 0.05)]
+   vs v3.5 raw bit (lower is better): full 0.02172 ctrl 0.2952 d 13.03 t 36.87
+PASS LIGHT dome light input suppresses night melatonin [Steering check]
+   vs zero difference: full 0.9998 ctrl 0.000 d Infinity t Infinity
+PASS INSGLC INS decodes blood glucose > median (balanced acc.; acceptance >= 0.75) [Bounded test evidence]
+   vs visceral afferent cut: full 0.8722 ctrl 0.4941 d 3.74 t 10.58
+   vs labels shuffled: full 0.8722 ctrl 0.5036 d 3.65 t 10.33
+FAIL RPTLATE late (11-60 tick) evoked CTX response carried by feedback (handoff acceptance) [late -3.06e-3, early 6.22e-3; late reduction CTX->THAL -0.29, CTX->CTX 1.14; early change 0.95 / 1.86]
+   vs CTX->THAL cut: full -0.003057 ctrl -0.003943 d 0.27 t 0.76
+   vs CTX->CTX cut: full -0.003057 ctrl 0.0004405 d -1.32 t -3.74
+   vs slow NMDA lesioned: full -0.003057 ctrl -0.003057 d 0.00 t 0.00
+ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 18/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 7/8

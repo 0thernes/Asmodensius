@@ -1,0 +1,1329 @@
+{
+ "seeds": "1000..1015",
+ "rollups": {
+  "butlin": "9/14",
+  "frameworks": "5/10",
+  "cqm": "18/25"
+ },
+ "items": [
+  {
+   "id": "RPT-1",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "recurrence: delayed recall",
+   "metric": "RPT1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "recurrent CTX synapses lesioned",
+     "full": 0.65,
+     "ctrl": 0.23645833333333327,
+     "d": 5.149796616092038,
+     "t": 14.565824435880861,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RPT-2",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "integration: XOR readout",
+   "metric": "RPT2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "cross-module CTX synapses lesioned",
+     "full": 0.534375,
+     "ctrl": 0.5187499999999999,
+     "d": 0.2631767959754665,
+     "t": 0.7443763883408036,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "GWT-1",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "specialist modules",
+   "metric": "GWT1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "topography scrambled at build",
+     "full": 0.6753472222222219,
+     "ctrl": 0.04322916666666666,
+     "d": 5.620987242056399,
+     "t": 15.898552783284597,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "GWT-2",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "limited-capacity selection",
+   "metric": "GWT2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "workspace lesioned (action reads module average)",
+     "full": 0.8895833333333333,
+     "ctrl": 0.5177083333333333,
+     "d": 6.9784797587457374,
+     "t": 19.73812143912869,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "GWT-3",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "global broadcast",
+   "metric": "GWT3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "broadcast lesioned",
+     "full": 0.973958333333333,
+     "ctrl": 0.21979166666666664,
+     "d": 19.45000103896409,
+     "t": 55.01291051494761,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "GWT-4",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "state-dependent attention",
+   "metric": "GWT4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "attention not driven by workspace state",
+     "full": 0.9010416666666666,
+     "ctrl": 0.18645833333333334,
+     "d": 16.46705656937524,
+     "t": 46.57586946555087,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "HOT-1",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "generative top-down",
+   "metric": "HOT1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "top-down lesioned",
+     "full": -0.08815136621854797,
+     "ctrl": -0.0958634185205886,
+     "d": 0.452454514814198,
+     "t": 1.2797346224143547,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "HOT-2",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "metacognitive monitoring (AUROC)",
+   "metric": "HOT2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "confidence shuffled (S)",
+     "full": 0.6950995178880127,
+     "ctrl": 0.4995996771098433,
+     "d": 3.593040674908379,
+     "t": 10.162653705227216,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "HOT-3",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "metacognitive agency (opt-out)",
+   "metric": "HOT3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "no opt-out",
+     "full": 0.681375,
+     "ctrl": 0.6856249999999999,
+     "d": -0.06030148488121085,
+     "t": -0.17055835550048903,
+     "pass": false
+    },
+    {
+     "control": "random opt-out at same rate",
+     "full": 0.681375,
+     "ctrl": 0.655875,
+     "d": 0.39178334714679514,
+     "t": 1.1081306460938485,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "HOT-4",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "quality space (Spearman)",
+   "metric": "HOT4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "sensory lines permuted every trial",
+     "full": 0.7688925928252048,
+     "ctrl": 0.004051416400538451,
+     "d": 20.572446837723085,
+     "t": 58.18766665821496,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AST-1",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "attention schema",
+   "metric": "AST1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "schema lesioned (raw observation)",
+     "full": -0.045021421417925894,
+     "ctrl": -0.0686180166389293,
+     "d": 1.326926487072945,
+     "t": 3.7531148685812923,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "PP-1",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "predictive coding",
+   "metric": "PP1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "predictor lesioned (running mean)",
+     "full": -0.023964216582138816,
+     "ctrl": -0.0443495393873405,
+     "d": 5.749188614900509,
+     "t": 16.26116102366658,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AE-1",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "agency / RL under reversals",
+   "metric": "AE1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "RPE learning lesioned",
+     "full": 0.31624304638608547,
+     "ctrl": 0.29598195633581326,
+     "d": 0.4694860655481545,
+     "t": 1.327907122486768,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "AE-2",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "embodiment: reaching",
+   "metric": "AE2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "forward model lesioned (gain fixed at prior)",
+     "full": -0.012526408621621556,
+     "ctrl": -0.30309669180543913,
+     "d": 1.9922076703437475,
+     "t": 5.634814212927671,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "thaler9",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "creative recombination",
+   "metric": "NOVEL",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "thaler9:dreams with shuffled content",
+     "full": 0.2962239614804275,
+     "ctrl": 0.29485677398042753,
+     "d": 0.009005507540161838,
+     "t": 0.025471421798700083,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established",
+   "note": "shares mechanism with V3-C3"
+  },
+  {
+   "id": "iit4",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "phi proxy",
+   "metric": "IIT",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "recurrent + cross-module CTX lesioned",
+     "full": 0.5743452600098997,
+     "ctrl": 0.44175956616406487,
+     "d": 3.228566482609867,
+     "t": 9.131765013460146,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "activeInference",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "EFE choice in depleting world",
+   "metric": "AINF",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "epistemic term lesioned",
+     "full": 44,
+     "ctrl": 42.75,
+     "d": 0.18823081310526066,
+     "t": 0.5323971374999499,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "attentionSchema",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "model of another's attention",
+   "metric": "ASO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "last-observation predictor",
+     "full": -0.03000647255673155,
+     "ctrl": -0.08787036712476592,
+     "d": 10.222666934596356,
+     "t": 28.91406844505832,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "fieldIntegration",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "binding by phase locking",
+   "metric": "FIELD",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "field coupling lesioned",
+     "full": 0.5708333333333332,
+     "ctrl": 0.3166666666666667,
+     "d": 2.8565867253241644,
+     "t": 8.07964737809676,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "ual",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "trace conditioning",
+   "metric": "UAL",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "eligibility traces lesioned",
+     "full": 0.3953615198526979,
+     "ctrl": 0.2755017259841816,
+     "d": 1.8421470608379311,
+     "t": 5.210378714645474,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "sensorimotor",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "efference prediction",
+   "metric": "SM",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "efference copy lesioned",
+     "full": -0.02206038015632133,
+     "ctrl": -0.6499344988188246,
+     "d": 3.8842170418943334,
+     "t": 10.98622483969534,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "projective",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "self/other ownership",
+   "metric": "PROJ",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "efference copy lesioned",
+     "full": 1,
+     "ctrl": 0.4885416666666667,
+     "d": 10.772795039605098,
+     "t": 30.470065699350265,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "ctm",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "report agrees with action",
+   "metric": "CTM",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "broadcast lesioned",
+     "full": 0.9729166666666667,
+     "ctrl": 0.25104166666666666,
+     "d": 19.198713916454025,
+     "t": 54.30216320154073,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "CQM01",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "heredity",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM01:offspring genomes random",
+     "full": 0.642411075274916,
+     "ctrl": 0.21124934291920186,
+     "d": 2.067822501039285,
+     "t": 5.8486852511000205,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM02",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "open-endedness",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM02:no mutation",
+     "full": 50.8125,
+     "ctrl": 6,
+     "d": 18.800838668885632,
+     "t": 53.17680205905318,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM03",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "ecological coupling",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM03:births on a fixed schedule",
+     "full": 0.9582376723327929,
+     "ctrl": 0,
+     "d": 8.194056692415527,
+     "t": 23.17629221053613,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "control correlation is 0 by construction (constant population); fails non-ceiling rule"
+  },
+  {
+   "id": "CQM04",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "morphology (reach gene)",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM04:random survival",
+     "full": 1.1724450420667916,
+     "ctrl": 1.0495612087885273,
+     "d": 0.2980165284620985,
+     "t": 0.8429180327248943,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM05",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "embodied consistency (−ledger error)",
+   "metric": "C05",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "leaky ledger",
+     "full": -1.714243447582019e-15,
+     "ctrl": -0.004391609327673963,
+     "d": 87.71529832235557,
+     "t": 248.0963290301545,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM06",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "perceptual integration",
+   "metric": "C06",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "integration lesion (modality 0 only)",
+     "full": -0.034007365726633036,
+     "ctrl": -0.042938782639405725,
+     "d": 1.0082011967378142,
+     "t": 2.8516236120548037,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM07",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "learning/plasticity",
+   "metric": "C07",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "plasticity frozen",
+     "full": -0.023964216582138816,
+     "ctrl": -0.0625,
+     "d": 10.868900893146213,
+     "t": 30.74189410235284,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM08",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "continual retention",
+   "metric": "C08",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "replay lesioned",
+     "full": 0.9656249999999998,
+     "ctrl": 0.9437500000000001,
+     "d": 0.5205936026451325,
+     "t": 1.4724610666908329,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "CQM09",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "causal interoceptive model",
+   "metric": "C09",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "persistence forecast",
+     "full": -0.648934865958399,
+     "ctrl": -1.3118348082818578,
+     "d": 7.4411803132046055,
+     "t": 21.046836237995254,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM10",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "goal regulation (viable fraction)",
+   "metric": "C10",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed foraging drive",
+     "full": 0.9920283564814814,
+     "ctrl": 0.9604311342592592,
+     "d": 1.1168895531102396,
+     "t": 3.1590407073626525,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "CQM11",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "planning",
+   "metric": "C11",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "model-free only",
+     "full": 0.797275005087505,
+     "ctrl": 0.18560313346497553,
+     "d": 6.714699843359112,
+     "t": 18.992039171485906,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM12",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "compositional transfer",
+   "metric": "NOVEL",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM12:dreams shuffled",
+     "full": -0.011645569473205625,
+     "ctrl": -0.02280728346389311,
+     "d": 1.2053090573963048,
+     "t": 3.4091288316419712,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM14",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "signalling game",
+   "metric": "C14",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "signal line cut",
+     "full": 0.7916666666666666,
+     "ctrl": 0.25625000000000003,
+     "d": 8.84490763262627,
+     "t": 25.017176663994757,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM15",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "boundary (integrity>0.7)",
+   "metric": "C15",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "repair lesioned",
+     "full": 0.3551215277777778,
+     "ctrl": 0.09312065972222221,
+     "d": 2.2704078278688073,
+     "t": 6.421683084580215,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM16",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "self-maintenance (alive fraction)",
+   "metric": "C16",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "allostatic (PID) lesion",
+     "full": 0.26445312499999996,
+     "ctrl": 0.2271122685185185,
+     "d": 19.544357810632672,
+     "t": 55.27979176733851,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM17",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "homeostasis (−glucose variance)",
+   "metric": "C17",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "PID lesioned",
+     "full": -0.27097376467210893,
+     "ctrl": -148.32300690152766,
+     "d": 1.7185020041304109,
+     "t": 4.8606576824131436,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM18",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "resilience after 40% CTX lesion",
+   "metric": "C18",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "plasticity frozen after lesion",
+     "full": 0.9927083333333333,
+     "ctrl": 0.996875,
+     "d": -0.5423261445466369,
+     "t": -1.5339299776947306,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "CQM22",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "valence trade-off",
+   "metric": "C22",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "aversive learning lesioned",
+     "full": -63.66250000000004,
+     "ctrl": -232.23750000000018,
+     "d": 1.1618124064917545,
+     "t": 3.286101724387925,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "butlin14",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "rollup of 14 Butlin items",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": false,
+   "category": "9/14 pass",
+   "note": "rollup"
+  },
+  {
+   "id": "CQM24",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "reproducibility (state hash)",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": true,
+   "category": "Tolerance test"
+  },
+  {
+   "id": "CQM25",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "scale (measured parameters)",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": true,
+   "category": "Implementation identified",
+   "note": "{\"synapses\":3276,\"plasticSynapses\":372,\"valueSynapses\":2186,\"kinetics\":390,\"quantum\":19,\"total\":5871}"
+  },
+  {
+   "id": "CQM23",
+   "group": "Prereg v3.4 (organism, v3.1 suite)",
+   "name": "substrate pluralism",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": false,
+   "category": "Not applicable",
+   "note": "JS only"
+  }
+ ],
+ "v34": [
+  {
+   "id": "K1a",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "immediate classification (post[0] acc, trials 100..159)",
+   "metric": "K1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "v3.1 cortex",
+     "full": 0.9614583333333331,
+     "ctrl": 0.525,
+     "d": 6.85798707438177,
+     "t": 19.397316662340163,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "K1b",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "immediate classification (post[0] acc, trials 100..159)",
+   "metric": "K1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "no developmental waves",
+     "full": 0.9614583333333331,
+     "ctrl": 0.946875,
+     "d": 0.45310844460219984,
+     "t": 1.2815842151644183,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "K1c",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "immediate classification (post[0] acc, trials 100..159)",
+   "metric": "K1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "no STDP",
+     "full": 0.9614583333333331,
+     "ctrl": 0.4854166666666667,
+     "d": 6.5458718298567105,
+     "t": 18.5145214386787,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "K1d",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "immediate classification (post[0] acc, trials 100..159)",
+   "metric": "K1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "no homeostasis (intrinsic + inhibitory)",
+     "full": 0.9614583333333331,
+     "ctrl": 0.9166666666666666,
+     "d": 1.1177317765565729,
+     "t": 3.1614228750033586,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "K1e",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "immediate classification (post[0] acc, trials 100..159)",
+   "metric": "K1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "E/I loops lesioned",
+     "full": 0.9614583333333331,
+     "ctrl": 0.9843749999999999,
+     "d": -0.9386522045811536,
+     "t": -2.654909356140145,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "K2",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "persistence: centroid probe 2 blank ticks after stimulus",
+   "metric": "K2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "NMDA-like current lesioned",
+     "full": 0.6677083333333333,
+     "ctrl": 0.23645833333333338,
+     "d": 5.818035454463956,
+     "t": 16.45588929214088,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3.4-L1a",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "memory-guided choice (C2 metric) — learned-gate LTC vs fixed",
+   "metric": "L1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.3257812517433194,
+     "ctrl": 0.3741536483546952,
+     "d": -0.4962568423953791,
+     "t": -1.4036263138719853,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L1b",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "memory-guided choice (C2 metric) — hand-set LTC vs fixed",
+   "metric": "L1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.385416672701831,
+     "ctrl": 0.3741536483546952,
+     "d": 0.13035426883220536,
+     "t": 0.3686975497914665,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L2a",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "sleep effect (sleep − forced wake) — learned-gate LTC vs fixed",
+   "metric": "L2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": -0.023567710333736613,
+     "ctrl": 0.042057290353113785,
+     "d": -0.5140904868688139,
+     "t": -1.4540674776337281,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L2b",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "sleep effect (sleep − forced wake) — hand-set LTC vs fixed",
+   "metric": "L2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.04049479358654935,
+     "ctrl": 0.042057290353113785,
+     "d": -0.014380001790833659,
+     "t": -0.04067278711909272,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L3a",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "level benefit (C8b metric) — learned-gate LTC vs fixed",
+   "metric": "L3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": -0.08157552025513723,
+     "ctrl": -0.04062500064901542,
+     "d": -0.3338699076413424,
+     "t": -0.944326702909278,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L3b",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "level benefit (C8b metric) — hand-set LTC vs fixed",
+   "metric": "L3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": -0.08645833559567109,
+     "ctrl": -0.04062500064901542,
+     "d": -0.2982684224166373,
+     "t": -0.8436304964184715,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L4a",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "delayed recall (RPT-1) — learned-gate LTC vs fixed",
+   "metric": "L4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.5218750000000001,
+     "ctrl": 0.65,
+     "d": -1.4854899124688368,
+     "t": -4.2015999619637014,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "LTC hurts"
+  },
+  {
+   "id": "V3.4-L4b",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "delayed recall (RPT-1) — hand-set LTC vs fixed",
+   "metric": "L4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.515625,
+     "ctrl": 0.65,
+     "d": -1.3333354106112627,
+     "t": -3.771242041757495,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "LTC hurts"
+  },
+  {
+   "id": "V3.4-L5a",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "robustness to tau scale x0.5/x2 — learned-gate LTC vs fixed",
+   "metric": "L5",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.01005859584838618,
+     "ctrl": -0.01940104021487059,
+     "d": 0.24298406195040292,
+     "t": 0.6872627117015283,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.4-L5b",
+   "group": "Prereg v3.4 (cortex + learned LTC)",
+   "name": "robustness to tau scale x0.5/x2 — hand-set LTC vs fixed",
+   "metric": "L5",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": -0.034830731224792535,
+     "ctrl": -0.01940104021487059,
+     "d": -0.16408757007824387,
+     "t": -0.46410973404299627,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  }
+ ],
+ "v36": [
+  {
+   "id": "GWT-3R",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "global broadcast, degraded stimuli",
+   "metric": "GWT3R",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "broadcast lesioned",
+     "full": 0.6364583333333332,
+     "ctrl": 0.2333333333333333,
+     "d": 5.67776736450489,
+     "t": 16.05915122176432,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "ctm-R",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "report agrees with action, degraded stimuli",
+   "metric": "CTMR",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "broadcast lesioned",
+     "full": 0.6979166666666667,
+     "ctrl": 0.28645833333333337,
+     "d": 5.207717200353874,
+     "t": 14.729648587488187,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM08R",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "continual retention, degraded stimuli",
+   "metric": "C08R",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "replay lesioned",
+     "full": 0.7,
+     "ctrl": 0.040625,
+     "d": 12.048949079195388,
+     "t": 34.079574400281864,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "SNAP",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "snapshot()/restore() into a different-seed organism reproduces the run (JSON round trip)",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": true,
+   "category": "Tolerance test 16/16"
+  },
+  {
+   "id": "NOISESIGN",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "decision-noise sign bias on a biased qubit state, |P(+)-0.5|",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "v3.5 raw bit (lower is better)",
+     "full": 0.02171875,
+     "ctrl": 0.29515625,
+     "d": 13.03446420970789,
+     "t": 36.86703212727121,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "v3.6 0.022 vs v3.5 0.295 (tolerance 0.05)"
+  },
+  {
+   "id": "LIGHT",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "dome light input suppresses night melatonin",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "zero difference",
+     "full": 0.9998412816362537,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Steering check"
+  },
+  {
+   "id": "INSGLC",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "INS decodes blood glucose > median (balanced acc.; acceptance >= 0.75)",
+   "metric": "INSGLC",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "visceral afferent cut",
+     "full": 0.8722008738863272,
+     "ctrl": 0.4940713298540128,
+     "d": 3.738875466106113,
+     "t": 10.575136784382584,
+     "pass": true
+    },
+    {
+     "control": "labels shuffled",
+     "full": 0.8722008738863272,
+     "ctrl": 0.5036197055756111,
+     "d": 3.6534568418214373,
+     "t": 10.333536430497304,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RPTLATE",
+   "group": "Prereg v3.6 (R-variants + steering API)",
+   "name": "late (11-60 tick) evoked CTX response carried by feedback (handoff acceptance)",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CTX->THAL cut",
+     "full": -0.0030566406250000003,
+     "ctrl": -0.003943142361111112,
+     "d": 0.26836634835394313,
+     "t": 0.7590546590533778,
+     "pass": false
+    },
+    {
+     "control": "CTX->CTX cut",
+     "full": -0.0030566406250000003,
+     "ctrl": 0.00044053819444444446,
+     "d": -1.3239740177391535,
+     "t": -3.744764024232615,
+     "pass": false
+    },
+    {
+     "control": "slow NMDA lesioned",
+     "full": -0.0030566406250000003,
+     "ctrl": -0.0030566406250000003,
+     "d": 0,
+     "t": 0,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "late -3.06e-3, early 6.22e-3; late reduction CTX->THAL -0.29, CTX->CTX 1.14; early change 0.95 / 1.86"
+  }
+ ],
+ "missing": []
+}
