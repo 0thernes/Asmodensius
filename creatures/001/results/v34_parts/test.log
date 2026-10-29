@@ -1,0 +1,45 @@
+RPT2 full=0.5104  cross-module CTX synapses lesioned=0.5219 15s
+RPT1 full=0.5687  recurrent CTX synapses lesioned=0.2490 18s
+GWT1 full=0.2575  topography scrambled at build=-0.01302 20s
+GWT2 full=0.4323  workspace lesioned (action reads module average)=0.3594 17s
+GWT3 full=0.8500  broadcast lesioned=0.2760 17s
+GWT4 full=0.05729  attention not driven by workspace state=0.05000 22s
+HOT1 full=-0.08825  top-down lesioned=-0.09018 13s
+HOT2 full=0.5038  confidence shuffled (S)=0.4806 10s
+HOT4 full=0.7184  sensory lines permuted every trial=0.003002 11s
+HOT3 full=0.2775  no opt-out=0.2506  random opt-out at same rate=0.2781 26s
+AST1 full=-0.04314  schema lesioned (raw observation)=-0.06687 13s
+PP1 full=-0.02137  predictor lesioned (running mean)=-0.04435 12s
+AE2 full=-0.01441  forward model lesioned (gain fixed at prior)=-0.2652 9s
+AE1 full=0.2851  RPE learning lesioned=0.3187 42s
+IIT full=0.3992  recurrent + cross-module CTX lesioned=0.2946 26s
+NOVEL thaler9:full=0.3667  thaler9:dreams with shuffled content=0.3105  CQM12:full=-0.02617  CQM12:dreams shuffled=-0.02204 60s
+ASO full=-0.03174  last-observation predictor=-0.09287 11s
+FIELD full=0.6104  field coupling lesioned=0.3417 13s
+AINF full=47.75  epistemic term lesioned=46.00 42s
+UAL full=0.4292  eligibility traces lesioned=0.3679 16s
+SM full=-0.02160  efference copy lesioned=-0.5987 11s
+PROJ full=1.000  efference copy lesioned=0.5073 9s
+CTM full=0.9365  broadcast lesioned=0.2573 16s
+C06 full=-0.04960  integration lesion (modality 0 only)=-0.05684 15s
+C07 full=-0.02137  plasticity frozen=-0.06250 25s
+C05 full=-2.325e-15  leaky ledger=-0.004238 582s
+C08 full=0.08906  replay lesioned=0.003125 552s
+C09 full=-2.298  persistence forecast=-1.425 34s
+C11 full=0.7965  model-free only=0.1588 13s
+C14 full=0.2354  signal line cut=0.2490 36s
+C10 full=0.9770  fixed foraging drive=0.9149 72s
+C15 full=0.3038  repair lesioned=0.1029 45s
+C16 full=0.2737  allostatic (PID) lesion=0.2390 45s
+C18 full=0.9948  plasticity frozen after lesion=0.9917 14s
+C17 full=-0.3605  PID lesioned=-205.7 36s
+C24 identical=1.000 4s
+C22 full=49.30  aversive learning lesioned=-216.9 43s
+K1 full=0.9573  v3.1 cortex=0.5271  no developmental waves=0.9615  no STDP=0.8948  no homeostasis (intrinsic + inhibitory)=0.9302  E/I loops lesioned=1.000 35s
+K2 full=0.5656  NMDA-like current lesioned=0.2219 16s
+L1 learned=0.4322  handset=0.4123  fixed=0.4160 114s
+L2 learned=0.09824  handset=0.07734  fixed=0.08678 199s
+L4 learned=0.4885  handset=0.4708  fixed=0.5687 24s
+L3 learned=0.01243  handset=0.03464  fixed=0.004948 507s
+L5 learned=-0.05026  handset=-0.005371  fixed=0.01204 599s
+EVO CQM01:full=0.6886  CQM02:full=48.69  CQM03:full=0.8636  CQM04:full=1.055  CQM01:offspring genomes random=0.2325  CQM02:no mutation=6.000  CQM03:births on a fixed schedule=0.000  CQM04:random survival=1.050 2355s
