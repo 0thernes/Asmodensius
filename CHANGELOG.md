@@ -48,3 +48,12 @@
 - activeInference, CQM-10, CQM-23 and CQM-24 were already re-tested and pass under v2 / v2.1 (V2-AI, V2-10, v2.1-23, v2.1-24). Their v1 results stay FAIL / IMPL.
 - AST-1R: still FAIL. No genuine improvement was found (see HARNESS_CHANGES).
 - Roadmap: 20 → 23 of 100 achieved (harness models). v1..v2.5 outputs are byte-identical to run13.
+
+## Round 12 (2026-10-29, Europe/London): prereg v2.7 + addendum v2.7a
+- AST-1R: proven unpassable at base 3000 by any causal mechanism. Seed 3012's drift exceeds the actuator limit for 55 steps, and a clairvoyant noise-free controller still reaches MSE 6.13, while a pass needs about 4 or less (harness/ast_bound.ts). It stays FAIL, with no mechanism change.
+- CAP-B contact-physics crawler PASS: vs uncoordinated gait d 1.55, t 4.39; vs no friction and vs isotropic friction both very large.
+- CAP-S social learning PASS: vs random peer d 1.39, t 3.94; vs no peer d 1.62, t 4.58. Uses the new seekPref planner (v2.7a, UNK tuned on 2000.. seeds).
+- CAP-R full-state self-reproduction PASS: fidelity 1.000; vs random init d 25.3; vs no repair d 1.55, t 4.37. Near pass-by-construction.
+- CAP-C real C. elegans connectome FAIL: AUROC 0.000 vs shuffled 0.611 (d −2.08). The connectome separates touch location perfectly but in the reversed direction under the Dale/GABA sign rule. v2.7a added synaptic scaling (deviation disclosed).
+- Benchmark audit: benchmark/capabilities_by_project.tsv (499 project×capability rows, from rubric codes with verified source URLs; the sources were not re-read for finer features) and benchmark/capability_matrix.tsv. Coverage: 9/12 classes are test-proven (E R B N L M S I D). W is not test-proven yet, C fails, and O is not testable.
+- creatures/001/MECHANISM_AUDIT.tsv: 76 of 85 frozen tests are flagged as self-contained harness models. 5 share code with the live page; 4 use the bundled creature agent/network.

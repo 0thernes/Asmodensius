@@ -2328,5 +2328,117 @@
    "pass": true,
    "category": "Bounded test evidence"
   }
+ ],
+ "v27": [
+  {
+   "id": "CAP-B",
+   "group": "Prereg v2.7",
+   "name": "Embodied contact physics: crawling (benchmark class B)",
+   "metric": "forward CoM displacement (m, 40 s)",
+   "mechanism": "2D mass-spring chain, penalty contact, anisotropic Coulomb friction, CPG traveling wave",
+   "cmps": [
+    {
+     "control": "uncoordinated gait (random phases)",
+     "full": 1.483889152074888,
+     "ctrl": 1.2574009725936715,
+     "d": 1.5528323879353372,
+     "t": 4.392073246220706,
+     "pass": true
+    },
+    {
+     "control": "no contact friction",
+     "full": 1.483889152074888,
+     "ctrl": 2.4962670819306254e-15,
+     "d": 1014.6300303559448,
+     "t": 2869.8070994408044,
+     "pass": true
+    },
+    {
+     "control": "isotropic friction",
+     "full": 1.483889152074888,
+     "ctrl": 1.0301095578815531,
+     "d": 213.66519808447552,
+     "t": 604.3364418763982,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CAP-S",
+   "group": "Prereg v2.7",
+   "name": "Social learning by observing a second creature (class S; roadmap 13)",
+   "metric": "−observer steps to goal",
+   "mechanism": "observer adds the peer's observed transitions to its world model, then plans",
+   "cmps": [
+    {
+     "control": "random peer (same number of moves)",
+     "full": -18.125,
+     "ctrl": -30.1875,
+     "d": 1.3921809342082354,
+     "t": 3.937682316869064,
+     "pass": true
+    },
+    {
+     "control": "no peer",
+     "full": -18.125,
+     "ctrl": -30.875,
+     "d": 1.6177302765455888,
+     "t": 4.575632194704698,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CAP-R",
+   "group": "Prereg v2.7",
+   "name": "Self-reproduction of the full creature state (class R; roadmap 4)",
+   "metric": "fraction of state entries copied bit-exactly",
+   "mechanism": "self-description (developed weights + organ state), triple redundancy + majority-vote repair",
+   "cmps": [
+    {
+     "control": "random-init child",
+     "full": 1,
+     "ctrl": 0.3277777777777777,
+     "d": 25.26688935493284,
+     "t": 71.4655552094528,
+     "pass": true
+    },
+    {
+     "control": "single-copy description (no repair)",
+     "full": 1,
+     "ctrl": 0.9694444444444446,
+     "d": 1.54536658910979,
+     "t": 4.37095677831463,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "mean fidelity 1.0000"
+  },
+  {
+   "id": "CAP-C",
+   "group": "Prereg v2.7",
+   "name": "Connectome-grounded touch-direction circuit (class C; roadmap 7)",
+   "metric": "AUROC anterior vs posterior touch on AVA−AVB",
+   "mechanism": "C. elegans hermaphrodite connectome (OpenWorm c302), rate model, GABA sign rule",
+   "cmps": [
+    {
+     "control": "degree-preserving shuffled connectome",
+     "full": 0,
+     "ctrl": 0.6106249999999999,
+     "d": -2.0788150033732835,
+     "t": -5.879776742870337,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established",
+   "note": "mean AUROC 0.000"
+  }
  ]
 }
