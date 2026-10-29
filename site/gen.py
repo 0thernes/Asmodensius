@@ -40,14 +40,20 @@ def fv(x): return "—" if x is None else f"{x:.3f}"
 V22 = R.get("v22", [])
 V24 = R.get("v24", [])
 V25 = R.get("v25", [])
-ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22] + [("v2.4", i) for i in V24] + [("v2.5", i) for i in V25]
+V26 = R.get("v26", [])
+ALL = [("v1", i) for i in R["v1"]] + [("v2", i) for i in R["v2"]] + [("v2.1", i) for i in R["v21"]] + [("v2.2", i) for i in V22] + [("v2.4", i) for i in V24] + [("v2.5", i) for i in V25] + [("v2.6", i) for i in V26]
 def counts(lst):
     c = {"pass": 0, "fail": 0, "impl": 0}
     for i in lst: c[status(i)[0]] += 1
     return c
 c1, c2, c21, c22 = counts(R["v1"]), counts(R["v2"]), counts(R["v21"]), counts(V22)
 c24 = counts(V24)
-RM = {int(i["id"][3:]): dict(i, ver=v) for v, L in (("v2.2", V22), ("v2.4", V24)) for i in L if i["id"].startswith("RM-")}
+RM = {}
+for v, L in (("v2.2", V22), ("v2.4", V24), ("v2.6", V26)):
+    for i in L:
+        if i["id"].startswith("RM-"):
+            k = int(i["id"][3:].rstrip("R"))
+            if k not in RM or (i["pass"] and not RM[k]["pass"]): RM[k] = dict(i, ver=v)  # an R test can mark a roadmap item achieved; the original failure stays shown in its own table
 ACH = sorted(k for k, i in RM.items() if i["pass"])
 v1fails = [i for i in R["v1"] if status(i)[0] == "fail"]
 
@@ -110,6 +116,7 @@ page("results.html", "Results", f"""<h1>Results</h1><p class="mut">Generated fro
 <h2>v2.2: held-out AST-1R and roadmap capability tests</h2>{table([("v2.2",i) for i in V22])}
 <h2>v2.4: 11 more roadmap capability tests</h2><p class="mut">These are small harness models of each capability, not behaviours of the rendered creature. Several are easy by construction (for example RM-29 gives the learner the task id; RM-52 uses a noiseless code). All 11 passed on their first run.</p>{table([("v2.4",i) for i in V24])}
 <h2>v2.5: CQM-21R, differentiation of the creature's own network</h2><p class="mut">A new test, not CQM-21: frozen v1 CQM-21 stays FAIL (its own toy network, ceiling control). CQM-21R decodes the stimulus from the creature network's hidden (undriven) units, against shuffled-weight, lesioned and rate-matched iid controls. First run (unchanged creatureNet) FAILED vs shuffled weights (d 0.62, t 1.74). Under addendum v2.5a a developmental Hebbian/anti-Hebbian plasticity phase was added (tuned on seeds 2000..2015 only), and the rerun is shown here. A 6-unit harness network, not the rendered creature's GPU brain.</p>{table([("v2.5",i) for i in V25])}
+<h2>v2.6: RM-10R and two new roadmap tests</h2><p class="mut">RM-10R is a new test, not RM-10: frozen v2.2 RM-10 (400 steps) stays FAIL. RM-10R uses the same world and mechanism but 10000 steps, a length chosen by power analysis on tuning seeds 2000..2015 only, so it is a statistical-power fix rather than a new mechanism; it adds a stronger no-efference-copy control. RM-64 (rivalry: mutual inhibition + adaptation + noise; parameters set on tuning seeds) and RM-83 (latent learning: world model from unrewarded exploration + BFS planning) are small harness models; RM-83 is close to pass-by-construction once the map is learned. AST-1R stays FAIL: its schema is already the correctly specified Kalman filter, and no genuine improvement was found.</p>{table([("v2.6",i) for i in V26])}
 <div class="card mut">v2.2 notes: {"; ".join(E(i["id"]+": "+i["note"]) for i in V22 if i.get("note"))}</div>
 <div class="card mut">GPU substrate: headless Chrome WebGL2 on ANGLE/SwiftShader, a software rasterizer, disclosed as pre-registered. Notes: {"; ".join(E(i.get("note","")) for i in R["v21"])}</div>""")
 

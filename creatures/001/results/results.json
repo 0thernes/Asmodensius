@@ -2252,5 +2252,81 @@
    "pass": true,
    "category": "Bounded test evidence"
   }
+ ],
+ "v26": [
+  {
+   "id": "RM-10R",
+   "group": "Prereg v2.6",
+   "name": "Interoceptive energy forecast, long-horizon evaluation (roadmap 10; not RM-10)",
+   "metric": "−MSE of 20-step energy forecast (T=10000)",
+   "mechanism": "efference copy of the activity schedule + online food-rate estimate",
+   "cmps": [
+    {
+     "control": "persistence forecast",
+     "full": -0.08499206390476523,
+     "ctrl": -0.10176113710966207,
+     "d": 4.527748896767722,
+     "t": 12.806407793657462,
+     "pass": true
+    },
+    {
+     "control": "no efference copy (mean drain)",
+     "full": -0.08499206390476523,
+     "ctrl": -0.09205199035878603,
+     "d": 1.9406480676698683,
+     "t": 5.488981634183736,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "RM-64",
+   "group": "Prereg v2.6",
+   "name": "Perceptual bistability (roadmap 64)",
+   "metric": "gamma shape k of dominance durations",
+   "mechanism": "mutual inhibition + slow adaptation + noise",
+   "cmps": [
+    {
+     "control": "memoryless (Poisson) switching, matched mean",
+     "full": 6.392968848036998,
+     "ctrl": 1.2572012229325031,
+     "d": 3.031311506592932,
+     "t": 8.573843688802688,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "seeds with <20 durations: 0; mean durations/seed 40"
+  },
+  {
+   "id": "RM-83",
+   "group": "Prereg v2.6",
+   "name": "Latent learning (roadmap 83)",
+   "metric": "−steps from start to goal after one rewarded placement",
+   "mechanism": "world model learned during unrewarded exploration + BFS planning",
+   "cmps": [
+    {
+     "control": "naive (no exploration)",
+     "full": -18.5625,
+     "ctrl": -29.25,
+     "d": 2.259933823136366,
+     "t": 6.392058125490256,
+     "pass": true
+    },
+    {
+     "control": "wrong map (explored a different maze)",
+     "full": -18.5625,
+     "ctrl": -30.25,
+     "d": 2.3710303042694414,
+     "t": 6.706286426190901,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  }
  ]
 }

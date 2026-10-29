@@ -39,3 +39,12 @@
 - Preregistration v2.5 adds CQM-21R, differentiation measured on the creature's own network, with shuffled-weight, lesion and rate-matched iid controls. The first run FAILED vs shuffled weights (d 0.62, t 1.74). Addendum v2.5a adds developmental Hebbian/anti-Hebbian plasticity. The rerun PASSES: d 2.10/3.46/3.47, t 5.95/9.79/9.80. CQM-21R does not count as v1 CQM-21. CQM-21 stays FAIL.
 - Fixed the corrupted creature index.html (nested bundles caused a SyntaxError), so the live page now actually runs. Headless Chrome renders at about 0.6 fps on SwiftShader.
 - Site regenerated, with fresh screenshots.
+
+## Round 11 (2026-10-29, Europe/London): prereg v2.6
+- Preregistration v2.6 (7939995) was committed before any code. Mechanisms + frozen tests (83c119b) were committed before the test-seed run. Results: results/run14.txt.
+- RM-10R PASS: vs persistence d 4.53, t 12.81; vs no-efference-copy d 1.94, t 5.49. Same world and mechanism as RM-10, but T=10000 (chosen by power analysis on tuning seeds). This is a power fix, not a new mechanism. Frozen RM-10 stays FAIL (d 0.01).
+- RM-64 perceptual bistability PASS: gamma shape k 6.39 vs Poisson 1.26, d 3.03, t 8.57.
+- RM-83 latent learning PASS: vs naive d 2.26, t 6.39; vs wrong map d 2.37, t 6.71. Close to pass-by-construction.
+- activeInference, CQM-10, CQM-23 and CQM-24 were already re-tested and pass under v2 / v2.1 (V2-AI, V2-10, v2.1-23, v2.1-24). Their v1 results stay FAIL / IMPL.
+- AST-1R: still FAIL. No genuine improvement was found (see HARNESS_CHANGES).
+- Roadmap: 20 → 23 of 100 achieved (harness models). v1..v2.5 outputs are byte-identical to run13.

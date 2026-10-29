@@ -136,3 +136,8 @@ v1 results are unchanged: activeInference, CQM-10 and CQM-21 still FAIL under v1
 - v1 CQM-21 is unchanged and still FAIL. v1..v2.4 outputs are identical to run10.
 - index.html was corrupted. Earlier rebuilds had spliced each new bundle into React's own `"<script><\/script>"` string literal, which gave 3 nested bundles and an "Unexpected identifier 'object'" SyntaxError at load, so the app never ran. This is why the round-8 #livetest output never appeared. It is now rebuilt cleanly from src/page.tsx (esbuild --jsx=automatic, inserted without string replacement).
 - livecdp.mjs: the timeout can now be set with LIVE_TIMEOUT_MS. Node 20 needs `--experimental-websocket`.
+
+## Round 11 (2026-10-29, Europe/London): v2.6
+- New mutable module v26mech.ts (rivalry, maze world model + BFS planner), frozen v26tests.ts, and tune26.ts (tuning seeds 2000..2015 only). run.ts now also runs v2.6.
+- Tuning-seed changes made before the test run: RM-64 parameters (3 settings scanned; beta 1.5, g 0.6, tauA 200, noise 0.08). RM-83 planner belief revision: if no believed path exists, it forgets remembered walls. Without this, the wrong-map control got permanently stuck at the 2000-step cap, which made it a strawman.
+- AST-1R diagnosis: the schema's Kalman prediction omits the drift noise's cross term into focus (P00/P01 lack +Qd). Correcting it (tested on bases 10000..17000) changed nothing measurable: worst d 1.22 before and after. The residual error is the filter floor (Rn 0.5, about 0.25 MSE) plus saturation runaways in rare seeds (e.g. 10012). Both full and ablation share these. The fix was reverted, and the mechanism is unchanged.
