@@ -251,6 +251,7 @@ V33 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v33.json
 V34 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v34.json")))
 V35 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v35.json")))
 V36 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v36.json")))
+V37 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v37.json")))
 def prereg_rows(D):
     rows = ""
     for it in D["items"]:
@@ -297,6 +298,8 @@ def systems_page():
 <p>Code and prereg §F frozen in 1da03c4 before any test-seed run. Rollups: Butlin {V35["rollups"]["butlin"]}, frameworks {V35["rollups"]["frameworks"]}, CQM {V35["rollups"]["cqm"]}; 25/41 d/t items (v3.4: 24/41). New passes: HOT-2, GWT-4, ual, CQM09, CQM14. GWT-3, ctm and CQM08 now fail the non-ceiling rule. LTC is off by default.</p>{prereg_rows(V35)}{prereg_rows({"items": V35["v34"]})}
 <h2>Round 17: v3.6 steering API, new mechanisms, lab-handoff mechanisms, test seeds 1000–1015</h2>
 <p>Code and prereg §F were frozen in 9050c4f before any test-seed run. Rollups: Butlin {V36["rollups"]["butlin"]}, frameworks {V36["rollups"]["frameworks"]}, CQM {V36["rollups"]["cqm"]}; 27/41 d/t items pass (v3.5: 25/41). New passes are CQM12 (schema extraction), CQM06 and AST-1. The adaptive Kalman ships off, so the AST-1 pass is not from a targeted mechanism. CQM03, K1a and K1c are lost to the non-ceiling rule. Degraded-stimulus R-variants of GWT-3, ctm and CQM08 pass; the originals stay on record. Snapshot/restore, the debiased noise sign, the light input and the INS glucose afferent pass. The late recurrent evoked phase (RPTLATE) fails. Moonlab and Eshkol WASM backends match the TS code exactly (results/wasm_equiv_v36.json).</p>{prereg_rows(V36)}{prereg_rows({"items": V36["v36"]})}
+<h2>Round 18: v3.7 late recurrence, dendritic plateau, depletion forward model, R-variants, test seeds 1000–1015</h2>
+<p>Code and prereg v3.7 were frozen in 14cc830 before any test-seed run. Rollups: Butlin {V37["rollups"]["butlin"]}, frameworks {V37["rollups"]["frameworks"]}, CQM {V37["rollups"]["cqm"]}; 26/41 d/t items pass (v3.6: 27/41). RPT-1 passes; K1aR and K1cR (degraded stimulus, 0.82, non-ceiling) pass; CQM03 falls under the ceiling and passes; ctm passes. AST-1, ual and CQM12 regress. RPTLATE, RPT-2, HOT-1, HOT-3, AE-1, activeInference, thaler9, CQM04 and CQM03R fail. The v3.6 thaler9 tuning figure came from pre-freeze code; frozen v3.6 gives d ≈ 0.05 on every seed block.</p>{prereg_rows(V37)}{prereg_rows({"items": V37["v37"]})}
 <p>Full design: <code>creatures/001/organism/SYSTEMS_DESIGN.md</code>. Live inspector: open the creature, wake it, and use the Organism inspector panel.</p>"""
     page("systems.html", "Systems", body)
 systems_page()
