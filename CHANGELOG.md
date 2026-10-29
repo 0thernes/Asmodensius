@@ -1,4 +1,9 @@
 # Changelog
+## Round 10 scoring (2026-10-29): prereg v2.3 LIVE tests on the rendered creature, 3 of 5 pass
+- 80/80 runs (seeds 1000–1015 × full, hab, circ, circbody, chain ablations) scored with the committed harness/score23.ts, unchanged.
+- PASS LIVE-28 circadian entrainment (PLV 0.987 vs 0.752 circ-ablated; d 1.37, t 3.86). PASS LIVE-28B circadian drives the body (r 0.887 vs 0.107; d 5.11, t 14.46). PASS LIVE-47 tamper-evident lineage (1.000 vs 0.000; every tamper detected, none with the chain ablated).
+- **FAIL** LIVE-80 habituation in the body (0.287 vs 0.392 hab-ablated; d −0.64, t −1.81: the ablated body habituates more). **FAIL** LIVE-81 stimulus-specific habituation (0.522 vs 0.357; d 0.49, t 1.39).
+- Scores: creatures/001/results/v23_scores.json and v23_scores.txt; added to results.json as `v23` and to the site Results page.
 ## Round 15: organism v3.4 (plastic topographic cortex, learned-gate LTC via e-prop); frozen a85966e, test seeds 1000–1015
 - v3.1 suite on the v3.4 organism: Butlin 8/14 (v3.1: 4/14), frameworks 5/10, CQM 16/25; 24 of 41 d/t items pass (v3.1: 22/41). New passes include RPT-1, GWT-1, GWT-2 and GWT-3. thaler9 is lost (d 0.62). RPT-2, HOT-1/2/3 and AE-1 still fail, and PROJ, CQM10 and CQM18 fail the ceiling rule.
 - Cortex: K1 module-0 accuracy is 0.957 vs 0.527 for the v3.1 cortex, but K1a–e all fail the ceiling rule. No dev waves (0.962) and E/I loops lesioned (1.000) are not worse. K2 persistence passes (0.566 vs 0.222 with NMDA lesioned; d 5.58, t 15.77).

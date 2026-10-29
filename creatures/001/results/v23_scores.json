@@ -1,0 +1,97 @@
+[
+ {
+  "id": "LIVE-80",
+  "group": "Prereg v2.3",
+  "name": "Habituation in the body",
+  "metric": "live creature",
+  "mechanism": "rendered creature (index.html) in headless Chrome",
+  "cmps": [
+   {
+    "control": "ablate=hab",
+    "full": 0.2871275000000001,
+    "ctrl": 0.39216354166666667,
+    "d": -0.6383105803027023,
+    "t": -1.8054149593406443,
+    "pass": false
+   }
+  ],
+  "pass": false,
+  "category": "Not established"
+ },
+ {
+  "id": "LIVE-81",
+  "group": "Prereg v2.3",
+  "name": "Stimulus-specific habituation",
+  "metric": "live creature",
+  "mechanism": "rendered creature (index.html) in headless Chrome",
+  "cmps": [
+   {
+    "control": "ablate=hab",
+    "full": 0.5224243749999999,
+    "ctrl": 0.35738374999999994,
+    "d": 0.4907083851608171,
+    "t": 1.3879329069292559,
+    "pass": false
+   }
+  ],
+  "pass": false,
+  "category": "Not established"
+ },
+ {
+  "id": "LIVE-28",
+  "group": "Prereg v2.3",
+  "name": "Circadian entrainment (PLV)",
+  "metric": "live creature",
+  "mechanism": "rendered creature (index.html) in headless Chrome",
+  "cmps": [
+   {
+    "control": "ablate=circ",
+    "full": 0.9865637687657314,
+    "ctrl": 0.7519388469198028,
+    "d": 1.3655806736186753,
+    "t": 3.8624454182922356,
+    "pass": true
+   }
+  ],
+  "pass": true,
+  "category": "Bounded test evidence"
+ },
+ {
+  "id": "LIVE-28B",
+  "group": "Prereg v2.3",
+  "name": "Circadian drives the body",
+  "metric": "live creature",
+  "mechanism": "rendered creature (index.html) in headless Chrome",
+  "cmps": [
+   {
+    "control": "ablate=circbody",
+    "full": 0.8867132936695158,
+    "ctrl": 0.10715988795252393,
+    "d": 5.11402311986437,
+    "t": 14.464641708803521,
+    "pass": true
+   }
+  ],
+  "pass": true,
+  "category": "Bounded test evidence"
+ },
+ {
+  "id": "LIVE-47",
+  "group": "Prereg v2.3",
+  "name": "Tamper-evident lineage",
+  "metric": "live creature",
+  "mechanism": "rendered creature (index.html) in headless Chrome",
+  "cmps": [
+   {
+    "control": "ablate=chain",
+    "full": 1,
+    "ctrl": 0,
+    "d": null,
+    "t": null,
+    "pass": true
+   }
+  ],
+  "pass": true,
+  "category": "Bounded test evidence"
+ }
+]

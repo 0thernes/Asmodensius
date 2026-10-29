@@ -5,7 +5,7 @@
    "group": "Butlin",
    "name": "Algorithmic recurrence",
    "metric": "delayed-recall accuracy",
-   "mechanism": "recurrent reservoir (ρ=0.95) + ridge readout",
+   "mechanism": "recurrent reservoir (\u03c1=0.95) + ridge readout",
    "cmps": [
     {
      "control": "recurrence ablated (W=0)",
@@ -58,7 +58,7 @@
    "id": "GWT-1",
    "group": "Butlin",
    "name": "Specialized parallel modules",
-   "metric": "selective lesion deficit (own − cross)",
+   "metric": "selective lesion deficit (own \u2212 cross)",
    "mechanism": "3 modality-tuned specialist modules",
    "cmps": [
     {
@@ -158,7 +158,7 @@
    "id": "HOT-1",
    "group": "Butlin",
    "name": "Generative, top-down / noisy perception",
-   "metric": "−reconstruction MSE",
+   "metric": "\u2212reconstruction MSE",
    "mechanism": "learned generative prototypes refine noisy input",
    "cmps": [
     {
@@ -239,7 +239,7 @@
    "id": "HOT-4",
    "group": "Butlin",
    "name": "Sparse and smooth coding (quality space)",
-   "metric": "Spearman ρ(stimulus distance, code distance)",
+   "metric": "Spearman \u03c1(stimulus distance, code distance)",
    "mechanism": "k-WTA sparse RBF population code (8 of 64 active)",
    "cmps": [
     {
@@ -258,7 +258,7 @@
    "id": "AST-1",
    "group": "Butlin",
    "name": "Predictive model of attention (attention schema)",
-   "metric": "−attention tracking error",
+   "metric": "\u2212attention tracking error",
    "mechanism": "Kalman attention schema estimates focus + hidden drift, monitors its own surprise (NIS) to inflate both focus and drift uncertainty, and steers attention",
    "cmps": [
     {
@@ -285,7 +285,7 @@
    "id": "PP-1",
    "group": "Butlin",
    "name": "Predictive coding input module",
-   "metric": "−next-input prediction MSE",
+   "metric": "\u2212next-input prediction MSE",
    "mechanism": "prediction-error-driven (NLMS) sensory predictor",
    "cmps": [
     {
@@ -338,9 +338,9 @@
   {
    "id": "AE-2",
    "group": "Butlin",
-   "name": "Embodiment: modelling output→input contingencies",
-   "metric": "−reaching error",
-   "mechanism": "learned forward model of motor→sensory gain, inverted for control",
+   "name": "Embodiment: modelling output\u2192input contingencies",
+   "metric": "\u2212reaching error",
+   "mechanism": "learned forward model of motor\u2192sensory gain, inverted for control",
    "cmps": [
     {
      "control": "ablation: action-sensory contingency scrambled",
@@ -358,7 +358,7 @@
    "id": "thaler9",
    "group": "Framework",
    "name": "Thaler creativity machine (DABUS-style)",
-   "metric": "novelty×usefulness; −distance to valued region",
+   "metric": "novelty\u00d7usefulness; \u2212distance to valued region",
    "mechanism": "noise-perturbed generator + critic; critic valence gates reinforcement",
    "cmps": [
     {
@@ -415,13 +415,13 @@
    ],
    "pass": true,
    "category": "Bounded test evidence",
-   "note": "phi proxy = I(whole_t;whole_t+1) − min over bipartitions of Σ I(part_t;part_t+1); not IIT 4.0's full Φ. Partition = trained network with cross-half edges removed"
+   "note": "phi proxy = I(whole_t;whole_t+1) \u2212 min over bipartitions of \u03a3 I(part_t;part_t+1); not IIT 4.0's full \u03a6. Partition = trained network with cross-half edges removed"
   },
   {
    "id": "activeInference",
    "group": "Framework",
    "name": "Free energy / active inference",
-   "metric": "viability (food found); −surprise",
+   "metric": "viability (food found); \u2212surprise",
    "mechanism": "Bayesian belief + expected-free-energy planner (4-step expectimax over beliefs, info gain and surprise terms)",
    "cmps": [
     {
@@ -464,7 +464,7 @@
    "id": "attentionSchema",
    "group": "Framework",
    "name": "Attention Schema Theory",
-   "metric": "−attention control error; −error predicting another agent's attention",
+   "metric": "\u2212attention control error; \u2212error predicting another agent's attention",
    "mechanism": "same Kalman schema applied to self and to another agent",
    "cmps": [
     {
@@ -491,7 +491,7 @@
    "id": "fieldIntegration",
    "group": "Framework",
    "name": "CEMI field integration (oscillator-field model)",
-   "metric": "feature-binding accuracy; ρ(coherence, accuracy)",
+   "metric": "feature-binding accuracy; \u03c1(coherence, accuracy)",
    "mechanism": "Kuramoto field; binding read out from phase synchrony",
    "cmps": [
     {
@@ -503,7 +503,7 @@
      "pass": true
     },
     {
-     "control": "coherence alters behavior: ρ(coupling→coherence, accuracy) vs 0",
+     "control": "coherence alters behavior: \u03c1(coupling\u2192coherence, accuracy) vs 0",
      "full": 0.9062499999999999,
      "ctrl": 0,
      "d": 8.92413309600162,
@@ -523,7 +523,7 @@
    "mechanism": "configural units + eligibility traces + Bayesian latent-cause inference (2 contexts, Beta value counts)",
    "cmps": [
     {
-     "control": "compound (negative patterning) vs simple conditioning (Rescorla–Wagner)",
+     "control": "compound (negative patterning) vs simple conditioning (Rescorla\u2013Wagner)",
      "full": 1,
      "ctrl": 0.546875,
      "d": 4.712696366439654,
@@ -554,7 +554,7 @@
    "id": "sensorimotor",
    "group": "Framework",
    "name": "Sensorimotor enactivism",
-   "metric": "−perception / planning / adaptation error",
+   "metric": "\u2212perception / planning / adaptation error",
    "mechanism": "learned sensorimotor contingency model",
    "cmps": [
     {
@@ -854,7 +854,7 @@
    "id": "01",
    "group": "CQM-25",
    "name": "Reproduction and heredity",
-   "metric": "parent–offspring trait correlation; gain in foraging gene",
+   "metric": "parent\u2013offspring trait correlation; gain in foraging gene",
    "mechanism": "population of agents with mutating genomes",
    "cmps": [
     {
@@ -920,8 +920,8 @@
    "id": "04",
    "group": "CQM-25",
    "name": "Morphology and development",
-   "metric": "evolved reach (limb count × length × cost)",
-   "mechanism": "genome → developmental limb program → reach",
+   "metric": "evolved reach (limb count \u00d7 length \u00d7 cost)",
+   "mechanism": "genome \u2192 developmental limb program \u2192 reach",
    "cmps": [
     {
      "control": "random morphology (no developmental program)",
@@ -939,7 +939,7 @@
    "id": "05",
    "group": "CQM-25",
    "name": "Embodied dynamics and internal consistency",
-   "metric": "−relative energy drift of limb oscillator",
+   "metric": "\u2212relative energy drift of limb oscillator",
    "mechanism": "symplectic (Hamiltonian) integrator for limbs",
    "cmps": [
     {
@@ -958,7 +958,7 @@
    "id": "06",
    "group": "CQM-25",
    "name": "Perceptual integration",
-   "metric": "−estimate MSE",
+   "metric": "\u2212estimate MSE",
    "mechanism": "reliability-weighted fusion of sight and hearing",
    "cmps": [
     {
@@ -985,7 +985,7 @@
    "id": "07",
    "group": "CQM-25",
    "name": "Learning and plasticity",
-   "metric": "−prediction MSE after learning",
+   "metric": "\u2212prediction MSE after learning",
    "mechanism": "NLMS predictive learning (shared with PP-1)",
    "cmps": [
     {
@@ -1004,7 +1004,7 @@
    "id": "08",
    "group": "CQM-25",
    "name": "Memory and continual retention",
-   "metric": "−task-A error after learning task B",
+   "metric": "\u2212task-A error after learning task B",
    "mechanism": "interleaved replay of consolidated task A",
    "cmps": [
     {
@@ -1024,7 +1024,7 @@
    "id": "09",
    "group": "CQM-25",
    "name": "Predictive/causal world models",
-   "metric": "−error predicting outcome of an intervention do(x)",
+   "metric": "\u2212error predicting outcome of an intervention do(x)",
    "mechanism": "world model that adjusts for observed confounder",
    "cmps": [
     {
@@ -1070,7 +1070,7 @@
    "id": "11",
    "group": "CQM-25",
    "name": "Reasoning and planning",
-   "metric": "maze success × efficiency",
+   "metric": "maze success \u00d7 efficiency",
    "mechanism": "breadth-first planning over a world model",
    "cmps": [
     {
@@ -1097,7 +1097,7 @@
    "id": "12",
    "group": "CQM-25",
    "name": "Transfer and compositional generalization",
-   "metric": "−error on unseen feature combinations",
+   "metric": "\u2212error on unseen feature combinations",
    "mechanism": "factored (compositional) representation",
    "cmps": [
     {
@@ -1208,7 +1208,7 @@
    "id": "17",
    "group": "CQM-25",
    "name": "Homeostatic regulation",
-   "metric": "−variance around setpoint",
+   "metric": "\u2212variance around setpoint",
    "mechanism": "negative-feedback energy regulation",
    "cmps": [
     {
@@ -1235,12 +1235,12 @@
    "id": "18",
    "group": "CQM-25",
    "name": "Repair and functional resilience",
-   "metric": "−error after 40% lesion",
+   "metric": "\u2212error after 40% lesion",
    "mechanism": "error-driven relearning + genomic regeneration",
    "cmps": [
     {
      "control": "no repair",
-     "full": -1.860796260114463e-7,
+     "full": -1.860796260114463e-07,
      "ctrl": -5.772984343158189,
      "d": 2.353418472479249,
      "t": 6.656472643439053,
@@ -1397,7 +1397,7 @@
    "id": "v2-AI",
    "group": "Prereg v2",
    "name": "Active inference, nonstationary depleting world",
-   "metric": "viability; −belief surprise (bits)",
+   "metric": "viability; \u2212belief surprise (bits)",
    "mechanism": "hazard-aware Bayesian filter + 4-step expectimax over (belief, energy) with value of information",
    "cmps": [
     {
@@ -1553,10 +1553,10 @@
    "group": "Prereg v2.1",
    "name": "Visual and embodied scale",
    "metric": "body participation ratio; rendered Sobel detail",
-   "mechanism": "8×6-node Hamiltonian limb chains; full SDF scene (shell, limbs, spines, fin, eyes, inner organs)",
+   "mechanism": "8\u00d76-node Hamiltonian limb chains; full SDF scene (shell, limbs, spines, fin, eyes, inner organs)",
    "cmps": [
     {
-     "control": "reduced-scale body (2 chains × 3 nodes): participation ratio",
+     "control": "reduced-scale body (2 chains \u00d7 3 nodes): participation ratio",
      "full": 6.986949755005546,
      "ctrl": 4.691416520321569,
      "d": 7.1164546304197485,
@@ -1582,7 +1582,7 @@
    "id": "AST-1R",
    "group": "Prereg v2.2",
    "name": "Attention schema on held-out seed sets (tail-robust)",
-   "metric": "−log10 mean squared attention error",
+   "metric": "\u2212log10 mean squared attention error",
    "mechanism": "Kalman attention schema with NIS self-monitoring (same as AST-1)",
    "cmps": [
     {
@@ -1721,7 +1721,7 @@
    "id": "RM-10",
    "group": "Prereg v2.2",
    "name": "Interoceptive prediction of energy (roadmap 10)",
-   "metric": "−MSE of 20-step energy forecast",
+   "metric": "\u2212MSE of 20-step energy forecast",
    "mechanism": "efference copy of the activity schedule + online food-rate estimate",
    "cmps": [
     {
@@ -1817,7 +1817,7 @@
    "id": "RM-61",
    "group": "Prereg v2.2",
    "name": "Metacognitive confidence reporting (roadmap 61)",
-   "metric": "confidence–accuracy AUROC",
+   "metric": "confidence\u2013accuracy AUROC",
    "mechanism": "second-order reliability monitor (HOT-2)",
    "cmps": [
     {
@@ -1836,7 +1836,7 @@
    "id": "RM-69",
    "group": "Prereg v2.2",
    "name": "Serial dependence in perception (roadmap 69)",
-   "metric": "serial bias slope; −MSE",
+   "metric": "serial bias slope; \u2212MSE",
    "mechanism": "Bayesian persistence prior (mixture: stay vs new stimulus)",
    "cmps": [
     {
@@ -1848,7 +1848,7 @@
      "pass": true
     },
     {
-     "control": "memoryless perceiver (−MSE)",
+     "control": "memoryless perceiver (\u2212MSE)",
      "full": -0.13878350937211154,
      "ctrl": -0.25064753263203093,
      "d": 4.801954001963421,
@@ -1864,7 +1864,7 @@
    "group": "Prereg v2.2",
    "name": "Temporal interval timing (roadmap 79)",
    "metric": "SD(80)/SD(10)",
-   "mechanism": "pacemaker–accumulator with per-trial rate variability",
+   "mechanism": "pacemaker\u2013accumulator with per-trial rate variability",
    "cmps": [
     {
      "control": "additive-noise timer",
@@ -1909,8 +1909,8 @@
    "id": "RM-81",
    "group": "Prereg v2.2",
    "name": "Classical conditioning with blocking (roadmap 81)",
-   "metric": "blocking index V_D − V_B",
-   "mechanism": "Rescorla–Wagner shared prediction error",
+   "metric": "blocking index V_D \u2212 V_B",
+   "mechanism": "Rescorla\u2013Wagner shared prediction error",
    "cmps": [
     {
      "control": "associative-only learner",
@@ -1942,7 +1942,7 @@
      "pass": true
     },
     {
-     "control": "Additional: full ≥ 2× control",
+     "control": "Additional: full \u2265 2\u00d7 control",
      "full": 0.9548125000000001,
      "ctrl": 0,
      "d": null,
@@ -1957,7 +1957,7 @@
    "id": "RM-29",
    "group": "Prereg v2.4",
    "name": "Lifelong learning without catastrophic forgetting (roadmap 29)",
-   "metric": "task-A R² after task B",
+   "metric": "task-A R\u00b2 after task B",
    "mechanism": "context-dependent gating of readout",
    "cmps": [
     {
@@ -1969,7 +1969,7 @@
      "pass": true
     },
     {
-     "control": "Additional: full retention ≥ 0.8 and task-B R² ≥ 0.8",
+     "control": "Additional: full retention \u2265 0.8 and task-B R\u00b2 \u2265 0.8",
      "full": 0.9999999999996156,
      "ctrl": 0,
      "d": null,
@@ -1984,7 +1984,7 @@
    "id": "RM-36",
    "group": "Prereg v2.4",
    "name": "Neuromodulated plasticity (roadmap 36)",
-   "metric": "mean reward, trials 200–299",
+   "metric": "mean reward, trials 200\u2013299",
    "mechanism": "dopamine-like RPE gate",
    "cmps": [
     {
@@ -2015,7 +2015,7 @@
      "pass": true
     },
     {
-     "control": "Additional: larger-later ≥ 50% of trials",
+     "control": "Additional: larger-later \u2265 50% of trials",
      "full": 0.739375,
      "ctrl": 0,
      "d": null,
@@ -2030,7 +2030,7 @@
    "id": "RM-53",
    "group": "Prereg v2.4",
    "name": "Chemotaxis (roadmap 53)",
-   "metric": "−final distance to source",
+   "metric": "\u2212final distance to source",
    "mechanism": "run-and-tumble temporal comparison",
    "cmps": [
     {
@@ -2057,7 +2057,7 @@
    "id": "RM-73",
    "group": "Prereg v2.4",
    "name": "Hunger-driven risk sensitivity (roadmap 73)",
-   "metric": "P(risky|low E) − P(risky|high E)",
+   "metric": "P(risky|low E) \u2212 P(risky|high E)",
    "mechanism": "energy-budget rule",
    "cmps": [
     {
@@ -2111,11 +2111,11 @@
    "id": "RM-82",
    "group": "Prereg v2.4",
    "name": "Extinction and spontaneous recovery (roadmap 82)",
-   "metric": "test response − end-of-extinction response",
+   "metric": "test response \u2212 end-of-extinction response",
    "mechanism": "two-process excitatory/inhibitory memory",
    "cmps": [
     {
-     "control": "Rescorla–Wagner unlearning",
+     "control": "Rescorla\u2013Wagner unlearning",
      "full": 0.629783387345705,
      "ctrl": 0,
      "d": 10.188088345730725,
@@ -2138,7 +2138,7 @@
    "id": "RM-96",
    "group": "Prereg v2.4",
    "name": "Radiation-tolerant genome repair (roadmap 96)",
-   "metric": "fraction of genome bits intact after 10× dose",
+   "metric": "fraction of genome bits intact after 10\u00d7 dose",
    "mechanism": "TMR majority scrubbing",
    "cmps": [
     {
@@ -2150,7 +2150,7 @@
      "pass": true
     },
     {
-     "control": "Additional: ≥0.95 in ≥15/16 seeds",
+     "control": "Additional: \u22650.95 in \u226515/16 seeds",
      "full": 0,
      "ctrl": 0,
      "d": null,
@@ -2177,7 +2177,7 @@
      "pass": true
     },
     {
-     "control": "Additional: alive and active at t=2000 in ≥15/16",
+     "control": "Additional: alive and active at t=2000 in \u226515/16",
      "full": 16,
      "ctrl": 0,
      "d": null,
@@ -2192,7 +2192,7 @@
    "id": "RM-52",
    "group": "Prereg v2.4",
    "name": "Graceful degradation under neuron loss (roadmap 52)",
-   "metric": "−max drop in P(k) per 8 units lost",
+   "metric": "\u2212max drop in P(k) per 8 units lost",
    "mechanism": "distributed cosine population code",
    "cmps": [
     {
@@ -2204,7 +2204,7 @@
      "pass": true
     },
     {
-     "control": "Additional: P(32) ≥ 0.5",
+     "control": "Additional: P(32) \u2265 0.5",
      "full": 1,
      "ctrl": 0,
      "d": null,
@@ -2258,7 +2258,7 @@
    "id": "RM-10R",
    "group": "Prereg v2.6",
    "name": "Interoceptive energy forecast, long-horizon evaluation (roadmap 10; not RM-10)",
-   "metric": "−MSE of 20-step energy forecast (T=10000)",
+   "metric": "\u2212MSE of 20-step energy forecast (T=10000)",
    "mechanism": "efference copy of the activity schedule + online food-rate estimate",
    "cmps": [
     {
@@ -2305,7 +2305,7 @@
    "id": "RM-83",
    "group": "Prereg v2.6",
    "name": "Latent learning (roadmap 83)",
-   "metric": "−steps from start to goal after one rewarded placement",
+   "metric": "\u2212steps from start to goal after one rewarded placement",
    "mechanism": "world model learned during unrewarded exploration + BFS planning",
    "cmps": [
     {
@@ -2369,7 +2369,7 @@
    "id": "CAP-S",
    "group": "Prereg v2.7",
    "name": "Social learning by observing a second creature (class S; roadmap 13)",
-   "metric": "−observer steps to goal",
+   "metric": "\u2212observer steps to goal",
    "mechanism": "observer adds the peer's observed transitions to its world model, then plans",
    "cmps": [
     {
@@ -2424,7 +2424,7 @@
    "id": "CAP-C",
    "group": "Prereg v2.7",
    "name": "Connectome-grounded touch-direction circuit (class C; roadmap 7)",
-   "metric": "AUROC anterior vs posterior touch on AVA−AVB",
+   "metric": "AUROC anterior vs posterior touch on AVA\u2212AVB",
    "mechanism": "C. elegans hermaphrodite connectome (OpenWorm c302), rate model, GABA sign rule",
    "cmps": [
     {
@@ -2439,6 +2439,103 @@
    "pass": false,
    "category": "Not established",
    "note": "mean AUROC 0.000"
+  }
+ ],
+ "v23": [
+  {
+   "id": "LIVE-80",
+   "group": "Prereg v2.3",
+   "name": "Habituation in the body",
+   "metric": "live creature",
+   "mechanism": "rendered creature (index.html) in headless Chrome",
+   "cmps": [
+    {
+     "control": "ablate=hab",
+     "full": 0.2871275000000001,
+     "ctrl": 0.39216354166666667,
+     "d": -0.6383105803027023,
+     "t": -1.8054149593406443,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "LIVE-81",
+   "group": "Prereg v2.3",
+   "name": "Stimulus-specific habituation",
+   "metric": "live creature",
+   "mechanism": "rendered creature (index.html) in headless Chrome",
+   "cmps": [
+    {
+     "control": "ablate=hab",
+     "full": 0.5224243749999999,
+     "ctrl": 0.35738374999999994,
+     "d": 0.4907083851608171,
+     "t": 1.3879329069292559,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "LIVE-28",
+   "group": "Prereg v2.3",
+   "name": "Circadian entrainment (PLV)",
+   "metric": "live creature",
+   "mechanism": "rendered creature (index.html) in headless Chrome",
+   "cmps": [
+    {
+     "control": "ablate=circ",
+     "full": 0.9865637687657314,
+     "ctrl": 0.7519388469198028,
+     "d": 1.3655806736186753,
+     "t": 3.8624454182922356,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "LIVE-28B",
+   "group": "Prereg v2.3",
+   "name": "Circadian drives the body",
+   "metric": "live creature",
+   "mechanism": "rendered creature (index.html) in headless Chrome",
+   "cmps": [
+    {
+     "control": "ablate=circbody",
+     "full": 0.8867132936695158,
+     "ctrl": 0.10715988795252393,
+     "d": 5.11402311986437,
+     "t": 14.464641708803521,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "LIVE-47",
+   "group": "Prereg v2.3",
+   "name": "Tamper-evident lineage",
+   "metric": "live creature",
+   "mechanism": "rendered creature (index.html) in headless Chrome",
+   "cmps": [
+    {
+     "control": "ablate=chain",
+     "full": 1,
+     "ctrl": 0,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
   }
  ]
 }
