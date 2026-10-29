@@ -7,4 +7,4 @@ let id = 0; const pend = new Map(); ws.onmessage = (m) => { const d = JSON.parse
 const cmd = (method, params = {}) => new Promise((r) => { pend.set(++id, r); ws.send(JSON.stringify({ id, method, params })); });
 await cmd("Page.enable"); await cmd("Page.navigate", { url: "http://localhost:8787/" }); await sleep(9000);
 const hud = await cmd("Runtime.evaluate", { expression: "document.getElementById('hud').textContent + ' | canvas=' + !!document.querySelector('canvas')" });
-const s = await cmd("Page.captureScreenshot", { format: "png" }); writeFileSync("out/viewer.png", Buffer.from(s.data, "base64")); console.log(hud.result.value); ws.close(); ch.kill();
+const s = await cmd("Page.captureScreenshot", { format: "png" }); writeFileSync((process.env.OUT ?? "out/viewer.png"), Buffer.from(s.data, "base64")); console.log(hud.result.value); ws.close(); ch.kill();
