@@ -41,7 +41,7 @@ export class Creature001 implements CreatureLab {
   private incoming(part: string) { const a = R0[part], n = RN[part], p = this.o.syn.post, r: number[] = []; for (let s = 0; s < p.length; s++) if (p[s] >= a && p[s] < a + n) r.push(s); return r; }
   allParts() { return [...REGIONS.map(([r]) => r), ...NM.map((m) => "nm:" + m), "body", "value"]; }
   motor() { return this.readState("MOT").subarray(0, RN.MOT).slice(); }
-  metrics() { const o = this.o; return { foraged: o.foraged, rewards: o.rewards, asleep: o.asleep ? 1 : 0, DA: o.nm.DA.E, NE: o.nm.NE.E, glc: o.blood.glc, hr: o.hr, kappa: o.kappa, qgtTrace: o.qgtTrace, motRate: o.regionRate.MOT ?? 0, ctxRate: o.regionRate.CTX ?? 0, forageNow: this.lastSite >= 0 ? 1 : 0, energy: o.energy(), ledgerError: o.ledgerError(), stores: o.fat + o.liverGly + o.muscle, integrity: o.integrity, atp: o.atp, eaten: o.eaten }; }
+  metrics() { const o = this.o; return { foraged: o.foraged, rewards: o.rewards, asleep: o.asleep ? 1 : 0, DA: o.nm.DA.E, NE: o.nm.NE.E, glc: o.blood.glc, hr: o.hr, kappa: o.kappa, qgtTrace: o.qgtTrace, motRate: o.regionRate.MOT ?? 0, ctxRate: o.regionRate.CTX ?? 0, forageNow: this.lastSite >= 0 ? 1 : 0, energy: o.energy(), ledgerError: o.ledgerError(), stores: o.fat + o.liverGly + o.muscle, integrity: o.integrity, atp: o.atp, eaten: o.eaten, ignitions: (o.mind as any).ignitions, hunger: o.regionRate.HYP ?? 0, vagal: o.vagal }; }
   lesionCoupling(id: string, gain: number) { const ks = this.edges.get(id); if (!ks) throw new Error(`creature 001 has no coupling ${id}`); for (const k of ks) this.o.mask[k] = gain; }
   lesionFlag(flag: string, on: boolean) { this.o.lesion(flag as any, on); }
   stimulate(part: string, amount: number) { this.o.stimulate(part, amount); }
@@ -59,6 +59,10 @@ export class Creature001 implements CreatureLab {
   work(kJ: number) { const o = this.o; const w = Math.min(kJ, Math.max(0, o.atp)); o.atp -= w; o.heat += w; }
   shiftModulator(name: string, d: number) { const m = this.o.nm[name]; if (!m) throw new Error(`no modulator ${name}`); m.E = Math.max(0, m.E + d); }
   rewire(frac: number, rnd: () => number) { let n = 0; for (let k = 0; k < this.o.mask.length; k++) if (rnd() < frac) { this.o.mask[k] = 0; n++; } return n; }
+  senseLines(x: number[]) { for (let i = 0; i < 16; i++) this.o.sens[i] = x[i % x.length]; }
+  drain(kJ: number) { const o = this.o; const d = Math.min(kJ, Math.max(0, o.blood.glc)); o.blood.glc -= d; o.eaten -= d; return d; }
+  give(kJ: number) { if (kJ > 0) this.o.feed(kJ); }
+  takeWaste() { const o = this.o; const w = o.excreted; o.excreted = 0; o.eaten -= w; return w; } // waste leaves the body: booked as negative intake so the internal ledger stays exact
   ledger() { return { energy: this.o.energy(), intake: this.o.eaten, error: this.o.ledgerError() }; }
 }
 export const make001 = (seed: number, opts?: Record<string, unknown>) => new Creature001(seed, opts);

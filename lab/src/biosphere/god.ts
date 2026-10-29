@@ -12,6 +12,16 @@ export type WorldDials = {
   electric: { part: string; amount: number } | null;   // sustained electrical stimulation
   sensoryLoad: number;       // hyper-stimulation of the sensory sheet (0 = baseline)
   quantumKicks: number;      // probability per tick of a dice-driven pulse into a random brain part
+  // v0.4
+  sensoryLinesR: number;     // R-version of sensory load: drives the real sensory lines (o.sens) instead of injecting current
+  temperature: number;       // weather: deg C (20 = neutral); thermoregulation cost |T-20| * 0.0005 kJ/tick paid ATP -> heat
+  wind: number;              // weather: drift (units/tick) along a dice-chosen direction that turns slowly
+  o2: number;                // gas: O2 fraction (0.21 = normal); hypoxia proxy cost 0.01 * max(0, 0.21-o2)/0.21 kJ/tick
+  co2: number;               // gas: CO2 fraction (0.0004 normal); hypercapnia -> LC (arousal) drive 0.5 * co2/0.04
+  radiation: number;         // per-tick tissue damage, plus the same fraction of synapses silenced per tick
+  recycling: number;         // fraction of detritus decomposed back into the local patch per tick (0 = waste is a sink)
+  parasites: number;         // kJ/tick drained from each host's blood glucose into parasite biomass
+  game: "none" | "pd" | "stag"; // payoff game played on contact; payoffs are harvested from the shared local patch
 };
 export type CreatureDials = {
   modShift: { name: string; perTick: number } | null;   // neuromodulator shift
@@ -19,7 +29,7 @@ export type CreatureDials = {
   lesionDice: boolean;       // dice: one random mechanism lesion at birth
   mutationSigma: number;     // dice: genes ~ exp(N(0, sigma)) at birth
 };
-export const BASE_WORLD: WorldDials = { foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0 };
+export const BASE_WORLD: WorldDials = { foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none" };
 export const BASE_CREATURE: CreatureDials = { modShift: null, rewireFrac: 0, lesionDice: false, mutationSigma: 0 };
 export const PRESETS: Record<string, Partial<WorldDials>> = {
   utopia: { foodCapScale: 2, growthScale: 3, gravity: 0.5 },
@@ -27,6 +37,11 @@ export const PRESETS: Record<string, Partial<WorldDials>> = {
   harsh: { foodCapScale: 0.3, growthScale: 0.3, gravity: 2, toxicity: 0.0005 },
   hell: { foodCapScale: 0.05, growthScale: 0.05, gravity: 3, toxicity: 0.003, sensoryLoad: 2, quantumKicks: 0.2 },
 };
+// utopia -> hell ladder, 7 rungs: every hostile dial moves monotonically
+export const LADDER: Partial<WorldDials>[] = Array.from({ length: 7 }, (_, i) => { const x = i / 6; return { foodCapScale: 2 * (1 - x) + 0.05 * x, growthScale: 3 * (1 - x) + 0.05 * x, gravity: 0.5 + 2.5 * x, toxicity: 0.003 * x, temperature: 20 + 25 * x, o2: 0.21 - 0.12 * x, radiation: 0.001 * x, parasites: 0.004 * x }; });
+export const LADDER_NAMES = ["utopia", "lush", "mild", "baseline-ish", "harsh", "brutal", "hell"];
+// payoff tables (kJ to row player, col player), harvested from the local patch: C = cooperate, D = defect
+export const PAYOFF = { pd: { CC: [2.2, 2.2], CD: [0, 3.3], DC: [3.3, 0], DD: [0.6, 0.6] }, stag: { CC: [3.3, 3.3], CD: [0, 1.1], DC: [1.1, 0], DD: [1.1, 1.1] } } as const;
 export const LESION_POOL = ["recLesion", "gwLesion", "rpeLesion", "efeLesion", "ppLesion", "stdpLesion", "homeoLesion", "nmdaLesion", "traceLesion", "pidLesion"];
 export const KICK_PARTS = ["CTX", "THAL", "HIP", "STR", "VTA", "LC", "HYP", "MOT"];
 export function birthOpts(cd: CreatureDials, dice: DiceSource): { opts: Record<string, unknown>; log: string[] } {

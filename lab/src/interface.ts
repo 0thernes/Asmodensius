@@ -35,6 +35,10 @@ export interface CreatureLab {
   work?(kJ: number): void;              // mechanical work paid from ATP into heat (gravity, drag)
   shiftModulator?(name: string, d: number): void;  // add d to an extracellular neuromodulator level
   rewire?(frac: number, rnd: () => number): number; // silence a random fraction of synapses; returns count
+  senseLines?(x: number[]): void;       // v0.4: write the creature's real sensory lines (not current injection)
+  drain?(kJ: number): number;           // v0.4: remove energy from the creature (parasite, payoff loss); booked as negative intake
+  give?(kJ: number): void;              // v0.4: give food (payoff); booked as intake
+  takeWaste?(): number;                 // v0.4: hand excreted energy back to the world (recycling); returns kJ
 }
 export interface BodySpec { radius: number; mass: number; maxSpeed: number; habitat: ("land" | "water" | "air")[]; }
 export interface WorldSense { light: number; foodHere: number; temperature: number; touch: number; t: number; }

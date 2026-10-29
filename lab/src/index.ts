@@ -3,3 +3,4 @@ export { stateDecoder } from "./instruments/decoder"; export { transplant } from
 export { motorLens } from "./instruments/motorLens"; export { workspaceRouting } from "./instruments/routing"; export { saeOnPart } from "./instruments/sae"; export { geometry, cka } from "./instruments/geometry"; export { pci } from "./instruments/pci"; export { nistOnCreature } from "./instruments/nist";
 export { Dome } from "./biosphere/dome";
 export { make001, Creature001 } from "./adapters/c001";
+export { motorLensR } from "./instruments/motorLensR"; export { qrngDiag, vonNeumann, toeplitz } from "./instruments/qrngDiag";
