@@ -1,4 +1,9 @@
 # Changelog
+## Round 15: organism v3.4 (plastic topographic cortex, learned-gate LTC via e-prop); frozen a85966e, test seeds 1000–1015
+- v3.1 suite on the v3.4 organism: Butlin 8/14 (v3.1: 4/14), frameworks 5/10, CQM 16/25; 24 of 41 d/t items pass (v3.1: 22/41). New passes include RPT-1, GWT-1, GWT-2 and GWT-3. thaler9 is lost (d 0.62). RPT-2, HOT-1/2/3 and AE-1 still fail, and PROJ, CQM10 and CQM18 fail the ceiling rule.
+- Cortex: K1 module-0 accuracy is 0.957 vs 0.527 for the v3.1 cortex, but K1a–e all fail the ceiling rule. No dev waves (0.962) and E/I loops lesioned (1.000) are not worse. K2 persistence passes (0.566 vs 0.222 with NMDA lesioned; d 5.58, t 15.77).
+- LTC: learned-vs-fixed 0/5 and hand-set-vs-fixed 0/5. Both arms hurt L4 delayed recall (learned d −1.15, t −3.26). Verdict: no benefit.
+- The v3.0 regression (run_v34reg, reported but not counted) was not run in this round.
 ## Round 14: organism v3.1 / v3.2 / v3.3 (preregistered; tuning on seeds 2000–2015, testing on 1000–1015)
 - v3.1: added a Mind layer to organism.ts with workspace/ignition/broadcast, a Kalman attention schema, metacognitive opt-out, NLMS predictive coding, Kuramoto binding, TD(λ) value, an efference/forward model, an interoceptive forecaster, model-based planning, awake/NREM replay, topographic sensory wiring, tissue integrity/repair, and an evolving genome. 22 of 41 d/t-tested items pass (24 of 45 rows, counting the CQM24 and CQM25 bookkeeping rows). Cortical classification items are at chance (RPT-1/2, GWT-2/3, HOT-1/2/3, AE-1). PROJ fails on ceiling. CQM09 does worse than a persistence forecast.
 - v3.2: C2 now passes (d 2.37, t 6.72 vs forced wake; d 1.29, t 3.65 vs no replay). C8b still fails (d 0.40). New regression: the C9 quantum-vs-classical equivalence fails (d 0.66). Found a v3.0 bug: the raphe drive was inside a comment, so 5-HT was ≈ 0. The v3.0 results stay on record unchanged.
