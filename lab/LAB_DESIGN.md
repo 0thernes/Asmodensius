@@ -56,3 +56,10 @@ New parts regionRates and rateAvg. The motor lens v2 PASSes at 0.66 of the oracl
 - `conformance/suite.ts`: 16 required checks + 2 optional ones (identity, parts, couplings, determinism, metrics, state round trip, stimulation, lesions, motor, biosphere hooks, body, dome ledger, God-hook conservation, direct per-hook booking, foraging, movement). `conformance/run.ts`: 001 16/16, template 16/16, and 3 broken mutants are all rejected.
 - Multi-species dome: `Inhabitant.species`, `Dome.speciesStats()`, viewer `SPECIES="001:5,template:3"`, species colours, and persistence restores each creature with its own factory. `multispecies.ts`: integration test.
 - `instruments/rpt.ts`: early/late evoked-response probe for recurrent processing.
+
+## v0.8 (round 7)
+- Exact persistence: CreatureLab gains optional snapshot/restore/setLight (001 adapter wraps organism v3.6). Dome.snapshotFull/fromSnapshot saves both PRNG states; the viewer state file is v:2.
+- `@snapshot` transplant part in transplant.ts.
+- Light dials: dayLength, lightScale, lightMode cycle/LL/DD, lightToCreatures. The default (12, 1, cycle, false) is the old dome exactly.
+- Dice source "moonlab-sim" (src/biosphere/moonlabDice.ts): simulated quantum, not hardware QRNG.
+- Battery DIALS-v5: RESULTS-DIALS-v5.md.

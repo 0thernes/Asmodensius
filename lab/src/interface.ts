@@ -38,7 +38,11 @@ export interface CreatureLab {
   senseLines?(x: number[]): void;       // v0.4: write the creature's real sensory lines (not current injection)
   drain?(kJ: number): number;           // v0.4: remove energy from the creature (parasite, payoff loss); booked as negative intake
   give?(kJ: number): void;              // v0.4: give food (payoff); booked as intake
-  takeWaste?(): number;                 // v0.4: hand excreted energy back to the world (recycling); returns kJ
+  takeWaste?(): number;
+  // v0.8 exact state (creature 001 v3.6 organism snapshot()/restore())
+  snapshot?(): unknown;                 // complete JSON-safe state; restore() into any instance reproduces the run exactly
+  restore?(s: unknown): void;
+  setLight?(x: number | null): void;    // v0.8: world light into the creature (null = its own internal photoperiod)                 // v0.4: hand excreted energy back to the world (recycling); returns kJ
 }
 export interface BodySpec { radius: number; mass: number; maxSpeed: number; habitat: ("land" | "water" | "air")[]; }
 export interface WorldSense { light: number; foodHere: number; temperature: number; touch: number; t: number; }

@@ -6,3 +6,4 @@ export { make001, Creature001 } from "./adapters/c001";
 export { motorLensR } from "./instruments/motorLensR"; export { qrngDiag, vonNeumann, toeplitz } from "./instruments/qrngDiag";
 export { quantumGeometry, tensor, berryPhase } from "./instruments/qgeom"; export { field3d, positions } from "./instruments/field3d"; export { scorecard } from "./instruments/scorecard";
 export { rptProbe } from "./instruments/rpt";
+export { moonlabDice, loadMoonlabSim } from "./biosphere/moonlabDice";

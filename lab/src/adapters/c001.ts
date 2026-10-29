@@ -17,6 +17,9 @@ export class Creature001 implements CreatureLab {
   hasCoupling(id: string) { return this.edges.has(id); }
   step(n = 1) { for (let i = 0; i < n; i++) { this.o.step(); if (this.o.choices.length > this.nChoices) { this.nChoices = this.o.choices.length; this.lastSite = this.o.choices[this.nChoices - 1]; } else this.lastSite = -1; } }
   t() { return this.o.t; }
+  snapshot() { return { org: (this.o as any).snapshot(), nChoices: this.nChoices, lastSite: this.lastSite }; }
+  restore(s: any) { (this.o as any).restore(s.org); this.nChoices = s.nChoices; this.lastSite = s.lastSite; }
+  setLight(x: number | null) { (this.o as any).setLight(x); }
   readState(part: string, mode: StateMode = "slow"): Float64Array { const o = this.o as any;
     if (part.startsWith("nm:")) { const m = o.nm[part.slice(3)]; return Float64Array.from([m.P, m.E]); }
     if (part === "body") return Float64Array.from([o.blood.glc, o.blood.ffa, o.blood.aa, o.fat, o.hr, o.atp]);

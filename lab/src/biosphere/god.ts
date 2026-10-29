@@ -2,7 +2,7 @@
 // and is energy-conserving. Dice come from a DiceSource with provenance; default is seeded mulberry32 ("classical-seeded").
 // The tsotchke quantum_rng WASM (neuralese-git/tsotchke/qrng.mjs) is the planned "qrng" source (not wired yet).
 import { mulberry } from "../rng";
-export type DiceSource = { name: "classical-seeded" | "qrng"; next: () => number };
+export type DiceSource = { name: "classical-seeded" | "qrng" | "moonlab-sim"; next: () => number; label?: string };
 export const seededDice = (seed: number): DiceSource => ({ name: "classical-seeded", next: mulberry(seed * 2654435761) });
 export type WorldDials = {
   foodCapScale: number;      // ecology / food cycle: nutrient capacity per patch (0 = barren)
@@ -24,6 +24,7 @@ export type WorldDials = {
   game: "none" | "pd" | "stag"; // payoff game played on contact; payoffs are harvested from the shared local patch
   // v0.5
   gameStrategy: "fixed" | "learned";
+  dayLength: number; lightScale: number; lightMode: "cycle" | "LL" | "DD"; lightToCreatures: boolean; // v0.8 light dials: hours of light, intensity, constant light/dark, and whether dome light drives the creature (setLight) or the creature runs its own photoperiod
   oneShot: boolean; // v0.6: each game round pairs creatures at random dome-wide (anonymous, no contact needed) instead of whoever is touching
   timeWarp: number; timeWarpR: number; // v0.6 time anomaly: creatures within timeWarpR of the centre run timeWarp brain/body ticks per world tick (0 = frozen time)
  // fixed: cooperate iff DA > 0.25. learned: p(C) = sigmoid(w), w updated by the creature's own dopamine response to the payoff
@@ -37,7 +38,7 @@ export type CreatureDials = {
   lesionDice: boolean;       // dice: one random mechanism lesion at birth
   mutationSigma: number;     // dice: genes ~ exp(N(0, sigma)) at birth
 };
-export const BASE_WORLD: WorldDials = { oneShot: false, timeWarp: 1, timeWarpR: 4, foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none", gameStrategy: "fixed", ph: 7, singularity: 0, grazers: 0 };
+export const BASE_WORLD: WorldDials = { dayLength: 12, lightScale: 1, lightMode: "cycle", lightToCreatures: false, oneShot: false, timeWarp: 1, timeWarpR: 4, foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none", gameStrategy: "fixed", ph: 7, singularity: 0, grazers: 0 };
 export const BASE_CREATURE: CreatureDials = { modShift: null, rewireFrac: 0, lesionDice: false, mutationSigma: 0 };
 export const PRESETS: Record<string, Partial<WorldDials>> = {
   utopia: { foodCapScale: 2, growthScale: 3, gravity: 0.5 },

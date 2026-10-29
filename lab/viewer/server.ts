@@ -11,21 +11,23 @@ let dome: Dome; let speed = 10; let paused = false;
 const FACTORIES: Record<string, (s: number) => any> = { "001": make001, template: makeTemplate };
 const SPEC = (process.env.SPECIES ?? `001:${N}`).split(",").map((x) => x.split(":")) as [string, string][];
 function reset(dials: Partial<WorldDials> = {}) { dome = new Dome({ seed: SEED }, dials); let k = 0; for (const [sp, n] of SPEC) for (let i = 0; i < +n; i++, k++) dome.add((sp === "001" ? "c" : sp[0]) + k, FACTORIES[sp](SEED + k)); }
-// v0.6 persistence: the world (patches, positions, dials, counters, learners, dice position) is saved exactly; each creature is saved as
-// seed + age + full lab state of every part and restored by writeState. That is a partial transplant: hidden organism state outside
-// the lab parts (and the creature's own energy ledger) restarts. Exact creature snapshot/restore belongs to the Round 17 worker.
-const STATE = process.env.STATE ?? join(__dirname, "dome_state.json"), SAVE_MS = +(process.env.SAVE_MS ?? 30000); let restoredAt: number | null = null, savedAt = 0;
-function persist() { const d: any = dome; const pop = dome.pop.map((h) => { const c: any = h.c; const parts: Record<string, number[]> = {}; for (const p of c.parts()) { try { parts[p.id] = Array.from(c.readState(p.id, "full")); } catch {} } return { id: h.id, species: h.species, seed: c.seed, age: c.t(), x: h.x, y: h.y, heading: h.heading, path: h.path, eaten0: h.eaten0, dials: h.dials, parts }; });
-  const w = { v: 1, savedAt: new Date().toISOString(), t: dome.t, cfg: dome.cfg, dials: dome.dials, grown: dome.grown, patches: dome.patches.map((p) => p.food), counters: Object.fromEntries(["kicks", "detritus", "parasiteBiomass", "recycled", "games", "coop", "windDir", "teleports", "grazerBiomass", "grazerHeat", "localFoodAcc", "warpTicks"].map((k) => [k, d[k]])), grazersXY: dome.grazersXY, learn: [...dome.learn.entries()], pop, speed, paused };
+// v0.8 persistence (v:2) is exact: Dome.snapshotFull() saves every world field and both PRNG states, plus each creature's snapshot() (organism v3.6).
+// A restored dome continues bit-identically to the uninterrupted one (test_persist.mjs). Old v:1 files still load through the approximate path below.
+// That path is a writeState partial transplant with the world ledger re-baselined.
+const STATE = process.env.STATE ?? join(__dirname, "dome_state.json"), SAVE_MS = +(process.env.SAVE_MS ?? 30000); let restoreMode = "fresh", restoredAt: number | null = null, savedAt = 0;
+function persist() { const w = { v: 2, savedAt: new Date().toISOString(), S: dome.snapshotFull(), speed, paused }; /* v0.8: exact, via organism v3.6 snapshot() and Dome.snapshotFull */
+
   writeFileSync(STATE + ".tmp", JSON.stringify(w)); renameSync(STATE + ".tmp", STATE); savedAt = dome.t; }
-function restore(): boolean { if (!existsSync(STATE) || process.env.FRESH) return false; const w = JSON.parse(readFileSync(STATE, "utf8")); const d: any = new Dome(w.cfg, w.dials); dome = d;
+function restore(): boolean { if (!existsSync(STATE) || process.env.FRESH) return false; const w = JSON.parse(readFileSync(STATE, "utf8"));
+  if (w.v === 2) { dome = Dome.fromSnapshot(w.S, (sp: string, seed: number) => (FACTORIES[sp ?? "001"] ?? make001)(seed)); speed = w.speed; paused = w.paused; restoredAt = dome.t; restoreMode = "exact"; return true; }
+  restoreMode = "v1-approximate"; const d: any = new Dome(w.cfg, w.dials); dome = d;
   for (const h of w.pop) { const c: any = (FACTORIES[h.species ?? "001"] ?? make001)(h.seed); for (const [k, v] of Object.entries(h.parts)) { try { c.writeState(k, Float64Array.from(v as number[]), "full"); } catch {} } if (c.o) c.o.t = h.age; /* non-001 species restart their clock (no age setter in the interface) */ d.add(h.id, c, h.dials); const I = d.pop[d.pop.length - 1]; Object.assign(I, { x: h.x, y: h.y, heading: h.heading, path: h.path }); }
   d.t = w.t; d.grown = w.grown; w.patches.forEach((f: number, i: number) => (d.patches[i].food = f)); Object.assign(d, w.counters); d.grazersXY = w.grazersXY; d.learn = new Map(w.learn); speed = w.speed; paused = w.paused;
   d.E0 = d.total() - d.grown; restoredAt = d.t; return true; } // world ledger re-baselined at restore because creature ledgers restart
 if (!restore()) reset(); setInterval(persist, SAVE_MS); for (const sig of ["SIGINT", "SIGTERM"]) process.on(sig as any, () => { persist(); process.exit(0); });
 const clients = new Set<any>();
 const snap = () => { const L = dome.ledger(); return { t: dome.t, light: dome.light(), dials: dome.dials, speed, paused, n: dome.n, radius: dome.cfg.radius, cell: dome.cfg.cell,
-  food: dome.patches.map((p) => Math.round(p.food * 10) / 10), grazers: dome.grazersXY, detritus: dome.detritus, parasite: dome.parasiteBiomass, grazerBiomass: dome.grazerBiomass, teleports: dome.teleports, games: dome.games, worldLedgerError: L.worldLedgerError, species: dome.speciesStats(), restoredAt, savedAt,
+  food: dome.patches.map((p) => Math.round(p.food * 10) / 10), grazers: dome.grazersXY, detritus: dome.detritus, parasite: dome.parasiteBiomass, grazerBiomass: dome.grazerBiomass, teleports: dome.teleports, games: dome.games, worldLedgerError: L.worldLedgerError, species: dome.speciesStats(), restoredAt, restoreMode, savedAt,
   pop: dome.pop.map((h) => { const m = h.c.metrics(); return { id: h.id, species: h.species, x: h.x, y: h.y, heading: h.heading, path: h.path, asleep: m.asleep, DA: m.DA, NE: m.NE, glc: m.glc, integrity: m.integrity, stores: m.stores, eaten: m.eaten, ledgerError: m.ledgerError, coopP: dome.coopProb(h.id) }; }) }; };
 setInterval(() => { if (!paused) for (let i = 0; i < speed; i++) dome.step(); const s = "data: " + JSON.stringify(snap()) + "\n\n"; for (const c of clients) c.write(s); }, 100);
 const body = (req: any) => new Promise<any>((ok) => { let b = ""; req.on("data", (d: any) => (b += d)); req.on("end", () => ok(b ? JSON.parse(b) : {})); });
