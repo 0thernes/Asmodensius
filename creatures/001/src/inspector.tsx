@@ -1,3 +1,13 @@
+// ---- Lab tab: queries the live dome viewer's inspector API (lab/viewer/README.md: GET /inspect?id=<creature>&tool=state|motorLens|pci|qrng) ----
+const LAB_TOOLS = ["state", "motorLens", "pci", "qrng"] as const;
+function LabTab({ mono }: { mono: Record<string, unknown> }) {
+  const [base, setBase] = useState("http://localhost:8787"); const [id, setId] = useState("c0"); const [res, setRes] = useState<Record<string, string>>({}); const [busy, setBusy] = useState<string | null>(null);
+  const run = async (tool: string) => { setBusy(tool); try { const r = await fetch(`${base.replace(/\/$/, "")}/inspect?id=${encodeURIComponent(id)}&tool=${tool}`); const t = await r.text(); let out = t; try { out = JSON.stringify(JSON.parse(t), null, 2); } catch { /* not JSON */ } setRes((x) => ({ ...x, [tool]: r.ok ? out : `HTTP ${r.status}: ${out}` })); } catch (e) { setRes((x) => ({ ...x, [tool]: `request failed: ${String(e)} (is the dome viewer running? PORT=8787 node out/server.js)` })); } finally { setBusy(null); } };
+  return <div><div style={mono}>Dome viewer inspector. state reads the live creature; motorLens, pci and qrng run on a fresh clone of it.</div>
+    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}><input value={base} onChange={(e) => setBase(e.target.value)} style={{ width: 200 }} /><input value={id} onChange={(e) => setId(e.target.value)} style={{ width: 50 }} />
+      {LAB_TOOLS.map((t) => <Button key={t} label={busy === t ? `${t}…` : t} onClick={() => run(t)} />)}<Button label="run all" onClick={async () => { for (const t of LAB_TOOLS) await run(t); }} /></div>
+    {LAB_TOOLS.filter((t) => res[t] !== undefined).map((t) => <div key={t}><div style={{ ...mono, fontWeight: 600 }}>{t}</div><pre style={{ ...mono, maxHeight: 220, overflow: "auto", margin: 0, background: "rgba(127,127,127,0.06)", padding: 6 }}>{res[t]}</pre></div>)}</div>;
+}
 // ---- Organism inspector: every panel reads the live Organism instance; controls call its public methods ----
 function Inspector({ org, theme, speed, setSpeed }: { org: Organism; theme: any; speed: number; setSpeed: (n: number) => void }) {
   const [, setTick] = useState(0); const [part, setPart] = useState<string>("CNS spiking"); const [reg, setReg] = useState("LC"); const [nmSel, setNm] = useState("DA");
@@ -46,6 +56,7 @@ function Inspector({ org, theme, speed, setSpeed }: { org: Organism; theme: any;
     "Body/arm": <div><div style={mono}>arm {org.mind.arm.toFixed(2)} · true gain {org.mind.gTrue.toFixed(2)} · learned gain {org.mind.gHat.toFixed(2)} · predicted Δ {org.mind.dArmPred.toFixed(3)} observed Δ {org.mind.dArmObs.toFixed(3)}</div><Button label="move arm +0.5" onClick={() => { org.mind.efference = 0.5; }} /><Button label="push arm (external)" onClick={() => { org.mind.push = 0.5; }} />{tog("efferenceLesion")}{tog("fwdLesion")}</div>,
     "Integrity": <div>{bar("integrity", org.integrity, 1)}<div style={mono}>tissue {org.tissue.toFixed(2)} kJ (in ledger) · damage taken {org.damageTaken.toFixed(2)} · dead {String(org.dead)}</div><Button label="damage 0.1" onClick={() => org.damage(0.1)} />{tog("repairLesion")}{tog("danger")}{tog("pidLesion")}</div>,
     "LTC neurons": <div><div style={mono}>{O.ltc ? "LTC on" : "fixed τ (LIF)"} · mean CTX τ {(Array.from(org.tau.slice(R0.CTX, R0.CTX + 64)).reduce((a, b) => a + b, 0) / 64).toFixed(2)} substeps · mean HIP τ {(Array.from(org.tau.slice(R0.HIP, R0.HIP + 32)).reduce((a, b) => a + b, 0) / 32).toFixed(2)}</div>{tog("ltc")}</div>,
+    "Lab": <LabTab mono={mono} />,
     "GPU 100M net": <div style={mono}>prediction error of the 100M procedural net + 680,008 learned params, fed to LC: {org.predErr.toFixed(4)}. The net itself runs on the GPU; see the parameter-engine panel.</div> };
   return <div style={{ ...panel, display: "flex", flexDirection: "column", gap: 8 }}>
     <div style={{ fontSize: 13, fontWeight: 600 }}>Organism inspector (live; every value read from the running simulation) · t={org.t} · {STAGES[org.stage]} · seed {org.o.seed} · {pc.total} organism params</div>
@@ -54,7 +65,7 @@ function Inspector({ org, theme, speed, setSpeed }: { org: Organism; theme: any;
       <Button label={`Stimulate ${reg}`} onClick={() => org.stimulate(reg, 3)} /><Button label={`${lesioned.current[reg] ? "Restore" : "Lesion"} ${reg}`} onClick={() => lesionRegion(reg)} />
       <select value={nmSel} onChange={(e) => setNm(e.target.value)}>{Object.keys(org.nm).map((k) => <option key={k}>{k}</option>)}</select><Button label={`Inject ${nmSel}`} onClick={() => org.inject(nmSel, 0.5)} />
       {tog("vagotomy")}{tog("scnLesion")}{tog("insulaLesion")}{tog("sympathectomy")}{tog("forceWake")}{tog("starve")}<Button label={`replay: ${String(O.replay ?? "full")}`} onClick={() => org.lesion("replay" as any, O.replay === "none" ? "full" : "none")} />
-      <span style={mono}>speed {speed} ticks/frame</span><input type="range" min={0} max={20} value={speed} onChange={(e) => setSpeed(+e.target.value)} /></div>
+      <Button label={part === "Lab" ? "Lab (open)" : "Lab"} onClick={() => setPart("Lab")} /><span style={mono}>speed {speed} ticks/frame</span><input type="range" min={0} max={20} value={speed} onChange={(e) => setSpeed(+e.target.value)} /></div>
     <div style={{ display: "grid", gridTemplateColumns: "minmax(300px, 1fr) minmax(300px, 1.2fr)", gap: 10 }}>
       <svg viewBox="0 0 600 540" style={{ width: "100%" }}>{edges.map(([a, b, l], k) => { const i = P.indexOf(a), j = P.indexOf(b); const on = a === part || b === part; return <line key={k} x1={cx(i)} y1={cy(i)} x2={cx(j)} y2={cy(j)} stroke={on ? (a === part ? col[1] : col[2]) : "rgba(127,127,127,0.18)"} strokeWidth={on ? 2 : 1}><title>{a} → {b}: {l}</title></line>; })}
         {P.map((p, i) => <g key={p} onClick={() => setPart(p)} style={{ cursor: "pointer" }}><circle cx={cx(i)} cy={cy(i)} r={p === part ? 11 : 7} fill={p === part ? col[0] : "#888"} /><text x={cx(i)} y={cy(i) - 13} fontSize="12" textAnchor="middle" fill={theme.text.primary}>{p}</text></g>)}</svg>
