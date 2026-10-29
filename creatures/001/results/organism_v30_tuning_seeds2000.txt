@@ -1,0 +1,43 @@
+PASS V3-C1a Starvation lowers tonic dopamine
+   vs starved 3 days: full 0.2628 ctrl 0.08420 d 7.25 t 20.51
+PASS V3-C1b Starvation lowers exploration
+   vs starved 3 days: full 2.103 ctrl 0.5289 d 4.35 t 12.31
+PASS V3-C1c DA mediates the starvation effect (clamp rescues exploration)
+   vs starved, DA free: full 2.399 ctrl 0.5289 d 5.25 t 14.84
+seconds 58.468
+PASS V3-C2 Sleep deprivation degrades memory-guided choice
+   vs sleep-deprived (forced wake): full 0.4315 ctrl 0.3391 d 1.64 t 4.63
+   vs sleep, replay disabled: full 0.4315 ctrl 0.3673 d 1.06 t 3.00
+seconds 53.708
+PASS V3-C3 REM recombination dreams improve later choice among novel sites
+   vs no replay: full 0.3757 ctrl 0.2990 d 1.75 t 4.95
+   vs NREM replay only (no dreams): full 0.3757 ctrl 0.2975 d 1.84 t 5.20
+   vs dreams with shuffled content: full 0.3757 ctrl 0.3024 d 1.23 t 3.48
+seconds 53.671
+PASS V3-C4 Vagotomy (gut-brain axis lesion) blunts post-meal satiety
+   vs subdiaphragmatic vagotomy: full 24.19 ctrl 7.125 d 2.13 t 6.03
+seconds 17.556
+PASS V3-C5 Locus coeruleus stimulation drives heart rate through the sympathetic chain
+   vs sham stimulation: full 16.49 ctrl -1.748 d 15.71 t 44.45
+   vs sympathectomy: full 16.49 ctrl 6.183 d 11.97 t 33.85
+seconds 25.436
+PASS V3-C6 SCN lesion flattens the sleep-wake rhythm
+   vs SCN lesion: full 0.8127 ctrl 0.01725 d 13.13 t 37.14
+seconds 35.94
+PASS V3-C7 Thought curvature is felt: high-curvature moments raise LC (noradrenergic) firing
+   vs insula lesion: full 0.1890 ctrl 0.004778 d 11.01 t 31.13
+   vs insula fed time-shuffled curvature: full 0.1890 ctrl -0.0004093 d 9.69 t 27.42
+seconds 28.581
+PASS V3-C8a Higher intelligence level costs more brain ATP
+   vs level 1: full 0.01901 ctrl 0.01074 d 22.10 t 62.51
+FAIL V3-C8b Higher intelligence level improves choice
+   vs level 1 (same organism state): full 0.4382 ctrl 0.4273 d 0.14 t 0.40
+seconds 45.281
+PASS V3-C9 Quantum noise source vs classical (equivalence, preregistered expectation |d|<0.5) [pass = |d|<0.5 (no quantum advantage claimed)]
+   vs classical noise, same marginals: full 0.4315 ctrl 0.4198 d 0.16 t 0.45
+seconds 31.836
+PASS V3-C10 Energy conservation across every run of this suite [max error 0.00e+0 over 16 runs; leaky control min 2.48e-3]
+   vs deliberately leaky ledger (must be detected > 1e-3): full 0.000 ctrl 0.002485 d NaN t NaN
+seconds 18.44
+PASS V3-C11 Seeded determinism [same-seed identical: true; different seeds differ: true]
+seconds 7.467
