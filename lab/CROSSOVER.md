@@ -60,3 +60,9 @@ Classes: **A** = transfers directly. **B** = transfers with the change named in 
 | neuralese-diffusion (STFT, image/music/video/shape3d diffusion) | generative diffusion models | — for the creatures. Its analysis tools (spectrograms, STFT) carry over as B, for creature sounds/rhythms | C (models) / B (STFT) | The diffusion models are generative nets and are kept out of the creatures |
 | desktop/Electron, Capacitor Android/iOS, gh-pages build, release.yml | packaging | site/gen.py -> docs/ already. Packaging can be copied later | A | DevOps only. Asmodensius has local git only and never pushes |
 | provenance.js banners, stale-chart stamps | provenance | provenance banner on every instrument output (seed, opts, git hash) | A | |
+
+
+## v0.4 updates
+- logit lens → motor lens: still FAIL. It reaches 0.29 of the oracle ceiling; the oracle itself is 0.76 because foraging is stochastic.
+- steering → neuromodulator shift: the manipulation PASSes (NE ×2), but the effect on sleep is null by construction. The ignitions R version PASSes.
+- RNG audit → qrngDiag: the bias equals the Born rule. VN→Toeplitz passes NIST. A decision-sign bias bug was found in organism.ts and reported, not fixed.

@@ -48,3 +48,7 @@ The p-values below come from a paired permutation test over 6 seeds and 1 simula
 - **Waste cycle:** excreted energy returns to patches through decomposers. This closes the loop; today waste is a sink.
 - **Parasitism:** a parasite agent that drains `feed` from a host, plus immune cost.
 - **Full hell-to-utopia preset ladder:** about 7 steps with survival curves.
+
+
+## v0.4 dials (Round 3)
+Built and tested: weather (temperature, wind), gas (O2 hypoxia, CO2 hypercapnia; both labelled proxies), radiation, waste recycling (detritus account), parasites (parasite-biomass account), prisoner's dilemma and stag-hunt payoffs harvested from the local patch, and the 7-rung utopia→hell LADDER. The world ledger now also includes detritus and parasite biomass. Results: preregistrations/RESULTS-DIALS-v1.md.
