@@ -246,6 +246,7 @@ V30 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v30.json
 V31 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v31.json")))
 V32 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v32.json")))
 V33 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v33.json")))
+V34 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v34.json")))
 def prereg_rows(D):
     rows = ""
     for it in D["items"]:
@@ -286,6 +287,8 @@ def systems_page():
 <p>C2 now passes (d 2.37 / 1.29, t 6.72 / 3.65). C8b still fails (d 0.40, t 1.14). <b>New regression:</b> the C9 equivalence test fails (d 0.66 &gt; 0.5). The v3.0 run had a bug: the raphe input sat inside a comment, so 5-HT was ≈ 0. The bug is fixed only for decision v32.</p>{prereg_rows(V32)}
 <h2>v3.3: liquid time-constant (LTC) spiking neurons vs fixed-τ LIF ({npassD(V33)} pass)</h2>
 <p>τ = τ0·(1+1.5·ACh)/((1+0.5·|I_syn|)(1+0.5·NE)), after Hasani et al. 2021 (LTC, AAAI), Hasani et al. 2022 (CfC, Nat. Mach. Intell.), Yin, Corradi &amp; Bohté 2023 (LTC-SN, Nat. Mach. Intell.) and Vanhalle &amp; Gielen 2025 (sLTC, ICECS). The gates are hand-set, not learned. LTC does not help: it is non-significantly worse on memory-guided choice and on the sleep effect, and no item passes.</p>{prereg_rows(V33)}
+<h2>Round 15: v3.4 plastic topographic cortex + learned-gate LTC (e-prop), test seeds 1000–1015</h2>
+<p>Code and prereg §F frozen in a85966e before any test-seed run. Rollups: Butlin {V34["rollups"]["butlin"]}, frameworks {V34["rollups"]["frameworks"]}, CQM {V34["rollups"]["cqm"]} (v3.1: Butlin 4/14, 22/41 d/t items). The new cortex decodes stimuli (K1 module-0 accuracy 0.957 vs 0.527 for the v3.1 cortex), but K1a–e fail the non-ceiling rule; development and E/I loops are not necessary. Learned-gate LTC does not beat fixed τ on any item and hurts delayed recall (L4).</p>{prereg_rows(V34)}{prereg_rows({"items": V34["v34"]})}
 <p>Full design: <code>creatures/001/organism/SYSTEMS_DESIGN.md</code>. Live inspector: open the creature, wake it, and use the Organism inspector panel.</p>"""
     page("systems.html", "Systems", body)
 systems_page()
