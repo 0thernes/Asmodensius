@@ -1,4 +1,28 @@
 # Changelog
+## Round 18: organism v3.7 (slow NMDA recurrence under divisive inhibition, slow CTX→THAL feedback, dendritic plateau, depletion forward model in EFE choice, ignition feature for confidence; R-variants K1aR/K1cR/CQM03R; Page PRNG snapshot-capable); prereg + code frozen 14cc830, test seeds 1000–1015
+- Rollups: Butlin 8/14 (v3.6: 9/14), frameworks 5/10, CQM 18/25; v3.7 items 2/3.
+- Passes:
+  - RPT-1 (d 3.42, t 9.68)
+  - K1aR (d 7.41, t 20.95; 0.82, non-ceiling)
+  - K1cR (d 10.42, t 29.46)
+  - CQM03 (0.920, now under the ceiling; d 5.99)
+  - ctm (0.943; d 14.33)
+- Lost (v3.6 pass → v3.7 fail):
+  - AST-1 (d 0.86, t 2.44)
+  - ual (d 0.74, t 2.09)
+  - CQM12 (d 0.80, t 2.25), just under t
+- Still failing:
+  - RPT-2 (d −0.29)
+  - RPTLATE: late response negative (−7e-4); vs CTX→THAL d −0.90
+  - HOT-1 (d −0.01)
+  - HOT-3 (d 0.14 / 0.48)
+  - AE-1 (d 0.17)
+  - activeInference (d 0.35, t 0.98)
+  - thaler9 (d 0.04)
+  - CQM04 (d 0.17; test economics)
+  - CQM03R (d −2.82: random birth counts track food better than the organism)
+- thaler9: the v3.6 prereg figure came from pre-freeze code. On tuning seeds only efeK=0 restores it (d 2.33), so the information-gain drive masks dream novelty. efeK was deliberately left unchanged (see prereg v3.7 §C).
+- Lab tab: tested in headless Chrome against the live viewer on :8787. Cross-origin, every request fails with the CORS message, because the viewer sends no Access-Control-Allow-Origin header. Through a same-origin proxy, all 4 endpoints render. The live c0 is depleted (energy −643, ATP −8930, asleep).
 ## Round 17: organism v3.6 (steering API, new mechanisms, lab-handoff mechanisms, WASM backends); prereg + code frozen 9050c4f, test seeds 1000–1015
 - v3.1 suite: Butlin 9/14 (v3.5: 8/14), frameworks 5/10 (5/10), CQM 18/25 (17/25); 27 of 41 d/t items pass (v3.5: 25/41).
 - New passes:
