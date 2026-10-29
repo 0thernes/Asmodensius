@@ -117,4 +117,4 @@ FAIL V3.4-L5a robustness to tau scale x0.5/x2 — learned-gate LTC vs fixed [Not
    vs fixed-tau LIF: full -0.002051 ctrl 0.007292 d -0.10 t -0.27
 FAIL V3.4-L5b robustness to tau scale x0.5/x2 — hand-set LTC vs fixed [Not established]
    vs fixed-tau LIF: full -0.006120 ctrl 0.007292 d -0.12 t -0.35
-ROLLUPS: Butlin 8/14, frameworks 5/10, CQM 17/25; K items 3/6; LTC learned-vs-fixed passes 1/5, hand-set-vs-fixed 0/5
+ROLLUPS: Butlin 8/14, frameworks 5/10, CQM 17/25; K items 3/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5
