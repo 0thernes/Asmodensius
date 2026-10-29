@@ -1,4 +1,36 @@
 # Changelog
+## Round 17: organism v3.6 (steering API, new mechanisms, lab-handoff mechanisms, WASM backends); prereg + code frozen 9050c4f, test seeds 1000–1015
+- v3.1 suite: Butlin 9/14 (v3.5: 8/14), frameworks 5/10 (5/10), CQM 18/25 (17/25); 27 of 41 d/t items pass (v3.5: 25/41).
+- New passes:
+  - CQM12 (−0.0117 vs −0.0228; d 1.21, t 3.41), from schema extraction.
+  - CQM06 (d 1.01, t 2.85). No mechanism targeted CQM06.
+  - AST-1 (d 1.33, t 3.75). The adaptive Kalman ships off because it hurt on tuning seeds, so this pass does not come from a targeted mechanism.
+- Lost to the non-ceiling rule:
+  - CQM03 (0.958)
+  - K1a and K1c (0.962)
+- Still failing:
+  - HOT-1 (d 0.45, t 1.28)
+  - HOT-3 (d −0.06 / 0.39)
+  - RPT-2 (d 0.26)
+  - AE-1 (d 0.47, t 1.33)
+  - activeInference (d 0.19)
+  - thaler9 (d 0.01; tuning showed d 1.79, which did not replicate)
+  - CQM04 (d 0.30)
+  - CQM08 (ceiling)
+  - GWT-3 and ctm (ceiling)
+- New v3.6 items, 7/8 pass:
+  - GWT-3R (d 5.68), ctm-R (d 5.21) and CQM08R (d 12.05): degraded-stimulus variants; the originals stay on record.
+  - SNAP: 16/16.
+  - NOISESIGN: |P(+)−0.5| is 0.022 vs 0.295 for the raw bit.
+  - LIGHT: passes.
+  - INSGLC: 0.872 vs 0.494 with the visceral afferent cut (d 3.74, t 10.58).
+  - RPTLATE fails: there is no late evoked phase. The slow NMDA current that creates one saturates cortex, so it ships off.
+- WASM: Moonlab and Eshkol are opt-in backends (organism/backends.ts).
+  - Moonlab probabilities match the TS circuit to 6.7e-16 on 5000 circuits.
+  - The Eshkol flip-flop has 0/2000 mismatches.
+  - The 2-day full state is identical with both backends on seeds 1000–1003 (results/wasm_equiv_v36.json).
+- The inspector has a Lab tab that calls the dome viewer's /inspect endpoint.
+- The summarizer's LTC rollup now counts only V3.4- items (e8a035c).
 ## Round 16: organism v3.5 (metacognition, agency and interoception mechanisms); prereg + code frozen 1da03c4, test seeds 1000–1015
 - v3.1 suite: Butlin 8/14 (v3.4: 8/14), frameworks 5/10 (5/10), CQM 17/25 (16/25); 25 of 41 d/t items pass (v3.4: 24/41).
 - New passes: HOT-2 (AUROC 0.660 vs 0.492; d 2.94, t 8.33), GWT-4 (d 13.04), ual (d 1.57, t 4.44), CQM09 (forecast error 0.68 vs persistence 1.33; d 8.06, t 22.80), CQM14 (0.776 vs 0.230; d 7.70, t 21.79).

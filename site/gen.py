@@ -250,6 +250,7 @@ V32 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v32.json
 V33 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v33.json")))
 V34 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v34.json")))
 V35 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v35.json")))
+V36 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v36.json")))
 def prereg_rows(D):
     rows = ""
     for it in D["items"]:
@@ -294,6 +295,8 @@ def systems_page():
 <p>Code and prereg §F frozen in a85966e before any test-seed run. Rollups: Butlin {V34["rollups"]["butlin"]}, frameworks {V34["rollups"]["frameworks"]}, CQM {V34["rollups"]["cqm"]} (v3.1: Butlin 4/14, 22/41 d/t items). The new cortex decodes stimuli (K1 module-0 accuracy 0.957 vs 0.527 for the v3.1 cortex), but K1a–e fail the non-ceiling rule; development and E/I loops are not necessary. Learned-gate LTC does not beat fixed τ on any item and hurts delayed recall (L4).</p>{prereg_rows(V34)}{prereg_rows({"items": V34["v34"]})}
 <h2>Round 16: v3.5 metacognition / agency / interoception mechanisms, test seeds 1000–1015</h2>
 <p>Code and prereg §F frozen in 1da03c4 before any test-seed run. Rollups: Butlin {V35["rollups"]["butlin"]}, frameworks {V35["rollups"]["frameworks"]}, CQM {V35["rollups"]["cqm"]}; 25/41 d/t items (v3.4: 24/41). New passes: HOT-2, GWT-4, ual, CQM09, CQM14. GWT-3, ctm and CQM08 now fail the non-ceiling rule. LTC is off by default.</p>{prereg_rows(V35)}{prereg_rows({"items": V35["v34"]})}
+<h2>Round 17: v3.6 steering API, new mechanisms, lab-handoff mechanisms, test seeds 1000–1015</h2>
+<p>Code and prereg §F were frozen in 9050c4f before any test-seed run. Rollups: Butlin {V36["rollups"]["butlin"]}, frameworks {V36["rollups"]["frameworks"]}, CQM {V36["rollups"]["cqm"]}; 27/41 d/t items pass (v3.5: 25/41). New passes are CQM12 (schema extraction), CQM06 and AST-1. The adaptive Kalman ships off, so the AST-1 pass is not from a targeted mechanism. CQM03, K1a and K1c are lost to the non-ceiling rule. Degraded-stimulus R-variants of GWT-3, ctm and CQM08 pass; the originals stay on record. Snapshot/restore, the debiased noise sign, the light input and the INS glucose afferent pass. The late recurrent evoked phase (RPTLATE) fails. Moonlab and Eshkol WASM backends match the TS code exactly (results/wasm_equiv_v36.json).</p>{prereg_rows(V36)}{prereg_rows({"items": V36["v36"]})}
 <p>Full design: <code>creatures/001/organism/SYSTEMS_DESIGN.md</code>. Live inspector: open the creature, wake it, and use the Organism inspector panel.</p>"""
     page("systems.html", "Systems", body)
 systems_page()
