@@ -1,0 +1,9 @@
+import { make001, lesionStats, stateDecoder } from "./src/index";
+const c = make001(2000); console.log("couplings", c.couplings().map((k) => `${k.id}:${k.n}`).join(" "));
+const S = [2000, 2001, 2002, 2003, 2004, 2005]; const ids = c.couplings().map((k) => k.id).filter((k) => /CTX|THAL/.test(k));
+const L: any = lesionStats(make001, S, ids, 400, "ctxRate"); console.log("baseline ctxRate", (L.baseline.reduce((a: number, b: number) => a + b, 0) / 6).toFixed(4)); for (const r of L.rows) console.log(r.coupling, r.diff.toFixed(4), r.p.toFixed(3));
+// interoception: glucose range and INS correlation
+const k = make001(2000); k.step(300); const g: number[] = [], ins: number[] = [], hyp: number[] = []; for (let t = 0; t < 1440; t++) { k.step(1); g.push(k.metrics().glc); const a = k.readState("INS"); ins.push(a.reduce((s, x) => s + x, 0) / a.length); const h = k.readState("HYP"); hyp.push(h.reduce((s, x) => s + x, 0) / h.length); }
+const corr = (x: number[], y: number[]) => { const mx = x.reduce((a, b) => a + b) / x.length, my = y.reduce((a, b) => a + b) / y.length; let n = 0, a = 0, b = 0; for (let i = 0; i < x.length; i++) { n += (x[i] - mx) * (y[i] - my); a += (x[i] - mx) ** 2; b += (y[i] - my) ** 2; } return n / Math.sqrt(a * b); };
+console.log("glc min/max/frac>3", Math.min(...g).toFixed(2), Math.max(...g).toFixed(2), (g.filter((x) => x > 3).length / g.length).toFixed(2), "corr(INS,glc)", corr(ins, g).toFixed(3), "corr(HYP,glc)", corr(hyp, g).toFixed(3));
+for (const part of ["INS", "HYP", "body"]) { const z = make001(2000); z.step(300); const med = [...g].sort((a, b) => a - b)[720]; const D: any = stateDecoder(z, part, () => ((z as any).o.blood.glc > med ? 1 : 0), 2, 1200, 4, 1); console.log("decode glc>median from", part, D.accuracy.toFixed(3), "shuf", D.controlShuffled.toFixed(3), "maj", D.majority.toFixed(3)); }
