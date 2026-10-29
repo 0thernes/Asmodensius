@@ -1,0 +1,2 @@
+{ "name": "@asmodensius/lab", "version": "0.1.0", "private": true, "type": "commonjs",
+  "scripts": { "smoke": "npx esbuild smoke.ts --bundle --platform=node --outfile=out/smoke.js --log-level=error && node out/smoke.js" } }
