@@ -1,4 +1,40 @@
 # Changelog
+## Round 19: organism v3.8a (energy budget, fasting physiology, viability tests, range-adapted epistemic value)
+Code and prereg were frozen before any test-seed run. The v3.8 freeze is 14c377e. The v3.8a amendment (bb5846f) replaced the 30-day lifespan criterion and added fasting physiology. The aborted first launch is disclosed in the prereg.
+
+**Energy**
+- Mechanisms: leptin/AgRP forage drive (fK 4), adaptive thermogenesis (thK 1, floor 0.6), muscle-accretion saturation.
+- Fasting: glycogen-gated PEPCK gluconeogenesis, phase-II proteolysis, CPT1 ketogenesis, brain ketone priority, renal ketone reabsorption, FFA feedback on lipolysis.
+- Viability results:
+  - VIAB-a (steady state with food) PASS: fat slope 0.40 [0.21, 0.59]/d; glycogen slope 0.055 [−0.015, 0.125]/d; imbalance 3%; 0/30 deaths.
+  - VIAB-b (starvation) PASS: 16/16 seeds show the stages in order (forage up 0.5 d, glycogen ~0.9 d, ketosis ~2 d, torpor 2–3 d) and die at ~6.7 d, inside the reserve-scaled window.
+  - VIAB-c (refeeding) PASS: 16/16 recovered; d 52.8, t 144.5 against no refeed.
+- Before v3.8: v3.7 died at a median of 11–17 d with ample food. With no food it died of hypoglycaemia at 1.6 d with about 70% of its fat left.
+
+**Methodology**
+- With n=16 the SE of d is about 0.4, so items near d≈1 flip between blocks, and picking the best of several variants on one block produces a winner's curse.
+- New rule: a mechanism is frozen only if d ≥ 1.0 and t ≥ 2.75 on both dev blocks (2000–2015 and 2016–2031).
+
+**efe conflict**
+- Fix: min-referenced epistemic value, efeC 0.5 (range adaptation).
+- On dev it held thaler9 (1.05/1.65) and CQM12 (1.69/1.31), with AINF at 0.78/0.88.
+- On test, thaler9 d 0.64, CQM12 d 0.68 and AINF d 0.75 all FAIL. Non-replication persists even under the two-block rule.
+
+**Test results**
+- Rollups: Butlin 8/14, frameworks 5/10, CQM 17/25.
+- Recovered: ual (d 1.29, t 3.66).
+- Lost:
+  - CQM01: too few deaths for the heredity metric to be meaningful.
+  - ctm: 0.958 is over the ceiling.
+- Still failing:
+  - AST-1 (d 0.93, t 2.63)
+  - RPT-2 (d 0.28)
+  - HOT-1 (d 0.86, t 2.43)
+  - HOT-3 (d −0.12 / −0.42)
+  - AE-1 (d 0.25)
+  - RPTLATE
+- RPT-1 passes (d 4.10).
+- No new RPT-2/HOT mechanism was attempted this round.
 ## Round 18: organism v3.7 (slow NMDA recurrence under divisive inhibition, slow CTX→THAL feedback, dendritic plateau, depletion forward model in EFE choice, ignition feature for confidence; R-variants K1aR/K1cR/CQM03R; Page PRNG snapshot-capable); prereg + code frozen 14cc830, test seeds 1000–1015
 - Rollups: Butlin 8/14 (v3.6: 9/14), frameworks 5/10, CQM 18/25; v3.7 items 2/3.
 - Passes:
