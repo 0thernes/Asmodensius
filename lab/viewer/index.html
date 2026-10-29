@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Asmodensius Dome: live</title>
+<style>body{margin:0;font:13px system-ui;background:#0b1020;color:#dde}#ui{position:absolute;top:0;right:0;width:330px;height:100vh;overflow:auto;background:#121a33ee;padding:10px;box-sizing:border-box}
+label{display:flex;justify-content:space-between;gap:6px;margin:3px 0}input[type=range]{width:150px}h3{margin:10px 0 4px;font-size:13px;color:#9bf}button{margin:2px}#hud{position:absolute;left:8px;top:8px;background:#0008;padding:6px 8px;white-space:pre;font:12px monospace}pre{white-space:pre-wrap;font-size:11px;max-height:260px;overflow:auto;background:#0006;padding:4px}</style>
+<script type="importmap">{"imports":{"three":"/vendor/three.module.js","three/addons/controls/OrbitControls.js":"/vendor/OrbitControls.js"}}</script></head>
+<body><div id="hud">connecting…</div><div id="ui">
+<b>God panel</b> (writes into the running sim)<div id="ctl"></div>
+<h3>Presets</h3><div><button data-p="utopia">utopia</button><button data-p="baseline">baseline</button><button data-p="harsh">harsh</button><button data-p="hell">hell</button></div>
+<label>ladder rung <input id="ladder" type="range" min="0" max="6" step="1" value="3"></label>
+<h3>Game</h3><label>game <select id="game"><option>none</option><option>pd</option><option>stag</option></select></label><label>strategy <select id="gameStrategy"><option>fixed</option><option>learned</option></select></label>
+<h3>Sim</h3><label>ticks / 100 ms <input id="speed" type="range" min="0" max="200" value="10"></label><button id="pause">pause</button><button id="reset">reset</button>
+<h3>Inspector (creature 001 lab instruments)</h3><label>creature <select id="who"></select></label>
+<div><button data-t="state">state</button><button data-t="motorLens">motor lens</button><button data-t="pci">PCI</button><button data-t="qrng">QRNG</button></div>
+<div><button id="stimVTA">stim VTA 2</button><button id="ne">NE +0.2</button><button id="harm">harm 0.05</button><button id="feed">feed 5 kJ</button></div><pre id="out"></pre></div>
+<script type="module">
+import * as THREE from "three"; import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+const SL=[["foodCapScale",0,3,.05],["growthScale",0,5,.1],["gravity",.2,5,.1],["toxicity",0,.005,.0001],["sensoryLoad",0,3,.1],["sensoryLinesR",0,.1,.005],["quantumKicks",0,.5,.01],["temperature",0,50,1],["wind",0,.2,.005],["o2",.05,.3,.01],["co2",0,.1,.002],["radiation",0,.003,.0001],["recycling",0,.2,.005],["parasites",0,.05,.001],["ph",2,12,.1],["singularity",0,3,.05],["grazers",0,200,1]];
+const post=(p,b)=>fetch(p,{method:"POST",body:JSON.stringify(b)}).then(r=>r.json());
+const ctl=document.getElementById("ctl"),inputs={};for(const [k,a,b,s] of SL){const l=document.createElement("label");l.innerHTML=`${k} <input type=range min=${a} max=${b} step=${s}><span></span>`;const i=l.querySelector("input");i.oninput=()=>{l.querySelector("span").textContent=i.value;post("/dials",{[k]:+i.value})};inputs[k]=i;ctl.appendChild(l);}
+document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>post("/preset",{name:b.dataset.p}));ladder.oninput=()=>post("/preset",{ladder:+ladder.value});
+game.onchange=()=>post("/dials",{game:game.value});gameStrategy.onchange=()=>post("/dials",{gameStrategy:gameStrategy.value});speed.oninput=()=>post("/control",{speed:+speed.value});
+pause.onclick=async()=>{const s=await (await fetch("/state")).json();post("/control",{paused:!s.paused})};reset.onclick=()=>post("/control",{reset:true});
+const show=o=>out.textContent=JSON.stringify(o,(k,v)=>typeof v==="number"?+v.toPrecision(4):v,1);
+document.querySelectorAll("[data-t]").forEach(b=>b.onclick=async()=>{out.textContent="running "+b.dataset.t+"…";show(await (await fetch(`/inspect?id=${who.value}&tool=${b.dataset.t}`)).json())});
+stimVTA.onclick=()=>post("/god",{id:who.value,act:"stimulate",part:"VTA",amount:2}).then(show);ne.onclick=()=>post("/god",{id:who.value,act:"shiftModulator",name:"NE",amount:.2}).then(show);harm.onclick=()=>post("/god",{id:who.value,act:"harm",amount:.05}).then(show);feed.onclick=()=>post("/god",{id:who.value,act:"feed",amount:5}).then(show);
+const R=new THREE.WebGLRenderer({antialias:true});R.setSize(innerWidth-330,innerHeight);document.body.prepend(R.domElement);const S=new THREE.Scene();S.background=new THREE.Color(0x0b1020);
+const C=new THREE.PerspectiveCamera(50,(innerWidth-330)/innerHeight,.1,200);C.position.set(0,18,22);new OrbitControls(C,R.domElement);
+const sun=new THREE.DirectionalLight(0xffffff,1);sun.position.set(5,20,5);S.add(sun,new THREE.AmbientLight(0x8899bb,.4));
+let floor,cells=[],bodies={},grazers=[],sing,dome;
+function build(s){const g=new THREE.InstancedMesh(new THREE.BoxGeometry(s.cell*.95,.1,s.cell*.95),new THREE.MeshLambertMaterial(),s.n*s.n);S.add(g);floor=g;
+ dome=new THREE.Mesh(new THREE.SphereGeometry(s.radius,48,24,0,Math.PI*2,0,Math.PI/2),new THREE.MeshPhongMaterial({color:0x88ccff,transparent:true,opacity:.12,side:THREE.DoubleSide}));S.add(dome);
+ sing=new THREE.Mesh(new THREE.SphereGeometry(.4,16,16),new THREE.MeshBasicMaterial({color:0xaa00ff}));S.add(sing);
+ for(const p of s.pop){const m=new THREE.Mesh(new THREE.SphereGeometry(.5,20,14),new THREE.MeshPhongMaterial({color:0xffaa44}));S.add(m);bodies[p.id]=m;const o=document.createElement("option");o.textContent=p.id;who.appendChild(o);}
+ for(const [k,i] of Object.entries(inputs)){i.value=s.dials[k];i.parentNode.querySelector("span").textContent=s.dials[k];}}
+const M=new THREE.Matrix4(),col=new THREE.Color(),gm=new THREE.MeshLambertMaterial({color:0x66ff99}),gg=new THREE.BoxGeometry(.2,.2,.2);
+new EventSource("/stream").onmessage=e=>{const s=JSON.parse(e.data);if(!floor)build(s);
+ for(let j=0;j<s.n;j++)for(let i=0;i<s.n;i++){const k=j*s.n+i,f=s.food[k];M.makeTranslation((i+.5)*s.cell-s.radius,f/60,(j+.5)*s.cell-s.radius);floor.setMatrixAt(k,M);col.setRGB(.15,.1+Math.min(1,f/40)*.8,.12);floor.setColorAt(k,col);}
+ floor.instanceMatrix.needsUpdate=true;floor.instanceColor.needsUpdate=true;sun.intensity=.2+1.2*s.light;sing.visible=s.dials.singularity>0;
+ for(const p of s.pop){const m=bodies[p.id];if(!m)continue;m.position.set(p.x,.6,p.y);m.material.color.set(p.asleep?0x4466ff:0xffaa44);m.scale.setScalar(.6+.6*Math.min(1,p.integrity));}
+ while(grazers.length<s.grazers.length){const g=new THREE.Mesh(gg,gm);S.add(g);grazers.push(g);}grazers.forEach((g,i)=>{g.visible=i<s.grazers.length;if(g.visible)g.position.set(s.grazers[i].x,.2,s.grazers[i].y)});
+ const hh=String(Math.floor((s.t%1440)/60)).padStart(2,"0");hud.textContent=`t=${s.t} (day ${Math.floor(s.t/1440)} ${hh}:${String(s.t%60).padStart(2,"0")})  light ${s.light.toFixed(2)}  world ledger err ${s.worldLedgerError.toExponential(1)}\n`+s.pop.map(p=>`${p.id} ${p.asleep?"zz":"  "} DA ${p.DA.toFixed(2)} NE ${p.NE.toFixed(2)} glc ${p.glc.toFixed(2)} integ ${p.integrity.toFixed(3)} eaten ${p.eaten.toFixed(1)}${isNaN(p.coopP)||p.coopP===null?"":" pC "+p.coopP.toFixed(2)}`).join("\n")+`\ngrazers ${s.grazers.length} (${s.grazerBiomass.toFixed(1)} kJ) detritus ${s.detritus.toFixed(2)} teleports ${s.teleports} games ${s.games}`;};
+(function loop(){requestAnimationFrame(loop);R.render(S,C)})();onresize=()=>{R.setSize(innerWidth-330,innerHeight);C.aspect=(innerWidth-330)/innerHeight;C.updateProjectionMatrix()};
+</script></body></html>

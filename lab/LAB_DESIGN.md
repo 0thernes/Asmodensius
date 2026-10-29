@@ -46,3 +46,7 @@ Each instrument has the shape `(Factory | CreatureLab, params) -> JSON result`. 
 
 ## v0.4 status (Round 3)
 This version adds the interface hooks senseLines, drain, give and takeWaste, plus Welch, Cohen's d and Spearman statistics, motorLensR with an oracle ceiling, and qrngDiag with von Neumann and Toeplitz extractors. The dial battery was preregistered (DIALS-v1) and run on 16 test seeds: 21/24 dials and the ladder pass. Failures: original hyper-stim, original NE→sleep, waste recycling, and motor lens R (0.29 of the oracle). See INVESTIGATION-R3.md.
+
+
+## v0.5 status (Round 4)
+New parts regionRates and rateAvg. The motor lens v2 PASSes at 0.66 of the oracle ceiling. The viewer server exposes the instruments as an inspector API. DIALS-v2: 8 PASS (plus the lens), 1 FAIL, 1 not counted (a direction-flag inconsistency in the prereg).

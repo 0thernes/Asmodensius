@@ -66,3 +66,8 @@ Classes: **A** = transfers directly. **B** = transfers with the change named in 
 - logit lens → motor lens: still FAIL. It reaches 0.29 of the oracle ceiling; the oracle itself is 0.76 because foraging is stochastic.
 - steering → neuromodulator shift: the manipulation PASSes (NE ×2), but the effect on sleep is null by construction. The ignitions R version PASSes.
 - RNG audit → qrngDiag: the bias equals the Born rule. VN→Toeplitz passes NIST. A decision-sign bias bug was found in organism.ts and reported, not fixed.
+
+
+## v0.5 updates
+- logit lens → motor lens: now PASS (rateAvg readout reaches 0.66 of the oracle).
+- interactive notebook/UI → live dome viewer with God panel and inspector API.

@@ -52,3 +52,7 @@ The p-values below come from a paired permutation test over 6 seeds and 1 simula
 
 ## v0.4 dials (Round 3)
 Built and tested: weather (temperature, wind), gas (O2 hypoxia, CO2 hypercapnia; both labelled proxies), radiation, waste recycling (detritus account), parasites (parasite-biomass account), prisoner's dilemma and stag-hunt payoffs harvested from the local patch, and the 7-rung utopia→hell LADDER. The world ledger now also includes detritus and parasite biomass. Results: preregistrations/RESULTS-DIALS-v1.md.
+
+
+## v0.5 (Round 4)
+Added dials: chemistry (pH: digestive loss into detritus), anomaly (singularity: attractor plus dice teleport), and ecology (grazers, a second non-neural species; dead biomass becomes detritus and decomposers recycle it). The game can now use a learned strategy (REINFORCE on the creature's own DA response to a VTA payoff burst). The sensory-lines knob is now dose-calibrated (0.02 lowers sleep from 0.578 to 0.512). The live 3D viewer is in viewer/. Results: preregistrations/RESULTS-DIALS-v2.md.
