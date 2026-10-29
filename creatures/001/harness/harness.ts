@@ -119,7 +119,7 @@ function hot1(): Item { // generative top-down perception: iterative inference w
   return item("HOT-1", "Butlin", "Generative, top-down / noisy perception", "−reconstruction MSE", "learned generative prototypes refine noisy input",
     [compare("ablation: bottom-up only", full, runSeeds(run("bottomup"), 7)), compare("random control: random generative prior", full, runSeeds(run("randprior"), 7))]);
 }
-function auroc(conf: number[], correct: boolean[]): number { let n1 = 0, n0 = 0, s = 0; const idx = conf.map((c, i) => [c, i]).sort((a, b) => a[0] - b[0]); idx.forEach(([, i], rank) => { if (correct[i]) { n1++; s += rank + 1; } else n0++; }); return n1 && n0 ? (s - n1 * (n1 + 1) / 2) / (n1 * n0) : 0.5; }
+export function auroc(conf: number[], correct: boolean[]): number { let n1 = 0, n0 = 0, s = 0; const idx = conf.map((c, i) => [c, i]).sort((a, b) => a[0] - b[0]); idx.forEach(([, i], rank) => { if (correct[i]) { n1++; s += rank + 1; } else n0++; }); return n1 && n0 ? (s - n1 * (n1 + 1) / 2) / (n1 * n0) : 0.5; }
 function firstOrder(r: Rng, N: number) { const out: { conf: number; ok: boolean; margin: number }[] = []; for (let k = 0; k < N; k++) { const lab = r() < 0.5 ? -1 : 1; const noise = 0.3 + r() * 2; const x = lab * 0.8 + gauss(r) * noise; const est = Math.sign(x) || 1;
     // second-order monitor: learned reliability = |x| scaled by estimated noise of the trial (observed via a second sample)
     const x2 = lab * 0.8 + gauss(r) * noise; const conf = Math.abs(x + x2) / (Math.abs(x - x2) + 0.3); out.push({ conf, ok: est === lab, margin: x }); } return out; }
