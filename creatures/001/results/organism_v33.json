@@ -1,0 +1,100 @@
+{
+ "seeds": "1000..1015",
+ "items": [
+  {
+   "id": "V3.3-L1",
+   "group": "Prereg v3.3 (LTC)",
+   "name": "memory-guided choice (C2 metric)",
+   "metric": "L1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.4130208366928855,
+     "ctrl": 0.455468755675247,
+     "d": -0.6276390229530375,
+     "t": -1.775231237069568,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.3-L2",
+   "group": "Prereg v3.3 (LTC)",
+   "name": "sleep effect (sleep − forced wake)",
+   "metric": "L2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.07389322877570523,
+     "ctrl": 0.12220052314805799,
+     "d": -0.695460623515489,
+     "t": -1.9670596917441072,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.3-L3",
+   "group": "Prereg v3.3 (LTC)",
+   "name": "level benefit (C8b metric)",
+   "metric": "L3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.040169271768536415,
+     "ctrl": 0.02845052177726757,
+     "d": 0.23178494462495683,
+     "t": 0.6555868244850216,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.3-L4",
+   "group": "Prereg v3.3 (LTC)",
+   "name": "delayed recall (RPT-1)",
+   "metric": "L4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": 0.2416666666666666,
+     "ctrl": 0.2604166666666667,
+     "d": -0.31052950170406063,
+     "t": -0.8783100656536833,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3.3-L5",
+   "group": "Prereg v3.3 (LTC)",
+   "name": "robustness to tau scale x0.5/x2",
+   "metric": "L5",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed-tau LIF",
+     "full": -0.014583332925394644,
+     "ctrl": -0.05413411522895329,
+     "d": 0.5632138411338418,
+     "t": 1.5930093052954495,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  }
+ ]
+}

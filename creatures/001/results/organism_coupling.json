@@ -21,7 +21,14 @@
   "Level",
   "Behaviour",
   "Plasticity",
-  "GPU 100M net"
+  "GPU 100M net",
+  "Senses",
+  "Workspace/attention",
+  "Metacognition",
+  "Prediction",
+  "Body/arm",
+  "Integrity",
+  "LTC neurons"
  ],
  "edges": [
   [
@@ -353,14 +360,114 @@
    "CNS spiking",
    "GPU 100M net",
    "organism state in senses (browser only)"
+  ],
+  [
+   "Senses",
+   "CNS spiking",
+   "16 lines → SENS → THAL → CTX module (topographic), sleep-gated"
+  ],
+  [
+   "CNS spiking",
+   "Workspace/attention",
+   "CTX module rates → posteriors → salience"
+  ],
+  [
+   "Neuromodulators",
+   "Workspace/attention",
+   "NE lowers ignition threshold"
+  ],
+  [
+   "Workspace/attention",
+   "CNS spiking",
+   "broadcast → HIP; attention gain → SENS; top-down → THAL"
+  ],
+  [
+   "Workspace/attention",
+   "Neuromodulators",
+   "ignition → LC (predErr)"
+  ],
+  [
+   "Workspace/attention",
+   "ATP/energy",
+   "ignition cost"
+  ],
+  [
+   "Workspace/attention",
+   "Metacognition",
+   "margin, consistency"
+  ],
+  [
+   "Neuromodulators",
+   "Metacognition",
+   "NE"
+  ],
+  [
+   "Sleep",
+   "Metacognition",
+   "adenosine S"
+  ],
+  [
+   "CNS spiking",
+   "Prediction",
+   "CTX → next-SENS predictor; TD value"
+  ],
+  [
+   "Prediction",
+   "Neuromodulators",
+   "prediction error → LC; TD error → DA"
+  ],
+  [
+   "Blood",
+   "Prediction",
+   "interoceptive glucose forecaster"
+  ],
+  [
+   "Body/arm",
+   "CNS spiking",
+   "motor → MOT"
+  ],
+  [
+   "Prediction",
+   "Body/arm",
+   "forward model (efference copy)"
+  ],
+  [
+   "Integrity",
+   "CNS spiking",
+   "damage → INS"
+  ],
+  [
+   "Integrity",
+   "Hormones",
+   "damage → cortisol"
+  ],
+  [
+   "Blood",
+   "Integrity",
+   "repair from amino acids"
+  ],
+  [
+   "Integrity",
+   "ATP/energy",
+   "repair ATP"
+  ],
+  [
+   "Neuromodulators",
+   "LTC neurons",
+   "ACh lengthens, NE shortens τ"
+  ],
+  [
+   "LTC neurons",
+   "CNS spiking",
+   "input-dependent membrane τ (opt-in)"
   ]
  ],
  "params": {
-  "synapses": 1850,
-  "plasticSynapses": 387,
-  "valueSynapses": 24,
+  "synapses": 2090,
+  "plasticSynapses": 563,
+  "valueSynapses": 2186,
   "kinetics": 390,
   "quantum": 19,
-  "total": 2283
+  "total": 4685
  }
 }

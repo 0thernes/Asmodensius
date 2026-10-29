@@ -1,0 +1,324 @@
+{
+ "seeds": [
+  1000,
+  1001,
+  1002,
+  1003,
+  1004,
+  1005,
+  1006,
+  1007,
+  1008,
+  1009,
+  1010,
+  1011,
+  1012,
+  1013,
+  1014,
+  1015
+ ],
+ "items": [
+  {
+   "id": "V3-C1a",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Starvation lowers tonic dopamine",
+   "metric": "mean extracellular DA, awake ticks of day 3",
+   "mechanism": "blood amino acids (tyrosine) x brain fuel (K-ATP) gate VTA firing and DA synthesis",
+   "cmps": [
+    {
+     "control": "starved 3 days",
+     "full": 0.2615495489635068,
+     "ctrl": 0.09815181715724762,
+     "d": 5.320046061146105,
+     "t": 15.047362584244771,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C1b",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Starvation lowers exploration",
+   "metric": "choice entropy (bits), 80 probe choices on a standardised value map",
+   "mechanism": "DA sets striatal noise amplitude in the spiking race",
+   "cmps": [
+    {
+     "control": "starved 3 days",
+     "full": 1.976881945363702,
+     "ctrl": 0.5046916760030077,
+     "d": 2.7642622684636975,
+     "t": 7.8185143800351575,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C1c",
+   "group": "Prereg v3.0 (organism)",
+   "name": "DA mediates the starvation effect (clamp rescues exploration)",
+   "metric": "choice entropy (bits)",
+   "mechanism": "starved + DA clamped at 0.25 vs starved",
+   "cmps": [
+    {
+     "control": "starved, DA free",
+     "full": 2.269947198925375,
+     "ctrl": 0.5046916760030077,
+     "d": 4.465560117794154,
+     "t": 12.630511364353778,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C2",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Sleep deprivation degrades memory-guided choice",
+   "metric": "expected reward of 80 probe choices on trained sites (day 4, 08:00)",
+   "mechanism": "NREM replay consolidates hippocampal episodes into site-value synapses; adenosine adds decision noise",
+   "cmps": [
+    {
+     "control": "sleep-deprived (forced wake)",
+     "full": 0.455468755675247,
+     "ctrl": 0.33326823252718896,
+     "d": 2.3744690213528674,
+     "t": 6.71601258686399,
+     "pass": true
+    },
+    {
+     "control": "sleep, replay disabled",
+     "full": 0.455468755675247,
+     "ctrl": 0.3808593795984052,
+     "d": 1.2921548364187307,
+     "t": 3.6547657886987146,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C3",
+   "group": "Prereg v3.0 (organism)",
+   "name": "REM recombination dreams improve later choice among novel sites",
+   "metric": "expected reward of 80 probe choices restricted to the 8 never-visited sites",
+   "mechanism": "REM pairs colour of one memory with shape of another and writes the cortical feature-model prediction into the novel site's value",
+   "cmps": [
+    {
+     "control": "no replay",
+     "full": 0.4025390651513589,
+     "ctrl": 0.29667969075671863,
+     "d": 2.4411794521691585,
+     "t": 6.9046981788882915,
+     "pass": true
+    },
+    {
+     "control": "NREM replay only (no dreams)",
+     "full": 0.4025390651513589,
+     "ctrl": 0.31770833610498816,
+     "d": 1.5194344557982573,
+     "t": 4.297609629053757,
+     "pass": true
+    },
+    {
+     "control": "dreams with shuffled content",
+     "full": 0.4025390651513589,
+     "ctrl": 0.2755859415134182,
+     "d": 1.5687182673648952,
+     "t": 4.437005298499716,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C4",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Vagotomy (gut-brain axis lesion) blunts post-meal satiety",
+   "metric": "forage attempts 2 h before minus 2 h after a 20 kJ meal",
+   "mechanism": "gut fill + ENS activity -> vagal afferent -> hypothalamic satiety neurons",
+   "cmps": [
+    {
+     "control": "subdiaphragmatic vagotomy",
+     "full": 18.6875,
+     "ctrl": 4.375,
+     "d": 1.8045486766717858,
+     "t": 5.104034425023322,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C5",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Locus coeruleus stimulation drives heart rate through the sympathetic chain",
+   "metric": "HR change (bpm), 30 min stim vs preceding hour",
+   "mechanism": "LC rate -> sympathetic tone -> HR -> brain perfusion",
+   "cmps": [
+    {
+     "control": "sham stimulation",
+     "full": 12.203543395922612,
+     "ctrl": -1.9445626474934796,
+     "d": 10.610823519547596,
+     "t": 30.01194105858325,
+     "pass": true
+    },
+    {
+     "control": "sympathectomy",
+     "full": 12.203543395922612,
+     "ctrl": 5.038257919183425,
+     "d": 6.936254120818462,
+     "t": 19.618689299455475,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C6",
+   "group": "Prereg v3.0 (organism)",
+   "name": "SCN lesion flattens the sleep-wake rhythm",
+   "metric": "night sleep fraction minus day sleep fraction (days 2-4)",
+   "mechanism": "SCN oscillator (light-entrained) supplies process C and melatonin",
+   "cmps": [
+    {
+     "control": "SCN lesion",
+     "full": 0.8295572916666667,
+     "ctrl": -0.015480324074074077,
+     "d": 15.010959644196255,
+     "t": 42.4574054261151,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C7",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Thought curvature is felt: high-curvature moments raise LC (noradrenergic) firing",
+   "metric": "LC rate at t+1 when kappa(t) above median minus below (awake, day 2)",
+   "mechanism": "trajectory curvature of the latent neural state -> insula -> LC",
+   "cmps": [
+    {
+     "control": "insula lesion",
+     "full": 0.18785729180701122,
+     "ctrl": -0.00007574850874620537,
+     "d": 11.004841131430133,
+     "t": 31.126391159659544,
+     "pass": true
+    },
+    {
+     "control": "insula fed time-shuffled curvature",
+     "full": 0.18785729180701122,
+     "ctrl": -0.0025679225936916655,
+     "d": 10.60573736677905,
+     "t": 29.997555246132094,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C8a",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Higher intelligence level costs more brain ATP",
+   "metric": "brain ATP demand (kJ/min), awake, day 2",
+   "mechanism": "level sets deliberation substeps and per-spike cost",
+   "cmps": [
+    {
+     "control": "level 1",
+     "full": 0.01759561180669338,
+     "ctrl": 0.010396208331428415,
+     "d": 16.417646652112925,
+     "t": 46.43611711533468,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "V3-C8b",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Higher intelligence level improves choice",
+   "metric": "probe expected reward (day 4 08:00, level switched just before the probe)",
+   "mechanism": "more integration steps average out decision noise",
+   "cmps": [
+    {
+     "control": "level 1 (same organism state)",
+     "full": 0.4572916729841382,
+     "ctrl": 0.4288411512068705,
+     "d": 0.40129667250601314,
+     "t": 1.1350383935863964,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "V3-C9",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Quantum noise source vs classical (equivalence, preregistered expectation |d|<0.5)",
+   "metric": "probe expected reward",
+   "mechanism": "Born-rule sampled 3-qubit state vs classical coin",
+   "cmps": [
+    {
+     "control": "classical noise, same marginals",
+     "full": 0.455468755675247,
+     "ctrl": 0.408789066504687,
+     "d": 0.6591476932137033,
+     "t": 1.8643512146995183,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Equivalence violated",
+   "note": "pass = |d|<0.5 (no quantum advantage claimed)"
+  },
+  {
+   "id": "V3-C10",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Energy conservation across every run of this suite",
+   "metric": "max |E_now - E_0 - eaten| / (E_0 + eaten)",
+   "mechanism": "explicit flux ledger: gut, blood, liver, fat, muscle, brain, ATP, heat, excreta",
+   "cmps": [
+    {
+     "control": "deliberately leaky ledger (must be detected > 1e-3)",
+     "full": 0,
+     "ctrl": 0.0024437409145155087,
+     "d": null,
+     "t": null,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Tolerance test",
+   "note": "max error 0.00e+0 over 464 runs; leaky control min 2.44e-3"
+  },
+  {
+   "id": "V3-C11",
+   "group": "Prereg v3.0 (organism)",
+   "name": "Seeded determinism",
+   "metric": "state hash after 600 ticks",
+   "mechanism": "pure seeded RNG; crypto entropy only when explicitly requested",
+   "cmps": [],
+   "pass": true,
+   "category": "Tolerance test",
+   "note": "same-seed identical: true; different seeds differ: true"
+  }
+ ],
+ "ledgerMax": 0,
+ "runs": 464
+}

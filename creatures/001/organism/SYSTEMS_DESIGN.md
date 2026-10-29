@@ -127,3 +127,9 @@ Each should be preregistered before code, with organism lesions as controls. Thi
 
 ## v3.0 outcome (test seeds 1000–1015)
 10/12 pass. C2 fails: sleep beats forced wake (d 1.98, t 5.60), but against sleep with replay disabled d is 0.93 and t is 2.63 (< 2.75). C8b fails (d 0.22, t 0.61), as it already did on tuning seeds. Full table: `results/organism_v30_run.txt`, `docs/systems.html`.
+
+## Round 14 additions (v3.1–v3.3)
+- **Mind layer** (class Mind, holding a reference to its Organism): workspace competition with an NE-lowered ignition threshold; broadcast to HIP; attention gain on SENS; top-down input to THAL; a confidence monitor; a Kalman attention schema; an NLMS next-sense predictor; Kuramoto phase binding; TD(λ) with normalized updates; an arm forward model fed by an efference copy; a glucose forecaster; and a planner. Cognitive cost is charged to brain ATP, so the ledger stays exact.
+- **Integrity**: tissue kJ is part of the ledger. Damage raises cortisol and INS drive. Repair uses amino acids and ATP.
+- **LTC option**: τ = τ0(1+1.5·ACh)/((1+0.5|I|)(1+0.5·NE)). The gains are hand-set, not learned as in Hasani et al. On preregistered tests it gave no benefit (v3.3, 0/5).
+- **Caveats**: the cortex does not decode the stimulus (F ≈ 0.09), so the workspace and metacognition items fail. Several CQM items reuse the same mechanism. The CQM03 control is degenerate. The raphe fix is applied only to decision v32.

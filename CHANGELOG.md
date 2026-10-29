@@ -1,4 +1,10 @@
 # Changelog
+## Round 14: organism v3.1 / v3.2 / v3.3 (preregistered; tuning on seeds 2000–2015, testing on 1000–1015)
+- v3.1: added a Mind layer to organism.ts with workspace/ignition/broadcast, a Kalman attention schema, metacognitive opt-out, NLMS predictive coding, Kuramoto binding, TD(λ) value, an efference/forward model, an interoceptive forecaster, model-based planning, awake/NREM replay, topographic sensory wiring, tissue integrity/repair, and an evolving genome. 22 of 43 items pass. Cortical classification items are at chance (RPT-1/2, GWT-2/3, HOT-1/2/3, AE-1). PROJ fails on ceiling. CQM09 does worse than a persistence forecast.
+- v3.2: C2 now passes (d 2.37, t 6.72 vs forced wake; d 1.29, t 3.65 vs no replay). C8b still fails (d 0.40). New regression: the C9 quantum-vs-classical equivalence fails (d 0.66). Found a v3.0 bug: the raphe drive was inside a comment, so 5-HT was ≈ 0. The v3.0 results stay on record unchanged.
+- v3.3: added liquid time-constant spiking neurons (opt-in `ltc`), with τ gated by synaptic input, ACh and NE. 0 of 5 preregistered items pass. On memory-guided choice LTC is non-significantly worse than fixed τ (d −0.63), and on the sleep effect also worse (d −0.70). Verdict: no benefit.
+- Inspector (index.v3.html) gained Senses, Workspace/attention, Metacognition, Prediction, Body/arm, Integrity and LTC panels, plus lesion toggles.
+
 ## Round 13 (2026-10-29): integrated organism
 - New `creatures/001/organism/`: one deterministic, seedable organism (224-neuron LIF CNS + 48-neuron ENS, 7 neuromodulators, an exact kJ metabolic ledger, hormones with PID allostasis, SCN and two-process sleep, NREM replay and REM recombination, latent curvature into the insula and LC, a 3-qubit noise layer with QGT and NIST health tests ported from tsotchke). About 2.3k organism parameters. The browser couples it both ways to the 100M procedural net and its 680,008 learned parameters.
 - Pre-registration v3.0, committed before the test run (d767098). Test seeds 1000–1015: 10 of 12 pass. **Failures:** C2 (against the replay-off control, t = 2.63 < 2.75) and C8b (level → choice, d 0.22). Results commit: 52b3e8b.

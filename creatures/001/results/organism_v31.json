@@ -1,0 +1,838 @@
+{
+ "seeds": "1000..1015",
+ "items": [
+  {
+   "id": "RPT-1",
+   "group": "Prereg v3.1 (organism)",
+   "name": "recurrence: delayed recall",
+   "metric": "RPT1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "recurrent CTX synapses lesioned",
+     "full": 0.2604166666666667,
+     "ctrl": 0.23958333333333334,
+     "d": 0.3879195031588117,
+     "t": 1.0972020449524484,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "RPT-2",
+   "group": "Prereg v3.1 (organism)",
+   "name": "integration: XOR readout",
+   "metric": "RPT2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "cross-module CTX synapses lesioned",
+     "full": 0.49375,
+     "ctrl": 0.5260416666666666,
+     "d": -0.5844550262638839,
+     "t": -1.6530884494790161,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "GWT-1",
+   "group": "Prereg v3.1 (organism)",
+   "name": "specialist modules",
+   "metric": "GWT1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "topography scrambled at build",
+     "full": 0.015625,
+     "ctrl": -0.029513888888888888,
+     "d": 0.8470322661084569,
+     "t": 2.3957690369963927,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "GWT-2",
+   "group": "Prereg v3.1 (organism)",
+   "name": "limited-capacity selection",
+   "metric": "GWT2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "workspace lesioned (action reads module average)",
+     "full": 0.2375,
+     "ctrl": 0.24166666666666667,
+     "d": -0.07033654492119455,
+     "t": -0.19894179151603555,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "GWT-3",
+   "group": "Prereg v3.1 (organism)",
+   "name": "global broadcast",
+   "metric": "GWT3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "broadcast lesioned",
+     "full": 0.240625,
+     "ctrl": 0.2552083333333333,
+     "d": -0.26817495822536797,
+     "t": -0.758513326022307,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "GWT-4",
+   "group": "Prereg v3.1 (organism)",
+   "name": "state-dependent attention",
+   "metric": "GWT4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "attention not driven by workspace state",
+     "full": 0.07187500000000001,
+     "ctrl": 0.06041666666666666,
+     "d": 0.3943353175921226,
+     "t": 1.115348708522963,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "HOT-1",
+   "group": "Prereg v3.1 (organism)",
+   "name": "generative top-down",
+   "metric": "HOT1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "top-down lesioned",
+     "full": -0.17785432143671512,
+     "ctrl": -0.1776277719978585,
+     "d": -0.02288359297439188,
+     "t": -0.06472457508042134,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "HOT-2",
+   "group": "Prereg v3.1 (organism)",
+   "name": "metacognitive monitoring (AUROC)",
+   "metric": "HOT2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "confidence shuffled (S)",
+     "full": 0.46773869991055994,
+     "ctrl": 0.49148860620004226,
+     "d": -0.420727525313272,
+     "t": -1.189997144723398,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "HOT-3",
+   "group": "Prereg v3.1 (organism)",
+   "name": "metacognitive agency (opt-out)",
+   "metric": "HOT3",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "no opt-out",
+     "full": 0.2802500000000002,
+     "ctrl": 0.265,
+     "d": 0.38539521841727964,
+     "t": 1.090062289518916,
+     "pass": false
+    },
+    {
+     "control": "random opt-out at same rate",
+     "full": 0.2802500000000002,
+     "ctrl": 0.2779375000000003,
+     "d": 0.08659178823079854,
+     "t": 0.24491856261226852,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "HOT-4",
+   "group": "Prereg v3.1 (organism)",
+   "name": "quality space (Spearman)",
+   "metric": "HOT4",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "sensory lines permuted every trial",
+     "full": 0.7242308570962874,
+     "ctrl": 0.027851776841053392,
+     "d": 10.25370852573319,
+     "t": 29.00186732342502,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AST-1",
+   "group": "Prereg v3.1 (organism)",
+   "name": "attention schema",
+   "metric": "AST1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "schema lesioned (raw observation)",
+     "full": -0.044191625544851246,
+     "ctrl": -0.060834540176655565,
+     "d": 1.1696466444732219,
+     "t": 3.308260295596424,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "PP-1",
+   "group": "Prereg v3.1 (organism)",
+   "name": "predictive coding",
+   "metric": "PP1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "predictor lesioned (running mean)",
+     "full": -0.0358903303465529,
+     "ctrl": -0.04434493794350424,
+     "d": 2.692820112182132,
+     "t": 7.616445447358021,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "AE-1",
+   "group": "Prereg v3.1 (organism)",
+   "name": "agency / RL under reversals",
+   "metric": "AE1",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "RPE learning lesioned",
+     "full": 0.28965039712930496,
+     "ctrl": 0.3015397461884409,
+     "d": -0.2886215996672848,
+     "t": -0.8163451612865842,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "AE-2",
+   "group": "Prereg v3.1 (organism)",
+   "name": "embodiment: reaching",
+   "metric": "AE2",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "forward model lesioned (gain fixed at prior)",
+     "full": -0.01372576770363669,
+     "ctrl": -0.2329307927742154,
+     "d": 2.3874331059275837,
+     "t": 6.7526805553226215,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "thaler9",
+   "group": "Prereg v3.1 (organism)",
+   "name": "creative recombination",
+   "metric": "NOVEL",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "thaler9:dreams with shuffled content",
+     "full": 0.4025390651513589,
+     "ctrl": 0.2755859415134182,
+     "d": 1.5687182673648952,
+     "t": 4.437005298499716,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "shares mechanism with V3-C3"
+  },
+  {
+   "id": "iit4",
+   "group": "Prereg v3.1 (organism)",
+   "name": "phi proxy",
+   "metric": "IIT",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "recurrent + cross-module CTX lesioned",
+     "full": 0.2511864762708079,
+     "ctrl": 0.07284563415039004,
+     "d": 3.4220344436172327,
+     "t": 9.678975042142719,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "activeInference",
+   "group": "Prereg v3.1 (organism)",
+   "name": "EFE choice in depleting world",
+   "metric": "AINF",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "epistemic term lesioned",
+     "full": 48.5625,
+     "ctrl": 47.875,
+     "d": 0.13400027759865876,
+     "t": 0.3790100198835657,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "attentionSchema",
+   "group": "Prereg v3.1 (organism)",
+   "name": "model of another's attention",
+   "metric": "ASO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "last-observation predictor",
+     "full": -0.032337428542321266,
+     "ctrl": -0.09232878554344519,
+     "d": 8.824296127016131,
+     "t": 24.958878522445172,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "fieldIntegration",
+   "group": "Prereg v3.1 (organism)",
+   "name": "binding by phase locking",
+   "metric": "FIELD",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "field coupling lesioned",
+     "full": 0.4437499999999999,
+     "ctrl": 0.33958333333333335,
+     "d": 1.1543107037025184,
+     "t": 3.264883704737066,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "ual",
+   "group": "Prereg v3.1 (organism)",
+   "name": "trace conditioning",
+   "metric": "UAL",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "eligibility traces lesioned",
+     "full": -0.037611963800181926,
+     "ctrl": -0.19496776612602507,
+     "d": 2.940102020809139,
+     "t": 8.315864305177655,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "sensorimotor",
+   "group": "Prereg v3.1 (organism)",
+   "name": "efference prediction",
+   "metric": "SM",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "efference copy lesioned",
+     "full": -0.020336175145116486,
+     "ctrl": -0.5195275207355315,
+     "d": 3.500134566448701,
+     "t": 9.899875548005253,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "projective",
+   "group": "Prereg v3.1 (organism)",
+   "name": "self/other ownership",
+   "metric": "PROJ",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "efference copy lesioned",
+     "full": 1,
+     "ctrl": 0.49583333333333335,
+     "d": 12.89864333951443,
+     "t": 36.4828726939094,
+     "pass": true
+    }
+   ],
+   "pass": false,
+   "category": "Ceiling",
+   "note": "fails non-ceiling rule"
+  },
+  {
+   "id": "ctm",
+   "group": "Prereg v3.1 (organism)",
+   "name": "report agrees with action",
+   "metric": "CTM",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "broadcast lesioned",
+     "full": 0.36979166666666663,
+     "ctrl": 0.29791666666666666,
+     "d": 1.1361969903444022,
+     "t": 3.2136503865450923,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM01",
+   "group": "Prereg v3.1 (organism)",
+   "name": "heredity",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM01:offspring genomes random",
+     "full": 0.5952577242612567,
+     "ctrl": 0.20824058421098396,
+     "d": 1.8216332478114052,
+     "t": 5.152356889449277,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM02",
+   "group": "Prereg v3.1 (organism)",
+   "name": "open-endedness",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM02:no mutation",
+     "full": 48.375,
+     "ctrl": 6,
+     "d": 9.063609562401552,
+     "t": 25.6357591344055,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM03",
+   "group": "Prereg v3.1 (organism)",
+   "name": "ecological coupling",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM03:births on a fixed schedule",
+     "full": 0.8230302169303478,
+     "ctrl": 0,
+     "d": 3.6586157059593862,
+     "t": 10.348127901757959,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence",
+   "note": "control correlation is 0 by construction (constant population)"
+  },
+  {
+   "id": "CQM04",
+   "group": "Prereg v3.1 (organism)",
+   "name": "morphology (reach gene)",
+   "metric": "EVO",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM04:random survival",
+     "full": 1.0129794152504317,
+     "ctrl": 1.0457422847453777,
+     "d": -0.08992140174735287,
+     "t": -0.2543361317974123,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM05",
+   "group": "Prereg v3.1 (organism)",
+   "name": "embodied consistency (−ledger error)",
+   "metric": "C05",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "leaky ledger",
+     "full": -1.5974337551216935e-15,
+     "ctrl": -0.004516996918165968,
+     "d": 89.25855129348747,
+     "t": 252.4613075940491,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM06",
+   "group": "Prereg v3.1 (organism)",
+   "name": "perceptual integration",
+   "metric": "C06",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "integration lesion (modality 0 only)",
+     "full": -0.09929010149229965,
+     "ctrl": -0.09539549732498269,
+     "d": -0.21152110111489733,
+     "t": -0.5982720198495571,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM07",
+   "group": "Prereg v3.1 (organism)",
+   "name": "learning/plasticity",
+   "metric": "C07",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "plasticity frozen",
+     "full": -0.0358903303465529,
+     "ctrl": -0.0625,
+     "d": 8.4762340187571,
+     "t": 23.974410214348993,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM08",
+   "group": "Prereg v3.1 (organism)",
+   "name": "continual retention",
+   "metric": "C08",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "replay lesioned",
+     "full": 0.14062499999999997,
+     "ctrl": 0,
+     "d": 2.6640125031280215,
+     "t": 7.534965224510291,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM09",
+   "group": "Prereg v3.1 (organism)",
+   "name": "causal interoceptive model",
+   "metric": "C09",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "persistence forecast",
+     "full": -2.299010062369021,
+     "ctrl": -1.4505574522358473,
+     "d": -6.252211913344138,
+     "t": -17.683925765363835,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM10",
+   "group": "Prereg v3.1 (organism)",
+   "name": "goal regulation (viable fraction)",
+   "metric": "C10",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "fixed foraging drive",
+     "full": 0.948509837962963,
+     "ctrl": 0.9537471064814815,
+     "d": -0.07015597327951047,
+     "t": -0.19843105778673634,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM11",
+   "group": "Prereg v3.1 (organism)",
+   "name": "planning",
+   "metric": "C11",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "model-free only",
+     "full": 0.7747028056196256,
+     "ctrl": 0.1888537853901631,
+     "d": 5.835056679472619,
+     "t": 16.50403258665179,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM12",
+   "group": "Prereg v3.1 (organism)",
+   "name": "compositional transfer",
+   "metric": "NOVEL",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "CQM12:dreams shuffled",
+     "full": -0.0211233057002085,
+     "ctrl": -0.022664135293955848,
+     "d": 0.1359719506259954,
+     "t": 0.38458675335521514,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM14",
+   "group": "Prereg v3.1 (organism)",
+   "name": "signalling game",
+   "metric": "C14",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "signal line cut",
+     "full": 0.2572916666666667,
+     "ctrl": 0.246875,
+     "d": 0.21988557200429895,
+     "t": 0.6219303161972907,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM15",
+   "group": "Prereg v3.1 (organism)",
+   "name": "boundary (integrity>0.7)",
+   "metric": "C15",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "repair lesioned",
+     "full": 0.4346571180555555,
+     "ctrl": 0.09594184027777776,
+     "d": 1.826194643525749,
+     "t": 5.1652584648144275,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM16",
+   "group": "Prereg v3.1 (organism)",
+   "name": "self-maintenance (alive fraction)",
+   "metric": "C16",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "allostatic (PID) lesion",
+     "full": 0.2592158564814815,
+     "ctrl": 0.22738715277777777,
+     "d": 13.292885544762543,
+     "t": 37.59795804095292,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM17",
+   "group": "Prereg v3.1 (organism)",
+   "name": "homeostasis (−glucose variance)",
+   "metric": "C17",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "PID lesioned",
+     "full": -0.560871865929728,
+     "ctrl": -164.12900713870238,
+     "d": 2.0634299954092246,
+     "t": 5.836261369030358,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "CQM18",
+   "group": "Prereg v3.1 (organism)",
+   "name": "resilience after 40% CTX lesion",
+   "metric": "C18",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "plasticity frozen after lesion",
+     "full": 0.6270833333333332,
+     "ctrl": 0.6406250000000002,
+     "d": -0.069983426794968,
+     "t": -0.1979430226295768,
+     "pass": false
+    }
+   ],
+   "pass": false,
+   "category": "Not established"
+  },
+  {
+   "id": "CQM22",
+   "group": "Prereg v3.1 (organism)",
+   "name": "valence trade-off",
+   "metric": "C22",
+   "mechanism": "",
+   "cmps": [
+    {
+     "control": "aversive learning lesioned",
+     "full": 43.375,
+     "ctrl": -247.76250000000016,
+     "d": 2.176420514553334,
+     "t": 6.15584681821671,
+     "pass": true
+    }
+   ],
+   "pass": true,
+   "category": "Bounded test evidence"
+  },
+  {
+   "id": "butlin14",
+   "group": "Prereg v3.1 (organism)",
+   "name": "rollup of 14 Butlin items",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": false,
+   "category": "4/14 pass",
+   "note": "rollup"
+  },
+  {
+   "id": "CQM24",
+   "group": "Prereg v3.1 (organism)",
+   "name": "reproducibility (state hash)",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": true,
+   "category": "Tolerance test"
+  },
+  {
+   "id": "CQM25",
+   "group": "Prereg v3.1 (organism)",
+   "name": "scale (measured parameters)",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": true,
+   "category": "Implementation identified",
+   "note": "{\"synapses\":2084,\"plasticSynapses\":535,\"valueSynapses\":2186,\"kinetics\":390,\"quantum\":19,\"total\":4679}"
+  },
+  {
+   "id": "CQM23",
+   "group": "Prereg v3.1 (organism)",
+   "name": "substrate pluralism",
+   "metric": "",
+   "mechanism": "",
+   "cmps": [],
+   "pass": false,
+   "category": "Not applicable",
+   "note": "JS only"
+  }
+ ]
+}

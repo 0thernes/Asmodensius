@@ -243,6 +243,18 @@ page("grounding.html", "Biological grounding", f"<h1>Biological grounding</h1><p
 # ---- Systems page (Round 13 organism): coupling-matrix diagram + v3.0 prereg results ----
 CPL = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_coupling.json")))
 V30 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v30.json")))
+V31 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v31.json")))
+V32 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v32.json")))
+V33 = json.load(open(os.path.join(ROOT, "creatures/001/results/organism_v33.json")))
+def prereg_rows(D):
+    rows = ""
+    for it in D["items"]:
+        for k, cm in enumerate(it["cmps"]):
+            rows += f'<tr><td>{E(it["id"]) if k==0 else ""}</td><td>{E(it["name"]) if k==0 else ""}</td><td>{E(cm["control"])}</td><td>{fv(cm["full"])}</td><td>{fv(cm["ctrl"])}</td><td>{fd(cm["d"])}</td><td>{fd(cm["t"])}</td><td>{"PASS" if cm["pass"] else "FAIL"}</td></tr>'
+        if not it["cmps"]: rows += f'<tr><td>{E(it["id"])}</td><td>{E(it["name"])}</td><td colspan="5">{E(str(it.get("category", it.get("metric",""))))}</td><td>{"PASS" if it["pass"] else "FAIL"}</td></tr>'
+    return "<table><tr><th>ID</th><th>Test</th><th>Control</th><th>full</th><th>ctrl</th><th>d</th><th>t</th><th></th></tr>" + rows + "</table>"
+def npassD(D): return f'{sum(1 for it in D["items"] if it["pass"])}/{len(D["items"])}'
+
 def systems_page():
     P = CPL["parts"]; n = len(P); M = {(a, b): l for a, b, l in CPL["edges"]}; c = 16; off = 150
     cells = []
@@ -268,6 +280,12 @@ def systems_page():
 <p>Pass rule: Cohen's d ≥ 0.8 and Welch t ≥ 2.75 against every control (C9 is an equivalence test, |d| &lt; 0.5). {npass}/{len(V30['items'])} pass. Failures are reported as they came out; no criteria were changed after the run.</p>
 <table><tr><th>ID</th><th>Test</th><th>Control</th><th>full</th><th>ctrl</th><th>d</th><th>t</th><th></th></tr>{rows}</table>
 <h2>Caveats</h2><ul><li>C5, C6 and C7 test couplings that are wired directly, so passing confirms the wiring works end to end; it is not a discovery.</li><li>C2 failed: sleep beats forced wake (d 1.98), but against "sleep with replay off" t = 2.63 &lt; 2.75. C8b failed: a higher intelligence level does not measurably improve choice (d 0.22).</li><li>The quantum layer is a classical simulation of a 3-qubit state vector. C9 found no quantum advantage, as preregistered.</li><li>Ports from tsotchke (QGT definition, NIST RCT/APT health tests) are re-implementations of the definitions, not the original code.</li></ul>
+<h2>Round 14: v3.1 (CQM-25, Butlin-14, 10 frameworks on organism.ts), test seeds 1000–1015, {npassD(V31)} pass</h2>
+<p>Tuned only on seeds 2000–2015 and frozen (commit 54e9e11) before the test run. A ceiling score (PROJ = 1.000) fails by the non-ceiling rule. Cortical classification items (RPT-1/2, GWT-2/3, HOT-1/2/3) are at chance: the 224-neuron LIF cortex does not carry a decodable stimulus well enough, so the workspace, metacognition and recurrence mechanisms exist and are inspectable, but they show no measurable benefit. The CQM03 control is degenerate (its correlation is 0 by construction).</p>{prereg_rows(V31)}
+<h2>v3.2: the v3.0 suite re-run on the v3.2 code ({npassD(V32)} pass). The v3.0 results above stay on record.</h2>
+<p>C2 now passes (d 2.37 / 1.29, t 6.72 / 3.65). C8b still fails (d 0.40, t 1.14). <b>New regression:</b> the C9 equivalence test fails (d 0.66 &gt; 0.5). The v3.0 run had a bug: the raphe input sat inside a comment, so 5-HT was ≈ 0. The bug is fixed only for decision v32.</p>{prereg_rows(V32)}
+<h2>v3.3: liquid time-constant (LTC) spiking neurons vs fixed-τ LIF ({npassD(V33)} pass)</h2>
+<p>τ = τ0·(1+1.5·ACh)/((1+0.5·|I_syn|)(1+0.5·NE)), after Hasani et al. 2021 (LTC, AAAI), Hasani et al. 2022 (CfC, Nat. Mach. Intell.), Yin, Corradi &amp; Bohté 2023 (LTC-SN, Nat. Mach. Intell.) and Vanhalle &amp; Gielen 2025 (sLTC, ICECS). The gates are hand-set, not learned. LTC does not help: it is non-significantly worse on memory-guided choice and on the sleep effect, and no item passes.</p>{prereg_rows(V33)}
 <p>Full design: <code>creatures/001/organism/SYSTEMS_DESIGN.md</code>. Live inspector: open the creature, wake it, and use the Organism inspector panel.</p>"""
     page("systems.html", "Systems", body)
 systems_page()
