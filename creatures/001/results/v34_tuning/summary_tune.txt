@@ -1,0 +1,120 @@
+PASS RPT-1 recurrence: delayed recall [Bounded test evidence]
+   vs recurrent CTX synapses lesioned: full 0.5969 ctrl 0.2521 d 8.05 t 22.77
+FAIL RPT-2 integration: XOR readout [Not established]
+   vs cross-module CTX synapses lesioned: full 0.5281 ctrl 0.5365 d -0.13 t -0.37
+PASS GWT-1 specialist modules [Bounded test evidence]
+   vs topography scrambled at build: full 0.2538 ctrl -0.006771 d 4.53 t 12.82
+FAIL GWT-2 limited-capacity selection [Not established]
+   vs workspace lesioned (action reads module average): full 0.4021 ctrl 0.3531 d 0.81 t 2.29
+PASS GWT-3 global broadcast [Bounded test evidence]
+   vs broadcast lesioned: full 0.8594 ctrl 0.2375 d 9.40 t 26.58
+FAIL GWT-4 state-dependent attention [Not established]
+   vs attention not driven by workspace state: full 0.04375 ctrl 0.05521 d -0.42 t -1.20
+FAIL HOT-1 generative top-down [Not established]
+   vs top-down lesioned: full -0.08616 ctrl -0.09861 d 0.77 t 2.17
+FAIL HOT-2 metacognitive monitoring (AUROC) [Not established]
+   vs confidence shuffled (S): full 0.4865 ctrl 0.4654 d 0.30 t 0.84
+FAIL HOT-3 metacognitive agency (opt-out) [Not established]
+   vs no opt-out: full 0.2821 ctrl 0.2650 d 0.41 t 1.15
+   vs random opt-out at same rate: full 0.2821 ctrl 0.2694 d 0.38 t 1.06
+PASS HOT-4 quality space (Spearman) [Bounded test evidence]
+   vs sensory lines permuted every trial: full 0.7274 ctrl -0.01475 d 17.70 t 50.07
+PASS AST-1 attention schema [Bounded test evidence]
+   vs schema lesioned (raw observation): full -0.04516 ctrl -0.06406 d 1.42 t 4.01
+PASS PP-1 predictive coding [Bounded test evidence]
+   vs predictor lesioned (running mean): full -0.02191 ctrl -0.04437 d 8.58 t 24.27
+FAIL AE-1 agency / RL under reversals [Not established]
+   vs RPE learning lesioned: full 0.2885 ctrl 0.3032 d -0.36 t -1.01
+PASS AE-2 embodiment: reaching [Bounded test evidence]
+   vs forward model lesioned (gain fixed at prior): full -0.01459 ctrl -0.2972 d 2.51 t 7.09
+PASS thaler9 creative recombination [Bounded test evidence] (shares mechanism with V3-C3)
+   vs thaler9:dreams with shuffled content: full 0.3690 ctrl 0.2582 d 1.10 t 3.11
+PASS iit4 phi proxy [Bounded test evidence]
+   vs recurrent + cross-module CTX lesioned: full 0.3886 ctrl 0.2695 d 3.06 t 8.65
+FAIL activeInference EFE choice in depleting world [Not established]
+   vs epistemic term lesioned: full 47.50 ctrl 47.19 d 0.05 t 0.14
+PASS attentionSchema model of another's attention [Bounded test evidence]
+   vs last-observation predictor: full -0.03287 ctrl -0.09285 d 7.66 t 21.67
+PASS fieldIntegration binding by phase locking [Bounded test evidence]
+   vs field coupling lesioned: full 0.6187 ctrl 0.3125 d 3.91 t 11.06
+FAIL ual trace conditioning [Not established]
+   vs eligibility traces lesioned: full 0.4197 ctrl 0.3371 d 0.69 t 1.96
+PASS sensorimotor efference prediction [Bounded test evidence]
+   vs efference copy lesioned: full -0.02202 ctrl -0.5885 d 3.05 t 8.63
+FAIL projective self/other ownership [Ceiling] (fails non-ceiling rule)
+   vs efference copy lesioned: full 1.000 ctrl 0.5156 d 15.11 t 42.75
+PASS ctm report agrees with action [Bounded test evidence]
+   vs broadcast lesioned: full 0.9083 ctrl 0.2531 d 12.51 t 35.37
+PASS CQM01 heredity [Bounded test evidence]
+   vs CQM01:offspring genomes random: full 0.7105 ctrl 0.2460 d 3.18 t 9.01
+PASS CQM02 open-endedness [Bounded test evidence]
+   vs CQM02:no mutation: full 47.75 ctrl 5.875 d 11.29 t 31.93
+PASS CQM03 ecological coupling [Bounded test evidence] (control correlation is 0 by construction (constant population))
+   vs CQM03:births on a fixed schedule: full 0.9276 ctrl 0.000 d 7.39 t 20.91
+FAIL CQM04 morphology (reach gene) [Not established]
+   vs CQM04:random survival: full 1.119 ctrl 1.160 d -0.10 t -0.29
+PASS CQM05 embodied consistency (−ledger error) [Bounded test evidence]
+   vs leaky ledger: full -2.097e-15 ctrl -0.004252 d 76.29 t 215.78
+FAIL CQM06 perceptual integration [Not established]
+   vs integration lesion (modality 0 only): full -0.04689 ctrl -0.05160 d 0.44 t 1.24
+PASS CQM07 learning/plasticity [Bounded test evidence]
+   vs plasticity frozen: full -0.02191 ctrl -0.06250 d 15.51 t 43.88
+PASS CQM08 continual retention [Bounded test evidence]
+   vs replay lesioned: full 0.1000 ctrl 0.004688 d 2.20 t 6.21
+FAIL CQM09 causal interoceptive model [Not established]
+   vs persistence forecast: full -2.318 ctrl -1.436 d -5.34 t -15.11
+FAIL CQM10 goal regulation (viable fraction) [Ceiling] (fails non-ceiling rule)
+   vs fixed foraging drive: full 0.9815 ctrl 0.9005 d 1.80 t 5.10
+PASS CQM11 planning [Bounded test evidence]
+   vs model-free only: full 0.7972 ctrl 0.1697 d 6.13 t 17.34
+FAIL CQM12 compositional transfer [Not established]
+   vs CQM12:dreams shuffled: full -0.02200 ctrl -0.02325 d 0.11 t 0.31
+FAIL CQM14 signalling game [Not established]
+   vs signal line cut: full 0.2677 ctrl 0.2667 d 0.02 t 0.06
+PASS CQM15 boundary (integrity>0.7) [Bounded test evidence]
+   vs repair lesioned: full 0.3436 ctrl 0.09151 d 1.48 t 4.18
+PASS CQM16 self-maintenance (alive fraction) [Bounded test evidence]
+   vs allostatic (PID) lesion: full 0.2723 ctrl 0.2389 d 12.64 t 35.75
+PASS CQM17 homeostasis (−glucose variance) [Bounded test evidence]
+   vs PID lesioned: full -0.3478 ctrl -220.6 d 2.27 t 6.43
+FAIL CQM18 resilience after 40% CTX lesion [Ceiling] (fails non-ceiling rule)
+   vs plasticity frozen after lesion: full 0.9958 ctrl 0.9958 d -0.00 t -0.00
+PASS CQM22 valence trade-off [Bounded test evidence]
+   vs aversive learning lesioned: full 45.05 ctrl -308.5 d 3.25 t 9.20
+FAIL butlin14 rollup of 14 Butlin items [7/14 pass] (rollup)
+PASS CQM24 reproducibility (state hash) [Tolerance test]
+PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":3065,"plasticSynapses":372,"valueSynapses":2186,"kinetics":390,"quantum":19,"total":5660})
+FAIL CQM23 substrate pluralism [Not applicable] (JS only)
+FAIL K1a immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs v3.1 cortex: full 0.9760 ctrl 0.5562 d 5.71 t 16.15
+FAIL K1b immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no developmental waves: full 0.9760 ctrl 0.9740 d 0.10 t 0.27
+FAIL K1c immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no STDP: full 0.9760 ctrl 0.8802 d 2.25 t 6.36
+FAIL K1d immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no homeostasis (intrinsic + inhibitory): full 0.9760 ctrl 0.9344 d 1.35 t 3.82
+FAIL K1e immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs E/I loops lesioned: full 0.9760 ctrl 0.9990 d -1.57 t -4.45
+PASS K2 persistence: centroid probe 2 blank ticks after stimulus [Bounded test evidence]
+   vs NMDA-like current lesioned: full 0.5979 ctrl 0.2708 d 6.76 t 19.12
+FAIL V3.4-L1a memory-guided choice (C2 metric) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.4490 ctrl 0.4265 d 0.33 t 0.95
+FAIL V3.4-L1b memory-guided choice (C2 metric) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.3867 ctrl 0.4265 d -0.44 t -1.24
+FAIL V3.4-L2a sleep effect (sleep − forced wake) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.1191 ctrl 0.08997 d 0.47 t 1.33
+FAIL V3.4-L2b sleep effect (sleep − forced wake) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.06283 ctrl 0.08997 d -0.32 t -0.89
+FAIL V3.4-L3a level benefit (C8b metric) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.03424 ctrl 0.04030 d -0.16 t -0.45
+FAIL V3.4-L3b level benefit (C8b metric) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.005794 ctrl 0.04030 d -0.71 t -2.00
+FAIL V3.4-L4a delayed recall (RPT-1) — learned-gate LTC vs fixed [LTC hurts]
+   vs fixed-tau LIF: full 0.5104 ctrl 0.5969 d -1.43 t -4.06
+FAIL V3.4-L4b delayed recall (RPT-1) — hand-set LTC vs fixed [LTC hurts]
+   vs fixed-tau LIF: full 0.4948 ctrl 0.5969 d -1.64 t -4.63
+FAIL V3.4-L5a robustness to tau scale x0.5/x2 — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full -0.01660 ctrl -0.009766 d -0.10 t -0.28
+FAIL V3.4-L5b robustness to tau scale x0.5/x2 — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.01159 ctrl -0.009766 d 0.23 t 0.64
+ROLLUPS: Butlin 7/14, frameworks 6/10, CQM 16/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5
