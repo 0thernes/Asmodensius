@@ -6,7 +6,7 @@ import { mulberry } from "../rng";
 import { BASE_WORLD, KICK_PARTS, PAYOFF, type WorldDials, type CreatureDials, type DiceSource, seededDice } from "./god";
 export type DomeConfig = { radius: number; cell: number; foodCap: number; growth: number; seed: number; touchRadius: number };
 export const DEFAULT_DOME: DomeConfig = { radius: 12, cell: 1, foodCap: 30, growth: 0.004, seed: 1, touchRadius: 1.2 };
-export type Inhabitant = { dials?: CreatureDials; id: string; c: CreatureLab; x: number; y: number; heading: number; path: number; eaten0: number };
+export type Inhabitant = { dials?: CreatureDials; id: string; species?: string; c: CreatureLab; x: number; y: number; heading: number; path: number; eaten0: number };
 export class Dome {
   cfg: DomeConfig; dials: WorldDials = { ...BASE_WORLD }; dice: DiceSource; kicks = 0; detritus = 0; parasiteBiomass = 0; recycled = 0; games = 0; coop = 0; windDir = 0; teleports = 0; lr = 30; rewardWindow = 15; grazerEat = 0.03; grazerBiomass = 0; grazerHeat = 0; localFoodAcc = 0; grazersXY: { x: number; y: number }[] = []; learn = new Map<string, { w: number; base: number; daBase: number; pend?: { c: boolean; p: number; acc?: number; k?: number } }>(); coopLog: number[] = []; n: number; patches: { food: number }[]; t = 0; grown = 0; r: () => number; pop: Inhabitant[] = []; E0 = 0;
   constructor(cfg: Partial<DomeConfig> = {}, dials: Partial<WorldDials> = {}) { this.cfg = { ...DEFAULT_DOME, ...cfg }; this.dials = { ...BASE_WORLD, ...dials }; this.dice = seededDice(this.cfg.seed + 101); this.r = mulberry(this.cfg.seed); this.n = Math.ceil((2 * this.cfg.radius) / this.cfg.cell);
@@ -15,7 +15,7 @@ export class Dome {
   cellAt(x: number, y: number) { const i = Math.min(this.n - 1, Math.max(0, Math.floor((x + this.cfg.radius) / this.cfg.cell))), j = Math.min(this.n - 1, Math.max(0, Math.floor((y + this.cfg.radius) / this.cfg.cell))); return this.patches[j * this.n + i]; }
   light() { const m = this.t % 1440; return Math.max(0, Math.sin(((m - 360) / 1440) * 2 * Math.PI)); } // same 1 tick = 1 min clock as creature 001's SCN; dawn 06:00
   add(id: string, c: CreatureLab, dials?: CreatureDials) { if (!c.body || !c.act || !c.exchange || !c.ledger) throw new Error(`${id} lacks the biosphere body interface`);
-    const a = this.r() * 2 * Math.PI, d = Math.sqrt(this.r()) * this.cfg.radius * 0.8; this.pop.push({ id, c, x: d * Math.cos(a), y: d * Math.sin(a), heading: this.r() * 2 * Math.PI, path: 0, eaten0: c.ledger().intake, dials }); if (dials?.rewireFrac) c.rewire!(dials.rewireFrac, this.dice.next); this.E0 = this.total(); }
+    const a = this.r() * 2 * Math.PI, d = Math.sqrt(this.r()) * this.cfg.radius * 0.8; this.pop.push({ id, species: c.creatureId, c, x: d * Math.cos(a), y: d * Math.sin(a), heading: this.r() * 2 * Math.PI, path: 0, eaten0: c.ledger().intake, dials }); if (dials?.rewireFrac) c.rewire!(dials.rewireFrac, this.dice.next); this.E0 = this.total(); }
   total() { return this.patches.reduce((s, p) => s + p.food, 0) + this.pop.reduce((s, h) => s + h.c.ledger!().energy, 0) + this.detritus + this.parasiteBiomass + this.grazerBiomass + this.grazerHeat; }
   coopProb(id: string) { const L = this.learn.get(id); return L ? 1 / (1 + Math.exp(-L.w)) : NaN; }
   patchFood() { return this.patches.reduce((s, p) => s + p.food, 0); }
@@ -65,6 +65,8 @@ export class Dome {
       const pick = (h: Inhabitant) => { if (this.dials.gameStrategy !== "learned") return h.c.metrics().DA > 0.25 ? "C" : "D"; const L = this.learn.get(h.id) ?? this.learn.set(h.id, { w: 0, base: 0, daBase: h.c.metrics().DA }).get(h.id)!; const p = 1 / (1 + Math.exp(-L.w)); const c = this.dice.next() < p; L.pend = { c, p }; this.coopLog.push(p); return c ? "C" : "D"; };
       const sa = pick(a), sb = pick(b); const pay = (P as any)[sa + sb] as number[]; const patch = this.cellAt(a.x, a.y);
       const want = pay[0] + pay[1]; if (patch.food < want) { if (this.dials.gameStrategy === "learned") { const A = this.learn.get(a.id), B = this.learn.get(b.id); if (A) A.pend = undefined; if (B) B.pend = undefined; } continue; } patch.food -= want; a.c.give!(pay[0]); b.c.give!(pay[1]); if (this.dials.gameStrategy === "learned") { a.c.stimulate("VTA", 0.5 * pay[0]); b.c.stimulate("VTA", 0.5 * pay[1]); } /* payoff reaches the brain as a dopamine burst; the strategy learns from the measured DA response */ this.games++; if (sa === "C") this.coop++; if (sb === "C") this.coop++; } }
+  speciesStats() { const S: Record<string, { n: number; eaten: number; stores: number; integrity: number }> = {}; for (const h of this.pop) { const k = h.species ?? h.c.creatureId, m = h.c.metrics(); const r = (S[k] ??= { n: 0, eaten: 0, stores: 0, integrity: 0 }); r.n++; r.eaten += m.eaten; r.stores += m.stores; r.integrity += m.integrity / 1; }
+    for (const r of Object.values(S)) { r.stores /= r.n; r.integrity /= r.n; } return S; }
   ledger() { const tot = this.total(); return { total: tot, start: this.E0, grown: this.grown, worldLedgerError: Math.abs(tot - this.E0 - this.grown) / this.E0 }; }
   snapshot() { return { t: this.t, cfg: this.cfg, grown: this.grown, patches: this.patches.map((p) => +p.food.toFixed(4)), pop: this.pop.map((h) => ({ id: h.id, x: h.x, y: h.y, heading: h.heading, path: h.path, ledger: h.c.ledger!(), seed: h.c.seed })) }; }
 }

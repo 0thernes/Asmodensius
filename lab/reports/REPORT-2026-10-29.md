@@ -1,8 +1,8 @@
 # Asmodensius lab auto report
 
-Generated 2026-10-29T10:07:45.933Z from 53 result files in lab/out/ (test seeds only). Failures are listed as failures.
+Generated 2026-10-29T10:18:46.838Z from 61 result files in lab/out/ (test seeds only). Failures are listed as failures.
 
-**Totals: 17 PASS, 3 FAIL.**
+**Totals: 20 PASS, 3 FAIL.**
 
 ## dials4
 
@@ -58,6 +58,19 @@ Generated 2026-10-29T10:07:45.933Z from 53 result files in lab/out/ (test seeds 
 | dials6_test_2.json | time anomaly: 3x time-dilation zone covering the dome (r=4) -> eaten per world day | 55.963 | 155.100 | 1.12e-13 | 5.914 | PASS |
 | dials6_test_3.json | time anomaly: frozen-time zone r=2 at centre of r=4 dome -> asleep fraction | 0.578 | 0.335 | 0.001 | -1.407 | PASS |
 | dials6_test_4.json | recycling 0.05 creature waste only, 10 days -> local food | 26.029 | 25.781 | 0.700 | -0.138 | FAIL |
+
+## dials7
+
+| file | dial | control | treated | p | d | result |
+|---|---|---|---|---|---|---|
+| dials7_test_A_ref.json |  |  |  |  |  | n/a |
+| dials7_test_B_contact.json |  |  |  |  |  | n/a |
+| dials7_test_C_window15.json |  |  |  |  |  | n/a |
+| dials7_test_D_lr30.json |  |  |  |  |  | n/a |
+| dials7_test_E_v3repeatedAtN8.json |  |  |  |  |  | n/a |
+| dials7_test_cmp0.json | reward window 15 vs 1 tick: C_window15 vs A_ref (predicted +) | 0.367 | 0.562 | 0.008 | 1.019 | PASS |
+| dials7_test_cmp1.json | partner rule contact vs one-shot: B_contact vs A_ref (predicted null, |d|<0.5) | 0.367 | 0.375 | 0.912 | 0.039 | PASS |
+| dials7_test_cmp2.json | learning rate 30 vs 300: D_lr30 vs A_ref (predicted null, |d|<0.5) | 0.367 | 0.397 | 0.663 | 0.156 | PASS |
 
 ## instr6
 

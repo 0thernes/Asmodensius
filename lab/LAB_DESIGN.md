@@ -50,3 +50,9 @@ This version adds the interface hooks senseLines, drain, give and takeWaste, plu
 
 ## v0.5 status (Round 4)
 New parts regionRates and rateAvg. The motor lens v2 PASSes at 0.66 of the oracle ceiling. The viewer server exposes the instruments as an inspector API. DIALS-v2: 8 PASS (plus the lens), 1 FAIL, 1 not counted (a direction-flag inconsistency in the prereg).
+
+## v0.7 (Round 6)
+- `template/creature.ts`: a minimal spiking creature implementing the full CreatureLab + biosphere surface; `template/scaffold.ts 002..100` copies it for a new creature (to lab/out/scaffold/NNN by default; creatures/NNN belongs to each creature's worker).
+- `conformance/suite.ts`: 16 required checks + 2 optional ones (identity, parts, couplings, determinism, metrics, state round trip, stimulation, lesions, motor, biosphere hooks, body, dome ledger, God-hook conservation, direct per-hook booking, foraging, movement). `conformance/run.ts`: 001 16/16, template 16/16, and 3 broken mutants are all rejected.
+- Multi-species dome: `Inhabitant.species`, `Dome.speciesStats()`, viewer `SPECIES="001:5,template:3"`, species colours, and persistence restores each creature with its own factory. `multispecies.ts`: integration test.
+- `instruments/rpt.ts`: early/late evoked-response probe for recurrent processing.
