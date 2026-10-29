@@ -58,6 +58,10 @@ export class Lin { W: Float64Array; constructor(public nOut: number, public nIn:
   out(x: ArrayLike<number>): number[] { const z: number[] = []; for (let k = 0; k < this.nOut; k++) z.push(mdot(this.W, x, k * (this.nIn + 1))); return z; }
   learn(x: ArrayLike<number>, target: number, lr: number, beta = 3): void { const p = msoftmax(this.out(x), beta); for (let k = 0; k < this.nOut; k++) { const g = (k === target ? 1 : 0) - p[k]; const o = k * (this.nIn + 1); for (let i = 0; i < this.nIn; i++) this.W[o + i] += lr * g * x[i]; this.W[o + this.nIn] += lr * g; } }
   regress(x: ArrayLike<number>, y: number[], lr: number): void { const z = this.out(x); let n = 1; for (let i = 0; i < x.length; i++) n += x[i] * x[i]; for (let k = 0; k < this.nOut; k++) { const g = (y[k] - z[k]) / n; const o = k * (this.nIn + 1); for (let i = 0; i < this.nIn; i++) this.W[o + i] += lr * g * x[i]; this.W[o + this.nIn] += lr * g; } } }
+/** v3.5: recursive least squares (exponentially forgetting) for the insula's causal glucose model: converges to the least-squares solution instead of NLMS's noisy steps */
+export class RLS { w: Float64Array; P: Float64Array; n: number; constructor(nIn: number, public lam: number) { this.n = nIn + 1; this.w = new Float64Array(this.n); this.P = new Float64Array(this.n * this.n); for (let i = 0; i < this.n; i++) this.P[i * this.n + i] = 100; }
+  out(x: ArrayLike<number>): number { let z = this.w[this.n - 1]; for (let i = 0; i < this.n - 1; i++) z += this.w[i] * x[i]; return z; }
+  fit(x: ArrayLike<number>, y: number): void { const n = this.n, u = new Float64Array(n); for (let i = 0; i < n - 1; i++) u[i] = x[i]; u[n - 1] = 1; const Pu = new Float64Array(n); let den = this.lam; for (let i = 0; i < n; i++) { let a = 0; for (let j = 0; j < n; j++) a += this.P[i * n + j] * u[j]; Pu[i] = a; den += u[i] * a; } const e = y - this.out(x); for (let i = 0; i < n; i++) this.w[i] += (Pu[i] / den) * e; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) this.P[i * n + j] = (this.P[i * n + j] - (Pu[i] * Pu[j]) / den) / this.lam; } }
 // Kalman attention schema over [focus, drift] (shared for self and for modelling another agent)
 export class Kal { x = [0, 0]; P = [[1, 0], [0, 1]]; constructor(public q = 0.002, public qd = 0.0004, public r = 0.09) {}
   predict(u = 0): number { const [p, d] = this.x; this.x = [p + d + u, d]; const P = this.P; this.P = [[P[0][0] + 2 * P[0][1] + P[1][1] + this.q, P[0][1] + P[1][1]], [P[0][1] + P[1][1], P[1][1] + this.qd]]; return this.x[0]; }
@@ -75,20 +79,29 @@ export class Mind {
   wv = new Float64Array(53); el = new Float64Array(53); V = 0; Vprev = 0; tdErr = 0;
   arm = 0; gTrue = 1; gHat = 1; efference = 0; dArmPred = 0; dArmObs = 0; push = 0; motor = 0;
   intero = new Lin(1, 5); interoBuf: { x: number[]; at: number }[] = []; glcPred = 0;
-  cost = 0; rew = 0; prevC = -1; epi: { x: number[]; y: number }[] = []; replays = 0; g: Organism | null = null; Tm = new Int16Array(64).fill(-1); Qmf = new Float64Array(64); sweeps = 0;
+  // v3.5: reward is a setter so the actor knows a reward event happened (policy-gradient credit to the last decision)
+  _rew = 0; rewSet = false; get rew(): number { return this._rew; } set rew(v: number) { this._rew = v; this.rewSet = true; }
+  meta2 = new Float64Array(8); confF: number[] = [0, 0, 0, 0, 0, 0, 0, 1]; pgX: Float64Array | null = null; pgA = -1; pgP: number[] = [0.25, 0.25, 0.25, 0.25]; rbar = 0; pbar = [0.25, 0.25, 0.25, 0.25]; interoBuf2: { x: number[]; at: number; g0: number }[] = []; rls = new RLS(5, M35.rlsLam); reVar = [0.1, 0.1, 0.1, 0.1];
+  cost = 0; prevC = -1; epi: { x: number[]; y: number }[] = []; replays = 0; g: Organism | null = null; Tm = new Int16Array(64).fill(-1); Qmf = new Float64Array(64); sweeps = 0;
   constructor(r: () => number) { for (let m = 0; m < NMOD; m++) { this.rate.push(new Float64Array(MW)); this.post.push([0.25, 0.25, 0.25, 0.25]); this.cls.push(new Lin(4, MW)); this.recon.push(new Lin(4, MW)); this.proto.push([0, 1, 2, 3].map((k) => [0, 1, 2, 3].map((j) => (j === k ? 0.5 : 0.1)))); this.percept.push([0, 0, 0, 0]); this.plv.push([0, 1, 2, 3].map(() => ({ c: 0, s: 0 }))); }
     for (let i = 0; i < this.meta.length; i++) this.meta[i] = 0; void r; }
   // one tick: called by Organism.step after the spiking substeps
-  step(g: Organism): void { this.g = g; const o = g.o, ne = g.nm.NE.E, ach = g.nm.ACh.E; this.cost = 0;
+  step(g: Organism): void { this.g = g; const o = g.o, ne = g.nm.NE.E, ach = g.nm.ACh.E; this.cost = 0; const v35 = (o.mind ?? MIND_DEFAULT) === "v35";
+    // v3.5 actor: a reward event credits the previous decision (REINFORCE with a running-average baseline; Williams 1992), so action mappings are learned from outcomes, not only from labels
+    if (v35 && this.rewSet && this.pgX && this.pgA >= 0 && g.learn) { const adv = this._rew - this.rbar; this.rbar += 0.05 * (this._rew - this.rbar); const W = this.act.W, n = this.act.nIn + 1;
+      for (let k = 0; k < 4; k++) this.pbar[k] += 0.02 * (this.pgP[k] - this.pbar[k]); const Lb = this.pgP.reduce((a, p, j) => a + p * Math.log(this.pbar[j] + 1e-9), 0); for (let k = 0; k < 4; k++) { const gk = M35.pgLr * adv * ((k === this.pgA ? 1 : 0) - this.pgP[k]) - M35.entK * this.pgP[k] * (Math.log(this.pbar[k] + 1e-9) - Lb); /* marginal-entropy (action-diversity) regulariser: penalises collapse onto one stimulus-independent action without flattening stimulus-specific choices */ for (let i = 0; i < 8; i++) W[k * n + i] += gk * this.pgX[i]; W[k * n + 8] += gk; } }
+    this.rewSet = false;
     const c34 = o.cortex !== "v31"; for (let m = 0; m < NMOD; m++) this.ampPrev[m] = this.amp[m]; // v3.4: previous-tick amplitude (onset salience)
     for (let m = 0; m < NMOD; m++) { let s = 0; for (let j = 0; j < MW; j++) { const ix = R0.CTX + m * MW + j, v = g.rate[ix]; this.rate[m][j] = c34 ? CX.norm * (v - g.rateAvg[ix]) : v; s += v; } this.amp[m] = s / MW; // v3.4: readouts see adaptation-normalised rates
       this.post[m] = msoftmax(this.cls[m].out(this.rate[m]), 3);
       // perception: bottom-up linear reconstruction of the 4 sensory lines; top-down: precision-weighted generative prototype (HOT-1)
       const bu = this.recon[m].out(this.rate[m]); const pm = this.post[m]; const tdv = [0, 1, 2, 3].map((j) => pm.reduce((a, p, k) => a + p * this.proto[m][k][j], 0)); const pr = Math.max(...pm);
-      this.percept[m] = o.topdownLesion ? bu : bu.map((b, j) => (1 - pr) * b + pr * tdv[j]); for (let j = 0; j < 4; j++) this.td[m * 4 + j] = o.topdownLesion ? 0 : 0.25 * pr * tdv[j]; }
+      if (v35 && !o.topdownLesion) { /* v3.5: precision-weighted generative top-down: sharpened posterior selects the learned prototype; weight = posterior precision */ const lg = this.cls[m].out(this.rate[m]); const ps0 = msoftmax(lg, M35.tdBeta); const s2 = Math.max(0.01, M35.tdS * this.reVar[m]); const ll = ps0.map((p, k) => M35.tdPrior * Math.log(p + 1e-9) - this.proto[m][k].reduce((a, q, j) => a + (bu[j] - q) ** 2, 0) / (2 * s2)); const mx = Math.max(...ll); const ez = ll.map((v) => Math.exp(v - mx)); const zs = ez.reduce((a, v) => a + v, 0); const ps = ez.map((v) => v / zs); /* Bayesian fusion: cortical class prior x Gaussian likelihood of the bottom-up reconstruction under each learned prototype, noise variance = learned recon error */ const pr2 = Math.max(...ps); for (let j = 0; j < 4; j++) tdv[j] = ps.reduce((a, p, k) => a + p * this.proto[m][k][j], 0); const w = Math.min(1, M35.tdGain * pr2); this.percept[m] = bu.map((b, j) => (1 - w) * b + w * tdv[j]); }
+      else this.percept[m] = o.topdownLesion ? bu : bu.map((b, j) => (1 - pr) * b + pr * tdv[j]); for (let j = 0; j < 4; j++) this.td[m * 4 + j] = o.topdownLesion ? 0 : 0.25 * pr * tdv[j]; }
     // global workspace: salience competition, NE lowers the ignition threshold, incumbent hysteresis; 1 slot
     const mt = c34 ? MT : MT31; const thr = mt.ignThr * (1.3 - 0.6 * Math.min(1, ne)); let best = -1, bs = 0; // v3.4: workspace constants re-tuned on seeds 2000+ (v3.1 values kept for cortex "v31")
-    for (let m = 0; m < NMOD; m++) { this.sal[m] = Math.max(0, this.amp[m] - mt.ampBase * this.ampPrev[m]) * this.att[m] * (mt.salOff + Math.max(...this.post[m])) ** mt.confExp * (m === this.win ? mt.hyst : 1); if (this.sal[m] > bs) { bs = this.sal[m]; best = m; } }
+    const thc = [0, 0, 0, 0]; if (v35) for (let m = 0; m < NMOD; m++) { /* v3.5: salience = thalamic input contrast (pulvinar-like bottom-up salience: peak minus mean of the module's 4 relay lines), not the adaptation-normalised cortical amplitude */ let mx = 0, sm = 0; for (let j = 0; j < 4; j++) { const v = M35.salSens ? g.rate[R0.SENS + m * 4 + j] : g.rate[R0.THAL + m * 4 + j]; mx = Math.max(mx, v); sm += v; } thc[m] = M35.salK * (mx - sm / 4); }
+    for (let m = 0; m < NMOD; m++) { this.sal[m] = Math.max(0, (v35 ? thc[m] : this.amp[m]) - mt.ampBase * this.ampPrev[m]) * this.att[m] * (mt.salOff + Math.max(...this.post[m])) ** mt.confExp * (m === this.win ? mt.hyst : 1); if (this.sal[m] > bs) { bs = this.sal[m]; best = m; } }
     const prevWin = this.win; this.bc.fill(0);
     if (o.gwLesion) { this.win = -1; for (let m = 0; m < NMOD; m++) for (let k = 0; k < 4; k++) this.bc[4 + k] += this.post[m][k] / NMOD; this.bc.fill(0.25, 0, 4); }
     else if (bs > thr) { this.win = best; this.bc[best] = 1; for (let k = 0; k < 4; k++) this.bc[4 + k] = this.post[best][k]; } else this.win = -1;
@@ -101,7 +114,9 @@ export class Mind {
     const z = this.act.out(this.bc); this.actP = msoftmax(z, 2 + 6 * Math.min(1, g.nm.DA.E + 0.2)); const srt = this.actP.slice().sort((a, b) => b - a); this.margin = srt[0] - srt[1];
     this.lastAct = this.action; let u = g.r(); let a = 0; for (; a < 3; a++) { u -= this.actP[a]; if (u < 0) break; } this.action = a;
     // metacognition: second-order monitor on margin, consistency, NE, adenosine
-    const f = [this.margin, this.action === margmax(this.actP) ? 1 : 0, ne, g.S, 1]; this.conf = 1 / (1 + Math.exp(-f.reduce((s, v, i) => s + v * this.meta[i], 0)));
+    if (v35) { /* v3.5 higher-order monitor: reads first-order states (chosen-action probability, margin, winner posterior, evidence amplitude, greedy flag, NE, adenosine) */ const wm = this.win >= 0 ? this.win : margmax(this.amp); this.confF = [this.actP[this.action], this.margin, Math.max(...this.post[wm]), 4 * this.amp[wm], this.action === margmax(this.actP) ? 1 : 0, ne, g.S, 1]; this.conf = 1 / (1 + Math.exp(-this.confF.reduce((s, v, i) => s + v * this.meta2[i], 0))); }
+    else { const f = [this.margin, this.action === margmax(this.actP) ? 1 : 0, ne, g.S, 1]; this.conf = 1 / (1 + Math.exp(-f.reduce((s, v, i) => s + v * this.meta[i], 0))); }
+    if (v35 && this.win >= 0) { this.pgX = Float64Array.from(this.bc); this.pgA = this.action; this.pgP = this.actP.slice(); }
     // predictive coding: predict this tick's sensory lines from last tick's cortex; error -> LC
     for (let i = 0; i < 16; i++) { this.ppMean[i] += 0.05 * (g.sens[i] - this.ppMean[i]); } const P = o.ppLesion ? Array.from(this.ppMean) : this.pp.out(this.ctxPrev); let e = 0; for (let i = 0; i < 16; i++) { this.pred[i] = P[i]; e += (g.sens[i] - P[i]) ** 2; } this.ppErr = e / 16;
     if (!o.ppLesion && !o.ppFreeze && g.learn) this.pp.regress(this.ctxPrev, Array.from(g.sens), 0.5); g.predErr += 0.3 * Math.min(1, this.ppErr);
@@ -116,24 +131,27 @@ export class Mind {
     for (let m = 0; m < NMOD; m++) for (let n = 0; n < NMOD; n++) { const dp = this.phase[m] - this.phase[n]; const P2 = this.plv[m][n]; P2.c += 0.2 * (Math.cos(dp) - P2.c); P2.s += 0.2 * (Math.sin(dp) - P2.s); }
     // TD value with eligibility traces over cortical module neurons (UAL); TD error -> DA
     const xv: number[] = []; for (let m = 0; m < NMOD; m++) for (let j = 0; j < MW; j++) xv.push(this.rate[m][j]); this.Vprev = this.V; this.V = mdot(this.wv, xv); this.tdErr = this.rew + 0.9 * this.V - this.Vprev;
-    if (g.learn) { let nn = 1; for (let i = 0; i < 53; i++) nn += this.el[i] * this.el[i]; const lr = 0.3 * Math.max(-1, Math.min(1, this.tdErr)) / nn; for (let i = 0; i < 53; i++) this.wv[i] += lr * this.el[i]; } // normalised TD (NLMS) step; v3.1 tuning fix: the unnormalised step diverged on seeds 2000+ g.nm.DA.E += 0.05 * Math.max(0, this.tdErr);
-    const lam = o.traceLesion ? 0 : 0.8; for (let i = 0; i < 52; i++) this.el[i] = lam * this.el[i] + xv[i]; this.el[52] = lam * this.el[52] + 1; this.rew = 0;
+    if (g.learn) { let nn = 1; for (let i = 0; i < 53; i++) nn += this.el[i] * this.el[i]; const lr = (v35 ? M35.ualLr : 0.3) * Math.max(-1, Math.min(1, this.tdErr)) / nn; for (let i = 0; i < 53; i++) this.wv[i] += lr * this.el[i]; } // normalised TD (NLMS) step; v3.1 tuning fix: the unnormalised step diverged on seeds 2000+ g.nm.DA.E += 0.05 * Math.max(0, this.tdErr);
+    const lam = o.traceLesion ? 0 : v35 ? M35.ualLam : 0.8; for (let i = 0; i < 52; i++) this.el[i] = lam * this.el[i] + xv[i]; this.el[52] = lam * this.el[52] + 1; this._rew = 0;
     // body: arm moved by motor command (efference copy) with unknown gain; external pushes; forward model learned (NLMS) and inverted
     this.dArmPred = o.efferenceLesion ? 0 : (o.fwdLesion ? 1 : this.gHat) * this.efference; const dA = this.gTrue * this.efference + this.push; this.arm = Math.max(-2, Math.min(2, this.arm + dA)); this.dArmObs = dA + 0.02 * g.gauss();
     if (!o.efferenceLesion && !o.fwdLesion && g.learn && Math.abs(this.efference) > 1e-3 && this.push === 0) this.gHat += 0.5 * (this.dArmObs - this.gHat * this.efference) * this.efference / (this.efference ** 2 + 0.01);
     this.motor = Math.abs(this.efference); this.efference = 0; this.push = 0;
     // interoceptive causal model: predict blood glucose 30 min ahead from current physiology (insula); trained online
-    const xi = [g.blood.glc / 3, g.gut.glc / 5, g.insulin, g.glucagon, g.motility]; this.glcPred = 3 * this.intero.out(xi)[0]; this.interoBuf.push({ x: xi, at: g.t + 30 }); while (this.interoBuf.length && this.interoBuf[0].at <= g.t) { const b = this.interoBuf.shift() as { x: number[]; at: number }; if (g.learn) this.intero.regress(b.x, [g.blood.glc / 3], 0.3); }
+    const xi = [g.blood.glc / 3, g.gut.glc / 5, g.insulin, g.glucagon, g.motility];
+    if (v35) { /* v3.5: the causal model predicts the CHANGE in glucose over 30 min from gut load and hormones (residual on persistence) */ this.glcPred = g.blood.glc + 3 * this.rls.out(xi); this.interoBuf2.push({ x: xi, at: g.t + 30, g0: g.blood.glc }); while (this.interoBuf2.length && this.interoBuf2[0].at <= g.t) { const b = this.interoBuf2.shift() as { x: number[]; at: number; g0: number }; if (g.learn) this.rls.fit(b.x, (g.blood.glc - b.g0) / 3); } } else {
+    this.glcPred = 3 * this.intero.out(xi)[0]; this.interoBuf.push({ x: xi, at: g.t + 30 }); while (this.interoBuf.length && this.interoBuf[0].at <= g.t) { const b = this.interoBuf.shift() as { x: number[]; at: number }; if (g.learn) this.intero.regress(b.x, [g.blood.glc / 3], 0.3); } }
     // hippocampal replay of stored action episodes into the action readout (awake ripples: 1/tick; NREM: 6/tick); lesioned with o.replay = "none"
     if (g.learn && o.replay !== "none" && this.epi.length) { const n = g.stage === 0 ? 1 : g.stage >= 2 && g.stage <= 3 ? 6 : 0; for (let k = 0; k < n; k++) { const e = this.epi[Math.floor(g.r() * this.epi.length)]; this.act.learn(e.x, e.y, 0.05); this.replays++; } this.cost += 0.00001 * n; }
     this.cost += 0.00002 * (this.ign + 1); }
   // ---- task-facing learning signals (feedback, as a trainer or the world would give) ----
   teach(m: number, label: number, clean?: number[]): void { if (this.g && this.g.o.eprop) this.g.epropLearn(m, label, clean ?? [0, 1, 2, 3].map((j) => (j === label ? 1 : 0))); const lr = 0.08 * (0.5 + 0.5 * Math.min(1, (this.g ? this.g.nm.ACh.E : 0.3))); this.cls[m].learn(this.rate[m], label, lr); const x = clean ?? [0, 1, 2, 3].map((j) => (j === label ? 1 : 0));
+    { const bu0 = this.recon[m].out(this.rate[m]); let e2 = 0; for (let j = 0; j < 4; j++) e2 += (x[j] - bu0[j]) ** 2; this.reVar[m] += 0.05 * (e2 / 4 - this.reVar[m]); }
     this.recon[m].regress(this.rate[m], x, 0.2); for (let j = 0; j < 4; j++) this.proto[m][label][j] += 0.1 * (x[j] - this.proto[m][label][j]); }
   teachAction(label: number, lr = 0.15): void { this.act.learn(this.bc, label, lr); this.epi.push({ x: Array.from(this.bc), y: label }); if (this.epi.length > 300) this.epi.shift(); }
   teachRecv(label: number): void { this.recv.learn(this.bcOut, label, 0.15); }
   teachReport(): void { this.rep.learn(this.bcOut, this.action, 0.15); }
-  teachConf(correct: boolean): void { const f = [this.margin, this.action === margmax(this.actP) ? 1 : 0, (this.g ? this.g.nm.NE.E : 0.3), (this.g ? this.g.S : 0.4), 1]; const e = (correct ? 1 : 0) - this.conf; for (let i = 0; i < 5; i++) this.meta[i] += 0.3 * e * f[i]; }
+  teachConf(correct: boolean): void { if (this.g && (this.g.o.mind ?? MIND_DEFAULT) === "v35") { const e = (correct ? 1 : 0) - this.conf; let nn = 1; for (const v of this.confF) nn += v * v; for (let i = 0; i < 8; i++) this.meta2[i] += M35.confLr * e * this.confF[i] / nn * 4; return; } const f = [this.margin, this.action === margmax(this.actP) ? 1 : 0, (this.g ? this.g.nm.NE.E : 0.3), (this.g ? this.g.S : 0.4), 1]; const e = (correct ? 1 : 0) - this.conf; for (let i = 0; i < 5; i++) this.meta[i] += 0.3 * e * f[i]; }
   rewardQuery(r: number): void { if (!this.lastQ) return; const [w, c, m] = this.lastQ; const i = (w * 4 + c) * 4 + m; this.Wq[i] += 0.2 * (r - this.Wq[i]); }
   // model-based planning over a learned transition model (hippocampal sweeps); sweeps scale with intelligence level; model-free Q as the lesion control
   observe(s: number, a: number, s2: number, r: number): void { this.Tm[s * 4 + a] = s2; const i = s * 4 + a; let mx = 0; for (let b = 0; b < 4; b++) mx = Math.max(mx, this.Qmf[s2 * 4 + b]); this.Qmf[i] += 0.3 * (r + 0.9 * mx - this.Qmf[i]); }
@@ -158,6 +176,13 @@ export const CX = { tc: 1.2, tcSig: 0.55, tcSum: 6.0, ffI: 0.3, eI: 0.5, iE: 0.6
 export const LTC_INIT = [Math.log(1 / Math.log(1.25)), 1.5, 0.5, 0.5]; // e-prop starting point = fixed-tau decay 0.8 per substep when gates are closed
 // Frozen 2026-10-29: mean theta after train_eprop.ts 16 tuning seeds (2000-2015) x 3 epochs, eta 0.02 (results/v34_tuning/eprop_training.json). SD 0.099 0.021 0.054 0.009.
 export const LTC_LEARNED = [1.3115, 1.4248, 0.4722, 0.5351];
+// v3.5 Mind/decision constants (tuned on seeds 2000..2015 only; frozen in prereg v3.5 §F). V35TUNE env (JSON) overrides are for tuning runs only.
+export const M35: Record<string, number> = { tdPrior: 0, tdS: 1, entK: 1, rlsLam: 0.9995, tdBeta: 8, tdGain: 0.5, confLr: 0.2, pgLr: 0.3, xW: 2, xP: 0.05, featIt: 4, salK: 1, orxK: 1.2, salSens: 1, remAll: 1, remLr: 0.25, lrBase: 0.1, lrVol: 0.4, efeK: 0.6, efeTau: 200, efeVis: 0.5, ualLr: 0.3, ualLam: 0.8, interoLr: 0.3 };
+declare const process: { env: Record<string, string | undefined> } | undefined;
+try { const e = typeof process !== "undefined" ? process.env.V35TUNE : undefined; if (e) Object.assign(M35, JSON.parse(e)); } catch { /* browser */ }
+// default Mind version: "v35"; ORG_MIND=v34 (node) reproduces the v3.4 organism bit-for-bit. LTC stays OFF by default (opt-in via o.ltc; it hurt delayed recall in v3.3/v3.4).
+export const MIND_DEFAULT: "v34" | "v35" = (() => { try { return typeof process !== "undefined" && process.env.ORG_MIND === "v34" ? "v34" : "v35"; } catch { return "v35"; } })();
+export const LTC_DEFAULT = false;
 // ---------------- options: lesions, clamps, conditions ----------------
 export type Opts = { seed: number; entropy?: "seeded" | "crypto"; noise?: "quantum" | "classical"; starve?: boolean; vagotomy?: boolean; scnLesion?: boolean; insulaLesion?: boolean; kappaShuffle?: boolean;
   sympathectomy?: boolean; replay?: "full" | "none" | "nremOnly" | "remShuffle"; forceWake?: boolean; daClamp?: number; level?: number; leakyLedger?: boolean; access?: "half" | "all";
@@ -168,7 +193,9 @@ export type Opts = { seed: number; entropy?: "seeded" | "crypto"; noise?: "quant
   // v3.2: set to "v30" to run the v3.0 decision/replay rules (for comparison only)
   decision?: "v32" | "v30"; ltc?: boolean | "learned" /* v3.3 liquid time-constant neurons; v3.4 "learned": CTX-E gates from e-prop training (LTC_LEARNED) */; tauScale?: number /* v3.3 robustness: multiplies every neuron's base time constant */;
   // v3.4 cortex: "v34" (default) = topographic TC fan + module E/I loops + STDP + homeostasis + NMDA-like recurrent persistence + developmental waves; "v31" reproduces the v3.1 cortex bit-for-bit
-  cortex?: "v31" | "v34"; devLesion?: boolean; stdpLesion?: boolean; homeoLesion?: boolean; eiLesion?: boolean; nmdaLesion?: boolean; eprop?: boolean /* v3.4: run the e-prop gate learning online (training curriculum only) */ };
+  cortex?: "v31" | "v34"; devLesion?: boolean; stdpLesion?: boolean; homeoLesion?: boolean; eiLesion?: boolean; nmdaLesion?: boolean; eprop?: boolean /* v3.4: run the e-prop gate learning online (training curriculum only) */;
+  // v3.5: Mind/decision version ("v35" default; "v34" reproduces v3.4)
+  mind?: "v34" | "v35" };
 export const SITES = 16; // 4 colours x 4 shapes; reward p = 0.05 + 0.25 cv[c] + 0.25 sv[s]
 export const STAGES = ["WAKE", "N1", "N2", "N3", "REM"] as const;
 
@@ -187,7 +214,7 @@ export class Organism {
   // neuromodulators: vesicle pool P, extracellular E
   nm: Record<string, { P: number; E: number }> = { DA: { P: 1, E: 0.3 }, "5HT": { P: 1, E: 0.3 }, NE: { P: 1, E: 0.3 }, ACh: { P: 1, E: 0.3 }, Glu: { P: 1, E: 0.3 }, GABA: { P: 1, E: 0.3 }, eCB: { P: 0.5, E: 0.1 } };
   // sleep / circadian
-  S = 0.4; scnPhase = 0 /* radians, 0 = midnight */; stage = 0; ultra = 0; awakeMin = 0; asleep = false; light = 1;
+  S = 0.4; orx = 0; scnPhase = 0 /* radians, 0 = midnight */; stage = 0; ultra = 0; awakeMin = 0; asleep = false; light = 1;
   // latent / curvature / interoception
   pc: Float64Array[] = []; z: number[][] = []; kappa = 0; kHist: number[] = []; liminal = 0; predErr = 0;
   // quantum
@@ -199,7 +226,7 @@ export class Organism {
   nmda = new Float32Array(NNEU); pk: Uint8Array = new Uint8Array(0); thA = new Float32Array(NNEU); inn: number[][] = []; devSens = new Float32Array(16); rd: Rng = mulberry(1); rateAvg = new Float32Array(NNEU).fill(0.12);
   gate: number[] = LTC_LEARNED.slice(); elig = new Float64Array(NNEU * 4); eligT = new Float64Array(NNEU * 4); gHist: number[][] = []; // gate is reset to LTC_INIT in the constructor when o.eprop (training)
   sens = new Float32Array(16); kind: Uint8Array; mask: Float32Array; mind: Mind; integrity = 1; tissue = 10; damageTaken = 0; cogCost = 0; pBase = new Float32Array(SITES); depl = new Float32Array(SITES);
-  danger = new Float32Array(SITES); wAv = new Float32Array(SITES); visits = new Float32Array(SITES); lastVisit = new Float32Array(SITES); vol = 0; modLesion = [false, false, false, false]; dead = false; lowGlc = 0;
+  danger = new Float32Array(SITES); wAv = new Float32Array(SITES); visits = new Float32Array(SITES); lastVisit = new Float32Array(SITES); vol = 0; assocPH = new Float32Array(SITES).fill(0.5); modLesion = [false, false, false, false]; dead = false; lowGlc = 0;
   constructor(o: Opts) { this.o = { noise: "quantum", replay: "full", entropy: "seeded", access: "half", ...o }; this.r = mulberry(o.seed * 7919 + 17); if (o.eprop) this.gate = LTC_INIT.slice();
     const er = mulberry(o.seed * 104729 + 3); this.ent = this.o.entropy === "crypto" && typeof crypto !== "undefined" ? (() => { const b = new Uint32Array(1); crypto.getRandomValues(b); return b[0] / 4294967296; }) : er;
     const r = this.r; const pre: number[] = [], post: number[] = [], w: number[] = [], pl: number[] = []; const has = new Set<number>();
@@ -220,7 +247,9 @@ export class Organism {
         for (let n = 0; n < 13; n++) { const pos = (3 * perm[n]) / 12; add(R0.THAL + i, E(mm, n), CX.tc * Math.exp(-((pos - j) ** 2) / (2 * CX.tcSig ** 2)) * (0.8 + 0.4 * rc()), 1, 1); }
         for (let k = 0; k < 3; k++) add(R0.THAL + i, I(mm, k), CX.ffI, 5, 0); } // feedforward inhibition
       for (let m = 0; m < 4; m++) { for (let n = 0; n < 13; n++) for (let k = 0; k < 3; k++) { add(E(m, n), I(m, k), CX.eI * (0.8 + 0.4 * rc()), 6, 0); add(I(m, k), E(m, n), -CX.iE * (0.8 + 0.4 * rc()), 7, 3); } // E/I loop; I->E plastic (Vogels 2011)
-        for (let a = 0; a < 13; a++) for (let b = 0; b < 13; b++) if (a !== b) add(E(m, a), E(m, b), CX.rec0 * (0.5 + rc()), 2, 2); } } // within-module recurrent, NMDA-like, STDP (assemblies)
+        for (let a = 0; a < 13; a++) for (let b = 0; b < 13; b++) if (a !== b) add(E(m, a), E(m, b), CX.rec0 * (0.5 + rc()), 2, 2); }
+      if ((o.mind ?? MIND_DEFAULT) === "v35") { const rx = mulberry(o.seed * 6113 + 29); /* v3.5: sparse cross-module E->E synapses (kind 3) onto coincidence-detecting E cells: a cell fires strongly only when its own TC input and the cross input coincide -> conjunctive (mixed-selectivity) codes */
+        for (let m = 0; m < 4; m++) for (let n = 0; n < 4; n++) if (m !== n) for (let a = 0; a < 13; a++) for (let b = 0; b < 13; b++) if (rx() < M35.xP) add(E(m, a), E(n, b), M35.xW * (0.5 + rx()), 3, 0); } } // within-module recurrent, NMDA-like, STDP (assemblies)
     this.syn = { pre: Int32Array.from(pre), post: Int32Array.from(post), w: Float32Array.from(w), plastic: Uint8Array.from(pl) }; this.kind = Uint8Array.from(kd); this.pk = Uint8Array.from(pkk); this.rd = mulberry(o.seed * 4441 + 9); this.mask = new Float32Array(pre.length).fill(1); this.mind = new Mind(ra);
     for (let i = 0; i < NNEU; i++) { this.out.push([]); this.th[i] = 1 + 0.1 * r(); } pre.forEach((p, s) => this.out[p].push(s)); for (let i = 0; i < NNEU; i++) this.inn.push([]); post.forEach((q, s2) => { if (this.pk[s2]) this.inn[q].push(s2); });
     const cv = [0, 1, 2, 3].sort(() => r() - 0.5), sv = [0, 1, 2, 3].sort(() => r() - 0.5);
@@ -255,8 +284,9 @@ export class Organism {
     // sleep: two-process (S adenosine, C circadian) flip-flop
     const C = 0.25 * scnOut + 0.1 * Math.sin(2 * Math.PI * this.ultra) * (this.asleep ? 0 : 0.5);
     const drive = this.S - C + 0.15 * this.melatonin; const forced = o.forceWake || (this.stim.LC || 0) > 3;
-    if (!this.asleep && drive > 0.62 && !forced) { this.asleep = true; this.ultra = 0; } else if (this.asleep && (drive < 0.2 || forced)) this.asleep = false;
-    this.liminal = Math.exp(-((drive - (this.asleep ? 0.2 : 0.62)) ** 2) / 0.004);
+    let thrS = 0.62; if ((o.mind ?? MIND_DEFAULT) === "v35") { /* v3.5: orexin-like arousal: sustained sensory engagement (task stimulation) holds the sleep/wake flip-flop in wake (Saper et al. 2010); S keeps accumulating, so the debt is paid later */ let eng = 0; for (let i = 0; i < 16; i++) eng += this.sens[i]; this.orx += 0.02 * (Math.min(1, eng) - this.orx); thrS += M35.orxK * this.orx; }
+    if (!this.asleep && drive > thrS && !forced) { this.asleep = true; this.ultra = 0; } else if (this.asleep && (drive < 0.2 || forced)) this.asleep = false;
+    this.liminal = Math.exp(-((drive - (this.asleep ? 0.2 : thrS)) ** 2) / 0.004);
     if (!this.asleep) this.stage = 0; else { const u = this.ultra; this.stage = u < 0.1 ? 1 : u < 0.3 ? 2 : u < 0.75 - 0.25 * clamp(0.6 - this.S) ? (this.S > 0.35 ? 3 : 2) : 4; }
     const awake = this.stage === 0, rem = this.stage === 4, n3 = this.stage === 3;
     // hormones
@@ -350,16 +380,18 @@ export class Organism {
       let got = r() < this.pTrue[k]; if (got && o.pool) { if (o.pool.food >= 2.2) o.pool.food -= 2.2; else got = false; } if (got && !o.starve) { this.feed(2.2); this.rewards++; }
       if (o.deplete && got) this.depl[k] = 1; this.visits[k]++; this.lastVisit[k] = this.t;
       if (o.danger && r() < this.danger[k]) { this.damage(0.08); this.predErr += 0.5; if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.3 * (1 - this.wAv[k]); } else if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.05 * (0 - this.wAv[k]);
-      const rew = got && !o.starve ? 1 : 0; if (this.learn && !o.rpeLesion) { const rpe = rew - this.wSite[k]; this.vol += 0.05 * (Math.abs(rpe) - this.vol); this.nm.DA.E += 0.05 * Math.max(0, rpe) * prec; this.wSite[k] += 0.01 * rpe * (0.5 + nmE("ACh")); // slow striatal learning; hippocampus stores the episode (complementary learning systems)
+      const rew = got && !o.starve ? 1 : 0; if (this.learn && !o.rpeLesion) { const rpe = rew - this.wSite[k]; this.vol += 0.05 * (Math.abs(rpe) - this.vol); this.nm.DA.E += 0.05 * Math.max(0, rpe) * prec; const v35d = (o.mind ?? MIND_DEFAULT) === "v35"; if (v35d) { /* v3.5: Pearce-Hall associability: per-site learning rate tracks recent unsigned RPE, so learning speeds up after reversals */ this.wSite[k] += (M35.lrBase + M35.lrVol * this.assocPH[k]) * rpe * (0.5 + nmE("ACh")); this.assocPH[k] = 0.7 * this.assocPH[k] + 0.3 * Math.abs(rpe); } else this.wSite[k] += 0.01 * rpe * (0.5 + nmE("ACh")); // slow striatal learning; hippocampus stores the episode (complementary learning systems)
         if (r() < 0.3 + 0.6 * nmE("ACh")) { this.episodes.push({ k, r: rew, p: Math.abs(rpe) }); if (this.episodes.length > 200) this.episodes.shift(); } } }
     // ---------- sleep replay (NREM: consolidation) and dreams (REM: generative recombination) ----------
     if (this.learn && !o.rpeLesion && o.replay !== "none" && !awake && this.episodes.length) { const E = this.episodes; const v32 = o.decision !== "v30"; let tot = 0; if (v32) for (const ep of E) tot += ep.p + 0.05;
       const pick = (): { k: number; r: number; p: number } => { if (!v32) return E[Math.floor(E.length * r())]; let u = r() * tot; for (const ep of E) { u -= ep.p + 0.05; if (u <= 0) return ep; } return E[E.length - 1]; }; // prioritised replay (Mattar & Daw 2018)
       if ((n3 || this.stage === 2) && r() < 0.5 + 0.3 * this.liminal) { for (let j = 0; j < 4; j++) { const ep = pick(); const k = ep.k;
           this.wSite[k] += 0.04 * (ep.r - this.wSite[k]); if (v32) ep.p *= 0.9; /* replayed memories lose priority */ const pred = this.featC[this.siteC[k]] + this.featS[this.siteS[k]]; const d = ep.r - pred; this.featC[this.siteC[k]] += 0.08 * d; this.featS[this.siteS[k]] += 0.08 * d;
-          for (let i = R0.HIP + 2 * k; i < R0.HIP + 2 * k + 2; i++) this.v[i] += 1; } }
+          for (let i = R0.HIP + 2 * k; i < R0.HIP + 2 * k + 2; i++) this.v[i] += 1; }
+        if ((o.mind ?? MIND_DEFAULT) === "v35") for (let it = 0; it < M35.featIt * 4; it++) { /* v3.5: NREM schema consolidation: extra passes fitting the colour+shape factor model to stored episodes */ const ep = E[Math.floor(r() * E.length)]; const k = ep.k; const d = ep.r - this.featC[this.siteC[k]] - this.featS[this.siteS[k]]; this.featC[this.siteC[k]] += 0.03 * d; this.featS[this.siteS[k]] += 0.03 * d; } }
       if (rem && o.replay !== "nremOnly" && r() < 0.9) { const a = E[Math.floor(r() * E.length)], b = E[Math.floor(r() * E.length)]; const c = this.siteC[a.k], s = this.siteS[b.k]; const k = s * 4 + c;
-        const vhat = o.replay === "remShuffle" ? r() * 0.6 : clamp(this.featC[c] + this.featS[s]); if (!this.access[k]) this.wSite[k] += 0.25 * (vhat - this.wSite[k]); } }
+        const vhat = o.replay === "remShuffle" ? r() * 0.6 : clamp(this.featC[c] + this.featS[s]); if (!this.access[k]) this.wSite[k] += 0.25 * (vhat - this.wSite[k]);
+        if ((o.mind ?? MIND_DEFAULT) === "v35" && M35.remAll) for (let k2 = 0; k2 < SITES; k2++) if (!this.access[k2]) { /* v3.5: each dream recombines every unexperienced colour x shape pair */ const vh = o.replay === "remShuffle" ? r() * 0.6 : clamp(this.featC[this.siteC[k2]] + this.featS[this.siteS[k2]]); this.wSite[k2] += M35.remLr * (vh - this.wSite[k2]); } } }
     if (n3 && this.learn && o.decision !== "v30") for (let si = 0; si < syn.w.length; si++) if (syn.plastic[si]) syn.w[si] += 0.0005 * (0.35 - syn.w[si]); // synaptic homeostasis: N3 down-scaling (Tononi & Cirelli 2014)
     for (let k = 0; k < SITES; k++) { if (this.depl[k] > 0) this.depl[k] = Math.max(0, this.depl[k] - 1 / 120); if (o.deplete) this.pTrue[k] = this.pBase[k] * (1 - 0.9 * this.depl[k]); }
     let repairATP = 0; if (!o.repairLesion && this.tissue < 10) { const f2 = Math.max(0, Math.min(10 - this.tissue, 0.01 * clamp(ATPf) * clamp(this.blood.aa - 0.3), this.blood.aa)); this.blood.aa -= f2; this.tissue += f2; repairATP = 0.5 * f2; } this.integrity = this.tissue / 10;
@@ -403,10 +435,10 @@ export class Organism {
   // spiking race between striatal channels; noise from quantum (Born-rule) or classical source, amplitude set by tonic DA
   choose(da: number): { k: number; sp: number } { const W = 3 + 5 * (this.level - 1); const sig = 0.35 * (0.2 + 2 * clamp(da)) * (1 + 0.2 * this.qgtTrace); const cnt = new Float32Array(SITES), v = new Float32Array(SITES); let sp = 0;
     const v32 = this.o.decision !== "v30"; const keep = v32 ? 1 - 0.4 / this.level : 0.6, gain = (1 - keep) / 0.4; // v3.2: integration time constant grows with level
-    const drive = new Float32Array(SITES); const beta = this.o.efeLesion ? 0 : 2.0 * this.vol * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E));
+    const drive = new Float32Array(SITES); const beta = this.o.efeLesion ? 0 : ((this.o.mind ?? MIND_DEFAULT) === "v35" ? M35.efeK : 2.0 * this.vol) * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)); // v3.5: epistemic weight no longer collapses with low volatility
     for (let k = 0; k < SITES; k++) { let w = this.wSite[k]; if (v32 && this.level >= 3) w += 0.5 * (clamp(this.featC[this.siteC[k]] + this.featS[this.siteS[k]]) - w); // deliberation: model-based feature prior
       w -= (1 + this.cortisol) * this.wAv[k] * clamp(1.2 - 0.6 * this.ghrelin); // learned aversive value traded against hunger
-      w += beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]); drive[k] = w; } // epistemic value
+      w += (this.o.mind ?? MIND_DEFAULT) === "v35" ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) /* v3.5: uncertainty about a site regrows with time since the last look (non-stationary world); visit-count discount exponent efeVis */ : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]); drive[k] = w; } // epistemic value
     const adenNoise = 1.0 * Math.max(0, this.S - 0.5);
     for (let s = 0; s < W; s++) for (let k = 0; k < SITES; k++) { if (!this.access[k]) continue; let n: number;
       if (this.o.noise === "quantum") { const u = this.q.measure(this.ent()); const u2 = this.ent(); n = (((u & 1) ? 1 : -1) * Math.sqrt(-2 * Math.log(Math.max(1e-12, u2)))) * 0.8; } else { const u2 = this.ent(); n = ((this.ent() < 0.5 ? 1 : -1) * Math.sqrt(-2 * Math.log(Math.max(1e-12, u2)))) * 0.8; }
