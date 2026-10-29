@@ -2,7 +2,7 @@
 // (e.g. sleep stage) from a part's state, with a shuffled-label control. Softmax regression, standardised inputs.
 import type { CreatureLab } from "../interface";
 import { mulberry } from "../rng";
-function train(X: number[][], y: number[], K: number, epochs = 150, lr = 0.5) { const n = X.length, d = X[0].length, mu = new Float64Array(d), sd = new Float64Array(d);
+export function train(X: number[][], y: number[], K: number, epochs = 150, lr = 0.5) { const n = X.length, d = X[0].length, mu = new Float64Array(d), sd = new Float64Array(d);
   for (const x of X) for (let i = 0; i < d; i++) mu[i] += x[i] / n; for (const x of X) for (let i = 0; i < d; i++) sd[i] += (x[i] - mu[i]) ** 2 / n; for (let i = 0; i < d; i++) sd[i] = Math.sqrt(sd[i]) || 1;
   const W = Array.from({ length: K }, () => new Float64Array(d + 1)); const z = (x: number[]) => x.map((v, i) => (v - mu[i]) / sd[i]);
   const P = (zz: number[]) => { const l = W.map((w) => { let a = w[d]; for (let i = 0; i < d; i++) a += w[i] * zz[i]; return a; }), m = Math.max(...l), e = l.map((v) => Math.exp(v - m)), S = e.reduce((a, b) => a + b, 0); return e.map((v) => v / S); };

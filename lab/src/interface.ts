@@ -9,8 +9,8 @@ export interface CreatureLab {
   couplings(): Coupling[];              // named part->part edges (connectome at part granularity)
   step(n?: number): void;               // advance n ticks (deterministic given seed)
   t(): number;
-  readState(part: string): Float64Array;           // state tensor of a part (rates, levels)
-  writeState(part: string, x: Vec): void;          // overwrite state (transplant / patching)
+  readState(part: string, mode?: "slow" | "full"): Float64Array;  // slow = rates+voltages; full = all neuron state + incoming weights + eligibility
+  writeState(part: string, x: Vec, mode?: "slow" | "full"): void; // transplant / patching
   motor(): Float64Array;                // the creature's output vector ("motor lens" target)
   metrics(): Record<string, number>;    // scalar behavioural/physiological readouts
   lesionCoupling(id: string, gain: number): void;  // 0 = cut, 1 = intact
@@ -18,6 +18,27 @@ export interface CreatureLab {
   stimulate(part: string, amount: number): void;   // inject drive (steering)
   feed?(amount: number): void;
   clone?(): CreatureLab;                // fresh copy with same seed/options
+  // v0.2 optional lab hooks
+  spikes?(): Uint8Array;                // binary spike vector this tick (PCI)
+  routing?(): { winner: number; phases: number[]; ignitions: number };   // workspace / attention-schema routing
+  noiseSample?(): number;               // last sample of the creature's internal noise/QRNG source
+  noiseBits?(): number;                 // bits per noise sample
+  hasCoupling?(id: string): boolean;
+  // v0.2 biosphere body (see BIOSPHERE.md)
+  body?(): BodySpec;
+  sense?(w: WorldSense): void;          // world -> creature (food under body, light, touch, temperature)
+  act?(): Action;                       // creature -> world (heading, speed, ingest request, emissions)
+  exchange?(e: Exchange): void;         // world <-> creature matter/energy transfer
+  ledger?(): { energy: number; intake: number; error: number };
+  // v0.3 God-panel hooks (all energy-conserving: they move energy between stores, never create it)
+  harm?(x: number): void;               // tissue damage (toxicity, radiation)
+  work?(kJ: number): void;              // mechanical work paid from ATP into heat (gravity, drag)
+  shiftModulator?(name: string, d: number): void;  // add d to an extracellular neuromodulator level
+  rewire?(frac: number, rnd: () => number): number; // silence a random fraction of synapses; returns count
 }
+export interface BodySpec { radius: number; mass: number; maxSpeed: number; habitat: ("land" | "water" | "air")[]; }
+export interface WorldSense { light: number; foodHere: number; temperature: number; touch: number; t: number; }
+export interface Action { heading: number; speed: number; forage: boolean; site: number; }
+export interface Exchange { foodPatch: { food: number }; }
 export type Factory = (seed: number, opts?: Record<string, unknown>) => CreatureLab;
 export interface InstrumentResult { instrument: string; creature: string; seeds: number[]; params: Record<string, unknown>; result: unknown; }

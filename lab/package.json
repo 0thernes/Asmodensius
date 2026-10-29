@@ -1,2 +1,2 @@
 { "name": "@asmodensius/lab", "version": "0.1.0", "private": true, "type": "commonjs",
-  "scripts": { "smoke": "npx esbuild smoke.ts --bundle --platform=node --outfile=out/smoke.js --log-level=error && node out/smoke.js" } }
+  "scripts": { "smoke": "npx esbuild smoke.ts --bundle --platform=node --outfile=out/smoke.js --log-level=error && node out/smoke.js", "smoke2": "npx esbuild smoke2.ts --bundle --platform=node --outfile=out/smoke2.js --log-level=error && node out/smoke2.js", "dials": "npx esbuild smoke3.ts --bundle --platform=node --outfile=out/smoke3.js --log-level=error && node out/smoke3.js" } }
