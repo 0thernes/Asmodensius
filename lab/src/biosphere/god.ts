@@ -25,6 +25,7 @@ export type WorldDials = {
   // v0.5
   gameStrategy: "fixed" | "learned";
   dayLength: number; lightScale: number; lightMode: "cycle" | "LL" | "DD"; lightToCreatures: boolean; // v0.8 light dials: hours of light, intensity, constant light/dark, and whether dome light drives the creature (setLight) or the creature runs its own photoperiod
+  deathRule: "organism" | "off"; respawnAfter: number; /* v0.9 lifecycle (DEATH-v1): "organism" = when the creature reports it is dead (alive() false) the dome stops stepping it (body frozen, energy kept in the ledger); respawnAfter > 0 = after that many ticks the corpse energy goes to detritus and a newborn of the same species with a fresh seed takes its place (its energy is logged as "born") */
   oneShot: boolean; // v0.6: each game round pairs creatures at random dome-wide (anonymous, no contact needed) instead of whoever is touching
   timeWarp: number; timeWarpR: number; // v0.6 time anomaly: creatures within timeWarpR of the centre run timeWarp brain/body ticks per world tick (0 = frozen time)
  // fixed: cooperate iff DA > 0.25. learned: p(C) = sigmoid(w), w updated by the creature's own dopamine response to the payoff
@@ -38,7 +39,7 @@ export type CreatureDials = {
   lesionDice: boolean;       // dice: one random mechanism lesion at birth
   mutationSigma: number;     // dice: genes ~ exp(N(0, sigma)) at birth
 };
-export const BASE_WORLD: WorldDials = { dayLength: 12, lightScale: 1, lightMode: "cycle", lightToCreatures: false, oneShot: false, timeWarp: 1, timeWarpR: 4, foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none", gameStrategy: "fixed", ph: 7, singularity: 0, grazers: 0 };
+export const BASE_WORLD: WorldDials = { deathRule: "organism", respawnAfter: 0, dayLength: 12, lightScale: 1, lightMode: "cycle", lightToCreatures: false, oneShot: false, timeWarp: 1, timeWarpR: 4, foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 0.0004, radiation: 0, recycling: 0, parasites: 0, game: "none", gameStrategy: "fixed", ph: 7, singularity: 0, grazers: 0 };
 export const BASE_CREATURE: CreatureDials = { modShift: null, rewireFrac: 0, lesionDice: false, mutationSigma: 0 };
 export const PRESETS: Record<string, Partial<WorldDials>> = {
   utopia: { foodCapScale: 2, growthScale: 3, gravity: 0.5 },

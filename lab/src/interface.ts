@@ -42,6 +42,7 @@ export interface CreatureLab {
   // v0.8 exact state (creature 001 v3.6 organism snapshot()/restore())
   snapshot?(): unknown;                 // complete JSON-safe state; restore() into any instance reproduces the run exactly
   restore?(s: unknown): void;
+  alive?(): boolean;                    // v0.9: false once the organism's own death rule has fired (001: 2 h of hypoglycaemia / ATP failure)
   setLight?(x: number | null): void;    // v0.8: world light into the creature (null = its own internal photoperiod)                 // v0.4: hand excreted energy back to the world (recycling); returns kJ
 }
 export interface BodySpec { radius: number; mass: number; maxSpeed: number; habitat: ("land" | "water" | "air")[]; }

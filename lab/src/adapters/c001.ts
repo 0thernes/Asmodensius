@@ -58,6 +58,7 @@ export class Creature001 implements CreatureLab {
   // biosphere body
   body(): BodySpec { return { radius: 0.5, mass: 1, maxSpeed: 0.6, habitat: ["water", "land"] }; }
   sense(w: WorldSense) { if (w.touch > 0) this.o.stimulate("INS", 0.2 * w.touch); }
+  alive() { return !this.o.dead; }
   exchange(e: Exchange) { (this.o.o as any).pool = e.foodPatch; } // the organism's own forage draws (2.2 kJ) now come out of the world patch under its body
   act(): Action { const site = this.lastSite; return { heading: site >= 0 ? (site / 16) * 2 * Math.PI : NaN, speed: Math.min(1, 4 * (this.o.regionRate.MOT ?? 0)) * (this.o.asleep ? 0 : 1), forage: site >= 0, site }; }
   harm(x: number) { this.o.damage(x); }
