@@ -2,7 +2,7 @@
 ## Round 16: organism v3.5 (metacognition, agency and interoception mechanisms); prereg + code frozen 1da03c4, test seeds 1000–1015
 - v3.1 suite: Butlin 8/14 (v3.4: 8/14), frameworks 5/10 (5/10), CQM 17/25 (16/25); 25 of 41 d/t items pass (v3.4: 24/41).
 - New passes: HOT-2 (AUROC 0.660 vs 0.492; d 2.94, t 8.33), GWT-4 (d 13.04), ual (d 1.57, t 4.44), CQM09 (forecast error 0.68 vs persistence 1.33; d 8.06, t 22.80), CQM14 (0.776 vs 0.230; d 7.70, t 21.79).
-- Lost: GWT-3, ctm and CQM08 now fail the non-ceiling rule (0.972, 0.959, 0.973), because the organism stays awake through long protocols. AST-1 is lost (d 0.92, t 2.59).
+- Lost: GWT-3 and ctm now fail the non-ceiling rule (the organism stays awake through long protocols). CQM08 is lost (d 0.61, t 1.72) and AST-1 is lost (d 0.92, t 2.59).
 - Still failing: HOT-1 (d 0.66, t 1.86), HOT-3 (d −0.15), RPT-2 (d 0.26), AE-1 (d 0.17), activeInference (d 0.09), thaler9 (d 0.58), CQM04 (d −0.13), CQM06 (d 0.69, t 1.96), CQM12 (d −0.82).
 - K1a and K1c pass (0.944 < ceiling); K1b, K1d and K1e fail. K2 passes. LTC learned and hand-set vs fixed: 0/5 each (L4 is hurt again). LTC is now off by default.
 - Separate item (34563ba): real Eshkol VM and Moonlab compiled to WASM, with a node smoke test and a browser demo in creatures/001/wasm.
