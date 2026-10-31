@@ -198,7 +198,7 @@ Result: Q-GEN, Q-INTEG, Q-CURIO, Q-SOCIAL-ATTN/Q-SELF, Q-ASSOC, plus the merged 
 | 23 substrate pluralism | not applicable | Drop as a gate. Keep the WASM-equivalence check as engineering. |
 | 24 reproducibility, 25 scale | engineering | Move to the conformance tier, not "qualities". |
 
-### 8.4 Resulting quality list (v4.0 scorecard, ~24 items under the 5 principles)
+### 8.4 Resulting quality list (v4.0 scorecard: 34 qualities under the 5 principles, replacing 49 literal items)
 P1 Predictive allostasis: Q-PRED, Q-TOPDOWN, Q-INTERO, Q-HOMEO, Q-ENERGY · P2 Value/uncertainty: Q-CURIO, Q-AGENCY, Q-VALENCE, Q-GOAL, Q-ASSOC, Q-LEARN · P3 Workspace: Q-RECUR, Q-BIND, Q-MOD, Q-CAP, Q-ATTN, Q-BCAST, Q-META, Q-META-ACT, Q-SIM, Q-SELFATTN, Q-SELF, Q-SOCIAL-ATTN, Q-INTEG · P4 Sleep/generative: Q-GEN, Q-RETAIN, Q-PLAN · P5 Embodied lineage: Q-BODY, Q-LINEAGE, Q-ECO, Q-ADAPT-BODY, Q-NOVEL, Q-COMM, Q-ROBUST.
 Each quality needs ≥1 concept test with a causal lesion **and** a non-mechanistic control (shuffle/random). Each test must be non-ceiling (degraded inputs by default). No test may require a specific project's data, body or protocol.
 
