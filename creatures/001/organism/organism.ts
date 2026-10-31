@@ -1,3 +1,4 @@
+import { InputLayer } from "./fp/l4";
 import { ProtoPosterior } from "./fp/hot1";
 import { Affect, type Persona } from "./affect";
 import { grow, randomGenome, cortexGene, type DevGenome } from "./develop";
@@ -92,7 +93,7 @@ export class Mind {
   rate: Float64Array[] = []; amp = [0, 0, 0, 0]; ampPrev = [0, 0, 0, 0]; post: number[][] = []; cls: Lin[] = []; sal = [0, 0, 0, 0];
   win = -1; ign = 0; ignitions = 0; bc = new Float64Array(8); bcOut = new Float64Array(8); att = [1, 1, 1, 1]; Wq = new Float64Array(4 * 4 * 4); lastQ: [number, number, number] | null = null;
   act = new Lin(4, 8); recv = new Lin(4, 8); rep = new Lin(4, 8); assoc = new Lin(4, 26); meta = new Float64Array(5); conf = 0.5; margin = 0; lastAct = -1; action = -1; actP: number[] = [0.25, 0.25, 0.25, 0.25];
-  proto: number[][][] = []; recon: Lin[] = []; percept: number[][] = []; td = new Float64Array(16);
+  proto: number[][][] = []; l4: InputLayer[] = []; recon: Lin[] = []; percept: number[][] = []; td = new Float64Array(16);
   pp = new Lin(16, 65); pred = new Float64Array(16); ppMean = new Float64Array(16); ppErr = 0; ctxPrev = new Float64Array(65);
   af = 0; afTarget = 0; drift = 0; afObs = 0; kal = new Kal(); other = new Kal(); afErr = 0; astU = 0;
   phase = [0, 1.5, 3, 4.5]; K = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]; co = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]; mAvg = [0, 0, 0, 0]; plv: { c: number; s: number }[][] = [];
@@ -104,7 +105,7 @@ export class Mind {
   meta2 = new Float64Array(8); confF: number[] = [0, 0, 0, 0, 0, 0, 0, 1]; pgX: Float64Array | null = null; pgA = -1; pgP: number[] = [0.25, 0.25, 0.25, 0.25]; rbar = 0; pbar = [0.25, 0.25, 0.25, 0.25]; interoBuf2: { x: number[]; at: number; g0: number }[] = []; rls = new RLS(5, M35.rlsLam); reVar = [0.1, 0.1, 0.1, 0.1];
   tdA = [0, 0, 0, 0]; tdB = [0, 0, 0, 0]; pr2L = [0, 0, 0, 0] /* v3.7 confidence-gated top-down precision */; meta3 = new Float64Array(10) /* v3.7 monitor weights (adds workspace ignition) */; tdW = [0.5, 0.5, 0.5, 0.5]; buL: number[][] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]; tdL: number[][] = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]; // v3.6 learned top-down precision
   cost = 0; prevC = -1; epi: { x: number[]; y: number }[] = []; replays = 0; g: Organism | null = null; Tm = new Int16Array(64).fill(-1); Qmf = new Float64Array(64); sweeps = 0;
-  constructor(r: () => number) { for (let m = 0; m < NMOD; m++) { this.rate.push(new Float64Array(MW)); this.post.push([0.25, 0.25, 0.25, 0.25]); this.cls.push(new Lin(4, MW)); this.recon.push(new Lin(4, MW)); this.proto.push([0, 1, 2, 3].map((k) => [0, 1, 2, 3].map((j) => (j === k ? 0.5 : 0.1)))); this.percept.push([0, 0, 0, 0]); this.plv.push([0, 1, 2, 3].map(() => ({ c: 0, s: 0 }))); }
+  constructor(r: () => number) { const L4K = M40.l4 > 0 ? 16 : 0; for (let m = 0; m < NMOD; m++) { if (L4K) this.l4.push(new InputLayer(4, L4K, Math.floor(r() * 2 ** 31))); this.rate.push(new Float64Array(MW + L4K)); this.post.push([0.25, 0.25, 0.25, 0.25]); this.cls.push(new Lin(4, MW + L4K)); this.recon.push(new Lin(4, MW + L4K)); this.proto.push([0, 1, 2, 3].map((k) => [0, 1, 2, 3].map((j) => (j === k ? 0.5 : 0.1)))); this.percept.push([0, 0, 0, 0]); this.plv.push([0, 1, 2, 3].map(() => ({ c: 0, s: 0 }))); }
     for (let i = 0; i < this.meta.length; i++) this.meta[i] = 0; void r; }
   // one tick: called by Organism.step after the spiking substeps
   step(g: Organism): void { this.g = g; const o = g.o, ne = g.nm.NE.E, ach = g.nm.ACh.E; this.cost = 0; const v35 = ge35(o.mind ?? MIND_DEFAULT), v36 = ge36(o.mind ?? MIND_DEFAULT);
@@ -113,7 +114,7 @@ export class Mind {
       for (let k = 0; k < 4; k++) this.pbar[k] += 0.02 * (this.pgP[k] - this.pbar[k]); const Lb = this.pgP.reduce((a, p, j) => a + p * Math.log(this.pbar[j] + 1e-9), 0); for (let k = 0; k < 4; k++) { const gk = M35.pgLr * adv * ((k === this.pgA ? 1 : 0) - this.pgP[k]) - M35.entK * this.pgP[k] * (Math.log(this.pbar[k] + 1e-9) - Lb); /* marginal-entropy (action-diversity) regulariser: penalises collapse onto one stimulus-independent action without flattening stimulus-specific choices */ for (let i = 0; i < 8; i++) W[k * n + i] += gk * this.pgX[i]; W[k * n + 8] += gk; } }
     this.rewSet = false;
     const c34 = o.cortex !== "v31"; for (let m = 0; m < NMOD; m++) this.ampPrev[m] = this.amp[m]; // v3.4: previous-tick amplitude (onset salience)
-    for (let m = 0; m < NMOD; m++) { let s = 0; for (let j = 0; j < MW; j++) { const ix = R0.CTX + m * MW + j, v = g.rate[ix]; this.rate[m][j] = c34 ? CX.norm * (v - g.rateAvg[ix]) : v; s += v; } this.amp[m] = s / MW; // v3.4: readouts see adaptation-normalised rates
+    for (let m = 0; m < NMOD; m++) { let s = 0; for (let j = 0; j < MW; j++) { const ix = R0.CTX + m * MW + j, v = g.rate[ix]; this.rate[m][j] = c34 ? CX.norm * (v - g.rateAvg[ix]) : v; s += v; } if (this.l4.length && m * 4 + 4 <= 16) { const z = this.l4[m].out(g.sens.slice(m * 4, m * 4 + 4)); for (let k = 0; k < z.length; k++) this.rate[m][MW + k] = z[k]; } /* v4.0 FIRST-PRINCIPLES cue encoding (fp/l4.ts): the read-outs also see a static L4-like input layer of the module's own receptor channels */ this.amp[m] = s / MW; // v3.4: readouts see adaptation-normalised rates
       this.post[m] = msoftmax(this.cls[m].out(this.rate[m]), 3);
       // perception: bottom-up linear reconstruction of the 4 sensory lines; top-down: precision-weighted generative prototype (HOT-1)
       const bu = this.recon[m].out(this.rate[m]); const pm = this.post[m]; const tdv = [0, 1, 2, 3].map((j) => pm.reduce((a, p, k) => a + p * this.proto[m][k][j], 0)); const pr = Math.max(...pm);
@@ -219,7 +220,7 @@ export const MIND_DEFAULT: "v34" | "v35" | "v36" | "v37" | "v38" | "v39" | "v40"
 const is40 = (m: string): boolean => m === "v40";
 export const LTC_DEFAULT = false;
 /** v4.0 parameters (dev-tuned on seeds 2000+ only; not frozen). uK: weight of the single uncertainty term; mK: blend of the Beta posterior mean into value; dreamC: pseudo-count a REM dream writes into an unexperienced option's belief; dreamLr: step toward the dreamt belief; tempSD: log-SD of per-individual temperament (curiosity gain) */
-export const M40: Record<string, number> = { uK: 1.0, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0 }; /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
+export const M40: Record<string, number> = { uK: 1.0, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1 }; /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
 try { const e40 = typeof process !== "undefined" ? process.env.V40TUNE : undefined; if (e40) Object.assign(M40, JSON.parse(e40)); } catch { /* browser */ }
 /** v4.0 dev controls: V40OPTS (JSON) fills Opts fields a caller left unset (affectLesion, v40Lesion, develop, v40Ctl) so population runs can apply a per-module control to every test */
 let V40OPTS: Record<string, any> = {}; try { const e = typeof process !== "undefined" ? process.env.V40OPTS : undefined; if (e) V40OPTS = JSON.parse(e); } catch { /* browser */ }

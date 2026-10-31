@@ -440,6 +440,38 @@
     }
   });
 
+  // ../../creatures/001/organism/fp/l4.ts
+  var InputLayer;
+  var init_l4 = __esm({
+    "../../creatures/001/organism/fp/l4.ts"() {
+      init_define_process_env();
+      InputLayer = class {
+        constructor(nIn, K, seed) {
+          this.nIn = nIn;
+          this.K = K;
+          let a = seed >>> 0;
+          const r = () => {
+            a = a + 1831565813 >>> 0;
+            let t = a;
+            t = Math.imul(t ^ t >>> 15, t | 1);
+            t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+          };
+          this.W = Array.from({ length: K }, (_, k) => Array.from({ length: nIn }, (_2, i) => k < nIn ? i === k ? 1 : 0 : r() * 2 - 0.5));
+          this.b = Array.from({ length: K }, (_, k) => k < nIn ? 0 : -0.3 * r());
+        }
+        nIn;
+        K;
+        W;
+        b;
+        /** the first nIn units are labelled-line copies (receptor -> L4 relay); the rest are random mixtures */
+        out(x) {
+          return this.W.map((w, k) => Math.max(0, w.reduce((a, v, i) => a + v * x[i], 0) + this.b[k]));
+        }
+      };
+    }
+  });
+
   // ../../creatures/001/organism/fp/hot1.ts
   var ProtoPosterior;
   var init_hot1 = __esm({
@@ -1267,6 +1299,7 @@
   var init_organism = __esm({
     "../../creatures/001/organism/organism.ts"() {
       init_define_process_env();
+      init_l4();
       init_hot1();
       init_affect();
       init_develop();
@@ -1570,6 +1603,7 @@
         action = -1;
         actP = [0.25, 0.25, 0.25, 0.25];
         proto = [];
+        l4 = [];
         recon = [];
         percept = [];
         td = new Float64Array(16);
@@ -1644,11 +1678,13 @@
         Qmf = new Float64Array(64);
         sweeps = 0;
         constructor(r) {
+          const L4K = M40.l4 > 0 ? 16 : 0;
           for (let m = 0; m < NMOD; m++) {
-            this.rate.push(new Float64Array(MW));
+            if (L4K) this.l4.push(new InputLayer(4, L4K, Math.floor(r() * 2 ** 31)));
+            this.rate.push(new Float64Array(MW + L4K));
             this.post.push([0.25, 0.25, 0.25, 0.25]);
-            this.cls.push(new Lin(4, MW));
-            this.recon.push(new Lin(4, MW));
+            this.cls.push(new Lin(4, MW + L4K));
+            this.recon.push(new Lin(4, MW + L4K));
             this.proto.push([0, 1, 2, 3].map((k) => [0, 1, 2, 3].map((j) => j === k ? 0.5 : 0.1)));
             this.percept.push([0, 0, 0, 0]);
             this.plv.push([0, 1, 2, 3].map(() => ({ c: 0, s: 0 })));
@@ -1683,6 +1719,10 @@
               const ix = R0.CTX + m * MW + j, v = g.rate[ix];
               this.rate[m][j] = c34 ? CX.norm * (v - g.rateAvg[ix]) : v;
               s += v;
+            }
+            if (this.l4.length && m * 4 + 4 <= 16) {
+              const z2 = this.l4[m].out(g.sens.slice(m * 4, m * 4 + 4));
+              for (let k = 0; k < z2.length; k++) this.rate[m][MW + k] = z2[k];
             }
             this.amp[m] = s / MW;
             this.post[m] = msoftmax(this.cls[m].out(this.rate[m]), 3);
@@ -2057,7 +2097,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));

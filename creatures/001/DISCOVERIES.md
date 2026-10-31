@@ -59,3 +59,18 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 ## 2026-10-31 (2:50 PM PT): first-principles pass (see FIRST-PRINCIPLES.md)
 - N13b integrity-gated veto on fresh 2080-2095: own vs lens-shuffled d 0.08, vs off 0.07, vs integrity-shuffled 0.04 (vetoI 3/10 similar). The 2064 d 0.57 did not replicate. N13 is null.
 - HOT-1 and HOT-3R mechanisms pass in isolation with held-out confirmation (d 5-11 and d ≈ 2), and fail when integrated (d −0.17; 0.37/0.01). The shared cause is the bottom-up cortical code (about 25% wrong-class percepts vs about 5% from raw input).
+
+## 2026-10-31 (afternoon PT): cortical cue encoding (first principles), dev 2145-2224
+- **Diagnosis.** On the HOT1 stream (seeds 2145-2152), raw-input argmax is 91% correct, the creature's `recon` percept 64%, and a batch ridge decoder on the same CTX rates 69%. So the information is lost in the adaptation-normalised cortical rates, not in the read-out. Holding the stimulus for 2 ticks drops it to 29%: transient dynamics.
+- **Module** (fp/l4.ts): a static L4-like input layer. Labelled-line copies plus a random rectified expansion of the module's own receptor channels, appended to the read-out features.
+  - Isolated: 88.9% vs raw 90.2% (2145) and 88.7% vs 90.7% (held-out 2161), within the 3-point goal.
+  - In the creature: 89% vs 91%.
+- **Integrated (l4 now default ON):**
+  - HOT-1: 2177 d 1.54, t 4.35; held-out 2193 **d 3.41, t 9.66**. Without l4, 2177 gave d 0.48. **HOT-1 now passes dev and held-out.**
+  - HOT-3R: d 0.63 / 0.27 (was 0.36 / −0.21). Not passing: the metacognitive confidence still discriminates trials poorly.
+  - RPT-2: d 0.56, unchanged. Its XOR read-out does not use these features.
+- **AE-1 + volX:**
+  - 2145: d 0.49 → 0.94. Held-out 2161: 0.26 → 0.62. 2209 with l4: 0.58 → 0.50.
+  - Mixed, so volX stays off.
+  - **Flag:** AE-1 at defaults is only d 0.26-0.58 on these three fresh blocks, so the earlier 0.88-1.24 margin does not replicate.
+- **Recheck on 2209-2224, defaults vs l4+volX:** thaler9 2.25 → 1.62, CQM12 1.49 → 1.50, UAL 2.25 → 1.98, AINF 0.07 → −0.02. Viability 318 forages, 0 deaths in both.

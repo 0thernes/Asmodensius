@@ -124,3 +124,8 @@ Then activeInference, RPT-2, CQM10, CQM01/04/03R, RPTLATE, LTC. The ceiling item
   - Held-out 2144: d 2.05 and 2.06.
   - **Integrated** HOT3R on g.mind.conf: 2128 d 0.37 / 0.00; held-out 2144 d 0.01 / 0.12. It fails for the same root cause: the creature's confidence is computed on the degraded cortical code.
 - **Next goal implied:** a principled fix to bottom-up encoding (sensory → CTX → `recon`/`cls` read-out), e.g. a read-out trained on the module's own input statistics, or lower cortical noise for cue channels. That one change is upstream of HOT-1, HOT-3 and probably RPT-2.
+- **Cue encoding (done):** the L4 input layer is adopted (l4 = 1).
+  - HOT-1 passes on dev 2177 (d 1.54) and held-out 2193 (d 3.41).
+  - HOT-3R is still short (d 0.63): the next bottleneck is the confidence signal itself (teachConf), not the percept.
+  - RPT-2 is unaffected and needs its own conjunctive-recurrence module.
+  - The AE-1 margin does not replicate at defaults (0.26-0.58 on fresh blocks); volX is mixed. AE-1 moves up the list.
