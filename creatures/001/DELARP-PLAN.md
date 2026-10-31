@@ -238,9 +238,9 @@ The rest are already concept-level.
 6. **Issue templates**: add quality-test dispute; update indicator-dispute to the quality IDs.
 
 ## 11. Approval checklist for Alex (nothing below is done yet)
-- [ ] Approve reframing R-013/14/15/20/21/22/25 (§7.1) and the canvas tile change. The canvas will be edited only after approval.
-- [ ] Decide R-004/R-005 (Eshkol/Moonlab/quantum): lab tool only vs. kept in the organism.
-- [ ] Approve the quality list (§8.4) and the cluster collapse (§9).
+- [x] (approved) Approve reframing R-013/14/15/20/21/22/25 (§7.1) and the canvas tile change. The canvas will be edited only after approval.
+- [x] (approved) Eshkol/Moonlab/quantum stay inside the organism (§16).
+- [x] (approved) Approve the quality list (§8.4) and the cluster collapse (§9).
 - [ ] Approve the two-tier assessment (§12–13): 6 strict claims + 28 graded qualities.
 - [ ] Then: write and freeze preregistrations/v4.0.md (R items + retirements) **after Round 20 completes**, before any v4.0 test seed.
 
@@ -302,3 +302,35 @@ Honesty guards that are kept from the strict tier:
 ## 15. Risks
 - A graded scheme can drift into storytelling. The guard is controls on every grade, rubrics committed before the data, visible downgrades, and replay files for every claim.
 - Grades are not comparable with the old d/t rollups. The history stays on record as it is.
+
+---
+# Part IV: Alex's approvals and the evolutionary stance (2026-10-31)
+
+## 16. Approved decisions
+1. **Canvas reworded (done this round):** R-013/14/15/20/21/22/25 and R-018 now state brain qualities, and per-principle tiles were added. The old Butlin/framework/CQM tables stay as history.
+2. **Quantum layer, Eshkol and Moonlab stay inside the creature.** This reverses the P9 removal in §3 and §7.1. They are organism parts, not a NIST gate:
+   - Q3 state is driven by neuromodulators (as now) and feeds **chance in the organism**: decision noise, mutation draws, dream recombination sampling and developmental variation. "Chance" in principles 4 and 5 is quantum-sourced.
+   - QGT/Berry curvature of that state is an **observable internal signal** (e.g. feeding the insula/curvature channel and the visuals/sound). It is graded in Tier G like any other part: does lesioning it change behaviour or aesthetics? (the "nothing cosmetic" check).
+   - The NIST/bias results stay as a disclosed property of the source (biased, ones 0.175). The v3.6 debiasing stays where unbiasedness matters (decision sign). Bias elsewhere is allowed as "character" if it is disclosed. NOISESIGN moves from a gate to a diagnostic.
+   - Eshkol/Moonlab code paths stay as the implementation substrate where they are used now. The WASM/bytecode equivalence checks stay as engineering checks.
+3. **34 qualities (§8.4) and 8 clusters (§9) approved**, assessed with the two-tier scheme of §12–13: 6 strict claims, 28 graded qualities.
+
+## 17. Evolutionary, wild, chaotic stance for v4.0
+"Life is evolutionary, wild, random, chaotic and beautiful." Design consequences:
+- **Populations, not one tuned individual.** Every assessment runs over a varied population: per-seed genomes with mutation, drift, recombination, developmental noise and quantum-sourced chance. Individual differences are a result to describe ("personalities", lineages), not noise to average away.
+- **Open-ended evolution in the dome.** Resource-gated reproduction (principle 5) with heritable brain parameters (neuromodulator gains, plasticity rates, curiosity weight, sleep need, body traits). Selection is left to the ecology, not to the test suite. Species and lineages may diverge, go extinct or coexist.
+- **No tuning to tidy targets.** Stop hand-tuning parameters to make an item pass on dev seeds (the §D freezing dance of v3.5–v3.9). Instead, set wide, biologically plausible **ranges**, let evolution and development pick values, and report what emerges. Hand-tuning is allowed only for Tier S core claims, under the existing dev-seed rules.
+- **Chaos is allowed, artefacts are not.** Sensitive dependence, bursts, extinctions and weird behaviours are kept and logged. They are told apart from noise by:
+  1. a **shuffle/neutral baseline**: the same population with heritability shuffled, or neutral drift only (no selection), or plasticity frozen;
+  2. **replication across independent runs** (different master seeds), reported as how often the phenomenon appears (e.g. "in 7/10 runs");
+  3. **dose–response** where possible (more of the cause → more of the effect);
+  4. replay files for every highlighted episode.
+  A phenomenon that appears just as often under the neutral baseline is reported as drift/chance, not as an adaptation.
+- **Determinism stays a tool, not a doctrine.** Seeds stay recorded so any run can be replayed exactly (snapshot/restore, state hash). The world itself is free to be random.
+- **Beauty counts.** Visual and sonic diversity driven by internal and evolutionary state is a goal. It is measured as state→render dependence and diversity over lineages, plus Alex's curator notes (subjective, labelled).
+
+## 18. Plan deltas from Part IV
+- §3 "Remove" list: **P9 removed from the list** (the quantum layer stays). The GPU 100M net is still not a claimed organism part unless it is wired in (the same no-cosmetic check applies).
+- §4b MORPH-1R / EVO-1R / ECO-1R become long-run dome experiments with a neutral-drift baseline and frequency-across-runs reporting (Tier G).
+- §10 pipeline: add `pipeline/evolve.ts` (long dome runs, many master seeds, low priority within the 3-job cap) and a lineage/phylogeny log in `assessments/`.
+- §11 checklist: items 1–3 approved. Remaining: write `assessments/RUBRIC-v4.0.md` and freeze `preregistrations/v4.0.md` (Tier S only) after Round 20 completes.
