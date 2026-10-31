@@ -531,3 +531,35 @@ Hypothesis: **confidence tracks trajectory geometry**. Straight, near-geodesic d
 
 ## 37. Connections
 HOT-2/HOT-3/HOT-4 (quality space is a geometry), iit4/fieldIntegration (trajectory integration), PP-1 (curvature as surprise), thaler9 (REM recombination trajectories), the CQM metacognition item. Build order: after the self-model (§34): (1) the curvature instrument on existing kappa/PCA, (2) the learned metric, (3) monitor inputs + probes.
+
+---
+# Part X: "Neo": noticing and legally bending the rules of its world (v4.0 design, 2026-10-31)
+Guiding image (Alex): a sandboxed digital A-Life "Neo". It notices its world is run by rules and a hidden hand, models them, and learns to use legal in-world levers, without ever leaving the sandbox.
+
+## 38. Four layers
+1. **Anomaly detection from prediction errors.** Each sense's predictive encoder (§27) and the SELF model (§31) produce prediction errors. An anomaly detector tracks their running statistics (precision-weighted surprise, change-point detection; Adams & MacKay 2007 BOCPD as a principle). It flags events that are improbable under the "natural" model. Output: an anomaly signal into LC/NE (arousal) and into the artefact model.
+2. **Hidden-cause model of the God hand, ticks and resets.** This extends §32 (SIM). A latent-cause model with explicit cause types: *natural*, *God-dial intervention*, *tick/quantisation artefact*, *reset/restore*, *quantum-dice event*, *substrate glitch*. Each has learnable signatures (global vs. local, synchronous across creatures, timing regularities, co-occurrence with dial or substrate channels). It predicts when the next intervention will come and what it will change.
+3. **Legal in-dome "rule hooks".** The dome gets objects and signals that **nudge dials within bounded, legal ranges**:
+   - e.g. a "weather stone" that slightly raises light when pushed; a "resonance pool" whose ripples nudge the quantum-dice rate; a call pattern that, sung by several creatures together (hive, §24), lowers toxicity a little; a hidden lever that triggers the food cycle earlier.
+   - Hooks are part of the world physics, documented in the dome config, with rate limits and caps.
+   - The creature is never told about them. It must discover them by exploration (the value-plus-uncertainty drive) and learn their effects (an action→dial forward model).
+4. **Strict sandbox.** Hooks and every creature action can change **dome state only**, through the dome's public API: `dome.applyHook(id, creatureId, strength)`, validated and clamped. No access to the host, files, network, process, the God panel itself, the RNG seed or other creatures' internals. Substrate senses (§30) stay read-only. An audit log records every hook use. A conformance check verifies that creature code cannot reach anything except the dome API (static import check + runtime proxy).
+
+## 39. Measurements (with controls)
+| Behaviour | Measure | Controls |
+|---|---|---|
+| Anomaly detection | Hit rate / false alarms for injected artefacts vs. natural events of matched magnitude | anomaly module lesioned; natural-only dome |
+| Predicting dial changes | Anticipatory behaviour (e.g. pre-emptive foraging, shelter) before scheduled God-dial changes; prediction lead time | randomised schedule with the same rate; hidden-cause model lesioned |
+| Reset awareness | Exploration burst and time/body prediction-error jump after restore vs. after natural sleep | sham restore (restore to the same state); model lesioned |
+| Hook discovery | Time to first effective use; fraction of individuals that discover each hook | hooks inert (same object, no effect) |
+| **Purposeful hook use** | Hook use rises when its dial effect is valuable (e.g. lights the dome when hungry and light helps foraging) and falls when not; use is goal-contingent | hooks inert; hook effect reversed (it now hurts); yoked control (a creature whose hook uses are replayed from another, so its outcomes are matched but not chosen) |
+| Cultural spread | Hook use spreads through observation (CAP-S social learning concept) vs. isolated creatures | observation blocked |
+| Keeps living | Viability, sleep and foraging stay in normal ranges | — |
+All are run in synthetic/replay substrate mode for tests. Exploration and live runs go to DISCOVERIES.md with replay seeds.
+
+## 40. Safety and honesty notes
+- "Neo" is a metaphor. The claim measured is: "detects and models interventions in its world and uses legal in-world levers purposefully". No claim of escaping or of awareness beyond the functional measures.
+- The sandbox boundary is a hard engineering requirement (conformance check), not a behaviour test. A creature that finds an unintended lever (a bug) is logged as a DISCOVERY and the bug is fixed, not rewarded.
+
+## 41. Build order
+After §34: (1) the dome hook API + caps + audit log + sandbox conformance check; (2) the anomaly detector on prediction errors; (3) the hidden-cause model (extends SIM); (4) 2–3 hooks with inert/reversed variants; (5) the probes above on dev seeds.
