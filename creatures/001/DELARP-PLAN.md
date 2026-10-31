@@ -91,3 +91,154 @@ Report concept rollups by principle (§3: P1–P5) instead of "Butlin x/14, fram
 - Retiring items lowers the published rollup counts. That is intended and must be reported, not hidden.
 - Merging the drives (principle 2) may lose the passing UAL/thaler9 dev results. Any drop is reported as such.
 - The CQM-25 source attribution (Avida/Tierra/Polyworld/Sims) is an inference from the item content. The v1 prereg defines the categories but does not name a source.
+
+---
+# Part II: Full-scope audit (Round 21 scope expansion, 2026-10-31)
+
+Directive (Alex): CQM-25, the 10 frameworks, Butlin-14 and the 150-project list are applied too strictly and literally. Reframe them as **neural-network and brain attributes/qualities** the creature should exhibit. Each one stays falsifiable and is measured against controls, but none is a 1:1 reproduction of a project or theory.
+Scope read: creatures/001 (organism, harness, preregs, src, MECHANISM_AUDIT), lab/ (src, instruments, biosphere, template, conformance, CROSSOVER), benchmark/ (projects.tsv 150 rows, capabilities_by_project.tsv 499 rows, capability_matrix.tsv), roadmap/capabilities.tsv (100 rows), docs/ + site/gen.py, .github (workflow + 4 issue templates), CITATION/README, and the Requirements Pipeline canvas 96123c90 (read only; not edited).
+No canvas edit, no new prereg frozen, /tmp/w/r20 untouched.
+
+## 7. Audit findings by area
+
+### 7.1 Requirements Pipeline canvas (R-001…R-048)
+| Req | Problem | Proposed rewording (for Alex's approval; canvas not edited) |
+|---|---|---|
+| R-013 "all 14 Butlin, no exceptions, grade A" | Literal 14/14 gate. Butlin et al. present these as indicator **properties** to assess, not a pass/fail exam. Some items cannot be passed by design (AST-1R). | "Exhibit the brain qualities behind the Butlin indicators (§8.1), each with a concept test vs. controls." |
+| R-014 "all 10 frameworks" | Each "framework" is a single theory's signature protocol (Thaler, CTM, IIT…). These protocols conflict (C1). | "Exhibit the 6 shared mechanisms the frameworks point to (§8.2)." |
+| R-015 "all 25 CQM, grade A" | Mixes brain qualities with A-Life population checks (heredity, morphology genes, substrate pluralism) and with duplicates (13=HOT-2, 19=RPT-1, 20=GWT-3, 21=iit4). | §8.3: 25 → 14 qualities, with duplicates merged. |
+| R-020 "do everything all 150 do" | Literal union of 150 projects (worms, Tierra, Lenia, Polyworld bodies…). Impossible, and the cause of the larping. | "Cover the capability clusters (§9) in one coherent organism; projects are references, not targets." |
+| R-021 100 novel capabilities | 11 rows copy named projects (c302/BAAIWorm reversal rates, FlyWire subgraph, Polyworld vision/mating, Creatures modulators, Brian2/NEST match). | Restate as principles (§9.2). |
+| R-022 "fly connectome, rodent and human brain, NHI/UAP" | Invites literal connectome imports (CAP-C). | "Use connectomics/neuroanatomy findings as design principles (motifs, E/I, modularity, neuromodulation), not as data imports." |
+| R-025 LTC SNNs | Named-architecture port; 0/10. | "Neurons with state-dependent time constants" (DEV-1R). |
+| R-004/R-005/R-008/R-039 Eshkol, Moonlab, QGT/HoTT, "math beyond understanding" | Tool-driven requirements. The quantum layer is decorative (P9) and the RNG fails NIST. | Keep as **lab tools / provenance**, outside the organism's claimed brain. Flag to Alex: these are his own explicit asks, so removal needs his decision. |
+| R-007 "nothing cosmetic" | Correct, and currently failing. The 100M GPU net (R-011) violates it. | Keep. Enforce through the conformance check C-NC (§10). |
+| R-018 release gate "grade A on every gate" | Tied to literal rollups. It would never open. | "Release when every principle-level quality (§3) has ≥1 passing concept test and nothing is cosmetic." |
+| Headline gates (8/14, 5/10, 17/25) | Rollups reward test counting and double-count shared mechanisms. | Replace with 5 principle tiles + 12 quality tiles (§8.4). |
+| R-002/R-006/R-009/R-012 visuals | Not larping (original shell body). Keep. | — |
+
+### 7.2 Code
+- **organism.ts**: The 15 version gates (ge35/is37/is38/is39…) make the code layered history rather than one design. The choice term at L494–499 holds 5 epistemic variants plus 2 value variants. v4.0 = one code path. Old minds are reproducible through a tagged commit, not through live branches.
+- **harness/**: v24–v27 mech/tests are self-contained models (MECHANISM_AUDIT: 76/85). harness.ts still hosts the Thaler inverted-U, the AST Kalman, CAP-B/C/S/R and the cqm21rNet toy. These go to `archive/harness-v1-v2.7/`.
+- **coupling.ts / SYSTEMS_DESIGN**: Lists "Quantum", "GPU 100M net", "LTC neurons" and "Curvature" as organism parts. Rewrite to the 5 principles. The quantum and GPU entries become lab/visual tools.
+- **lab/src/instruments**: These are fine as analysis tools (decoder, PCI, SAE, transplant, lesionStats, routing, geometry). `scorecard.ts` encodes the literal Butlin/framework rollup, so switch it to the quality list (§8). `qgeom.ts`/`qrngDiag.ts`/`nist.ts` stay as tool diagnostics only.
+- **lab/biosphere**: The dome, God dials and dice are original. Keep them. `moonlabDice` is labelled simulated, which is fine.
+- **lab/template + conformance**: The template is a generic small LIF creature. It is good and not a mimic. The conformance suite checks the interface and energy (19 checks). It has no brain-quality checks, so add an optional quality tier (§10).
+- **lab smoke/diag scripts** (smoke…smoke10, diag9*, exact8, viab2): one-off scripts. Move them to lab/scratch/ and stop counting them as evidence.
+
+### 7.3 Pipeline / DevOps
+- **.github/workflows/harness.yml runs only the v1 harness** (the toy models, run6.txt + repro.sh). It never runs the organism suite, VIAB or conformance. So CI evidence = the 14/14 "harness" column, which measures toys. **This is the biggest pipeline bug.**
+- The 3-job nohup queues in /tmp/w/rNN are untracked and outside the repo, so they cannot be reproduced from git. Add `pipeline/queue.sh` + `pipeline/score.sh` to the repo (same logic, versioned).
+- The summarize_v3x.ts/run_v3x.ts copies (9 near-duplicates) should become one `run.ts --prereg vX` that reads the frozen item list from the prereg file.
+- The results tree mixes tuning, dev and test outputs. Store them as results/<prereg>/{dev,test}/ with a manifest (seed set, git hash), as the lab provenance banner already does.
+- site/gen.py and docs/{benchmark,rankings,results}.html publish the literal rollups and the "top of 151" ranking. Regenerate them from the quality list. Drop "rankings" vs. 150 projects (self-scored).
+
+### 7.4 Schemas, templates, references
+- `benchmark/projects.tsv` caps rubric (E R M D O B N L S C I W) is a feature-presence rubric: "has evolution", "has a connectome". It invites copying. Re-key it to the clusters (§9).
+- Issue templates: `indicator-dispute.md` assumes the Butlin/CQM item IDs. Add a "quality-test dispute" template referencing quality IDs. `new-creature.md` should link the conformance quality tier.
+- References: keep the citations (Butlin 2023, Friston, Gershman/Niv, Cahill, Owen, Wilson & McNaughton…) as **sources of principles**. Label c302 / FlyWire / BAAIWorm / Polyworld / Creatures entries "reference only (not reproduced)".
+- Preregistration format: add a mandatory field `concept:` (which quality/principle) and `mimicry-check:` ("does this test require reproducing a specific project's data, body or protocol? if yes, justify or reject").
+
+## 8. Reinterpretation: from literal items to brain qualities
+Format: original item → over-literal? → concept-level quality test (new R ID for v4.0, not frozen yet). Same pass rule and controls discipline. "Keep" = already concept-level and kept as is.
+
+### 8.1 Butlin-14 → brain qualities
+| Item | Literal? | Quality / replacement |
+|---|---|---|
+| RPT-1 recurrence | no | Keep: **Q-RECUR** recurrent processing sustains information (delayed recall vs. feedback cut). |
+| RPT-2 integration (XOR readout) | yes: the XOR readout protocol | **Q-BIND**: stimulus-conjunction decoding from recurrent cortex beats either-feature decoding vs. recurrent cut. Merged with CQM06 and fieldIntegration. |
+| GWT-1 specialist modules | no | Keep: **Q-MOD** functional modularity (lesion dissociation). |
+| GWT-2 limited capacity | no | Keep: **Q-CAP**. |
+| GWT-3 broadcast | ceiling protocol | **Q-BCAST** = WS-1R (degraded input; one item for GWT-3, ctm, CQM20). |
+| GWT-4 state-dependent attention | no | Keep: **Q-ATTN**. |
+| HOT-1 generative top-down | yes: a dedicated tdIter bolt-on | **Q-TOPDOWN**: top-down expectations improve perception of degraded input vs. feedback cut (uses principle 1). |
+| HOT-2 metacognitive monitoring | no | Keep: **Q-META** (merged with CQM13). |
+| HOT-3 metacognitive agency (opt-out) | partly | **Q-META-ACT** = META-1R: confidence is used to act (opt out, seek information). |
+| HOT-4 quality space | no | Keep: **Q-SIM** graded similarity structure. |
+| AST-1 / AST-1R | yes: Kalman/LQG toy, unpassable | **Q-SELFATTN** = ATT-1R: a learned model of its own attention improves control. |
+| PP-1 predictive coding | no | Keep: **Q-PRED**. |
+| AE-1 agency under reversals | partly | **Q-AGENCY** = REV-1R (learned action–outcome model, flexible after reversal). |
+| AE-2 embodiment | no | Keep: **Q-BODY**. |
+
+### 8.2 The 10 frameworks → 6 shared mechanisms
+| Framework item | Literal? | Shared mechanism / test |
+|---|---|---|
+| thaler9 | **yes** (Creativity Machine noise inverted-U) | **Q-GEN** generative recombination (REC-1R). Noise-level inverted-U dropped. |
+| iit4 (phi proxy) | proxy | **Q-INTEG** integration–differentiation balance (PCI-style perturbational complexity vs. lesioned/shuffled; the lab pci.ts already exists). Merged with CQM21. |
+| activeInference | **yes** (EFE formula) | **Q-CURIO** = CUR-1R (directed exploration from uncertainty). |
+| attentionSchema (model of another's attention) | partly | **Q-SOCIAL-ATTN**: predicting another agent's attention focus vs. shuffled. Shares its model with Q-SELFATTN. |
+| fieldIntegration (phase locking) | no | Merged into **Q-BIND**. |
+| ual (trace conditioning) | no | Keep: **Q-ASSOC** unlimited-associative-learning marker. |
+| sensorimotor (efference prediction) | no | Merged into **Q-PRED** (self-generated vs. external input). |
+| projective (self/other ownership) | ceiling protocol | **Q-SELF** self/other distinction under degraded cues. |
+| ctm | **yes** (CTM chunk protocol) | Merged into **Q-BCAST**. |
+| butlin14 rollup | rollup | Removed (rollups are not tests). |
+Result: Q-GEN, Q-INTEG, Q-CURIO, Q-SOCIAL-ATTN/Q-SELF, Q-ASSOC, plus the merged Q-BIND/Q-PRED/Q-BCAST.
+
+### 8.3 CQM-25 → 14 organism qualities
+| CQM | Literal? | Disposition |
+|---|---|---|
+| 01 heredity | A-Life population protocol | **Q-LINEAGE** = EVO-1R (resource-gated reproduction). |
+| 02 open-endedness | ok | **Q-NOVEL** behavioural/representational novelty keeps growing vs. a fixed-world control. |
+| 03 ecological coupling | protocol artefact (C3) | **Q-ECO** = ECO-1R. |
+| 04 morphology (reach gene) | **yes** (Sims-style gene; fights the energy ledger) | **Q-ADAPT-BODY** = MORPH-1R (two environments, opposite optima). |
+| 05 embodied consistency | ok | Keep: **Q-ENERGY** (with VIAB). |
+| 06 perceptual integration | dup | → Q-BIND. |
+| 07 learning | ok | Keep: **Q-LEARN**. |
+| 08 continual retention | ceiling | **Q-RETAIN** = CQM08R. |
+| 09 causal interoceptive model | ok | Keep: **Q-INTERO**. |
+| 10 goal regulation | partly (ceiling) | **Q-GOAL** goal-directed vs. habitual switching after devaluation (concept-level). |
+| 11 planning | ok | Keep: **Q-PLAN**. |
+| 12 compositional transfer | ok | Merged with **Q-GEN**. |
+| 13 = HOT-2, 19 = RPT-1, 20 = GWT-3, 21 = iit4 | duplicates | Count once (Q-META, Q-RECUR, Q-BCAST, Q-INTEG). |
+| 14 signalling game | ok | Keep: **Q-COMM**. |
+| 15 boundary, 16 self-maintenance, 17 homeostasis | ok | Merge into **Q-HOMEO** (allostasis family; VIAB-a/b/c are its tests). |
+| 18 resilience | ceiling | **Q-ROBUST** graceful degradation after graded lesions (dose–response slope vs. no-plasticity control). |
+| 22 valence trade-off | ok | Keep: **Q-VALENCE**. |
+| 23 substrate pluralism | not applicable | Drop as a gate. Keep the WASM-equivalence check as engineering. |
+| 24 reproducibility, 25 scale | engineering | Move to the conformance tier, not "qualities". |
+
+### 8.4 Resulting quality list (v4.0 scorecard, ~24 items under the 5 principles)
+P1 Predictive allostasis: Q-PRED, Q-TOPDOWN, Q-INTERO, Q-HOMEO, Q-ENERGY · P2 Value/uncertainty: Q-CURIO, Q-AGENCY, Q-VALENCE, Q-GOAL, Q-ASSOC, Q-LEARN · P3 Workspace: Q-RECUR, Q-BIND, Q-MOD, Q-CAP, Q-ATTN, Q-BCAST, Q-META, Q-META-ACT, Q-SIM, Q-SELFATTN, Q-SELF, Q-SOCIAL-ATTN, Q-INTEG · P4 Sleep/generative: Q-GEN, Q-RETAIN, Q-PLAN · P5 Embodied lineage: Q-BODY, Q-LINEAGE, Q-ECO, Q-ADAPT-BODY, Q-NOVEL, Q-COMM, Q-ROBUST.
+Each quality needs ≥1 concept test with a causal lesion **and** a non-mechanistic control (shuffle/random). Each test must be non-ceiling (degraded inputs by default). No test may require a specific project's data, body or protocol.
+
+## 9. The 150-project list → capability clusters
+
+### 9.1 Collapse
+projects.tsv has 150 projects in 30 categories; capabilities_by_project.tsv has 499 project×capability rows over 12 rubric codes. Collapsed into 8 clusters, each a quality family (not "do what project X does"):
+| Cluster | Source categories (n projects) | Rubric codes | Quality family in 001 |
+|---|---|---|---|
+| K1 Neural control & brain models | brain model, connectome-grounded (10), consciousness models, cognitive architecture, neuroevolution | N, C, I | P3 workspace qualities. **"connectome-grounded" becomes "biologically-informed wiring principles"** (modularity, E/I balance, neuromodulator hubs), not a connectome import. |
+| K2 Learning & memory | embodied RL, multi-agent RL, cognitive arch. | L | P2 + P4 (Q-LEARN, Q-ASSOC, Q-RETAIN, Q-GEN) |
+| K3 Metabolism & self-maintenance | artificial chemistry (9), synthetic biology, protocells | M | P1 (Q-HOMEO, Q-ENERGY) |
+| K4 Evolution & lineage | digital evolution (8), open-endedness (7), neuroevolution | E, R, O(pen-ended) | P5 (Q-LINEAGE, Q-NOVEL) |
+| K5 Bodies & morphogenesis | evolved bodies (12), morphogenesis (8), physics engine, embodied agents | B | P5 (Q-BODY, Q-ADAPT-BODY). **No worm/Sims body reproduction.** |
+| K6 Self-organising media | CA, continuous CA/Lenia (7), reaction–diffusion, particle life | — | Out of scope for the brain. At most a dome-environment feature. Not a gate. |
+| K7 Ecology & society | agent ecology (12), collective behaviour, game creatures, agent modelling | S | P5 (Q-ECO, Q-COMM, Q-SOCIAL-ATTN) |
+| K8 Engineering & openness | (all) | D, W, O(pen source) | Conformance tier (determinism, browser, reproducibility). Not qualities. |
+Excluded as not applicable: LLM agents (4) (no LLM by R-010) and biological hybrids (3) (wetware).
+
+### 9.2 Roadmap (100 "novel capabilities")
+Rows that copy a project must be restated as principles:
+- c302/BAAIWorm reversal rates → "forward/backward switching emerges from a learned approach/avoid circuit".
+- FlyWire subgraph controller → "modular wiring motifs improve steering vs. degree-preserving shuffle".
+- Polyworld vision/mating/predation → "vision from own render", "recombination speeds adaptation", "predator–prey dynamics".
+- Creatures (Grand) modulators → Q-VALENCE / neuromodulator ablation.
+- Brian2/NEST match → drop.
+- Eshkol bit-for-bit → engineering check.
+- Genome-to-connectome, chemotaxis, thermotaxis → keep as principles (development, gradient following), no worm specifics.
+The rest are already concept-level.
+
+## 10. Pipeline and template changes (proposed)
+1. **CI**: harness.yml runs (a) conformance suite on 001 + template, (b) organism smoke on dev seeds (a few minutes), (c) the reproducibility hash. The v1 toy harness moves to an `archive` job that is non-gating and labelled.
+2. **Repo pipeline**: `pipeline/{queue.sh,score.sh,run.ts}`, with the item list read from the frozen prereg and results under results/<prereg>/{dev,test}/ with a manifest.
+3. **Prereg template** (`preregistrations/TEMPLATE.md`): fields concept/principle, quality ID, mimicry-check, controls (lesion + non-mechanistic), non-ceiling design, seeds (fresh test, dev 2000–2031), the freeze commit before test seeds, R-suffix rule for redefinitions, and the two-block freezing rule.
+4. **Conformance**: keep the 19 interface/energy checks (required). Add **C-NC** "no cosmetic parts": each declared part must change a metric when lesioned. Add an optional **quality tier**: run any Q-test whose hooks the creature implements, and report per cluster. creature template docs: "copy the interface, invent your own brain; do not reproduce a named project".
+5. **Scorecard/canvas/site**: tiles per principle (P1–P5), each listing its quality IDs and PASS/FAIL. The Butlin/framework/CQM/150 tables stay as historical mappings with a column "→ quality ID". Remove the "top of 151" ranking.
+6. **Issue templates**: add quality-test dispute; update indicator-dispute to the quality IDs.
+
+## 11. Approval checklist for Alex (nothing below is done yet)
+- [ ] Approve reframing R-013/14/15/20/21/22/25 (§7.1) and the canvas tile change. The canvas will be edited only after approval.
+- [ ] Decide R-004/R-005 (Eshkol/Moonlab/quantum): lab tool only vs. kept in the organism.
+- [ ] Approve the quality list (§8.4) and the cluster collapse (§9).
+- [ ] Then: write and freeze preregistrations/v4.0.md (R items + retirements) **after Round 20 completes**, before any v4.0 test seed.
