@@ -1,0 +1,4 @@
+ARCHIVED 2026-10-31: original site/gen.py text for CAP-C:
+CAP-C uses the real C. elegans connectome (OpenWorm c302). It separates anterior from posterior touch perfectly but in the reversed direction under the Dale/GABA sign rule, so it FAILS; no synapse signs were changed. AST-1R stays FAIL: a clairvoyant, noise-free controller still cannot pass base 3000 (harness/ast_bound.ts). Audit: 76 of 85 frozen tests are self-contained harness models rather than the creature's own mechanisms (creatures/001/MECHANISM_AUDIT.tsv).
+
+and: "C":"partial: CAP-C real C. elegans connectome FAILS (reversed direction)"

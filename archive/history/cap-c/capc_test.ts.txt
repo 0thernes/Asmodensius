@@ -1,0 +1,5 @@
+// ARCHIVED 2026-10-31: CAP-C test block from creatures/001/harness/v27tests.ts. Not built.
+  if (want("CAP-C")) { const conn = loadConn(fs.readFileSync(path.join(dataDir, "celegans_herm_full_edgelist.csv"), "utf8")); const ANT = ["ALML", "ALMR", "AVM"], POST = ["PLML", "PLMR"];
+    const run = (shuf: boolean) => SEEDS.map((s) => { const c = shuf ? shuffleConn(conn, mulberry(s * 263 + 2722)) : conn; const r = mulberry(s * 263 + 2721); const sc: number[] = [], lab: boolean[] = []; for (let k = 0; k < 20; k++) { sc.push(touchTrial(c, ANT, r)); lab.push(true); sc.push(touchTrial(c, POST, r)); lab.push(false); } return auroc(sc, lab); });
+    const F = run(false); const it = item("CAP-C", P, "Connectome-grounded touch-direction circuit (class C; roadmap 7)", "AUROC anterior vs posterior touch on AVA−AVB", "C. elegans hermaphrodite connectome (OpenWorm c302), rate model, GABA sign rule", [compare("degree-preserving shuffled connectome", F, run(true))]);
+    const m = F.reduce((a, b) => a + b, 0) / 16; it.note = `mean AUROC ${m.toFixed(3)}`; if (m <= 0.5) it.pass = false; out.push(it); }

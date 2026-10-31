@@ -6,8 +6,8 @@ const $ = (h: string) => { const e = document.createElement("div"); e.innerHTML 
 const bar = (v: number, lo = 0, hi = 1, c = "#5b8") => { const f = Math.max(0, Math.min(1, (v - lo) / (hi - lo))); return `<span class=b><i style="width:${(f * 100).toFixed(0)}%;background:${c}"></i></span><small>${v.toFixed(2)}</small>`; };
 const strip = (a: number[], lo: number, hi: number) => a.map((v) => { const f = Math.max(0, Math.min(1, (v - lo) / (hi - lo))); return `<i class=s style="background:hsl(${(f * 120).toFixed(0)},60%,45%)" title="${v.toFixed(2)}"></i>`; }).join("");
 function build() { const seed = 2000 + Math.floor(Math.random() * 32); d = new Dome({ seed, radius: 6 }, { respawnAfter: 60 }); const les = [...off].join(",");
-  d.spawn = (_: string, s: number, parent?: any) => make001(s, { mind: "v40", affectLesion: les, ...(parent?.persona?.() ? { parentPersona: parent.persona() } : {}) });
-  for (let i = 0; i < 5; i++) d.add("c" + i, make001(seed * 10 + i, { mind: "v40", affectLesion: les })); (document.getElementById("seed") as HTMLElement).textContent = `dev seed ${seed}`; }
+  d.spawn = (_: string, s: number, parent?: any) => make001(s, { mind: "v40", affectLesion: les, ...(parent?.persona?.() ? { parentPersona: parent.persona() } : {}), ...(parent?.devGenome?.() ? { parentDevGenome: parent.devGenome() } : { develop: true }) });
+  for (let i = 0; i < 5; i++) d.add("c" + i, make001(seed * 10 + i, { mind: "v40", affectLesion: les, develop: true })); (document.getElementById("seed") as HTMLElement).textContent = `dev seed ${seed}`; }
 function render() { const root = document.getElementById("pop")!; root.innerHTML = ""; const t = d.t, day = (t / 1440).toFixed(2);
   (document.getElementById("clock") as HTMLElement).textContent = `t=${t} (day ${day}) · deaths ${d.deaths} · births ${d.births}`;
   for (const h of d.pop) { const a = h.c.affectState?.(); if (!a) { root.append($(`<div class=card><b>${h.id}</b> affect off (lesion all)</div>`)); continue; }

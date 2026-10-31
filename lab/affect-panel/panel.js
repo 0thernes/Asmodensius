@@ -606,6 +606,79 @@
     }
   });
 
+  // ../creatures/001/organism/develop.ts
+  function randomGenome(nProj, nReg, r) {
+    const g = new Float32Array(3 * nProj + 3 * nReg);
+    for (let p = 0; p < nProj; p++) {
+      g[3 * p] = 1 + 0.3 * gs(r);
+      g[3 * p + 1] = 0.1 * gs(r);
+      g[3 * p + 2] = Math.log(0.25) + 0.3 * gs(r);
+    }
+    for (let k = 3 * nProj; k < g.length; k++) g[k] = gs(r);
+    return g;
+  }
+  function mutateGenome(g, r, rate = 0.05) {
+    const o = g.slice();
+    for (let k = 0; k < o.length; k++) o[k] += rate * gs(r);
+    return o;
+  }
+  function grow(P, R02, RN2, regions, g, r) {
+    const nP = P.length, tagOf = (reg) => {
+      const k = 3 * nP + 3 * regions.indexOf(reg);
+      return [g[k], g[k + 1], g[k + 2]];
+    };
+    const pos = (i, reg) => (i - R02[reg] + 0.5) / RN2[reg];
+    const jit = /* @__PURE__ */ new Map();
+    const tag = (i, reg) => {
+      let t = jit.get(i);
+      if (!t) {
+        const b = tagOf(reg);
+        t = b.map((v) => v + 0.5 * gs(r));
+        jit.set(i, t);
+      }
+      return t;
+    };
+    const pre = [], post = [], aff = [];
+    let cand = 0, topo = 0;
+    P.forEach(([a, b, p], pi) => {
+      const gain = g[3 * pi], off = g[3 * pi + 1], sig = Math.max(0.05, Math.exp(g[3 * pi + 2]));
+      for (let j = R02[b]; j < R02[b] + RN2[b]; j++) {
+        const xj = pos(j, b), tj = tag(j, b);
+        const C = [];
+        for (let i = R02[a]; i < R02[a] + RN2[a]; i++) {
+          if (i === j) continue;
+          const xi = pos(i, a), ti = tag(i, a);
+          const d = xj - (gain * xi + off - (gain - 1) / 2);
+          const A = Math.exp(-(d * d) / (2 * sig * sig)) * (1 + Math.tanh((ti[0] * tj[0] + ti[1] * tj[1] + ti[2] * tj[2]) / 3));
+          C.push([i, A]);
+        }
+        const meanA = C.reduce((s, c) => s + c[1], 0) / Math.max(1, C.length) || 1;
+        const keepN = Math.round(p * C.length + (r() - 0.5));
+        const over = C.filter(([, A]) => r() < Math.min(1, 2 * p * A / meanA));
+        cand += over.length;
+        over.sort((u, v) => v[1] * (0.7 + 0.6 * r()) - u[1] * (0.7 + 0.6 * r()));
+        for (const [i, A] of over.slice(0, Math.max(0, keepN))) {
+          pre.push(i);
+          post.push(j);
+          aff.push(A / meanA);
+          const xi = pos(i, a);
+          topo += 1 - Math.abs(xj - xi);
+        }
+      }
+    });
+    return { pre, post, aff, stats: { candidates: cand, kept: pre.length, topo: pre.length ? topo / pre.length : 0 } };
+  }
+  var gs;
+  var init_develop = __esm({
+    "../creatures/001/organism/develop.ts"() {
+      init_define_process_env();
+      gs = (r) => {
+        const u = Math.max(1e-12, r()), v = r();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.283185307 * v);
+      };
+    }
+  });
+
   // ../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
@@ -733,6 +806,7 @@
     "../creatures/001/organism/organism.ts"() {
       init_define_process_env();
       init_affect();
+      init_develop();
       clamp = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
       IG0 = betaIG(1, 1);
       REGIONS = [["SENS", 16], ["THAL", 16], ["CTX", 64], ["HIP", 32], ["STR", 32], ["HYP", 16], ["VTA", 6], ["RAPHE", 6], ["LC", 6], ["BF", 6], ["INS", 8], ["SCN", 8], ["MOT", 8], ["ENS", 48]];
@@ -1644,6 +1718,8 @@
         // v3.6: light input, dendritic NMDA buffer, latent-cause value map, schema statistics, Beta beliefs for expected information gain
         deathCause = "";
         temper = -1;
+        devGenome = null;
+        devStats = null;
         intPrev = 1;
         affR = mulberry2(9);
         affect = null;
@@ -1675,7 +1751,22 @@
           const r = this.r;
           const pre = [], post = [], w = [], pl = [];
           const has = /* @__PURE__ */ new Set();
-          for (const [a, b, p] of CP) for (let i = R0[a]; i < R0[a] + RN[a]; i++) for (let j = R0[b]; j < R0[b] + RN[b]; j++) {
+          if (o.develop) {
+            const rg = mulberry2(o.seed * 5167 + 23);
+            const gnm = o.devGenome ?? randomGenome(CP.length, REGIONS.length, rg);
+            this.devGenome = gnm;
+            const G2 = grow(CP, R0, RN, REGIONS.map((x) => x[0]), gnm, rg);
+            this.devStats = G2.stats;
+            const regOf = (i) => REGIONS.find(([n]) => i >= R0[n] && i < R0[n] + RN[n])[0];
+            G2.pre.forEach((i, k) => {
+              const j = G2.post[k];
+              const ln = Math.exp(-0.7 + 0.9 * this.gauss(r)) * 0.35 * Math.min(2, 0.5 + 0.5 * G2.aff[k]);
+              w.push(INHIB(i) ? -ln * 1.6 : ln);
+              pre.push(i);
+              post.push(j);
+              pl.push(regOf(i) === "CTX" && regOf(j) === "CTX" && !INHIB(i) ? 1 : 0);
+            });
+          } else for (const [a, b, p] of CP) for (let i = R0[a]; i < R0[a] + RN[a]; i++) for (let j = R0[b]; j < R0[b] + RN[b]; j++) {
             if (i === j) continue;
             let pp = p;
             if (a === b && b === "CTX" && has.has(j * NNEU + i)) pp = Math.min(1, p * 4);
@@ -2798,6 +2889,7 @@
       init_define_process_env();
       init_organism();
       init_affect();
+      init_develop();
       NM = ["DA", "5HT", "NE", "ACh", "Glu", "GABA", "eCB"];
       regionOf = (i) => {
         for (const [r] of REGIONS) if (i >= R0[r] && i < R0[r] + RN[r]) return r;
@@ -2809,7 +2901,7 @@
           this.seed = seed;
           this.opts = opts;
           const pp = opts.parentPersona;
-          this.o = new Organism({ seed, ...opts, ...pp ? { persona: Affect.birth(mulberry2(seed * 4049 + 7), pp) } : {} });
+          this.o = new Organism({ seed, ...opts, ...pp ? { persona: Affect.birth(mulberry2(seed * 4049 + 7), pp) } : {}, ...opts.parentDevGenome ? { develop: true, devGenome: mutateGenome(opts.parentDevGenome, mulberry2(seed * 4073 + 3)) } : {} });
           const s = this.o.syn;
           for (let k = 0; k < s.pre.length; k++) {
             const id = `${regionOf(s.pre[k])}->${regionOf(s.post[k])}`;
@@ -2989,6 +3081,9 @@
         persona() {
           return this.o.affect ? { ...this.o.affect.persona } : null;
         }
+        devGenome() {
+          return this.o.devGenome;
+        }
         affectState() {
           return this.o.affectState();
         }
@@ -3089,8 +3184,8 @@
         const seed = 2e3 + Math.floor(Math.random() * 32);
         d = new Dome({ seed, radius: 6 }, { respawnAfter: 60 });
         const les = [...off].join(",");
-        d.spawn = (_, s, parent) => make001(s, { mind: "v40", affectLesion: les, ...parent?.persona?.() ? { parentPersona: parent.persona() } : {} });
-        for (let i = 0; i < 5; i++) d.add("c" + i, make001(seed * 10 + i, { mind: "v40", affectLesion: les }));
+        d.spawn = (_, s, parent) => make001(s, { mind: "v40", affectLesion: les, ...parent?.persona?.() ? { parentPersona: parent.persona() } : {}, ...parent?.devGenome?.() ? { parentDevGenome: parent.devGenome() } : { develop: true } });
+        for (let i = 0; i < 5; i++) d.add("c" + i, make001(seed * 10 + i, { mind: "v40", affectLesion: les, develop: true }));
         document.getElementById("seed").textContent = `dev seed ${seed}`;
       }
       function render() {

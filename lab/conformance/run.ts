@@ -12,4 +12,4 @@ for (const r of NEG) console.log(`${r.creature}: ${r.pass ? "WRONGLY CONFORMS" :
 writeFileSync("out/conformance_neg.json", JSON.stringify({ negatives: NEG.map((r) => ({ creature: r.creature, rejected: !r.pass })), checks: { allNegativesRejected: NEG.every((r) => !r.pass), c001Conforms: R[0].pass, templateConforms: R[1].pass } }));
 
 // v4.0: required originality check over the whole repo (see ORIGINS.md)
-{ const o = originality("../"); console.log(`originality: ${o.pass ? "PASS" : "FAIL"} (${o.fails} fail, ${o.warns} warn)`); for (const x of o.findings) console.log(`  ${x.kind} ${x.file}:${x.line} ${x.why}`); writeFileSync("out/originality.json", JSON.stringify(o, null, 1)); if (!o.pass) process.exitCode = 1; }
+{ const o = originality("../"); console.log(`originality: ${o.pass ? "PASS" : "FAIL"} (${o.fails} fail, ${o.allowed} allowed)`); for (const x of o.findings) console.log(`  ${x.kind} ${x.file}:${x.line} ${x.why}`); writeFileSync("out/originality.json", JSON.stringify(o, null, 1)); if (!o.pass) process.exitCode = 1; }

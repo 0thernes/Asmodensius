@@ -1,7 +1,7 @@
 // FROZEN v2.7 tests (preregistrations/v2.7.md). Do not edit after first test-seed run.
 import { mulberry, SEEDS, compare, item, Item, auroc } from "./harness";
 import { maze, newModel, MN } from "./v26mech";
-import { seekPref, crawl, stateOf, reproduce, loadConn, shuffleConn, touchTrial } from "./v27mech";
+import { seekPref, crawl, stateOf, reproduce } from "./v27mech";
 const fs = require("fs"), path = require("path");
 export function v27Tests(dataDir: string, only?: string): Item[] { const want = (id: string) => !only || only === id; const P = "Prereg v2.7"; const out: Item[] = [];
   if (want("CAP-B")) { const run = (mode: string) => SEEDS.map((s) => { const r = mulberry(s * 263 + 2701); const jit = Array.from({ length: 12 }, () => (r() * 2 - 1) * 0.01); const phi0 = r() * 6.283185307; const rp = mulberry(s * 263 + 2702);
@@ -19,8 +19,5 @@ export function v27Tests(dataDir: string, only?: string): Item[] { const want = 
   if (want("CAP-R")) { const run = (mode: string) => SEEDS.map((s) => { const p = stateOf(s); const c = mode === "rand" ? stateOf(s + 7777) : reproduce(p, mulberry(s * 263 + 2711), mode === "full"); let k = 0; for (let i = 0; i < p.length; i++) if (Object.is(p[i], c[i])) k++; return k / p.length; });
     const F = run("full"); const it = item("CAP-R", P, "Self-reproduction of the full creature state (class R; roadmap 4)", "fraction of state entries copied bit-exactly", "self-description (developed weights + organ state), triple redundancy + majority-vote repair", [compare("random-init child", F, run("rand")), compare("single-copy description (no repair)", F, run("norep"))]);
     const m = F.reduce((a, b) => a + b, 0) / 16; it.note = `mean fidelity ${m.toFixed(4)}`; if (m < 0.99) it.pass = false; out.push(it); }
-  if (want("CAP-C")) { const conn = loadConn(fs.readFileSync(path.join(dataDir, "celegans_herm_full_edgelist.csv"), "utf8")); const ANT = ["ALML", "ALMR", "AVM"], POST = ["PLML", "PLMR"];
-    const run = (shuf: boolean) => SEEDS.map((s) => { const c = shuf ? shuffleConn(conn, mulberry(s * 263 + 2722)) : conn; const r = mulberry(s * 263 + 2721); const sc: number[] = [], lab: boolean[] = []; for (let k = 0; k < 20; k++) { sc.push(touchTrial(c, ANT, r)); lab.push(true); sc.push(touchTrial(c, POST, r)); lab.push(false); } return auroc(sc, lab); });
-    const F = run(false); const it = item("CAP-C", P, "Connectome-grounded touch-direction circuit (class C; roadmap 7)", "AUROC anterior vs posterior touch on AVA−AVB", "C. elegans hermaphrodite connectome (OpenWorm c302), rate model, GABA sign rule", [compare("degree-preserving shuffled connectome", F, run(true))]);
-    const m = F.reduce((a, b) => a + b, 0) / 16; it.note = `mean AUROC ${m.toFixed(3)}`; if (m <= 0.5) it.pass = false; out.push(it); }
+  /* CAP-C retired 2026-10-31 (originality rule): see archive/history/cap-c/; historical v2.7 outcome kept in results */
   return out; }

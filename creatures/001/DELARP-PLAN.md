@@ -604,3 +604,23 @@ After §34: (1) the dome hook API + caps + audit log + sandbox conformance check
   - Imbalance is allowed to be adaptive or harmful; only selection decides.
 - **Originality rule:** see `ORIGINS.md`. Required check `lab/conformance/originality.ts` currently FAILS on the C. elegans connectome CSV, the CAP-C worm circuit, site text and the transplant.ts provenance line. The replacement list is in ORIGINS.md.
 - **Smoke test (dev seed 2003, 1 day, 5 creatures):** creatures formed positive and negative attitudes toward each other, e.g. c1 → c2 −0.50 and c1 → c0 +0.22. There were no deaths, so inheritance was not exercised yet; that waits for the population dev runs after Round 20.
+
+---
+
+# Part XIII: CAP-C retired; 001 grows its own wiring
+
+- **CAP-C archived** to `archive/history/cap-c/`: the edgelist, the mechanism and test code as `.txt`, the original site text, and a README. Nothing imports it, and it's excluded from the build and the originality scan. The v2.7 results stay as history. `site/gen.py` text is updated, and `v27tests.ts` skips CAP-C with a note. The originality check now **PASSES** (0 fail; 4 allowed items: React and three.js).
+- **Developmental wiring** (`organism/develop.ts`, opt-in `develop: true`, v4.0):
+  - Every neuron gets a position and a surface tag from a heritable genome (3 genes per projection: map gain, offset and width; 3 per region: tag).
+  - Each projection over-produces ~2x candidate synapses, weighted by topographic map and tag affinity, then competitive pruning keeps each target's best inputs down to the density set by 001's own projection table.
+  - Weights scale with affinity.
+  - Inheritance: `mutateGenome`. The dome lineage passes the parent genome (`parentDevGenome`), and the affect panel's domes grow developmentally.
+- **Smoke test (dev seed 2005, 1 day; a sanity check, not a result):**
+  - Grown synapses: 3101 vs 3313 i.i.d. (~6% fewer; some targets lack enough candidates; tune later).
+  - Topographic order: 0.875.
+  - Forages: 73 grown vs 61 i.i.d., and a mutated-genome child foraged 82; all alive.
+- **Next:**
+  - Activity-dependent refinement and pruning during sleep (link to M40.turn).
+  - Grow the hand-designed v3.1–v3.9 cortical blocks from the same genome.
+  - Developmental genome evolution in dome lineages.
+  - Make `develop` the v4.0 default once dev seeds show it's viable (after Round 20).
