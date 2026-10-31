@@ -31,6 +31,7 @@ export interface CreatureLab {
   exchange?(e: Exchange): void;         // world <-> creature matter/energy transfer
   ledger?(): { energy: number; intake: number; error: number };
   // v0.3 God-panel hooks (all energy-conserving: they move energy between stores, never create it)
+  meet?(otherId: string): void; neighbors?(nb: { id: string; dx: number; dy: number }[]): void; persona?(): Record<string, number> | null; // v4.0 social attitudes + lineage
   harm?(x: number): void;               // tissue damage (toxicity, radiation)
   work?(kJ: number): void;              // mechanical work paid from ATP into heat (gravity, drag)
   shiftModulator?(name: string, d: number): void;  // add d to an extracellular neuromodulator level

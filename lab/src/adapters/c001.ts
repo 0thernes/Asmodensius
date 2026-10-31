@@ -1,5 +1,6 @@
 // Read-only adapter for creature 001 (imports organism.ts, never modifies it).
-import { Organism, REGIONS, R0, RN, NNEU } from "../../../creatures/001/organism/organism";
+import { Organism, REGIONS, R0, RN, NNEU, mulberry } from "../../../creatures/001/organism/organism";
+import { Affect } from "../../../creatures/001/organism/affect";
 import type { CreatureLab, Part, Coupling, Vec, BodySpec, WorldSense, Action, Exchange } from "../interface";
 const NM = ["DA", "5HT", "NE", "ACh", "Glu", "GABA", "eCB"];
 const regionOf = (i: number) => { for (const [r] of REGIONS) if (i >= R0[r] && i < R0[r] + RN[r]) return r; return "?"; };
@@ -9,7 +10,7 @@ export type StateMode = "slow" | "full";
 export class Creature001 implements CreatureLab {
   readonly creatureId = "001"; o: Organism; private edges = new Map<string, number[]>(); private nChoices = 0; private lastSite = -1;
   constructor(readonly seed: number, readonly opts: Record<string, unknown> = {}) {
-    this.o = new Organism({ seed, ...opts } as any);
+    const pp = opts.parentPersona as any; this.o = new Organism({ seed, ...opts, ...(pp ? { persona: Affect.birth(mulberry(seed * 4049 + 7), pp) } : {}) } as any); /* v4.0: inherited personality with mutation + bet-hedging scatter */
     const s = this.o.syn; for (let k = 0; k < s.pre.length; k++) { const id = `${regionOf(s.pre[k])}->${regionOf(s.post[k])}`; (this.edges.get(id) ?? this.edges.set(id, []).get(id)!).push(k); }
   }
   parts(): Part[] { return [...REGIONS.map(([r, n]) => ({ id: r, kind: "region" as const, size: n })), ...NM.map((m) => ({ id: "nm:" + m, kind: "modulator" as const, size: 2 })), { id: "body", kind: "organ", size: 6 }, { id: "value", kind: "module", size: 16 }]; }
@@ -60,7 +61,14 @@ export class Creature001 implements CreatureLab {
   sense(w: WorldSense) { if (w.touch > 0) this.o.stimulate("INS", 0.2 * w.touch); }
   alive() { return !this.o.dead; }
   exchange(e: Exchange) { (this.o.o as any).pool = e.foodPatch; } // the organism's own forage draws (2.2 kJ) now come out of the world patch under its body
-  act(): Action { const site = this.lastSite; return { heading: site >= 0 ? (site / 16) * 2 * Math.PI : NaN, speed: Math.min(1, 4 * (this.o.regionRate.MOT ?? 0)) * (this.o.asleep ? 0 : 1), forage: site >= 0, site }; }
+  private nb: { id: string; dx: number; dy: number }[] = [];
+  meet(id: string) { const a = this.o.affect; if (a) a.meet(id, a.feltValence()); }
+  neighbors(nb: { id: string; dx: number; dy: number }[]) { this.nb = nb; }
+  persona() { return this.o.affect ? { ...this.o.affect.persona } as Record<string, number> : null; }
+  affectState() { return this.o.affectState(); }
+  /** v4.0: when not heading to a food site, steer toward the most-liked or away from the most-disliked nearby creature */
+  private socialHeading(): number { const a = this.o.affect; if (!a || !this.nb.length) return NaN; let best = 0, hd = NaN; for (const n of this.nb) { const s = a.stance(n.id); if (Math.abs(s) > Math.abs(best) && Math.abs(s) > 0.05) { best = s; hd = Math.atan2(n.dy, n.dx) + (s < 0 ? Math.PI : 0); } } return hd; }
+  act(): Action { const site = this.lastSite; return { heading: site >= 0 ? (site / 16) * 2 * Math.PI : this.socialHeading(), speed: Math.min(1, 4 * (this.o.regionRate.MOT ?? 0)) * (this.o.asleep ? 0 : 1), forage: site >= 0, site }; }
   harm(x: number) { this.o.damage(x); }
   work(kJ: number) { const o = this.o; const w = Math.min(kJ, Math.max(0, o.atp)); o.atp -= w; o.heat += w; }
   shiftModulator(name: string, d: number) { const m = this.o.nm[name]; if (!m) throw new Error(`no modulator ${name}`); m.E = Math.max(0, m.E + d); }

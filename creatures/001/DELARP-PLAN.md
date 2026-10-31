@@ -585,3 +585,22 @@ After §34: (1) the dome hook API + caps + audit log + sandbox conformance check
 **Smoke test (seed 2001, 3 days, a sanity check rather than a result):** full: 280 forages, alive, no events; `all` lesion: 316 forages (so affect changes behaviour); max-vulnerability persona: 162 forages, alive, `hpaLockIn`, `infection`, `sensitised`, 4 cravings, a mood swing, mood pinned at −1 (a depressive lock-in; watch whether it recovers over longer runs). Starvation: mood −0.31. Viability across a population still needs measuring on dev seeds 2000+ once the box is free.
 
 **Next:** lab panel bound to `affectState()`; `meet()` wired to dome social contacts; dev-seed population runs (viability, event rates, lesion deltas), logged in DISCOVERIES.md.
+
+---
+
+# Part XII: Live affect panel, social attitudes, adaptive imbalance, originality rule
+
+- **Live panel:** `lab/affect-panel/index.html` with `panel.js`, built from `main.ts` with esbuild and runnable offline. It steps a 5-creature dome in the browser and shows each creature's emotions, mood (fast and slow), stress, inflammation, sleep debt, scarcity, attitudes and wanting across the 16 sites, outcome SD, attitudes toward other creatures, personality genes and the last dysregulation events. Each affect layer has a lesion toggle that rebuilds the dome.
+- **Social attitudes in the dome:**
+  - The dome calls `meet(id)` on contact and `neighbors()` with creatures within 3× touch radius.
+  - An attitude toward a creature is learned from how being near it felt (associative).
+  - When it isn't heading to a food site, 001 approaches the creature it likes most or avoids the one it dislikes most.
+  - Respawn takes a living conspecific as parent (`spawn(species, seed, parent)`), so personality is inherited with mutation and selection works through survival.
+- **v3.9 behaviour is unchanged:** affect only exists under `is40`, the dome's social loop draws no random numbers, and parent selection only runs for 3-argument spawners.
+- **Adaptive imbalance (heritable genes):**
+  - `hedge` (bet-hedging) widens how far offspring temperaments scatter (Slatkin 1974).
+  - `riskScar` (risk-sensitive foraging) prefers high-variance options under energy scarcity and avoids them when fed (Caraco 1980; Stephens 1981).
+  - Lesion: `risk`.
+  - Imbalance is allowed to be adaptive or harmful; only selection decides.
+- **Originality rule:** see `ORIGINS.md`. Required check `lab/conformance/originality.ts` currently FAILS on the C. elegans connectome CSV, the CAP-C worm circuit, site text and the transplant.ts provenance line. The replacement list is in ORIGINS.md.
+- **Smoke test (dev seed 2003, 1 day, 5 creatures):** creatures formed positive and negative attitudes toward each other, e.g. c1 → c2 −0.50 and c1 → c0 +0.22. There were no deaths, so inheritance was not exercised yet; that waits for the population dev runs after Round 20.
