@@ -470,3 +470,39 @@ The creature also feels the machine it lives on. These are alien senses only a d
 - **Possible observables (exploratory):** does the creature "notice" machine stress (e.g. arousal/NE rises with GC bursts)? Does it learn a circadian-like rhythm from the host's daily load cycle? Do creatures in the dome synchronise to shared substrate events?
 
 Build order addition: SubstrateTap with synthetic and replay first (node), then live mode (node), then browser live mode.
+
+---
+# Part VIII: Self-model and simulation insight (v4.0 design, 2026-10-31)
+Core goal (Alex): the closest achievable awareness of its environment and a sense of being alive. Wording rule: we build and measure **functional** self-modelling and world-modelling. We never claim phenomenal consciousness.
+
+## 31. Unified self-model: a persistent "self, here, now" state
+- **What it binds:** a low-dimensional recurrent state `SELF` (e.g. 32–64 units, slow time constant) that is trained to predict, jointly, the next:
+  1. body state (interoception: energy, glucose, HR, integrity, temperature);
+  2. sensory summary (fused sensory bus, §26–30);
+  3. own action consequences (efference copy);
+  4. location/heading in the dome (central-complex-like ring, §23);
+  5. time (circadian phase, age).
+  This follows the bodily-self principle (Seth; Blanke & Metzinger minimal phenomenal selfhood: body ownership, self-location, first-person perspective) and the attention-schema principle (a model of its own attention as part of the self).
+- **Persistence:** SELF carries across sleep (with REM-time "offline self": the dream generator runs from SELF), survives snapshot/restore, and accumulates an autobiographical index (episodes keyed by SELF state).
+- **Use:** SELF feeds the workspace and the value-plus-uncertainty drive (e.g. "I am weak → avoid risk"). Lesion control: SELF clamped to its mean, or SELF from a different individual (a "self transplant", via the lab transplant instrument).
+- **Observables (graded, then promotable):** the self-state predicts own future body state better than a body-only predictor (vs. SELF lesioned); the creature distinguishes self-caused vs. externally caused sensory change (self-tickle-like attenuation; sensorimotor/projective); mirror-like contingency detection (it recognises its own movement in the dome render vs. another creature's, vs. delayed-feedback control); continuity: behaviour after sleep or restore is consistent with pre-sleep self-state (vs. self shuffled).
+- **"Sense of being alive" as a functional bundle:** self-maintenance drive (homeostasis), death-avoidance (behaviour changes as viability falls, beyond hunger), a self-continuity preference (avoids states that reset it, see §32), and a felt-energy channel. Measured as behaviour; labelled functional.
+
+## 32. Simulation insight: learning that its world is a simulation
+The dome has regularities that natural worlds lack: God-panel dial jumps, seeded repeat patterns, substrate glitches (GC pauses, frame drops, §30), resets/restores, tick quantisation, quantum-dice interventions. The creature gets the senses to notice them (world-dial, substrate, quantum) but is never told.
+- **Mechanism:** an **artefact model**, a latent-cause module (extends the v3.6 latent-cause inference, Gershman & Niv) that learns two kinds of causes for surprising events: "natural" (smooth, local, energy-conserving, caused by its own or others' actions) and "artefact" (discontinuous, global, synchronous across all creatures, coincident with substrate events or dial changes, periodic or seed-repeating). Its posterior P(artefact | event) is a slow internal belief state, "SIM", also read into SELF (§31).
+- **Behaviour it should change (falsifiable):**
+  1. **Prediction of interventions:** anticipatory changes before dial changes or resets when these follow learnable schedules (e.g. a God-panel cycle, a reset every N days), vs. the same schedule with randomised timing (control) and vs. SIM lesioned.
+  2. **Differential response:** treats artefact events differently from natural events with matched sensory magnitude (e.g. does not learn site values from a food change caused by a dial jump; does not flee a global glitch as a predator). Control: the same events relabelled at random, or the artefact cues (substrate/dial channel) shuffled.
+  3. **Exploiting regularities:** uses seed-repeat structure (a replayed day) to forage better on the second pass than a creature with SIM lesioned, without memorising sites directly (control: a new seed with identical statistics).
+  4. **Glitch detection:** SIM rises after substrate glitches injected in synthetic mode (dose–response with glitch rate), not after matched natural noise.
+  5. **Reset awareness:** after a snapshot/restore, the creature's prediction error about time/body jumps, and it re-checks its world (exploration burst) more than after a natural sleep of the same length.
+- **Keeps living:** SIM must not freeze behaviour. A guard check is that foraging, sleep and viability (VIAB) stay within their normal ranges when SIM is high. Life goes on inside the simulation.
+- **Controls throughout:** a "natural dome" (no dial jumps, no glitches, no resets; matched event statistics) where SIM must stay low; shuffled artefact cues; SIM lesion. Results are reported with replay seeds and substrate logs (replay mode only for tests).
+- **Labels:** "models its world as having artificial interventions" is a functional, measurable claim. Anything stronger is not claimed.
+
+## 33. Where this connects to the lists
+Self-model: HOT-2/HOT-4, AST-1 (attention as part of SELF), AE-1/AE-2, projective, sensorimotor, CQM09 (causal interoceptive model), CQM15 boundary. Simulation insight: PP-1 (prediction of interventions), CQM11 planning, the latent-cause mechanism behind AE-1. Both start in Tier G (graded, exploratory, DISCOVERIES.md), then get promoted to preregistered R items when stable.
+
+## 34. Build order (after §29/§30)
+(1) SELF recurrent state + its prediction losses (node). (2) Synthetic artefact schedule in the dome (dial cycles, injected glitches, resets) + natural-dome control. (3) Artefact latent-cause module → SIM. (4) The five behavioural probes above on dev seeds. (5) Browser: show SELF and SIM in the inspector (no claims in the UI beyond the functional label).
