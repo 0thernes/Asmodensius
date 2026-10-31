@@ -55,3 +55,7 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
   - volX: unexpected uncertainty = |RPE| minus 2w(1-w) (Yu & Dayan 2005).
 - AINFR4 d results: default −0.77; srcMon −0.55; srcMon+epiN −0.36; srcMon+epiN+volLeak 0 **+0.12**; srcMon+epiN+volX+volLeak 0.03 +0.22.
 - The epistemic lesion still explores enough by decision noise (lesion 0.59 per forage), so directed info-seeking has almost no margin here. Not passing.
+
+## 2026-10-31 (3:10 PM PT): first-principles pass (see FIRST-PRINCIPLES.md)
+- N13b integrity-gated veto on fresh 2080-2095: own vs lens-shuffled d 0.08, vs off 0.07, vs integrity-shuffled 0.04 (vetoI 3/10 similar). The 2064 d 0.57 did not replicate. N13 is null.
+- HOT-1 and HOT-3R mechanisms pass in isolation with held-out confirmation (d 5-11 and d ≈ 2), and fail when integrated (d −0.17; 0.37/0.01). The shared cause is the bottom-up cortical code (about 25% wrong-class percepts vs about 5% from raw input).

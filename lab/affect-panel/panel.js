@@ -440,6 +440,51 @@
     }
   });
 
+  // ../../creatures/001/organism/fp/hot1.ts
+  var ProtoPosterior;
+  var init_hot1 = __esm({
+    "../../creatures/001/organism/fp/hot1.ts"() {
+      init_define_process_env();
+      ProtoPosterior = class {
+        constructor(K, D) {
+          this.K = K;
+          this.D = D;
+          this.mu = Array.from({ length: K }, () => new Array(D).fill(1 / D));
+          this.pi = new Array(K).fill(1 / K);
+          this.n = new Array(K).fill(0);
+        }
+        K;
+        D;
+        mu;
+        pi;
+        s2 = 0.25;
+        n;
+        post(x) {
+          const lp = this.mu.map((m, k) => Math.log(this.pi[k]) - m.reduce((a, v, j) => a + (x[j] - v) ** 2, 0) / (2 * this.s2));
+          const mx = Math.max(...lp);
+          const w = lp.map((l) => Math.exp(l - mx));
+          const z = w.reduce((a, b) => a + b, 0);
+          return w.map((v) => v / z);
+        }
+        percept(x) {
+          const p = this.post(x);
+          const out = new Array(this.D).fill(0);
+          for (let k = 0; k < this.K; k++) for (let j = 0; j < this.D; j++) out[j] += p[k] * this.mu[k][j];
+          return out;
+        }
+        /** teach with the noisy observation x of class k and its clean target */
+        teach(x, k, clean) {
+          this.n[k]++;
+          const lr = Math.max(0.05, 1 / this.n[k]);
+          for (let j = 0; j < this.D; j++) this.mu[k][j] += lr * (clean[j] - this.mu[k][j]);
+          const r2 = x.reduce((a, v, j) => a + (v - clean[j]) ** 2, 0) / this.D;
+          this.s2 += 0.05 * (Math.max(1e-3, r2) - this.s2);
+          for (let i = 0; i < this.K; i++) this.pi[i] += 0.02 * ((i === k ? 1 : 0) - this.pi[i]);
+        }
+      };
+    }
+  });
+
   // ../../creatures/001/organism/affect.ts
   var cl, Affect;
   var init_affect = __esm({
@@ -1222,6 +1267,7 @@
   var init_organism = __esm({
     "../../creatures/001/organism/organism.ts"() {
       init_define_process_env();
+      init_hot1();
       init_affect();
       init_develop();
       init_v40mods();
@@ -1673,6 +1719,13 @@
               }
             } else this.percept[m] = o.topdownLesion ? bu : bu.map((b, j) => (1 - pr) * b + pr * tdv[j]);
             for (let j = 0; j < 4; j++) this.td[m * 4 + j] = o.topdownLesion ? 0 : 0.25 * pr * tdv[j];
+            if (M40.fpH1 > 0 && is40(o.mind ?? MIND_DEFAULT)) {
+              this.ppBu[m] = bu.slice();
+              if (!o.topdownLesion) {
+                if (!this.fpP[m]) this.fpP[m] = new ProtoPosterior(4, 4);
+                this.percept[m] = this.fpP[m].percept(bu);
+              }
+            }
           }
           const mt = c34 ? MT : MT31;
           const thr = mt.ignThr * (1.3 - 0.6 * Math.min(1, ne));
@@ -1843,7 +1896,10 @@
           this.cost += 2e-5 * (this.ign + 1);
         }
         // ---- task-facing learning signals (feedback, as a trainer or the world would give) ----
+        fpP = [];
+        ppBu = [];
         teach(m, label, clean) {
+          if (this.fpP[m] && this.ppBu[m]) this.fpP[m].teach(this.ppBu[m], label, clean ?? [0, 1, 2, 3].map((j) => j === label ? 1 : 0));
           if (this.g && this.g.o.eprop) this.g.epropLearn(m, label, clean ?? [0, 1, 2, 3].map((j) => j === label ? 1 : 0));
           const lr = 0.08 * (0.5 + 0.5 * Math.min(1, this.g ? this.g.nm.ACh.E : 0.3));
           this.cls[m].learn(this.rate[m], label, lr);
@@ -2001,7 +2057,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2462,10 +2518,12 @@
             this.S = clamp(this.S + fb.sleep);
           }
           if (is40(o.mind ?? MIND_DEFAULT) && (M40.forget > 0 || M40.volLeak > 0) && this.t % 10 === 0) {
-            const f2 = 1 - 10 * (M40.forget + M40.volLeak * this.vol);
+            const f2 = 1 - 10 * (M40.forget + M40.volLeak * (M40.volX > 0 ? this.volU : this.vol));
             for (let k = 0; k < this.bA.length; k++) {
               this.bA[k] = 1 + f2 * (this.bA[k] - 1);
               this.bB[k] = 1 + f2 * (this.bB[k] - 1);
+              this.rA[k] = 1 + f2 * (this.rA[k] - 1);
+              this.rB[k] = 1 + f2 * (this.rB[k] - 1);
             }
           }
           if (is40(o.mind ?? MIND_DEFAULT) && !(o.v40Lesion ?? "").includes("v40all")) {
@@ -2776,7 +2834,10 @@
             let { k, sp } = this.choose(da);
             if (is40(o.mind ?? MIND_DEFAULT) && (o.veto ?? "own") !== "off") {
               const kk = o.veto === "shuffle" ? (k * 7 + 3 + o.seed % 5) % SITES : k;
-              const harm = this.wAv[kk] * (1 + this.cortisol);
+              this.intHist.push(this.integrity);
+              if (this.intHist.length > 500) this.intHist.shift();
+              const integ = o.veto === "intShuf" ? this.intHist[Math.floor(r() * this.intHist.length)] : this.integrity;
+              const harm = M40.vetoI > 0 ? this.wAv[kk] * (1 + M40.vetoI * (1 - integ)) : this.wAv[kk] * (1 + this.cortisol);
               this.vetoLog.push(harm);
               if (this.vetoLog.length > 2e3) this.vetoLog.shift();
               if (harm > M40.vetoThr && this.access[k]) {
@@ -2827,6 +2888,8 @@
               const dw = v37f ? 1 - this.dDelta * this.dHat[k] : 1;
               this.bA[k] += rew;
               this.bB[k] += (1 - rew) * dw;
+              this.rA[k] += rew;
+              this.rB[k] += (1 - rew) * dw;
             }
             if (v37f && rew) this.dHat[k] = 1;
             if (v36d && this.learn && !o.rpeLesion) {
@@ -2849,6 +2912,10 @@
             if (this.learn && !o.rpeLesion) {
               const rpe = rew - this.wSite[k];
               this.vol += 0.05 * (Math.abs(rpe) - this.vol);
+              {
+                const pw = clamp(this.wSite[k]);
+                this.volU += 0.05 * (Math.max(0, Math.abs(rpe) - 2 * pw * (1 - pw)) - this.volU);
+              }
               this.nm.DA.E += 0.05 * Math.max(0, rpe) * prec;
               const v35d = ge35(o.mind ?? MIND_DEFAULT);
               if (v35d) {
@@ -3144,7 +3211,19 @@
         }
         // spiking race between striatal channels; noise from quantum (Born-rule) or classical source, amplitude set by tonic DA
         /** value estimate the chooser uses for site k: v4.0 blends the Beta posterior mean (mK) into the striatal value, so a dreamt belief counts; before v4.0 it is wSite */
+        volU = 0;
+        rA = new Float32Array(SITES).fill(1);
+        rB = new Float32Array(SITES).fill(1);
+        /* v4.0 source monitoring (reality monitoring; Johnson & Raye 1981): uncertainty for the epistemic term is read from belief counts from REAL outcomes only, so dream-recombined beliefs about never-visited sites keep their mean but do not masquerade as experience; belief counts from REAL outcomes only (dreams never write here) */
+        uSD(k) {
+          if (M40.epiN > 0) {
+            const a = M40.srcMon > 0 ? this.rA[k] : this.bA[k], b = M40.srcMon > 0 ? this.rB[k] : this.bB[k];
+            return 0.5 / Math.sqrt(a + b + 1);
+          }
+          return M40.srcMon > 0 ? betaSD(this.rA[k], this.rB[k]) : betaSD(this.bA[k], this.bB[k]);
+        }
         kgV = new Float32Array(SITES);
+        intHist = [];
         vetoes = 0;
         harms = 0;
         vetoLog = [];
@@ -3261,7 +3340,7 @@
             if (this.temper < 0) this.temper = this.birthTemper();
             let na = 0;
             for (let k = 0; k < SITES; k++) if (this.access[k]) {
-              sdMu += betaSD(this.bA[k], this.bB[k]);
+              sdMu += this.uSD(k);
               na++;
             }
             sdMu /= Math.max(1, na);
@@ -3317,7 +3396,7 @@
             if (this.affect) w += M40.affK * this.affect.bias(k);
             if (this.neo) w += M40.markK * this.marks[k];
             w -= (1 + this.cortisol) * this.wAv[k] * clamp(1.2 - 0.6 * this.ghrelin);
-            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * ((M40.kgK > 0 ? M40.kgK * this.kgV[k] : betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 + M40.eK * (hBin(this.dDelta * this.dHat[k]) - hdMu) / Math.LN2 + (M40.tsK ? M40.tsK * (betaSD(this.bA[k], this.bB[k]) / SD0) * gaussQ(this.ent) : 0)) : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
+            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * ((M40.kgK > 0 ? M40.kgK * this.kgV[k] : this.uSD(k) - sdMu) / SD0 + M40.eK * (hBin(this.dDelta * this.dHat[k]) - hdMu) / Math.LN2 + (M40.tsK ? M40.tsK * (this.uSD(k) / SD0) * gaussQ(this.ent) : 0)) : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
             if (is37(this.o.mind ?? MIND_DEFAULT)) {
               const avail = 1 - M37.depW * this.dDelta * this.dHat[k];
               if (!this.o.rpeLesion) w += (v40 ? M40.mK : M37.bmW) * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]);
