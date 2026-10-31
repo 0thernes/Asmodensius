@@ -364,3 +364,47 @@ The consolidation of §3 still applies to **mechanisms**: one value-and-uncertai
 - R-018: release when strong across the three lists, with strict d/t for core claims and nothing cosmetic.
 - R-020/21/22/25 keep the concept-through-clusters wording.
 - The top section "v4.0 plan" maps each principle to its Butlin/framework/CQM items. The old tables are no longer labelled "history" (they are the live lists).
+
+---
+# Part VI: Beyond the lists (exploratory roadmap, 2026-10-31)
+These go beyond Butlin 14, the 10 frameworks and CQM 25. They are **exploratory**, with no gates. Results go to DISCOVERIES.md. An item can be promoted to a measured test later through a new preregistration. Principles only; no project is copied.
+
+## 22. Other theories of mind and consciousness, not yet represented
+| Theory | Core idea to borrow | Possible observable in 001 |
+|---|---|---|
+| Dendritic integration theory (Aru, Suzuki & Larkum 2020) | Consciousness depends on L5 pyramidal apical–basal coupling, gated by the thalamus (matrix cells) | An apical/basal 2-compartment E cell. Anaesthesia-like decoupling (a drug dial) should collapse broadcast while leaving local processing intact |
+| Temporo-spatial theory (Northoff) | Intrinsic slow-fluctuation scale-free dynamics "nest" stimuli | Power-law exponent of resting activity; stimulus-evoked change scaled by pre-stimulus state |
+| Beast-machine / interoceptive inference (Seth) | The self as prediction of the body's inner state | Already partly present (INS). Selfhood dissociation: a body-signal "illusion" via a gut/HR mismatch dial |
+| Self-organising criticality / neuronal avalanches (Beggs & Plenz) | The brain operates near a critical branching ratio ≈ 1 | Avalanche size and duration exponents; criticality vs. sleep stage; does learning peak near σ ≈ 1? |
+| Assembly calculus (Papadimitriou et al. 2020) | Projection, association, merge of neural assemblies | Assembly formation and merge in CTX as compositional primitives (CQM12-adjacent) |
+| Thousand Brains / cortical column voting (Hawkins) | Many column models vote on object identity | Principle only: modules each hold a partial model and vote in the workspace |
+| Neural ODE / continuous attractor + grid codes (Moser; Burak & Fiete) | Path integration in a continuous attractor | A dome navigation map: a grid-like code for food locations, novel shortcuts |
+| Global neuronal workspace "ignition" bistability (Dehaene) | All-or-none ignition at threshold | Already measured (ignitions). Add a masking/threshold psychometric curve |
+| Recurrent "integrated information" alternatives (causal emergence, Hoel) | Macro-scale causation exceeds micro | Effective information at region vs. neuron scale |
+| Free-energy "markov blanket" selfhood (Friston/Kirchhoff) | Organism = a self-evidencing blanket | Information-theoretic blanket detection between body, brain and dome |
+| Unlimited associative learning (Ginsburg & Jablonka): full marker set | Compound stimuli, second-order conditioning, novelty | Extend ual: second-order conditioning, blocking, latent inhibition |
+| Higher-order "perceptual reality monitoring" (Lau) | Discriminating real vs. imagined (dream) content | Does the monitor tell perception from REM-generated content? (v4.0 dreams write beliefs, so this is testable) |
+
+## 23. New neuroscience findings worth turning into mechanisms
+- **Fly central complex (ring attractor, heading) + mushroom body (sparse Kenyon coding, dopamine compartments)**: a heading ring for dome navigation, and a sparse expansion layer (×50 KC-like units) feeding valence-compartment outputs. A good place to scale toward ~100M parameters, with weights sparse and mostly random as in the fly.
+- **Mouse thalamocortical loops (core vs. matrix thalamus, L5→higher-order thalamus)**: route the workspace through higher-order thalamus. Matrix thalamus gates apical dendrites (dendritic integration theory).
+- **Primate PFC working memory (activity-silent STP traces, Mongillo 2008; bursty gamma/beta, Miller)**: working memory held in synaptic facilitation between bursts. Delayed recall then survives a distractor.
+- **Human cortical hierarchy (timescale gradient; Murray 2014)**: intrinsic time constants rising from sensory to association areas. This is the LTC concept done as a gradient.
+- **Astrocytes and the tripartite synapse; glymphatic clearance in sleep**: a slow glial layer that integrates activity, modulates plasticity and clears adenosine/waste during N3 (couples sleep need to metabolism).
+- **Neuropeptide / volume transmission (connectome of peptides; Ripoll-Sánchez 2023, principle only)**: a second, wireless "chemical connectome" of diffuse peptide signals with slow, state-setting effects.
+- **Representational drift (Driscoll 2017)**: stable behaviour despite drifting neural codes. Observable in long dome runs.
+- **Gut–brain microbiome axis**: a microbial population in the gut organ with its own evolution, affecting 5-HT precursor supply.
+- **Predictive processing in dendrites, burst-dependent plasticity (Payeur 2021)**: a credit-assignment alternative to e-prop.
+
+## 24. Sci-fi / fringe angles (exploratory, labelled speculative)
+- **Self-rewiring brain**: sleep-time synaptic turnover (M40.turn, implemented, off), then structural growth/pruning of whole modules, grafting a module from another individual ("brain graft"), and hybrid offspring brains.
+- **Alien senses**: magnetoreception-like field sense in the dome, electric-field sense of other creatures, a sense of the quantum layer's own geometry (QGT trace as an interoceptive channel), time-sense.
+- **Hive / distributed cognition**: creatures in the dome share a slow broadcast channel (a pheromone-like field). Test whether a collective solves a foraging problem no individual solves.
+- **Exotic neuromodulation**: a "psychedelic" 5-HT2A-like dial that flattens priors (REBUS; Carhart-Harris & Friston 2019), measured as increased entropy and changed exploration; a "fear-bliss" opioid/oxytocin axis.
+- **Quantum-chance development**: Moonlab/Q3 draws set developmental wiring noise and temperament (temperament implemented), so siblings differ.
+- **Open-ended evolution of brain architecture**: genomes encode module counts and coupling motifs, not just gains.
+
+## 25. Proposed canvas additions (for Alex's approval; not yet on the canvas)
+- New requirement **R-049 "Beyond the lists"**: explore the theories and findings in §22–24; results logged in DISCOVERIES.md; promotion to measured tests via prereg. Stage "2 Architecture", status "in progress".
+- New requirement **R-050 "DISCOVERIES log"**: surprising or never-before-seen behaviours, each with a replay seed; no gates.
+- A canvas section "Beyond the lists" with a table of §22 (theory → observable) and a "Discoveries" counter.
