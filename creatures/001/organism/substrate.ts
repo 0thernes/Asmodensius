@@ -14,7 +14,7 @@ export class SubstrateTap {
   /** one reading per tick: [jitter, cpu, heap, gc, loopDelay, dome], each roughly in 0..1 */
   read(t: number, dome = 0): number[] {
     let v: number[];
-    if (this.mode === "replay") { const f = this.replayLog[this.i++]; if (!f || f.t !== t) throw new Error(`substrate replay out of sync at tick ${t}`); return f.v.slice(); }
+    if (this.mode === "replay") { const f = this.replayLog[this.i++]; if (!f || f.t !== t) throw new Error(`substrate replay out of sync at tick ${t}`); this.log.push({ t, v: f.v.slice() }); return f.v.slice(); }
     if (this.mode === "synthetic") { // 1/f-like jitter (sum of AR(1) octaves), occasional GC bursts, slow load drift
       for (let k = 0; k < 6; k++) { const a = 1 - Math.pow(2, -k - 1); this.pink[k] = a * this.pink[k] + (1 - a) * (this.r() - 0.5); }
       const pk = this.pink.reduce((s, x) => s + x, 0); const gc = this.r() < 0.02 ? 0.3 + 0.7 * this.r() : 0;
