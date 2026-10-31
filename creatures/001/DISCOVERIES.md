@@ -24,3 +24,9 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - **activeInference shows no v4.0 effect** (d ≈ 0 for all uK 0.5–6, belief leak `forget` 0.0005–0.01). The depleting-world gain in v3.9 came from terms the unified uncertainty term replaced. Open problem; `forget` is left in at 0.
 - Personality lesion was a no-op over 3 days (drift is tiny). It now means "population-mean temperament".
 - Every per-module control was viable (0 deaths in any arm). No single module control changed food significantly (|t| < 1.5); glitchNoise (noise bursts in world senses) foraged *more* (277 vs 248, n.s.).
+
+### 2026-10-31 activeInference via Tsotchke ideas (dev 2000-2015)
+- **Eshkol `vm_expected_free_energy` (pragmatic + epistemic split):** I added the entropy of each site's hidden depleted/recovered state to the epistemic term (`eK`). AINF did not improve (eK 0.3: d −0.05; eK 1–3: the full arm forages *less*, 63–67 vs 68.75 lesioned). Re-checking uncertain sites wastes trips.
+- **Posterior sampling from the creature's own entropy stream** (Born-rule Q3 / QRNG lineage, `tsK`): AINF +2.7 rewards, but d only 0.13 (between-seed SD about 20), and AE-1 drops to d 0.57. Left OFF.
+- **The real cause is likely a ceiling, not missing curiosity.** v4.0 with grown wiring and the epistemic term lesioned already gets 68.75 rewards in the depleting world, versus v3.9 full at 60.7. The lesion leaves little to gain.
+- **CQM12 margin:** dreamC 6 with dreamLr 0.75 gives d 1.59 (was 0.99), with thaler9 1.83.
