@@ -8,3 +8,10 @@ export class TwoModule { Wa: number[][]; Wx: number[][]; th: number[]; A: number
   step(a: number, b: number, lesion: boolean): number[] { const N = this.N, prevA = this.A, prevB = this.B; const u = (i: number) => { const own = i < N ? a : b, other = i < N ? prevB : prevA; const ff = this.Wa[i][0] * own + this.Wa[i][1] * 0.5; const x = lesion ? 0 : this.Wx[i].reduce((s, w, j) => s + w * other[j], 0); return Math.max(0, ff + 2 * Math.max(0, x - this.th[i] * 0.5)); };
     const nA = Array.from({ length: N }, (_, i) => u(i)), nB = Array.from({ length: N }, (_, i) => u(N + i)); this.A = nA; this.B = nB; return [...nA, ...nB]; }
   reset(): void { this.A.fill(0); this.B.fill(0); } }
+
+/** v4.0 apical-gain variant (original code): cross-module input lands on an apical compartment whose sigmoid output MULTIPLIES the basal
+ *  (feedforward) drive, so a unit bursts only for basal AND apical coincidence (BAC firing; Larkum, Zhu & Sakmann 1999; Larkum 2013). */
+export class ApicalGain extends TwoModule { gain = 3;
+  step(a: number, b: number, lesion: boolean): number[] { const N = this.N, pA = this.A, pB = this.B; const u = (i: number) => { const own = i < N ? a : b, other = i < N ? pB : pA; const ff = Math.max(0, this.Wa[i][0] * own + this.Wa[i][1] * 0.5);
+      const ap = lesion ? 0 : this.Wx[i].reduce((s, w, j) => s + w * other[j], 0); const g = 1 / (1 + Math.exp(-(ap - (this.th[i] - 0.5) * 0.5) / 0.1)); return ff * (lesion ? 1 : 1 + this.gain * (g - 0.5)) ; };
+    const nA = Array.from({ length: N }, (_, i) => u(i)), nB = Array.from({ length: N }, (_, i) => u(N + i)); this.A = nA; this.B = nB; return [...nA, ...nB]; } }

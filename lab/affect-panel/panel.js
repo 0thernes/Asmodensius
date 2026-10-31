@@ -2125,7 +2125,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2745,10 +2745,12 @@
               this.modAct[m] = 0.9 * this.modAct[m] + 0.1 * c / 13;
               sdiv[m] = 1 / (1 + M37.inhG * 13 * this.modAct[m]);
             }
+            const dmM = [0, 0, 0, 0];
+            if (M40.som > 0) for (let i = R0.CTX; i < R0.CTX + 52; i++) dmM[Math.floor((i - R0.CTX) / 13)] += this.dend[i] / 13;
             for (let i = 0; i < NNEU; i++) {
               const cortical = i >= R0.CTX && i < R0.CTX + 64;
               const g = cortical ? 1 + 0.5 * ne : 1;
-              const I = ext[i] + inp[i] + (c34 ? this.nmda[i] : 0) + (v36s ? this.nmdaS[i] * (v37c && i >= R0.CTX && i < R0.CTX + 52 ? sdiv[Math.floor((i - R0.CTX) / 13)] : 1) : 0) + (v37d ? M37.dendK * (M40.dTh > 0 && i >= R0.CTX && i < R0.CTX + RN.CTX ? M40.dG * Math.max(0, this.dend[i] - M40.dTh) : this.dend[i]) / (1 + Math.exp(-(this.v[i] - M37.dendVh) / M37.dendVs)) : 0) + (v36n ? M36.dendK * this.dend[i] / (1 + Math.exp(-(this.v[i] - M36.dendVh) / M36.dendVs)) : 0);
+              const I = (ext[i] + inp[i]) * (M40.aG > 0 && v37d && i >= R0.CTX && i < R0.CTX + RN.CTX ? 1 + M40.aG * (1 / (1 + Math.exp(-(this.dend[i] - (i < R0.CTX + 52 ? M40.som * dmM[Math.floor((i - R0.CTX) / 13)] : 0) - M40.aTh) / 0.3)) - 0.5) : 1) + (c34 ? this.nmda[i] : 0) + (v36s ? this.nmdaS[i] * (v37c && i >= R0.CTX && i < R0.CTX + 52 ? sdiv[Math.floor((i - R0.CTX) / 13)] : 1) : 0) + (v37d ? (M40.aG > 0 ? 0 : M37.dendK) * (M40.dTh > 0 && i >= R0.CTX && i < R0.CTX + RN.CTX ? M40.dG * Math.max(0, this.dend[i] - M40.dTh) : this.dend[i]) / (1 + Math.exp(-(this.v[i] - M37.dendVh) / M37.dendVs)) : 0) + (v36n ? M36.dendK * this.dend[i] / (1 + Math.exp(-(this.v[i] - M36.dendVh) / M36.dendVs)) : 0);
               if (c34) this.nmda[i] *= nmK;
               if (v36s) this.nmdaS[i] *= slowDec;
               if (v36n || v37d) this.dend[i] = 0;
