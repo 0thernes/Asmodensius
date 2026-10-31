@@ -563,3 +563,25 @@ All are run in synthetic/replay substrate mode for tests. Exploration and live r
 
 ## 41. Build order
 After §34: (1) the dome hook API + caps + audit log + sandbox conformance check; (2) the anomaly detector on prediction errors; (3) the hidden-cause model (extends SIM); (4) 2–3 hooks with inert/reversed variants; (5) the probes above on dev seeds.
+
+---
+
+# Part XI: Layered affect, dysregulation, and no designer penalties (v4.0 branch)
+
+**Code:** `organism/affect.ts`, wired into `organism.ts` under `is40`. Smoke test: `organism/affect_smoke.ts`. Lab view: `Organism.affectState()`.
+
+| Layer | Timescale | Inputs (all body/brain or natural consequence) | Causal effect on behaviour | Lesion |
+|---|---|---|---|---|
+| Emotions: fear, delight, frustration, calm | ~15 ticks | NE, cortisol, tissue damage, reward·DA, failed forages, 5HT·satiety | forage probability (fear freezes, frustration restless), decision noise | `affectLesion=emotion` |
+| Mood: valence/arousal, fast and slow | 6 h / 3 d EMAs | emotions, sickness; rumination term (∝ vulnerability) | scales the uncertainty (curiosity) drive | `mood` |
+| Attitudes | lasting | emotion at each visit to an option; social contact valence (`meet`) | additive value bias per option | `attitude` |
+| Personality: bold, curious, reactive, vuln | lifetime drift, heritable | seeded or quantum draw, `Affect.birth(rand, parent, mut)` for inheritance; drifts with slow mood | gains on all of the above | `personality` (freezes at birth values) |
+| Dysregulation | hours to days | see below | cortisol, DA/5HT, sleep pressure feedback; wanting bias; sickness | `dysreg`; `all` removes the whole system |
+
+**Dysregulation (wild on purpose, coping through the same loops):** HPA stress load with hysteresis lock-in (threshold lowered by vulnerability), which recovers when load drops; sleep debt from staying awake under high pressure, which raises frustration; incentive sensitisation, where wanting grows and liking develops tolerance, and unmet wanting means craving/withdrawal; inflammation from chronic stress, energy crisis, damage or rare chance infection, which produces sickness behaviour (lethargy, anhedonia, more sleep) and recovery; mean-reverting DA/5HT drift ∝ vulnerability; rumination-driven mood overshoot and swings. Events are logged (`hpaLockIn`, `hpaRecover`, `sleepDebt`, `sensitised`, `craving`, `infection`, `sickness`, `recovered`, `moodSwing`).
+
+**No designer-imposed penalties (rule, effective now):** nothing in affect.ts rewards or punishes "bad" behaviour. All signals come from body state, pain/damage, energy, outcomes, social contact or selection. An audit of `organism.ts` found the existing aversive term `wAv` is learned from actual damage (a natural consequence), so it stays. Any term that scores behaviour against a designer's notion of good must be removed, and new ones are not allowed. The dome sandbox boundary is a hard technical limit, not a signal the creature receives as punishment.
+
+**Smoke test (seed 2001, 3 days, a sanity check rather than a result):** full: 280 forages, alive, no events; `all` lesion: 316 forages (so affect changes behaviour); max-vulnerability persona: 162 forages, alive, `hpaLockIn`, `infection`, `sensitised`, 4 cravings, a mood swing, mood pinned at −1 (a depressive lock-in; watch whether it recovers over longer runs). Starvation: mood −0.31. Viability across a population still needs measuring on dev seeds 2000+ once the box is free.
+
+**Next:** lab panel bound to `affectState()`; `meet()` wired to dome social contacts; dev-seed population runs (viability, event rates, lesion deltas), logged in DISCOVERIES.md.
