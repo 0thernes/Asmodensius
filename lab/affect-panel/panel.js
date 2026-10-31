@@ -608,19 +608,24 @@
 
   // ../creatures/001/organism/develop.ts
   function randomGenome(nProj, nReg, r) {
-    const g = new Float32Array(3 * nProj + 3 * nReg);
+    const g = new Float32Array(3 * nProj + 3 * nReg + CORTEX_GENES.length);
     for (let p = 0; p < nProj; p++) {
       g[3 * p] = 1 + 0.3 * gs(r);
       g[3 * p + 1] = 0.1 * gs(r);
       g[3 * p + 2] = Math.log(0.25) + 0.3 * gs(r);
     }
-    for (let k = 3 * nProj; k < g.length; k++) g[k] = gs(r);
+    for (let k = 3 * nProj; k < 3 * nProj + 3 * nReg; k++) g[k] = gs(r);
+    for (let k = 3 * nProj + 3 * nReg; k < g.length; k++) g[k] = 0.1 * gs(r);
     return g;
   }
   function mutateGenome(g, r, rate = 0.05) {
     const o = g.slice();
     for (let k = 0; k < o.length; k++) o[k] += rate * gs(r);
     return o;
+  }
+  function cortexGene(g, nProj, nReg, name) {
+    const k = 3 * nProj + 3 * nReg + CORTEX_GENES.indexOf(name);
+    return k < g.length ? Math.exp(Math.max(-1, Math.min(1, g[k]))) : 1;
   }
   function grow(P, R02, RN2, regions, g, r) {
     const nP = P.length, tagOf = (reg) => {
@@ -639,7 +644,15 @@
       return t;
     };
     const pre = [], post = [], aff = [];
-    let cand = 0, topo = 0;
+    let cand = 0, topo = 0, target = 0;
+    const proj = [];
+    const affinity = (pi, i, j) => {
+      const [a, b] = P[pi];
+      const gain = g[3 * pi], off = g[3 * pi + 1], sig = Math.max(0.05, Math.exp(g[3 * pi + 2]));
+      const ti = tag(i, a), tj = tag(j, b);
+      const d = pos(j, b) - (gain * pos(i, a) + off - (gain - 1) / 2);
+      return Math.exp(-(d * d) / (2 * sig * sig)) * (1 + Math.tanh((ti[0] * tj[0] + ti[1] * tj[1] + ti[2] * tj[2]) / 3));
+    };
     P.forEach(([a, b, p], pi) => {
       const gain = g[3 * pi], off = g[3 * pi + 1], sig = Math.max(0.05, Math.exp(g[3 * pi + 2]));
       for (let j = R02[b]; j < R02[b] + RN2[b]; j++) {
@@ -653,25 +666,38 @@
           C.push([i, A]);
         }
         const meanA = C.reduce((s, c) => s + c[1], 0) / Math.max(1, C.length) || 1;
-        const keepN = Math.round(p * C.length + (r() - 0.5));
+        const tN = p * C.length;
+        target += tN;
+        const keepN = Math.min(C.length, Math.round(OVERGROW * tN + (r() - 0.5)));
         const over = C.filter(([, A]) => r() < Math.min(1, 2 * p * A / meanA));
         cand += over.length;
+        if (over.length < keepN) {
+          const inSet = new Set(over.map((c) => c[0]));
+          const rest = C.filter(([i]) => !inSet.has(i)).sort((u, v) => v[1] - u[1]);
+          for (const c of rest) {
+            if (over.length >= keepN) break;
+            over.push(c);
+          }
+        }
         over.sort((u, v) => v[1] * (0.7 + 0.6 * r()) - u[1] * (0.7 + 0.6 * r()));
         for (const [i, A] of over.slice(0, Math.max(0, keepN))) {
           pre.push(i);
           post.push(j);
+          proj.push(pi);
           aff.push(A / meanA);
           const xi = pos(i, a);
           topo += 1 - Math.abs(xj - xi);
         }
       }
     });
-    return { pre, post, aff, stats: { candidates: cand, kept: pre.length, topo: pre.length ? topo / pre.length : 0 } };
+    return { pre, post, aff, proj, affinity, stats: { candidates: cand, kept: pre.length, topo: pre.length ? topo / pre.length : 0, target: Math.round(target) } };
   }
-  var gs;
+  var CORTEX_GENES, OVERGROW, gs;
   var init_develop = __esm({
     "../creatures/001/organism/develop.ts"() {
       init_define_process_env();
+      CORTEX_GENES = ["tc", "tcSig", "eI", "iE", "rec0", "xsSig"];
+      OVERGROW = 1.15;
       gs = (r) => {
         const u = Math.max(1e-12, r()), v = r();
         return Math.sqrt(-2 * Math.log(u)) * Math.cos(6.283185307 * v);
@@ -1720,6 +1746,11 @@
         temper = -1;
         devGenome = null;
         devStats = null;
+        devAff = null;
+        devTarget = 0;
+        devSlots = [];
+        actEMA = new Float32Array(NNEU);
+        cg = () => 1;
         intPrev = 1;
         affR = mulberry2(9);
         affect = null;
@@ -1756,7 +1787,12 @@
             const gnm = o.devGenome ?? randomGenome(CP.length, REGIONS.length, rg);
             this.devGenome = gnm;
             const G2 = grow(CP, R0, RN, REGIONS.map((x) => x[0]), gnm, rg);
-            this.devStats = G2.stats;
+            this.devStats = { ...G2.stats, pruned: 0, sprouted: 0 };
+            this.devAff = G2.affinity;
+            this.devTarget = G2.stats.target;
+            const base0 = pre.length;
+            this.devSlots = G2.proj.map((pi, k) => [base0 + k, pi]);
+            this.cg = (n) => cortexGene(gnm, CP.length, REGIONS.length, n);
             const regOf = (i) => REGIONS.find(([n]) => i >= R0[n] && i < R0[n] + RN[n])[0];
             G2.pre.forEach((i, k) => {
               const j = G2.post[k];
@@ -1835,16 +1871,16 @@
               if (this.o.topoScramble) perm.sort(() => rc() - 0.5);
               for (let n = 0; n < 13; n++) {
                 const pos = 3 * perm[n] / 12;
-                add(R0.THAL + i, E(mm, n), CX.tc * Math.exp(-((pos - j) ** 2) / (2 * CX.tcSig ** 2)) * (0.8 + 0.4 * rc()), 1, 1);
+                add(R0.THAL + i, E(mm, n), CX.tc * this.cg("tc") * Math.exp(-((pos - j) ** 2) / (2 * (CX.tcSig * this.cg("tcSig")) ** 2)) * (0.8 + 0.4 * rc()), 1, 1);
               }
               for (let k = 0; k < 3; k++) add(R0.THAL + i, I(mm, k), CX.ffI, 5, 0);
             }
             for (let m = 0; m < 4; m++) {
               for (let n = 0; n < 13; n++) for (let k = 0; k < 3; k++) {
-                add(E(m, n), I(m, k), CX.eI * (0.8 + 0.4 * rc()), 6, 0);
-                add(I(m, k), E(m, n), -CX.iE * (0.8 + 0.4 * rc()), 7, 3);
+                add(E(m, n), I(m, k), CX.eI * this.cg("eI") * (0.8 + 0.4 * rc()), 6, 0);
+                add(I(m, k), E(m, n), -CX.iE * this.cg("iE") * (0.8 + 0.4 * rc()), 7, 3);
               }
-              for (let a = 0; a < 13; a++) for (let b = 0; b < 13; b++) if (a !== b) add(E(m, a), E(m, b), CX.rec0 * (0.5 + rc()), 2, 2);
+              for (let a = 0; a < 13; a++) for (let b = 0; b < 13; b++) if (a !== b) add(E(m, a), E(m, b), CX.rec0 * this.cg("rec0") * (0.5 + rc()), 2, 2);
             }
             if (ge35(o.mind ?? MIND_DEFAULT)) {
               const rx = mulberry2(o.seed * 6113 + 29);
@@ -1857,7 +1893,7 @@
               for (let m = 0; m < 4; m++) for (let b = 0; b < 13; b++) {
                 const n = m ^ 1, p = Math.floor(rs() * 4);
                 for (let a = 0; a < 13; a++) {
-                  const ww = M39.xsW * Math.exp(-((3 * a / 12 - p) ** 2) / (2 * M39.xsSig ** 2));
+                  const ww = M39.xsW * Math.exp(-((3 * a / 12 - p) ** 2) / (2 * (M39.xsSig * this.cg("xsSig")) ** 2));
                   if (ww > 0.02 * M39.xsW) add(E(n, a), E(m, b), ww, 3, 0);
                 }
               }
@@ -2428,6 +2464,10 @@
               }
             }
           }
+          if (this.devAff) {
+            for (let i = 0; i < NNEU; i++) this.actEMA[i] += 2e-3 * ((this.spk[i] ? 1 : 0) - this.actEMA[i]);
+            if (n3 && this.t % 10 === 0) this.devRefine();
+          }
           if (n3 && this.learn && is40(o.mind ?? MIND_DEFAULT) && M40.turn > 0 && r() < M40.turn) {
             let mi = -1, mw = 1e9;
             for (let si = 0; si < syn.w.length; si++) if (syn.plastic[si] && syn.w[si] < mw) {
@@ -2654,6 +2694,58 @@
           }
           const g = Math.sqrt(-2 * Math.log(Math.max(1e-12, u1))) * Math.cos(2 * Math.PI * u2);
           return Math.exp(M40.tempSD * g);
+        }
+        /** v4.0 develop: one deep-sleep refinement event. Score a sample of grown synapses by |w| x coactivity; eliminate the weakest. While above the
+         *  table's target density, elimination is net (developmental pruning); at target, the slot re-sprouts onto a partner in the same projection chosen
+         *  by genome affinity x recent presynaptic activity. Only the presynaptic partner changes (dendrite fixed), so this.out is updated in place. */
+        devRefine() {
+          const S = this.devSlots;
+          if (!S.length || !this.devAff) return;
+          const r = this.rd, syn = this.syn;
+          let worst = -1, ws = 1e9;
+          for (let n = 0; n < 24; n++) {
+            const k = Math.floor(r() * S.length), si2 = S[k][0];
+            if (this.mask[si2] === 0 && S[k][2] === 1) continue;
+            const sc = Math.abs(syn.w[si2]) * (0.02 + Math.sqrt(this.actEMA[syn.pre[si2]] * this.actEMA[syn.post[si2]]));
+            if (sc < ws) {
+              ws = sc;
+              worst = k;
+            }
+          }
+          if (worst < 0) return;
+          const [si, pi] = S[worst];
+          const st = this.devStats;
+          const live = S.length - st.pruned + st.sprouted;
+          if (live > this.devTarget) {
+            this.mask[si] = 0;
+            S[worst][2] = 1;
+            st.pruned++;
+            return;
+          }
+          const [a] = CP[pi];
+          const j = syn.post[si];
+          let best = -1, bs = -1;
+          for (let n = 0; n < 12; n++) {
+            const i = R0[a] + Math.floor(r() * RN[a]);
+            if (i === j) continue;
+            const sc = this.devAff(pi, i, j) * (0.05 + this.actEMA[i]) * (0.5 + r());
+            if (sc > bs) {
+              bs = sc;
+              best = i;
+            }
+          }
+          if (best < 0) return;
+          const old = syn.pre[si];
+          const L = this.out[old];
+          const ix = L.indexOf(si);
+          if (ix >= 0) L.splice(ix, 1);
+          syn.pre[si] = best;
+          this.out[best].push(si);
+          const ln = 0.1 + 0.15 * r();
+          syn.w[si] = INHIB(best) ? -ln * 1.6 : ln;
+          this.mask[si] = 1;
+          st.sprouted++;
+          st.pruned++;
         }
         /** v4.0 lab view of the layered affect system (emotions, moods, attitudes, personality, dysregulation events) */
         affectState() {
@@ -3210,7 +3302,7 @@
       <div>attitude (16 sites) ${strip(a.att, -0.5, 0.5)}</div><div>wanting ${strip(a.want, 0, 1)}</div><div>outcome SD ${strip(a.rSD, 0, 0.6)}</div>
       <div>others: <small>${oth}</small></div>
       <div><small>bold ${P.bold.toFixed(2)} \xB7 curious ${P.curious.toFixed(2)} \xB7 reactive ${P.reactive.toFixed(2)} \xB7 vuln ${P.vuln.toFixed(2)} \xB7 hedge ${(P.hedge ?? 0).toFixed(2)} \xB7 riskScar ${(P.riskScar ?? 0).toFixed(2)}</small></div>
-      <ul>${ev || "<li>no dysregulation events yet</li>"}</ul></div>`));
+      ${h.c.o?.devStats ? `<div><small>wiring: ${h.c.o.devStats.kept - h.c.o.devStats.pruned + h.c.o.devStats.sprouted}/${h.c.o.devStats.target} target \xB7 pruned ${h.c.o.devStats.pruned} \xB7 sprouted ${h.c.o.devStats.sprouted} \xB7 topo ${h.c.o.devStats.topo.toFixed(2)}</small></div>` : ""}<ul>${ev || "<li>no dysregulation events yet</li>"}</ul></div>`));
         }
       }
       function loop() {

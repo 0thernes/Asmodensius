@@ -22,7 +22,7 @@ function render() { const root = document.getElementById("pop")!; root.innerHTML
       <div>attitude (16 sites) ${strip(a.att, -0.5, 0.5)}</div><div>wanting ${strip(a.want, 0, 1)}</div><div>outcome SD ${strip(a.rSD, 0, 0.6)}</div>
       <div>others: <small>${oth}</small></div>
       <div><small>bold ${P.bold.toFixed(2)} · curious ${P.curious.toFixed(2)} · reactive ${P.reactive.toFixed(2)} · vuln ${P.vuln.toFixed(2)} · hedge ${(P.hedge ?? 0).toFixed(2)} · riskScar ${(P.riskScar ?? 0).toFixed(2)}</small></div>
-      <ul>${ev || "<li>no dysregulation events yet</li>"}</ul></div>`)); } }
+      ${h.c.o?.devStats ? `<div><small>wiring: ${h.c.o.devStats.kept - h.c.o.devStats.pruned + h.c.o.devStats.sprouted}/${h.c.o.devStats.target} target · pruned ${h.c.o.devStats.pruned} · sprouted ${h.c.o.devStats.sprouted} · topo ${h.c.o.devStats.topo.toFixed(2)}</small></div>` : ""}<ul>${ev || "<li>no dysregulation events yet</li>"}</ul></div>`)); } }
 function loop() { if (running) { for (let i = 0; i < speed; i++) d.step(); render(); } requestAnimationFrame(loop); }
 window.addEventListener("DOMContentLoaded", () => { const tg = document.getElementById("lesions")!;
   for (const l of LAYERS) { const b = $(`<label><input type=checkbox> lesion ${l}</label>`); b.querySelector("input")!.addEventListener("change", (e) => { (e.target as HTMLInputElement).checked ? off.add(l) : off.delete(l); build(); }); tg.append(b); }

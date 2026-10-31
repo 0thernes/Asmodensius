@@ -624,3 +624,20 @@ After §34: (1) the dome hook API + caps + audit log + sandbox conformance check
   - Grow the hand-designed v3.1–v3.9 cortical blocks from the same genome.
   - Developmental genome evolution in dome lineages.
   - Make `develop` the v4.0 default once dev seeds show it's viable (after Round 20).
+
+---
+
+# Part XIV: CAP-B retired; grown wiring refines, prunes, and evolves
+
+- **CAP-B archived** to `archive/history/cap-b/` (the worm-style `crawl()` body, its test block and the site text). The v2.7 results are kept as history. The originality check now also fails on crawler bodies. Roadmap item 7 (the copied worm-circuit transplant) is reworded to "grown approach/escape switching circuit", and the site is regenerated. The check **PASSES**.
+- **Shortfall fixed:** growth now overshoots the table density by 15% (`OVERGROW`) and a late-sprouting pass fills any target that lacks candidates. Seed 2005: 2068 grown vs 1785 target, 3470 total synapses vs 3313 i.i.d.
+- **Sleep refinement and pruning:**
+  - In deep sleep (N3), every 10 ticks, 24 grown synapses are scored by |w| × coactivity (per-neuron activity EMAs) and the weakest is eliminated.
+  - Above target density this is net developmental pruning (about 10–15 days to reach target).
+  - At target, the slot re-sprouts onto a partner chosen by genome affinity × recent activity (Hebbian sprouting); `this.out` is updated in place.
+  - Counts are in `devStats` (pruned, sprouted, target) and shown in the affect panel.
+  - Known caveat: calling a lesion that rebuilds `mask` revives pruned slots.
+- **Cortex blocks from the genome:** 6 heritable cortical growth genes (thalamocortical gain and width, E→I, I→E, recurrent seed weight, long-range axon width) scale the v3.4–v3.9 cortical motifs, lognormally around the designed values.
+- **Genome evolution in the dome:** a respawned creature inherits a living conspecific's developmental genome with mutation (`mutateGenome`), together with its personality. Survival is the only selection; there is no fitness term.
+- **Smoke test (seed 2005, 2 days; sanity only):** pruning is active (18 slots in 2 days at the old 30-tick cadence). Forages: 137 i.i.d., 146 grown, 184 for the mutated child; all alive.
+- **After Round 20:** dev-seed populations for viability, rate of approach to target density, and genome drift across dome generations. Then decide whether `develop` becomes the v4.0 default.
