@@ -30,7 +30,7 @@
     }
   });
 
-  // src/rng.ts
+  // ../src/rng.ts
   function mulberry(seed) {
     let a = seed >>> 0;
     const f = () => {
@@ -47,15 +47,15 @@
     return f;
   }
   var init_rng = __esm({
-    "src/rng.ts"() {
+    "../src/rng.ts"() {
       init_define_process_env();
     }
   });
 
-  // src/biosphere/god.ts
+  // ../src/biosphere/god.ts
   var seededDice, BASE_WORLD, LADDER, PAYOFF, KICK_PARTS;
   var init_god = __esm({
-    "src/biosphere/god.ts"() {
+    "../src/biosphere/god.ts"() {
       init_define_process_env();
       init_rng();
       seededDice = (seed) => ({ name: "classical-seeded", next: mulberry(seed * 2654435761) });
@@ -69,10 +69,10 @@
     }
   });
 
-  // src/biosphere/dome.ts
+  // ../src/biosphere/dome.ts
   var DEFAULT_DOME, Dome;
   var init_dome = __esm({
-    "src/biosphere/dome.ts"() {
+    "../src/biosphere/dome.ts"() {
       init_define_process_env();
       init_rng();
       init_god();
@@ -440,10 +440,10 @@
     }
   });
 
-  // ../creatures/001/organism/affect.ts
+  // ../../creatures/001/organism/affect.ts
   var cl, Affect;
   var init_affect = __esm({
-    "../creatures/001/organism/affect.ts"() {
+    "../../creatures/001/organism/affect.ts"() {
       init_define_process_env();
       cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
       Affect = class {
@@ -456,7 +456,7 @@
           this.rMean = new Float32Array(nOpt).fill(0.5);
           this.rVar = new Float32Array(nOpt).fill(0.25);
           this.persona = { ...persona };
-          this.persona0 = { ...persona };
+          this.persona0 = this.off.has("personality") ? { bold: 0.5, curious: 1, reactive: 0.5, vuln: 0.3, hedge: 0.3, riskScar: 0.5 } : { ...persona };
         }
         off;
         emo = { fear: 0, delight: 0, frustration: 0, calm: 0.5 };
@@ -480,6 +480,7 @@
         scarcity = 0;
         failStreak = 0;
         swingSign = 1;
+        /* personality lesion = population-mean temperament (no individual differences, no drift) */
         /** seeded or inherited personality; vulnerability is heritable */
         static birth(rand, parent, mut = 0.1) {
           const g = () => {
@@ -635,7 +636,7 @@
     }
   });
 
-  // ../creatures/001/organism/develop.ts
+  // ../../creatures/001/organism/develop.ts
   function randomGenome(nProj, nReg, r) {
     const g = new Float32Array(3 * nProj + 3 * nReg + CORTEX_GENES.length);
     for (let p = 0; p < nProj; p++) {
@@ -723,7 +724,7 @@
   }
   var CORTEX_GENES, OVERGROW, gs;
   var init_develop = __esm({
-    "../creatures/001/organism/develop.ts"() {
+    "../../creatures/001/organism/develop.ts"() {
       init_define_process_env();
       CORTEX_GENES = ["tc", "tcSig", "eI", "iE", "rec0", "xsSig"];
       OVERGROW = 1.15;
@@ -734,10 +735,10 @@
     }
   });
 
-  // ../creatures/001/organism/substrate.ts
+  // ../../creatures/001/organism/substrate.ts
   var SubstrateTap;
   var init_substrate = __esm({
-    "../creatures/001/organism/substrate.ts"() {
+    "../../creatures/001/organism/substrate.ts"() {
       init_define_process_env();
       init_organism();
       SubstrateTap = class {
@@ -824,10 +825,10 @@
     }
   });
 
-  // ../creatures/001/organism/v40mods.ts
+  // ../../creatures/001/organism/v40mods.ts
   var cl2, fin, SensoryBus, SelfModel, Curvature, HOOKS, NeoHooks;
   var init_v40mods = __esm({
-    "../creatures/001/organism/v40mods.ts"() {
+    "../../creatures/001/organism/v40mods.ts"() {
       init_define_process_env();
       init_substrate();
       cl2 = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
@@ -865,10 +866,28 @@
         lastIn = [];
         chIdx = [];
         R;
+        ctl = /* @__PURE__ */ new Set();
+        outK = 0.3;
+        cr = 2654435769;
+        crand() {
+          this.cr = Math.imul(this.cr ^ this.cr >>> 15, 739982445) + 1831565813 >>> 0;
+          return this.cr / 4294967296;
+        }
         step(t, classic, intero, alien, reward) {
           const sub = this.tap && !this.off.has("substrate") ? this.tap.read(t).map((v) => cl2(fin(v), -1, 2)) : [0, 0, 0, 0, 0, 0];
-          const x = [...Array.from(classic), ...intero, ...this.off.has("alien") ? [0, 0, 0] : alien, ...sub];
+          if (this.ctl.has("glitchInj") && this.crand() < 0.02) sub[3] = 1;
+          if (this.ctl.has("glitchNoise") && this.crand() < 0.02) for (let i = 0; i < 16; i++) classic[i] += this.crand() - 0.5;
+          let x = [...Array.from(classic), ...intero, ...this.off.has("alien") ? [0, 0, 0] : alien, ...sub];
           this.lastIn = x;
+          if (this.ctl.has("busShuffle")) {
+            x = x.slice();
+            for (let i = x.length - 1; i > 0; i--) {
+              const j = Math.floor(this.crand() * (i + 1));
+              const tmp = x[i];
+              x[i] = x[j];
+              x[j] = tmp;
+            }
+          }
           const D = this.D, n = x.length;
           const f = new Float32Array(D);
           const fc = [new Float32Array(D), new Float32Array(D), new Float32Array(D), new Float32Array(D)];
@@ -908,7 +927,7 @@
           for (let i = 0; i < 16; i++) {
             let s = 0;
             for (let d = 0; d < D; d++) s += this.R[i * D + d] * f[d];
-            this.out[i] = this.off.has("bus") ? 0 : 0.3 * Math.tanh(s);
+            this.out[i] = this.off.has("bus") ? 0 : this.outK * Math.tanh(s);
           }
           return this.out;
         }
@@ -935,6 +954,8 @@
         errBody = 0;
         sim = 0.1;
         mean;
+        ctl = /* @__PURE__ */ new Set();
+        simK = 0.6;
         lastX = [];
         step(x, glitch) {
           const tgt = [x[0], x[1], x[2], x[3], x[10]];
@@ -950,7 +971,7 @@
           this.errBody += 0.05 * (eb - this.errBody);
           for (let i = 0; i < this.N; i++) {
             let s = 0;
-            for (let j = 0; j < 12; j++) s += this.Win[i * 12 + j] * fin(x[j]);
+            for (let j = 0; j < (this.ctl.has("selfBody") ? 4 : 12); j++) s += this.Win[i * 12 + j] * fin(x[j]);
             this.z[i] = 0.95 * this.z[i] + 0.05 * Math.tanh(s);
             this.mean[i] += 1e-3 * (this.z[i] - this.mean[i]);
           }
@@ -973,7 +994,7 @@
         }
         // 0.25 = neutral; >0.25 when SELF foresees an energy drop
         learnScale() {
-          return 1 - 0.6 * this.sim;
+          return 1 - this.simK * this.sim;
         }
         state() {
           return { err: this.err, errBody: this.errBody, sim: this.sim, pred: [...this.pred], caution: this.caution(), z: Array.from(this.z.slice(0, 8)) };
@@ -1039,6 +1060,7 @@
         pending = [];
         lastUse = null;
         shadeUntil = 0;
+        ctl = /* @__PURE__ */ new Set();
         step(t, sim, sleepDebt, hunger, bestSite, r) {
           if (this.off.has("neo")) return;
           if (this.lastUse && t - this.lastUse.t === 120) {
@@ -1050,7 +1072,7 @@
           if (this.lastUse || t % 30 !== 0) return;
           const drive = [sleepDebt * (0.3 + sim), hunger * (0.2 + sim)];
           for (let k = 0; k < 2; k++) {
-            const p = cl2(0.02 + 0.3 * drive[k] + 2 * this.val[k], 0, 0.5);
+            const p = this.ctl.has("neoRandom") ? 0.06 : cl2(0.02 + 0.3 * drive[k] + 2 * this.val[k], 0, 0.5);
             if (r() < p) {
               this.uses[k]++;
               this.pending.push({ t, hook: HOOKS[k], arg: k === 1 ? bestSite : 60 });
@@ -1073,7 +1095,7 @@
     }
   });
 
-  // ../creatures/001/organism/organism.ts
+  // ../../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
     const f = () => {
@@ -1195,9 +1217,9 @@
     }
     return { g, berry, trace: g[0][0] + g[1][1] + g[2][2] };
   }
-  var clamp, IG0, REGIONS, R0, RN, NNEU, INHIB, CP, TA, Q3, Health, NMOD, MW, msoftmax, margmax, mdot, Lin, RLS, Kal, Mind, TUNE, MT31, MT, LTC_TAU0, CX, LTC_INIT, LTC_LEARNED, M35, M36, M37, M38, M39, MIND_DEFAULT, ge35, ge36, is37, is38, is39, is40, M40, betaSD, SD0, SITES, Organism;
+  var clamp, IG0, REGIONS, R0, RN, NNEU, INHIB, CP, TA, Q3, Health, NMOD, MW, msoftmax, margmax, mdot, Lin, RLS, Kal, Mind, TUNE, MT31, MT, LTC_TAU0, CX, LTC_INIT, LTC_LEARNED, M35, M36, M37, M38, M39, MIND_DEFAULT, ge35, ge36, is37, is38, is39, is40, M40, V40OPTS, betaSD, SD0, SITES, Organism;
   var init_organism = __esm({
-    "../creatures/001/organism/organism.ts"() {
+    "../../creatures/001/organism/organism.ts"() {
       init_define_process_env();
       init_affect();
       init_develop();
@@ -1974,10 +1996,16 @@
       is38 = (m) => m === "v38" || m === "v39" || m === "v40";
       is39 = (m) => m === "v39" || m === "v40";
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 2, dreamLr: 0.25, tempSD: 0.25, turn: 0 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 4, dreamLr: 0.25, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
+      } catch {
+      }
+      V40OPTS = {};
+      try {
+        const e = typeof process !== "undefined" ? define_process_env_default.V40OPTS : void 0;
+        if (e) V40OPTS = JSON.parse(e);
       } catch {
       }
       betaSD = (a, b) => {
@@ -2146,6 +2174,10 @@
         dead = false;
         lowGlc = 0;
         constructor(o) {
+          if (Object.keys(V40OPTS).length) {
+            o = { ...o };
+            for (const k in V40OPTS) if (o[k] == null) o[k] = V40OPTS[k];
+          }
           this.o = { noise: "quantum", replay: "full", entropy: "seeded", access: "half", ...o };
           this.r = mulberry2(o.seed * 7919 + 17);
           if (o.eprop) this.gate = LTC_INIT.slice();
@@ -2158,7 +2190,7 @@
           const r = this.r;
           const pre = [], post = [], w = [], pl = [];
           const has = /* @__PURE__ */ new Set();
-          if (o.develop) {
+          if (o.develop ?? is40(o.mind ?? MIND_DEFAULT)) {
             const rg = mulberry2(o.seed * 5167 + 23);
             const gnm = o.devGenome ?? randomGenome(CP.length, REGIONS.length, rg);
             this.devGenome = gnm;
@@ -2422,14 +2454,27 @@
             this.nm["5HT"].E = Math.max(0, this.nm["5HT"].E + fb.S5);
             this.S = clamp(this.S + fb.sleep);
           }
+          if (is40(o.mind ?? MIND_DEFAULT) && M40.forget > 0 && this.t % 10 === 0) {
+            const f2 = 1 - 10 * M40.forget;
+            for (let k = 0; k < this.bA.length; k++) {
+              this.bA[k] = 1 + f2 * (this.bA[k] - 1);
+              this.bB[k] = 1 + f2 * (this.bB[k] - 1);
+            }
+          }
           if (is40(o.mind ?? MIND_DEFAULT) && !(o.v40Lesion ?? "").includes("v40all")) {
             const off = new Set((o.v40Lesion ?? "").split(",").filter(Boolean));
             if (!this.bus) {
               const rr = mulberry2(o.seed * 6007 + 41);
               this.bus = new SensoryBus(rr, off, o.substrate ?? "synthetic", o.seed, o.substrateLog ?? []);
               this.selfM = new SelfModel(rr, off);
+              const ctl = new Set((o.v40Ctl ?? "").split(",").filter(Boolean));
               this.curv = new Curvature(rr, RN.CTX, off);
               this.neo = new NeoHooks(off);
+              this.bus.ctl = ctl;
+              this.selfM.ctl = ctl;
+              this.neo.ctl = ctl;
+              this.bus.outK = M40.busOut;
+              this.selfM.simK = M40.simK;
             }
             const A = this.affect;
             const intero = [this.blood.glc, this.atp / 2, this.integrity, this.fat / 400];
@@ -2522,7 +2567,7 @@
           add("ENS", 0.1 + 0.2 * gutFill / 4 + 0.3 * paraGut);
           for (const k in this.stim) if (R0[k] !== void 0 && k !== "LC") add(k, this.stim[k] * 0.3);
           if (ge36(o.mind ?? MIND_DEFAULT) && !o.visceralLesion && !o.insulaLesion) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += M36.visK * (i % 2 ? 1 - bg : bg - 1);
-          if (this.curv) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += 0.3 * this.curv.felt();
+          if (this.curv) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += M40.insK * this.curv.felt();
           if (o.insulaLesion) add("INS", -5);
           if (o.scnLesion) add("SCN", -5);
           {
@@ -3075,6 +3120,10 @@
           if (this.t % 2 === 0) this.record();
         }
         // spiking race between striatal channels; noise from quantum (Born-rule) or classical source, amplitude set by tonic DA
+        /** value estimate the chooser uses for site k: v4.0 blends the Beta posterior mean (mK) into the striatal value, so a dreamt belief counts; before v4.0 it is wSite */
+        valueEst(k) {
+          return is40(this.o.mind ?? MIND_DEFAULT) && !this.o.rpeLesion ? this.wSite[k] + M40.mK * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]) : this.wSite[k];
+        }
         /** v4.0 REM: move an unexperienced option's Beta belief toward a dreamt mean vh with low confidence (pseudo-count dreamC). Value (wSite) is untouched; the dream raises or lowers expected reward AND keeps uncertainty high, so novelty flows through the single uncertainty term */
         dreamBelief(k, vh) {
           const c = M40.dreamC, lr = M40.dreamLr;
@@ -3216,10 +3265,10 @@
           for (let k = 0; k < SITES; k++) {
             let w = this.wSite[k] + (is39(this.o.mind ?? MIND_DEFAULT) && M39.vK > 0 ? M39.vK * (this.wSite[k] - wMu) : 0);
             if (v32 && this.level >= 3) w += 0.5 * (clamp(this.featC[this.siteC[k]] + this.featS[this.siteS[k]]) - w);
-            if (this.affect) w += this.affect.bias(k);
-            if (this.neo) w += 0.1 * this.marks[k];
+            if (this.affect) w += M40.affK * this.affect.bias(k);
+            if (this.neo) w += M40.markK * this.marks[k];
             w -= (1 + this.cortisol) * this.wAv[k] * clamp(1.2 - 0.6 * this.ghrelin);
-            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1.125 - 0.5 * this.selfM.caution() : 1) * uGate * (betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
+            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * (betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
             if (is37(this.o.mind ?? MIND_DEFAULT)) {
               const avail = 1 - M37.depW * this.dDelta * this.dHat[k];
               if (!this.o.rpeLesion) w += (v40 ? M40.mK : M37.bmW) * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]);
@@ -3396,10 +3445,10 @@
     }
   });
 
-  // src/adapters/c001.ts
+  // ../src/adapters/c001.ts
   var NM, regionOf, NEU, Creature001, make001;
   var init_c001 = __esm({
-    "src/adapters/c001.ts"() {
+    "../src/adapters/c001.ts"() {
       init_define_process_env();
       init_organism();
       init_affect();
@@ -3679,9 +3728,9 @@
     }
   });
 
-  // affect-panel/main.ts
+  // main.ts
   var require_main = __commonJS({
-    "affect-panel/main.ts"() {
+    "main.ts"() {
       init_define_process_env();
       init_dome();
       init_c001();
