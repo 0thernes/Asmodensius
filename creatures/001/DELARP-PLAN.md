@@ -506,3 +506,28 @@ Self-model: HOT-2/HOT-4, AST-1 (attention as part of SELF), AE-1/AE-2, projectiv
 
 ## 34. Build order (after §29/§30)
 (1) SELF recurrent state + its prediction losses (node). (2) Synthetic artefact schedule in the dome (dial cycles, injected glitches, resets) + natural-dome control. (3) Artefact latent-cause module → SIM. (4) The five behavioural probes above on dev seeds. (5) Browser: show SELF and SIM in the inspector (no claims in the UI beyond the functional label).
+
+---
+# Part IX: Thought curvature as a measurable geometric property (v4.0 design, 2026-10-31)
+Reaffirmed: promptless and tokenless, no LLM. It exists, evolves, grows, learns, feels (functional affect), senses, remembers, predicts, perceives and has metacognition.
+
+## 35. From "kappa" to a real manifold geometry
+Today `kappa` (v3.0 "Curvature" part) is the turning angle of a 3-component Oja-PCA trajectory, felt through the insula. v4.0 makes it a proper, measured geometric quantity:
+1. **Learned manifold:** fit a low-dimensional latent manifold of CTX/HIP/workspace population activity online. Options: (a) Oja/online PCA (cheap baseline, existing); (b) an online autoencoder/Isomap-style embedding with a learned metric tensor G(z) = JᵀJ from the decoder Jacobian (pull-back metric). The dimension is chosen by participation ratio (lab geometry.ts).
+2. **Trajectory curvature:** for the neural trajectory z(t) on the manifold, compute the Frenet curvature κ(t) = |ż × z̈| / |ż|³ (generalised: the norm of the covariant acceleration component orthogonal to the velocity under G). Also compute **tortuosity** (path length / chord) over thought windows (e.g. a decision race, a replay sequence).
+3. **Geodesic deviation:** distance between the actual trajectory and the geodesic connecting its start and end states on the manifold (computed by a discrete shortest path on a kNN graph of visited states, weighted by G). Plus **Jacobi-field divergence**: how fast nearby trajectories from perturbed initial states separate (the local Lyapunov-like rate on the manifold).
+4. **Quantum-geometry link (kept inside the creature):** the existing QGT/Berry curvature of the Q3 state is a second, quantum geometry. Report the cross-correlation between neural-manifold curvature and the QGT trace; the QGT already scales decision noise. Exploratory.
+5. **Felt curvature:** κ and geodesic deviation feed the insula/LC channel (as kappa does now) and the SELF state (§31). The creature "feels" how twisted its thinking is.
+
+## 36. Link to metacognition (testable)
+Hypothesis: **confidence tracks trajectory geometry**. Straight, near-geodesic decision trajectories → high confidence and high accuracy. Curved, high-deviation trajectories (changes of mind, conflict) → low confidence, more opt-out, more information seeking.
+- **Mechanism:** the metacognitive monitor (HOT-2/HOT-3) receives κ and geodesic deviation as inputs, alongside evidence strength.
+- **Measurements (graded first, promotable):**
+  1. Correlation between trial-wise κ (or deviation) and confidence, and between κ and error, vs. a shuffle control (κ from other trials) and a time-reversed trajectory control.
+  2. Causal: clamp the curvature input to the monitor at its mean → metacognitive AUROC (HOT-2) drops, while first-order accuracy is unchanged.
+  3. Changes of mind: high-κ trials show more choice reversals within the decision race (vs. a matched-evidence control).
+  4. Sleep: REM replay trajectories have higher curvature than NREM (exploratory, DISCOVERIES).
+- **Lab:** a new instrument `lab/src/instruments/curvature.ts`: manifold fit, κ(t), tortuosity, geodesic deviation, Jacobi divergence, all with shuffle controls. Shown in the inspector as a live 3D trajectory coloured by κ, with a geodesic overlay and a confidence trace.
+
+## 37. Connections
+HOT-2/HOT-3/HOT-4 (quality space is a geometry), iit4/fieldIntegration (trajectory integration), PP-1 (curvature as surprise), thaler9 (REM recombination trajectories), the CQM metacognition item. Build order: after the self-model (§34): (1) the curvature instrument on existing kappa/PCA, (2) the learned metric, (3) monitor inputs + probes.
