@@ -50,3 +50,4 @@
 - `fp/rpt2.ts` ApicalGain and organism aG/som: original code; BAC firing after Larkum, Zhu & Sakmann 1999; dendrite-targeting inhibition after Murayama et al. 2009 (Nature 457:1137) and Silberberg & Markram 2007 (Neuron 53:735).
 - fp/rpt2.ts LearnedApical and organism ffi: original code; competitive Hebbian after von der Malsburg 1973, Oja 1982, Miller, Keller & Stryker 1989; feedforward inhibition after Pouille & Scanziani 2001 (Science 293:1159), Isaacson & Scanziani 2011 (Neuron 72:231).
 - organism apL/apAll/apH: original code; dendritic plateau after Schiller et al. 2000, Larkum 1999; intrinsic homeostasis after Triesch 2005 (ICANN), Desai, Rutherford & Turrigiano 1999 (Nat Neurosci 2:515).
+- organism onR: original code; onset-recruited inhibition truncating persistent activity after Gutkin et al. 2001 (J Comput Neurosci 11:121), Cardin et al. 2009 (Nature 459:663).

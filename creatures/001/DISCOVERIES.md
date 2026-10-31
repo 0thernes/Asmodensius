@@ -97,3 +97,7 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 ## 2026-10-31 4:02 PM PT turn
 - RPT-2 loss localised: the CTX soma is driven by a slow NMDA persistence current (~60× the feedforward drive), so cross-module coincidence cannot gate spiking. b itself is transmitted. Apical gating variants are null in the creature (2705).
 - HOT3RM at uK 0.3: passes both controls on 2737 and 2753, fails on 2721. Provisional.
+
+## 2026-10-31 4:06 PM PT turn
+- Onset reset of slow NMDA removes persistence (|nmdaS| 8.97→0.44) but does not create a×b conjunctions; RPT2R null (2785). Not adopted.
+- HOT3RM held-out 2769: passes vs random, fails vs shuffled (t 2.33). Not confirmed.

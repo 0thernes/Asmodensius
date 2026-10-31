@@ -199,3 +199,11 @@ Then activeInference, RPT-2, CQM10, CQM01/04/03R, RPTLATE, LTC. The ceiling item
   - 2737: 1.37/3.86 and 1.21/3.43 (passes).
   - 2753: 1.06/3.00 and 1.15/3.26 (passes).
   - 2 of 3 fresh blocks pass both controls. This is provisional, not confirmed.
+
+## 4:06 PM PT turn (dev seeds 2769–2800)
+- RPT-2 onset reset (onR, default off): sensory onset truncates CTX slow-NMDA persistence, modelling PV inhibition recruited by an onset transient (Gutkin et al. 2001; Cardin et al. 2009).
+  - It works mechanically: mean |nmdaS| drops from 8.97 to 0.44.
+  - XOR is still absent: offline decode 0.49–0.54, interaction ≤0.13.
+  - RPT2R 2785: onR0.8 −0.13/−0.37; plus apical gating −0.02/−0.05; onR1 plus apical gating −0.44/−1.25 → null.
+  - So slow-NMDA dominance was not the sole cause; the spiking soma remains near-additive in a and b. Not adopted, so defaults are unchanged and the 2625 recheck still stands.
+- HOT3RM held-out 2769 (no tuning): vs random 1.01/2.85 (passes), vs shuffled 0.82/2.33 (t fails) → **not confirmed**. Tally: 2 of 4 fresh blocks pass both controls.

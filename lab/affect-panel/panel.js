@@ -2125,7 +2125,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0 };
+      M40 = { uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2573,6 +2573,15 @@
         step() {
           const o = this.o, r = this.r;
           this.t++;
+          if (M40.onR > 0 && this.nmdaS) {
+            const ps = this.sPrev ??= new Float64Array(this.sens.length);
+            let ch = 0;
+            for (let i = 0; i < this.sens.length; i++) {
+              ch += Math.abs(this.sens[i] - ps[i]);
+              ps[i] = this.sens[i];
+            }
+            if (ch > 0.5) for (let i = R0.CTX; i < R0.CTX + RN.CTX; i++) this.nmdaS[i] *= 1 - M40.onR;
+          }
           if (is40(o.mind ?? MIND_DEFAULT) && !(o.affectLesion ?? "").includes("all")) {
             this.intPrev = this.integrity;
             if (!this.affect) {
@@ -3333,6 +3342,7 @@
         w3s;
         dI;
         dM;
+        sPrev;
         dV;
         gS = 0.5;
         gL = 0.5;
