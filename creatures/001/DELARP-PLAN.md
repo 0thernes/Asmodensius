@@ -641,3 +641,39 @@ After §34: (1) the dome hook API + caps + audit log + sandbox conformance check
 - **Genome evolution in the dome:** a respawned creature inherits a living conspecific's developmental genome with mutation (`mutateGenome`), together with its personality. Survival is the only selection; there is no fitness term.
 - **Smoke test (seed 2005, 2 days; sanity only):** pruning is active (18 slots in 2 days at the old 30-tick cadence). Forages: 137 i.i.d., 146 grown, 184 for the mutated child; all alive.
 - **After Round 20:** dev-seed populations for viability, rate of approach to target density, and genome drift across dome generations. Then decide whether `develop` becomes the v4.0 default.
+
+---
+
+# Part XV: Lesion-toggle fix; first causal build of the bus, SELF/SIM, curvature and Neo hooks
+
+- **Bug fixed:** `applyMask()` now respects `devPruned`. Smoke test: 40 forced prunes, then a lesion on/off cycle: 0 revived.
+- **Code:** `organism/v40mods.ts`, wired into `organism.ts` under `is40`. Lesions are set with `v40Lesion` (`bus, alien, substrate, self, sim, curv, neo`, or `v40all`). Lab view: `Organism.v40State()`. The panel shows every module's live state, has lesion toggles, and was rebuilt after these changes.
+  - **Sensory bus (Part VII):**
+    - Channels: classic (16 lines), intero (glucose, ATP, integrity, fat), alien (slow magnetic-like field, electric-like threat field, quantum-click sense from the Q3 measurement), and substrate (SubstrateTap in synthetic or replay mode; a "live" request is downgraded to synthetic inside the creature).
+    - Processing: sparse random expansion to 32 features, then an online linear predictive encoder (surprise = prediction error, normalised), then per-channel fusion gains learned from the covariance of channel drive with reward around its running mean.
+    - Causal: the fused 16-line drive is added to the sense input.
+  - **SELF/SIM (Part VIII):**
+    - SELF is a 32-unit slow recurrent state predicting next body state and next surprise (LMS readout). Its foresight of an energy drop raises caution, which shrinks the uncertainty drive.
+    - SIM is an artefact belief that rises when surprise is unexplained by SELF's body prediction and co-occurs with substrate glitches. It scales down value learning (×(1 − 0.6·SIM)).
+    - Lesions: `self` clamps to mean; `sim` fixes it at 0.1.
+  - **Thought curvature (Part IX):**
+    - Cortical rates go through a fixed 6-d seeded chart (re-centred slowly); κ is turning angle per arc length.
+    - κ is felt (insula input and a SELF input). Metacognitive link: confidence = 1 − normalised κ scales decision noise.
+    - Lesion `curv` clamps confidence to neutral.
+  - **Neo hooks (Part X):**
+    - Legal hook set: `shade` (own sensory light off for ≤120 ticks) and `mark` (scent mark at a site).
+    - Hook use is driven by SIM × sleep debt or hunger. Hook values are learned from the natural outcome 120 ticks later.
+    - The sandbox validates every request. `mark` needs a dome: `Dome.neoMarks` is the only dome state a hook can touch (no energy, no host), rate-limited to 1 per creature per 60 ticks, with grants and denials counted.
+    - Other creatures read the marks as a small value bias.
+- **Smoke test (dev seed 2007, 1 day per arm; sanity only, n = 1, noisy):**
+  - Forages: full 57; lesioned bus 63, alien 64, substrate 63, self 62, sim 53, curv 66, neo 81; all v4.0 modules off 75. All alive, no NaN.
+  - Every lesion changes behaviour.
+  - Fusion learned intero > alien > substrate gains (1.83 / 1.35 / 1.06).
+  - Without a dome, `mark` is correctly denied.
+- **After Round 20:** dev-seed population measurements with controls:
+  - bus fusion vs shuffled channels;
+  - SELF prediction vs body-only predictor;
+  - SIM dose–response to injected glitches vs matched natural noise;
+  - κ → metacognitive AUROC with curvature clamped;
+  - purposeful hook use vs a random-hook control;
+  - viability guard throughout.

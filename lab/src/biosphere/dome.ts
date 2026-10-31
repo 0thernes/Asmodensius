@@ -15,22 +15,26 @@ export class Dome {
   cellAt(x: number, y: number) { const i = Math.min(this.n - 1, Math.max(0, Math.floor((x + this.cfg.radius) / this.cfg.cell))), j = Math.min(this.n - 1, Math.max(0, Math.floor((y + this.cfg.radius) / this.cfg.cell))); return this.patches[j * this.n + i]; }
   light() { const D = this.dials; if (D.lightMode === "DD") return 0; if (D.lightMode === "LL") return D.lightScale; const m = this.t % 1440, h = D.dayLength * 30; /* half day length in minutes, centred on noon; dayLength 12 = the original 06:00-18:00 sine */
     return Math.abs(m - 720) < h ? D.lightScale * Math.sin((Math.PI * (m - (720 - h))) / (2 * h)) : 0; } // same 1 tick = 1 min clock as creature 001's SCN; dawn 06:00
-  add(id: string, c: CreatureLab, dials?: CreatureDials) { if (!c.body || !c.act || !c.exchange || !c.ledger) throw new Error(`${id} lacks the biosphere body interface`);
+  /** v4.0 Neo sandbox: the only dome state a creature hook may touch is this shared scent-mark map (no energy, no host). Rate-limited. */
+  neoMarks = new Float32Array(16); neoGrants = 0; neoDenied = 0;
+  private attachNeo(c: CreatureLab) { if (c.attachSandbox) { let last = -1e9; c.attachSandbox((site: number) => { if (!(Number.isInteger(site) && site >= 0 && site < 16) || this.t - last < 60) { this.neoDenied++; return false; } last = this.t; this.neoMarks[site] = Math.min(1, this.neoMarks[site] + 0.3); this.neoGrants++; return true; }); } }
+  add(id: string, c: CreatureLab, dials?: CreatureDials) { this.attachNeo(c); if (!c.body || !c.act || !c.exchange || !c.ledger) throw new Error(`${id} lacks the biosphere body interface`);
     const a = this.r() * 2 * Math.PI, d = Math.sqrt(this.r()) * this.cfg.radius * 0.8; this.pop.push({ id, species: c.creatureId, c, x: d * Math.cos(a), y: d * Math.sin(a), heading: this.r() * 2 * Math.PI, path: 0, eaten0: c.ledger().intake, dials }); if (dials?.rewireFrac) c.rewire!(dials.rewireFrac, this.dice.next); this.E0 = this.total(); }
   total() { return this.patches.reduce((s, p) => s + p.food, 0) + this.pop.reduce((s, h) => s + h.c.ledger!().energy, 0) + this.detritus + this.parasiteBiomass + this.grazerBiomass + this.grazerHeat; }
   coopProb(id: string) { const L = this.learn.get(id); return L ? 1 / (1 + Math.exp(-L.w)) : NaN; }
   patchFood() { return this.patches.reduce((s, p) => s + p.food, 0); }
-  step() { this.t++; const L = this.light();
+  step() { this.t++; const L = this.light(); for (let k = 0; k < 16; k++) this.neoMarks[k] *= 0.999;
     for (let i = 0; i < this.patches.length; i++) { const p = this.patches[i]; if (!this.inside(i)) continue; const g = Math.max(0, this.cfg.growth * this.dials.growthScale * L * (this.cfg.foodCap * this.dials.foodCapScale - p.food)); p.food += g; this.grown += g; }
     for (let hi = 0; hi < this.pop.length; hi++) { let h = this.pop[hi];
       if (this.dials.deathRule !== "off" && h.c.alive && !h.c.alive()) { /* DEATH-v1: a dead creature is not stepped, sensed or moved */
         if (h.deathT === undefined) { h.deathT = this.t; this.deaths++; this.deathLog.push({ id: h.id, seed: h.c.seed, t: this.t, age: h.c.t() }); }
         if (this.dials.respawnAfter > 0 && this.spawn && this.t - h.deathT >= this.dials.respawnAfter) { this.detritus += h.c.ledger!().energy; this.births++;
           const kin = this.spawn.length >= 3 ? this.pop.filter((q) => q !== h && q.species === h.species && (!q.c.alive || q.c.alive())) : []; /* v4.0 lineage: a living conspecific is the parent (selection by survival) */
-          const c = this.spawn(h.species ?? "001", 7000000 + this.cfg.seed * 1000 + this.births, kin.length ? kin[Math.floor(this.r() * kin.length)].c : undefined); this.born += c.ledger!().energy; this.pop[hi] = h = { ...h, c, path: 0, eaten0: c.ledger!().intake, deathT: undefined }; }
+          const c = this.spawn(h.species ?? "001", 7000000 + this.cfg.seed * 1000 + this.births, kin.length ? kin[Math.floor(this.r() * kin.length)].c : undefined); this.attachNeo(c); this.born += c.ledger!().energy; this.pop[hi] = h = { ...h, c, path: 0, eaten0: c.ledger!().intake, deathT: undefined }; }
         else continue; }
       const patch = this.cellAt(h.x, h.y); let touch = 0; for (const o of this.pop) if (o !== h && Math.hypot(o.x - h.x, o.y - h.y) < this.cfg.touchRadius) touch++;
       if (h.c.meet || h.c.neighbors) { const nb: { id: string; dx: number; dy: number }[] = []; for (const o of this.pop) { if (o === h || (o.c.alive && !o.c.alive())) continue; const dx = o.x - h.x, dy = o.y - h.y, dd = Math.hypot(dx, dy); if (dd < this.cfg.touchRadius) h.c.meet?.(o.id); if (dd < 3 * this.cfg.touchRadius) nb.push({ id: o.id, dx, dy }); } h.c.neighbors?.(nb); } /* v4.0 social: contact forms attitudes; nearby creatures can be approached or avoided */
+      h.c.readMarks?.(this.neoMarks);
       if (this.dials.lightToCreatures && h.c.setLight) h.c.setLight(L);
       h.c.sense!({ light: L, foodHere: patch.food, temperature: 20 + 5 * L, touch, t: this.t }); h.c.exchange!({ foodPatch: patch }); const D = this.dials, cd = h.dials;
       if (D.toxicity) h.c.harm!(D.toxicity); if (D.electric) h.c.stimulate(D.electric.part, D.electric.amount); if (D.sensoryLoad) h.c.stimulate("SENS", D.sensoryLoad);

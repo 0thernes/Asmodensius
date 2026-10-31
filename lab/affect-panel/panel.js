@@ -1,5 +1,11 @@
 (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function(x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __esm = (fn, res, err) => function __init() {
     if (err) throw err[0];
     try {
@@ -8,7 +14,7 @@
       throw err = [e], e;
     }
   };
-  var __commonJS = (cb, mod) => function __require() {
+  var __commonJS = (cb, mod) => function __require2() {
     try {
       return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
     } catch (e) {
@@ -128,7 +134,27 @@
           return Math.abs(m - 720) < h ? D.lightScale * Math.sin(Math.PI * (m - (720 - h)) / (2 * h)) : 0;
         }
         // same 1 tick = 1 min clock as creature 001's SCN; dawn 06:00
+        /** v4.0 Neo sandbox: the only dome state a creature hook may touch is this shared scent-mark map (no energy, no host). Rate-limited. */
+        neoMarks = new Float32Array(16);
+        neoGrants = 0;
+        neoDenied = 0;
+        attachNeo(c) {
+          if (c.attachSandbox) {
+            let last = -1e9;
+            c.attachSandbox((site) => {
+              if (!(Number.isInteger(site) && site >= 0 && site < 16) || this.t - last < 60) {
+                this.neoDenied++;
+                return false;
+              }
+              last = this.t;
+              this.neoMarks[site] = Math.min(1, this.neoMarks[site] + 0.3);
+              this.neoGrants++;
+              return true;
+            });
+          }
+        }
         add(id, c, dials) {
+          this.attachNeo(c);
           if (!c.body || !c.act || !c.exchange || !c.ledger) throw new Error(`${id} lacks the biosphere body interface`);
           const a = this.r() * 2 * Math.PI, d = Math.sqrt(this.r()) * this.cfg.radius * 0.8;
           this.pop.push({ id, species: c.creatureId, c, x: d * Math.cos(a), y: d * Math.sin(a), heading: this.r() * 2 * Math.PI, path: 0, eaten0: c.ledger().intake, dials });
@@ -148,6 +174,7 @@
         step() {
           this.t++;
           const L = this.light();
+          for (let k = 0; k < 16; k++) this.neoMarks[k] *= 0.999;
           for (let i = 0; i < this.patches.length; i++) {
             const p = this.patches[i];
             if (!this.inside(i)) continue;
@@ -168,6 +195,7 @@
                 this.births++;
                 const kin = this.spawn.length >= 3 ? this.pop.filter((q) => q !== h && q.species === h.species && (!q.c.alive || q.c.alive())) : [];
                 const c = this.spawn(h.species ?? "001", 7e6 + this.cfg.seed * 1e3 + this.births, kin.length ? kin[Math.floor(this.r() * kin.length)].c : void 0);
+                this.attachNeo(c);
                 this.born += c.ledger().energy;
                 this.pop[hi] = h = { ...h, c, path: 0, eaten0: c.ledger().intake, deathT: void 0 };
               } else continue;
@@ -185,6 +213,7 @@
               }
               h.c.neighbors?.(nb);
             }
+            h.c.readMarks?.(this.neoMarks);
             if (this.dials.lightToCreatures && h.c.setLight) h.c.setLight(L);
             h.c.sense({ light: L, foodHere: patch.food, temperature: 20 + 5 * L, touch, t: this.t });
             h.c.exchange({ foodPatch: patch });
@@ -705,6 +734,345 @@
     }
   });
 
+  // ../creatures/001/organism/substrate.ts
+  var SubstrateTap;
+  var init_substrate = __esm({
+    "../creatures/001/organism/substrate.ts"() {
+      init_define_process_env();
+      init_organism();
+      SubstrateTap = class {
+        constructor(mode, seed, replayLog = []) {
+          this.mode = mode;
+          this.replayLog = replayLog;
+          this.r = mulberry2(seed * 3571 + 40);
+          if (mode === "live") {
+            try {
+              const ph = __require("perf_hooks");
+              this.gcObs = new ph.PerformanceObserver((l) => {
+                for (const e of l.getEntries()) this.gcPending += e.duration;
+              });
+              this.gcObs.observe({ entryTypes: ["gc"] });
+              this.eld = ph.monitorEventLoopDelay({ resolution: 10 });
+              this.eld.enable();
+            } catch {
+            }
+            this.last = typeof performance !== "undefined" ? performance.now() : Date.now();
+          }
+        }
+        mode;
+        replayLog;
+        log = [];
+        i = 0;
+        r;
+        pink = new Float64Array(6);
+        last = 0;
+        gcPending = 0;
+        gcObs = null;
+        eld = null;
+        /** one reading per tick: [jitter, cpu, heap, gc, loopDelay, dome], each roughly in 0..1 */
+        read(t, dome = 0) {
+          let v;
+          if (this.mode === "replay") {
+            const f = this.replayLog[this.i++];
+            if (!f || f.t !== t) throw new Error(`substrate replay out of sync at tick ${t}`);
+            this.log.push({ t, v: f.v.slice() });
+            return f.v.slice();
+          }
+          if (this.mode === "synthetic") {
+            for (let k = 0; k < 6; k++) {
+              const a = 1 - Math.pow(2, -k - 1);
+              this.pink[k] = a * this.pink[k] + (1 - a) * (this.r() - 0.5);
+            }
+            const pk = this.pink.reduce((s, x) => s + x, 0);
+            const gc = this.r() < 0.02 ? 0.3 + 0.7 * this.r() : 0;
+            v = [0.5 + pk, 0.3 + 0.2 * Math.sin(t / 1440 * 2 * Math.PI) + 0.05 * (this.r() - 0.5), 0.4 + 0.1 * this.pink[5], gc, 0.1 + 0.5 * gc, dome];
+          } else {
+            const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+            const dt = now - this.last;
+            this.last = now;
+            let cpu = 0, heap = 0;
+            try {
+              const os = __require("os");
+              cpu = os.loadavg()[0] / Math.max(1, os.cpus().length);
+              heap = process.memoryUsage().heapUsed / process.memoryUsage().heapTotal;
+            } catch {
+            }
+            const gc = Math.min(1, this.gcPending / 50);
+            this.gcPending = 0;
+            const m = this.eld ? this.eld.mean : 0;
+            const ld = Number.isFinite(m) ? Math.min(1, m / 1e8) : 0;
+            v = [Math.tanh(dt / 50), Math.min(1, cpu), heap, gc, ld, dome];
+          }
+          this.log.push({ t, v: v.slice() });
+          return v;
+        }
+        /** newline-delimited JSON for results/<run>/substrate.ndjson */
+        toNDJSON() {
+          return this.log.map((f) => JSON.stringify(f)).join("\n");
+        }
+        static fromNDJSON(s) {
+          return s.split("\n").filter(Boolean).map((l) => JSON.parse(l));
+        }
+        close() {
+          try {
+            this.gcObs?.disconnect();
+            this.eld?.disable();
+          } catch {
+          }
+        }
+      };
+    }
+  });
+
+  // ../creatures/001/organism/v40mods.ts
+  var cl2, fin, SensoryBus, SelfModel, Curvature, HOOKS, NeoHooks;
+  var init_v40mods = __esm({
+    "../creatures/001/organism/v40mods.ts"() {
+      init_define_process_env();
+      init_substrate();
+      cl2 = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+      fin = (x) => Number.isFinite(x) ? x : 0;
+      SensoryBus = class {
+        constructor(r, off, mode = "synthetic", seed = 0, replay = []) {
+          this.off = off;
+          const nIn = 16 + 4 + 3 + 6;
+          this.W = new Float32Array(this.D * nIn);
+          for (let k = 0; k < this.W.length; k++) this.W[k] = r() < 0.15 ? r() < 0.5 ? -1 : 1 : 0;
+          this.P = new Float32Array(this.D * this.D);
+          this.prev = new Float32Array(this.D);
+          this.R = new Float32Array(16 * this.D);
+          for (let k = 0; k < this.R.length; k++) this.R[k] = (r() - 0.5) * 0.3;
+          this.tap = mode === "off" ? null : new SubstrateTap(mode === "live" ? "synthetic" : mode, seed, replay);
+          for (let i = 0; i < 16; i++) this.chIdx.push(0);
+          for (let i = 0; i < 4; i++) this.chIdx.push(1);
+          for (let i = 0; i < 3; i++) this.chIdx.push(2);
+          for (let i = 0; i < 6; i++) this.chIdx.push(3);
+        }
+        off;
+        D = 32;
+        W;
+        P;
+        prev;
+        gain = [1, 0.5, 0.25, 0.25];
+        use = [0, 0, 0, 0];
+        surprise = 0;
+        sMean = 1e-4;
+        surpriseN = 1;
+        rBar = 0;
+        chSurprise = [0, 0, 0, 0];
+        out = new Float32Array(16);
+        tap;
+        lastIn = [];
+        chIdx = [];
+        R;
+        step(t, classic, intero, alien, reward) {
+          const sub = this.tap && !this.off.has("substrate") ? this.tap.read(t).map((v) => cl2(fin(v), -1, 2)) : [0, 0, 0, 0, 0, 0];
+          const x = [...Array.from(classic), ...intero, ...this.off.has("alien") ? [0, 0, 0] : alien, ...sub];
+          this.lastIn = x;
+          const D = this.D, n = x.length;
+          const f = new Float32Array(D);
+          const fc = [new Float32Array(D), new Float32Array(D), new Float32Array(D), new Float32Array(D)];
+          for (let d = 0; d < D; d++) for (let i = 0; i < n; i++) {
+            const w = this.W[d * n + i];
+            if (w) {
+              const c = this.chIdx[i];
+              const v = w * x[i] * this.gain[c];
+              f[d] += v;
+              fc[c][d] += w * x[i];
+            }
+          }
+          for (let d = 0; d < D; d++) f[d] = Math.tanh(f[d]);
+          let se = 0;
+          const err = new Float32Array(D);
+          for (let d = 0; d < D; d++) {
+            let p = 0;
+            for (let e = 0; e < D; e++) p += this.P[d * D + e] * this.prev[e];
+            err[d] = f[d] - p;
+            se += err[d] * err[d];
+          }
+          for (let d = 0; d < D; d++) for (let e = 0; e < D; e++) this.P[d * D + e] += 0.01 * err[d] * this.prev[e];
+          this.surprise += 0.05 * (se / D - this.surprise);
+          this.sMean += 1e-3 * (this.surprise - this.sMean);
+          this.surpriseN = cl2(this.surprise / (this.sMean + 1e-9), 0, 5);
+          this.rBar += 2e-3 * (reward - this.rBar);
+          for (let c = 0; c < 4; c++) {
+            let s = 0;
+            for (let d = 0; d < D; d++) s += fc[c][d] * err[d];
+            this.chSurprise[c] += 0.05 * (Math.abs(s) / D - this.chSurprise[c]);
+            let a = 0;
+            for (let d = 0; d < D; d++) a += Math.abs(fc[c][d]);
+            this.use[c] += 2e-3 * ((reward - this.rBar) * Math.tanh(a / D) * 10 - this.use[c]);
+            this.gain[c] = cl2(this.gain[c] + 0.01 * this.use[c], 0.05, 2);
+          }
+          this.prev = f;
+          for (let i = 0; i < 16; i++) {
+            let s = 0;
+            for (let d = 0; d < D; d++) s += this.R[i * D + d] * f[d];
+            this.out[i] = this.off.has("bus") ? 0 : 0.3 * Math.tanh(s);
+          }
+          return this.out;
+        }
+        state() {
+          return { gain: [...this.gain], use: [...this.use], surprise: this.surprise, surpriseN: this.surpriseN, chSurprise: [...this.chSurprise], substrateMode: this.tap?.mode ?? "off" };
+        }
+      };
+      SelfModel = class {
+        constructor(r, off) {
+          this.off = off;
+          this.z = new Float32Array(this.N);
+          this.mean = new Float32Array(this.N);
+          this.Win = new Float32Array(this.N * 12).map(() => (r() - 0.5) * 0.6);
+          this.Wout = new Float32Array(5 * this.N);
+        }
+        off;
+        N = 32;
+        z;
+        Win;
+        Wout;
+        pred = [0, 0, 0, 0, 0];
+        atpEMA = 0.5;
+        err = 0;
+        errBody = 0;
+        sim = 0.1;
+        mean;
+        lastX = [];
+        step(x, glitch) {
+          const tgt = [x[0], x[1], x[2], x[3], x[10]];
+          let e = 0, eb = 0;
+          for (let o = 0; o < 5; o++) {
+            const d = tgt[o] - this.pred[o];
+            e += d * d;
+            if (o < 4) eb += d * d;
+            if (!this.off.has("self")) for (let i = 0; i < this.N; i++) this.Wout[o * this.N + i] += 0.01 * d * this.z[i];
+          }
+          this.err += 0.05 * (e - this.err);
+          this.atpEMA += 0.01 * (x[1] - this.atpEMA);
+          this.errBody += 0.05 * (eb - this.errBody);
+          for (let i = 0; i < this.N; i++) {
+            let s = 0;
+            for (let j = 0; j < 12; j++) s += this.Win[i * 12 + j] * fin(x[j]);
+            this.z[i] = 0.95 * this.z[i] + 0.05 * Math.tanh(s);
+            this.mean[i] += 1e-3 * (this.z[i] - this.mean[i]);
+          }
+          const z = this.off.has("self") ? this.mean : this.z;
+          for (let o = 0; o < 5; o++) {
+            let s = 0;
+            for (let i = 0; i < this.N; i++) s += this.Wout[o * this.N + i] * z[i];
+            this.pred[o] = s;
+          }
+          if (!this.off.has("sim")) {
+            const unexpl = Math.max(0, 0.25 * x[10] - this.errBody);
+            const lik = cl2(2 * glitch + 4 * unexpl);
+            this.sim = cl2(0.98 * this.sim + 0.02 * lik);
+          } else this.sim = 0.1;
+          this.lastX = x;
+        }
+        /** predicted energy drop (next atp below now) -> caution */
+        caution() {
+          return this.off.has("self") ? 0.25 : cl2(0.25 + 5 * (this.atpEMA - this.pred[1]), 0, 1);
+        }
+        // 0.25 = neutral; >0.25 when SELF foresees an energy drop
+        learnScale() {
+          return 1 - 0.6 * this.sim;
+        }
+        state() {
+          return { err: this.err, errBody: this.errBody, sim: this.sim, pred: [...this.pred], caution: this.caution(), z: Array.from(this.z.slice(0, 8)) };
+        }
+      };
+      Curvature = class {
+        constructor(r, nIn, off) {
+          this.nIn = nIn;
+          this.off = off;
+          this.Pm = new Float32Array(this.K * nIn).map(() => (r() - 0.5) * 2 / Math.sqrt(nIn));
+          this.mu = new Float32Array(nIn);
+        }
+        nIn;
+        off;
+        K = 6;
+        Pm;
+        buf = [];
+        kappa = 0;
+        kMean = 0.5;
+        kSD = 0.3;
+        conf = 0.5;
+        mu;
+        step(rates) {
+          const y = new Array(this.K).fill(0);
+          for (let i = 0; i < this.nIn; i++) {
+            const v = rates[i] - this.mu[i];
+            this.mu[i] += 1e-3 * v;
+            if (v) for (let k2 = 0; k2 < this.K; k2++) y[k2] += this.Pm[k2 * this.nIn + i] * v;
+          }
+          this.buf.push(y);
+          if (this.buf.length > 3) this.buf.shift();
+          if (this.buf.length < 3) return;
+          const [a, b, c] = this.buf;
+          const d1 = b.map((v, i) => v - a[i]), d2 = c.map((v, i) => v - b[i]);
+          const n1 = Math.hypot(...d1), n2 = Math.hypot(...d2);
+          if (n1 < 1e-6 || n2 < 1e-6) return;
+          const cos = cl2(d1.reduce((s, v, i) => s + v * d2[i], 0) / (n1 * n2), -1, 1);
+          const k = Math.acos(cos) / (0.5 * (n1 + n2) + 1e-3);
+          this.kappa = 0.9 * this.kappa + 0.1 * Math.min(50, k);
+          this.kMean += 2e-3 * (this.kappa - this.kMean);
+          this.kSD += 2e-3 * (Math.abs(this.kappa - this.kMean) - this.kSD);
+          this.conf = this.off.has("curv") ? 0.5 : cl2(0.5 - 0.25 * (this.kappa - this.kMean) / (this.kSD + 1e-3));
+        }
+        felt() {
+          return this.off.has("curv") ? 0 : cl2((this.kappa - this.kMean) / (this.kSD + 1e-3), -2, 2);
+        }
+        noiseMul() {
+          return 0.7 + 0.6 * (1 - this.conf);
+        }
+        state() {
+          return { kappa: this.kappa, kMean: this.kMean, conf: this.conf, felt: this.felt() };
+        }
+      };
+      HOOKS = ["shade", "mark"];
+      NeoHooks = class {
+        constructor(off) {
+          this.off = off;
+        }
+        off;
+        val = [0, 0];
+        uses = [0, 0];
+        granted = [0, 0];
+        pending = [];
+        lastUse = null;
+        shadeUntil = 0;
+        step(t, sim, sleepDebt, hunger, bestSite, r) {
+          if (this.off.has("neo")) return;
+          if (this.lastUse && t - this.lastUse.t === 120) {
+            const k = this.lastUse.k;
+            const now = k === 0 ? -sleepDebt : -hunger;
+            this.val[k] += 0.2 * (now - this.lastUse.base - this.val[k]);
+            this.lastUse = null;
+          }
+          if (this.lastUse || t % 30 !== 0) return;
+          const drive = [sleepDebt * (0.3 + sim), hunger * (0.2 + sim)];
+          for (let k = 0; k < 2; k++) {
+            const p = cl2(0.02 + 0.3 * drive[k] + 2 * this.val[k], 0, 0.5);
+            if (r() < p) {
+              this.uses[k]++;
+              this.pending.push({ t, hook: HOOKS[k], arg: k === 1 ? bestSite : 60 });
+              this.lastUse = { k, t, base: k === 0 ? -sleepDebt : -hunger };
+              break;
+            }
+          }
+        }
+        /** sandbox reply */
+        grant(req, ok) {
+          if (ok) {
+            this.granted[HOOKS.indexOf(req.hook)]++;
+            if (req.hook === "shade") this.shadeUntil = req.t + req.arg;
+          }
+        }
+        state() {
+          return { val: [...this.val], uses: [...this.uses], granted: [...this.granted], pending: this.pending.length };
+        }
+      };
+    }
+  });
+
   // ../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
@@ -833,6 +1201,7 @@
       init_define_process_env();
       init_affect();
       init_develop();
+      init_v40mods();
       clamp = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
       IG0 = betaIG(1, 1);
       REGIONS = [["SENS", 16], ["THAL", 16], ["CTX", 64], ["HIP", 32], ["STR", 32], ["HYP", 16], ["VTA", 6], ["RAPHE", 6], ["LC", 6], ["BF", 6], ["INS", 8], ["SCN", 8], ["MOT", 8], ["ENS", 48]];
@@ -1748,6 +2117,13 @@
         devStats = null;
         devAff = null;
         devTarget = 0;
+        devPruned = null;
+        bus = null;
+        selfM = null;
+        curv = null;
+        neo = null;
+        marks = new Float32Array(SITES);
+        lastRew = 0;
         devSlots = [];
         actEMA = new Float32Array(NNEU);
         cg = () => 1;
@@ -1956,6 +2332,7 @@
             if (o.mixLesion && kd === 3) m = 0;
             if (o.ctFbLesion && (kd === 8 || this.syn.pre[k] >= R0.CTX && this.syn.pre[k] < R0.CTX + RN.CTX && this.syn.post[k] >= R0.THAL && this.syn.post[k] < R0.THAL + RN.THAL)) m = 0;
             if (o.eiLesion && kd >= 5 && kd <= 7) m = 0;
+            if (this.devPruned && this.devPruned[k]) m = 0;
             this.mask[k] = m;
           }
         }
@@ -2045,9 +2422,30 @@
             this.nm["5HT"].E = Math.max(0, this.nm["5HT"].E + fb.S5);
             this.S = clamp(this.S + fb.sleep);
           }
+          if (is40(o.mind ?? MIND_DEFAULT) && !(o.v40Lesion ?? "").includes("v40all")) {
+            const off = new Set((o.v40Lesion ?? "").split(",").filter(Boolean));
+            if (!this.bus) {
+              const rr = mulberry2(o.seed * 6007 + 41);
+              this.bus = new SensoryBus(rr, off, o.substrate ?? "synthetic", o.seed, o.substrateLog ?? []);
+              this.selfM = new SelfModel(rr, off);
+              this.curv = new Curvature(rr, RN.CTX, off);
+              this.neo = new NeoHooks(off);
+            }
+            const A = this.affect;
+            const intero = [this.blood.glc, this.atp / 2, this.integrity, this.fat / 400];
+            const alien = [Math.cos(2 * Math.PI * this.t / (1440 * 7) + o.seed), clamp(this.cortisol), this.qOut ? 1 : 0];
+            this.bus.step(this.t, this.sens, intero, alien, this.lastRew);
+            this.lastRew *= 0.9;
+            const glitch = this.bus.lastIn[16 + 4 + 3 + 3] ?? 0;
+            this.curv.step(this.rate.subarray(R0.CTX, R0.CTX + RN.CTX));
+            this.selfM.step([...intero, this.nm.DA.E, this.nm["5HT"].E, this.nm.NE.E, this.nm.ACh.E, A ? A.mood.val : 0, A ? A.emo.fear : 0, this.bus.surpriseN - 1, this.curv.felt()], glitch);
+            this.neo.step(this.t, this.selfM.sim, A ? A.sleepDebt : this.S, clamp(this.ghrelin), this.bestSite(), this.affR);
+            for (const q of this.neo.pending.splice(0)) this.neoSandbox(q);
+          }
           const minute = this.t % 1440, hour = minute / 60;
           this.light = this.lightIn !== null ? clamp(this.lightIn) : hour >= this.photo[0] && hour < this.photo[1] ? 1 : 0;
           this.scnPhase += 2 * Math.PI / 1440 + this.light * 2e-3 * Math.sin(2 * Math.PI * minute / 1440 - this.scnPhase);
+          if (this.neo && this.t < this.neo.shadeUntil) this.light = 0;
           const scnOut = o.scnLesion ? 0 : Math.cos(this.scnPhase - 2 * Math.PI * 14 / 24);
           this.melatonin += 0.05 * ((1 - this.light) * (o.scnLesion ? 0.5 : clamp(0.5 - scnOut)) - this.melatonin);
           this.ultra = (this.ultra + 1 / 90) % 1;
@@ -2124,13 +2522,14 @@
           add("ENS", 0.1 + 0.2 * gutFill / 4 + 0.3 * paraGut);
           for (const k in this.stim) if (R0[k] !== void 0 && k !== "LC") add(k, this.stim[k] * 0.3);
           if (ge36(o.mind ?? MIND_DEFAULT) && !o.visceralLesion && !o.insulaLesion) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += M36.visK * (i % 2 ? 1 - bg : bg - 1);
+          if (this.curv) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += 0.3 * this.curv.felt();
           if (o.insulaLesion) add("INS", -5);
           if (o.scnLesion) add("SCN", -5);
           {
             const M = this.mind;
             const gate = awake ? 1 : rem ? 0.2 : 0.05;
             for (let i = 0; i < 16; i++) {
-              ext[R0.SENS + i] += TUNE.sensIn * gate * this.sens[i] * M.att[i >> 2];
+              ext[R0.SENS + i] += TUNE.sensIn * gate * (this.sens[i] + (this.bus ? this.bus.out[i] : 0)) * M.att[i >> 2];
               ext[R0.THAL + i] += M.td[i];
             }
             if (o.cortex !== "v31" && this.t < CX.dev && !o.devLesion) {
@@ -2345,6 +2744,7 @@
               if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.3 * (1 - this.wAv[k]);
             } else if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.05 * (0 - this.wAv[k]);
             const rew = got2 && !o.starve ? 1 : 0;
+            this.lastRew = Math.max(this.lastRew, rew);
             if (this.affect) this.affect.outcome(this.t, k, rew, Math.max(0, this.intPrev - this.integrity), this.nm.DA.E);
             const v36d = ge36(o.mind ?? MIND_DEFAULT);
             const v37f = is37(o.mind ?? MIND_DEFAULT);
@@ -2384,7 +2784,7 @@
               this.nm.DA.E += 0.05 * Math.max(0, rpe) * prec;
               const v35d = ge35(o.mind ?? MIND_DEFAULT);
               if (v35d) {
-                this.wSite[k] += (M35.lrBase + M35.lrVol * this.assocPH[k]) * rpe * (0.5 + nmE("ACh"));
+                this.wSite[k] += (M35.lrBase + M35.lrVol * this.assocPH[k]) * rpe * (0.5 + nmE("ACh")) * (this.selfM ? this.selfM.learnScale() : 1);
                 this.assocPH[k] = 0.7 * this.assocPH[k] + 0.3 * Math.abs(rpe);
               } else this.wSite[k] += 0.01 * rpe * (0.5 + nmE("ACh"));
               if (r() < 0.3 + 0.6 * nmE("ACh")) {
@@ -2719,6 +3119,7 @@
           if (live > this.devTarget) {
             this.mask[si] = 0;
             S[worst][2] = 1;
+            (this.devPruned ??= new Uint8Array(this.mask.length))[si] = 1;
             st.pruned++;
             return;
           }
@@ -2747,13 +3148,33 @@
           st.sprouted++;
           st.pruned++;
         }
+        /** v4.0 Neo: built-in sandbox. Legal hooks only; touches nothing outside this creature unless a dome sandbox is attached (domeSandbox). */
+        domeSandbox = null;
+        neoLog = [];
+        neoSandbox(q) {
+          let ok = false;
+          if (q.hook === "shade") ok = q.arg > 0 && q.arg <= 120;
+          else if (q.hook === "mark") ok = !!this.domeSandbox && Number.isInteger(q.arg) && q.arg >= 0 && q.arg < SITES && this.domeSandbox(q);
+          this.neo.grant(q, ok);
+          this.neoLog.push(q);
+          if (this.neoLog.length > 100) this.neoLog.shift();
+        }
+        bestSite() {
+          let b = 0;
+          for (let k = 1; k < SITES; k++) if (this.wSite[k] > this.wSite[b]) b = k;
+          return b;
+        }
+        /** v4.0 lab view of Parts VII–X */
+        v40State() {
+          return this.bus ? { bus: this.bus.state(), self: this.selfM.state(), curv: this.curv.state(), neo: this.neo.state(), marks: Array.from(this.marks), devPruned: this.devPruned ? this.devPruned.reduce((a, b) => a + b, 0) : 0 } : null;
+        }
         /** v4.0 lab view of the layered affect system (emotions, moods, attitudes, personality, dysregulation events) */
         affectState() {
           return this.affect ? this.affect.state() : null;
         }
         choose(da) {
           const W = 3 + 5 * (this.level - 1);
-          const sig = 0.35 * (0.2 + 2 * clamp(da)) * (1 + 0.2 * this.qgtTrace) * (this.affect ? this.affect.noiseMul() : 1);
+          const sig = 0.35 * (0.2 + 2 * clamp(da)) * (1 + 0.2 * this.qgtTrace) * (this.affect ? this.affect.noiseMul() : 1) * (this.curv ? this.curv.noiseMul() : 1);
           const cnt = new Float32Array(SITES), v = new Float32Array(SITES);
           let sp = 0;
           const v32 = this.o.decision !== "v30";
@@ -2796,8 +3217,9 @@
             let w = this.wSite[k] + (is39(this.o.mind ?? MIND_DEFAULT) && M39.vK > 0 ? M39.vK * (this.wSite[k] - wMu) : 0);
             if (v32 && this.level >= 3) w += 0.5 * (clamp(this.featC[this.siteC[k]] + this.featS[this.siteS[k]]) - w);
             if (this.affect) w += this.affect.bias(k);
+            if (this.neo) w += 0.1 * this.marks[k];
             w -= (1 + this.cortisol) * this.wAv[k] * clamp(1.2 - 0.6 * this.ghrelin);
-            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * uGate * (betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
+            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1.125 - 0.5 * this.selfM.caution() : 1) * uGate * (betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
             if (is37(this.o.mind ?? MIND_DEFAULT)) {
               const avail = 1 - M37.depW * this.dDelta * this.dHat[k];
               if (!this.o.rpeLesion) w += (v40 ? M40.mK : M37.bmW) * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]);
@@ -3173,6 +3595,15 @@
         persona() {
           return this.o.affect ? { ...this.o.affect.persona } : null;
         }
+        attachSandbox(mark) {
+          this.o.domeSandbox = (q) => q.hook === "mark" && mark(q.arg);
+        }
+        readMarks(m) {
+          if (this.o.neo) this.o.marks.set(m);
+        }
+        v40State() {
+          return this.o.v40State();
+        }
         devGenome() {
           return this.o.devGenome;
         }
@@ -3255,6 +3686,8 @@
       init_dome();
       init_c001();
       var LAYERS = ["emotion", "mood", "attitude", "personality", "dysreg", "risk"];
+      var V40 = ["bus", "alien", "substrate", "self", "sim", "curv", "neo"];
+      var off40 = /* @__PURE__ */ new Set();
       var off = /* @__PURE__ */ new Set();
       var d;
       var running = true;
@@ -3275,16 +3708,16 @@
       function build() {
         const seed = 2e3 + Math.floor(Math.random() * 32);
         d = new Dome({ seed, radius: 6 }, { respawnAfter: 60 });
-        const les = [...off].join(",");
-        d.spawn = (_, s, parent) => make001(s, { mind: "v40", affectLesion: les, ...parent?.persona?.() ? { parentPersona: parent.persona() } : {}, ...parent?.devGenome?.() ? { parentDevGenome: parent.devGenome() } : { develop: true } });
-        for (let i = 0; i < 5; i++) d.add("c" + i, make001(seed * 10 + i, { mind: "v40", affectLesion: les, develop: true }));
+        const les = [...off].join(","), les40 = [...off40].join(",");
+        d.spawn = (_, s, parent) => make001(s, { mind: "v40", affectLesion: les, v40Lesion: les40, ...parent?.persona?.() ? { parentPersona: parent.persona() } : {}, ...parent?.devGenome?.() ? { parentDevGenome: parent.devGenome() } : { develop: true } });
+        for (let i = 0; i < 5; i++) d.add("c" + i, make001(seed * 10 + i, { mind: "v40", affectLesion: les, v40Lesion: les40, develop: true }));
         document.getElementById("seed").textContent = `dev seed ${seed}`;
       }
       function render() {
         const root = document.getElementById("pop");
         root.innerHTML = "";
         const t = d.t, day = (t / 1440).toFixed(2);
-        document.getElementById("clock").textContent = `t=${t} (day ${day}) \xB7 deaths ${d.deaths} \xB7 births ${d.births}`;
+        document.getElementById("clock").textContent = `t=${t} (day ${day}) \xB7 deaths ${d.deaths} \xB7 births ${d.births} \xB7 Neo marks granted ${d.neoGrants} / denied ${d.neoDenied}`;
         for (const h of d.pop) {
           const a = h.c.affectState?.();
           if (!a) {
@@ -3302,7 +3735,15 @@
       <div>attitude (16 sites) ${strip(a.att, -0.5, 0.5)}</div><div>wanting ${strip(a.want, 0, 1)}</div><div>outcome SD ${strip(a.rSD, 0, 0.6)}</div>
       <div>others: <small>${oth}</small></div>
       <div><small>bold ${P.bold.toFixed(2)} \xB7 curious ${P.curious.toFixed(2)} \xB7 reactive ${P.reactive.toFixed(2)} \xB7 vuln ${P.vuln.toFixed(2)} \xB7 hedge ${(P.hedge ?? 0).toFixed(2)} \xB7 riskScar ${(P.riskScar ?? 0).toFixed(2)}</small></div>
-      ${h.c.o?.devStats ? `<div><small>wiring: ${h.c.o.devStats.kept - h.c.o.devStats.pruned + h.c.o.devStats.sprouted}/${h.c.o.devStats.target} target \xB7 pruned ${h.c.o.devStats.pruned} \xB7 sprouted ${h.c.o.devStats.sprouted} \xB7 topo ${h.c.o.devStats.topo.toFixed(2)}</small></div>` : ""}<ul>${ev || "<li>no dysregulation events yet</li>"}</ul></div>`));
+      ${h.c.o?.devStats ? `<div><small>wiring: ${h.c.o.devStats.kept - h.c.o.devStats.pruned + h.c.o.devStats.sprouted}/${h.c.o.devStats.target} target \xB7 pruned ${h.c.o.devStats.pruned} \xB7 sprouted ${h.c.o.devStats.sprouted} \xB7 topo ${h.c.o.devStats.topo.toFixed(2)}</small></div>` : ""}${(() => {
+            const v = h.c.v40State?.();
+            if (!v) return "";
+            const B = v.bus, S = v.self, K = v.curv, N = v.neo;
+            return `<div><small><b>bus</b> gain ${B.gain.map((x) => x.toFixed(2)).join("/")} (classic/intero/alien/substrate:${B.substrateMode}) \xB7 surprise ${B.surprise.toFixed(3)}</small></div>
+      <div><small><b>SELF</b> err ${S.err.toFixed(3)} \xB7 caution ${S.caution.toFixed(2)} \xB7 <b>SIM</b> ${bar(S.sim, 0, 1, "#a6f")}</small></div>
+      <div><small><b>curvature</b> \u03BA ${K.kappa.toFixed(2)} \xB7 felt ${K.felt.toFixed(2)} \xB7 confidence ${K.conf.toFixed(2)}</small></div>
+      <div><small><b>Neo</b> shade ${N.uses[0]}/${N.granted[0]} \xB7 mark ${N.uses[1]}/${N.granted[1]} (used/granted) \xB7 hook values ${N.val.map((x) => x.toFixed(2)).join("/")} \xB7 pruned-kept ${v.devPruned}</small></div>`;
+          })()}<ul>${ev || "<li>no dysregulation events yet</li>"}</ul></div>`));
         }
       }
       function loop() {
@@ -3318,6 +3759,14 @@
           const b = $(`<label><input type=checkbox> lesion ${l}</label>`);
           b.querySelector("input").addEventListener("change", (e) => {
             e.target.checked ? off.add(l) : off.delete(l);
+            build();
+          });
+          tg.append(b);
+        }
+        for (const l of V40) {
+          const b = $(`<label><input type=checkbox> lesion ${l}</label>`);
+          b.querySelector("input").addEventListener("change", (e) => {
+            e.target.checked ? off40.add(l) : off40.delete(l);
             build();
           });
           tg.append(b);

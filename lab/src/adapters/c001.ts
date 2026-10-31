@@ -66,6 +66,9 @@ export class Creature001 implements CreatureLab {
   meet(id: string) { const a = this.o.affect; if (a) a.meet(id, a.feltValence()); }
   neighbors(nb: { id: string; dx: number; dy: number }[]) { this.nb = nb; }
   persona() { return this.o.affect ? { ...this.o.affect.persona } as Record<string, number> : null; }
+  attachSandbox(mark: (site: number) => boolean) { (this.o as any).domeSandbox = (q: any) => q.hook === "mark" && mark(q.arg); }
+  readMarks(m: Float32Array) { if ((this.o as any).neo) (this.o as any).marks.set(m); }
+  v40State() { return (this.o as any).v40State(); }
   devGenome() { return (this.o as any).devGenome as Float32Array | null; }
   affectState() { return this.o.affectState(); }
   /** v4.0: when not heading to a food site, steer toward the most-liked or away from the most-disliked nearby creature */
