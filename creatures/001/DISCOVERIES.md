@@ -30,3 +30,7 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - **Posterior sampling from the creature's own entropy stream** (Born-rule Q3 / QRNG lineage, `tsK`): AINF +2.7 rewards, but d only 0.13 (between-seed SD about 20), and AE-1 drops to d 0.57. Left OFF.
 - **The real cause is likely a ceiling, not missing curiosity.** v4.0 with grown wiring and the epistemic term lesioned already gets 68.75 rewards in the depleting world, versus v3.9 full at 60.7. The lesion leaves little to gain.
 - **CQM12 margin:** dreamC 6 with dreamLr 0.75 gives d 1.59 (was 0.99), with thaler9 1.83.
+
+### 2026-10-31 AE-1 replication failure: diagnosis
+- The full creature, not the lesion, was the problem. The Beta belief (blended into value via mK) never forgot, so after each reversal it dragged value back to the stale average. Volatility-scaled forgetting (volLeak 0.01) fixed it: held-out 2048–2063 d 1.24.
+- Affect attitudes and "wanting" learned from raw outcomes, bypassing the RPE system. They are now gated by the phasic RPE.

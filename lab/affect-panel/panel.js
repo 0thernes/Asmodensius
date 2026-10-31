@@ -567,7 +567,8 @@
           return fb;
         }
         /** natural outcome of an approach to option k: reward (food), pain (damage), or nothing */
-        outcome(t, k, reward, pain, da) {
+        outcome(t, k, reward, pain, da, rpe = reward - 0.5) {
+          const phasic = Math.abs(rpe);
           const on = (l) => !this.off.has(l);
           this.lastVisit[k] = t;
           const P = this.persona;
@@ -586,9 +587,9 @@
             }
             if (pain > 0) this.emo.fear = cl(this.emo.fear + pain * (0.5 + P.reactive));
           }
-          if (on("attitude")) this.att[k] += 0.08 * (this.emo.delight - this.emo.fear - 0.5 * this.emo.frustration - this.att[k]);
+          if (on("attitude")) this.att[k] += 0.08 * Math.min(1, 2 * phasic) * (this.emo.delight - this.emo.fear - 0.5 * this.emo.frustration - this.att[k]);
           if (on("dysreg") && reward > 0) {
-            this.want[k] = cl(this.want[k] + 0.02 * (0.5 + P.vuln) * (0.5 + da));
+            this.want[k] = cl(this.want[k] + 0.02 * (0.5 + P.vuln) * (0.5 + da) * Math.min(1, 2 * Math.max(0, rpe)));
             this.tol[k] = cl(this.tol[k] + 0.01 * P.vuln, 0, 0.8);
             if (this.want[k] > 0.6 && this.want[k] - 0.02 < 0.6) this.ev(t, "sensitised", this.want[k]);
           }
@@ -1996,7 +1997,7 @@
       is38 = (m) => m === "v38" || m === "v39" || m === "v40";
       is39 = (m) => m === "v39" || m === "v40";
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2456,8 +2457,8 @@
             this.nm["5HT"].E = Math.max(0, this.nm["5HT"].E + fb.S5);
             this.S = clamp(this.S + fb.sleep);
           }
-          if (is40(o.mind ?? MIND_DEFAULT) && M40.forget > 0 && this.t % 10 === 0) {
-            const f2 = 1 - 10 * M40.forget;
+          if (is40(o.mind ?? MIND_DEFAULT) && (M40.forget > 0 || M40.volLeak > 0) && this.t % 10 === 0) {
+            const f2 = 1 - 10 * (M40.forget + M40.volLeak * this.vol);
             for (let k = 0; k < this.bA.length; k++) {
               this.bA[k] = 1 + f2 * (this.bA[k] - 1);
               this.bB[k] = 1 + f2 * (this.bB[k] - 1);
@@ -2792,7 +2793,7 @@
             } else if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.05 * (0 - this.wAv[k]);
             const rew = got2 && !o.starve ? 1 : 0;
             this.lastRew = Math.max(this.lastRew, rew);
-            if (this.affect) this.affect.outcome(this.t, k, rew, Math.max(0, this.intPrev - this.integrity), this.nm.DA.E);
+            if (this.affect) this.affect.outcome(this.t, k, rew, Math.max(0, this.intPrev - this.integrity), this.nm.DA.E, o.rpeLesion ? 0 : rew - this.wSite[k]);
             const v36d = ge36(o.mind ?? MIND_DEFAULT);
             const v37f = is37(o.mind ?? MIND_DEFAULT);
             if (v37f && this.learn && M37.dLr > 0) {
