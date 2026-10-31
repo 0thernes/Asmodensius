@@ -80,3 +80,8 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - RPT-2 isolated dendritic module: dev 2289 d 0.87 t 2.47 (fails t), held-out 2305 d 1.43 t 4.05. RPT2R in creature (new, disclosed): null at T=1/3/5. Original RPT-2 stays failing.
 - AE-1 diagnosis: night (no foraging) covers ~1/3 of the scored window and the first reversal is slept through with replay of the old contingency; the RPE effect is confined to daytime post-reversal bins. Recheck with l4 alone: 2321 AE-1 d 1.39 t 3.92, held-out 2353 d 0.81 t 2.29 → not confirmed.
 - l4-only recheck passes held on both blocks: thaler9, CQM12, UAL, viability (0 deaths). AINF null.
+
+## 2026-10-31 3:29 PM PT turn
+- AE-1 is insensitive to dream replay (identical with dreamLr 0) — the replay/night account is falsified. Forget 0.001 passed dev 2465 (0.98/2.77) but failed held-out 2481 (0.56/1.57). AE1R (new) fails dev.
+- Dendritic threshold does not create cross-module conjunctions; features are linearly encoded (0.95+) but XOR stays at chance.
+- Learning-progress curiosity does not move AINF.

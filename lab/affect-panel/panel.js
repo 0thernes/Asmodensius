@@ -440,6 +440,33 @@
     }
   });
 
+  // ../../creatures/001/organism/fp/cur.ts
+  var LearningProgress;
+  var init_cur = __esm({
+    "../../creatures/001/organism/fp/cur.ts"() {
+      init_define_process_env();
+      LearningProgress = class {
+        p;
+        eF;
+        eS;
+        constructor(n) {
+          this.p = new Float64Array(n).fill(0.3);
+          this.eF = new Float64Array(n).fill(0.3);
+          this.eS = new Float64Array(n).fill(0.3);
+        }
+        observe(k, r) {
+          const e = Math.abs(r - this.p[k]);
+          this.eF[k] += 0.3 * (e - this.eF[k]);
+          this.eS[k] += 0.05 * (e - this.eS[k]);
+          this.p[k] += 0.2 * (r - this.p[k]);
+        }
+        bonus(k) {
+          return Math.max(0, this.eS[k] - this.eF[k]);
+        }
+      };
+    }
+  });
+
   // ../../creatures/001/organism/fp/l4.ts
   var InputLayer;
   var init_l4 = __esm({
@@ -1299,6 +1326,7 @@
   var init_organism = __esm({
     "../../creatures/001/organism/organism.ts"() {
       init_define_process_env();
+      init_cur();
       init_l4();
       init_hot1();
       init_affect();
@@ -2097,7 +2125,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2720,7 +2748,7 @@
             for (let i = 0; i < NNEU; i++) {
               const cortical = i >= R0.CTX && i < R0.CTX + 64;
               const g = cortical ? 1 + 0.5 * ne : 1;
-              const I = ext[i] + inp[i] + (c34 ? this.nmda[i] : 0) + (v36s ? this.nmdaS[i] * (v37c && i >= R0.CTX && i < R0.CTX + 52 ? sdiv[Math.floor((i - R0.CTX) / 13)] : 1) : 0) + (v37d ? M37.dendK * this.dend[i] / (1 + Math.exp(-(this.v[i] - M37.dendVh) / M37.dendVs)) : 0) + (v36n ? M36.dendK * this.dend[i] / (1 + Math.exp(-(this.v[i] - M36.dendVh) / M36.dendVs)) : 0);
+              const I = ext[i] + inp[i] + (c34 ? this.nmda[i] : 0) + (v36s ? this.nmdaS[i] * (v37c && i >= R0.CTX && i < R0.CTX + 52 ? sdiv[Math.floor((i - R0.CTX) / 13)] : 1) : 0) + (v37d ? M37.dendK * (M40.dTh > 0 && i >= R0.CTX && i < R0.CTX + RN.CTX ? M40.dG * Math.max(0, this.dend[i] - M40.dTh) : this.dend[i]) / (1 + Math.exp(-(this.v[i] - M37.dendVh) / M37.dendVs)) : 0) + (v36n ? M36.dendK * this.dend[i] / (1 + Math.exp(-(this.v[i] - M36.dendVh) / M36.dendVs)) : 0);
               if (c34) this.nmda[i] *= nmK;
               if (v36s) this.nmdaS[i] *= slowDec;
               if (v36n || v37d) this.dend[i] = 0;
@@ -2923,6 +2951,13 @@
                 const e2 = rew - pu * (1 - this.dDelta * dh);
                 this.dDelta = clamp(this.dDelta - M37.dLr * e2 * pu * dh, 0, 1);
               }
+            }
+            if (v36d && this.learn && M40.curK > 0) (this.lp ??= new LearningProgress(SITES)).observe(k, rew);
+            if (v36d && this.learn && M40.dreamGate > 0) {
+              const pA = this.bA[k] / (this.bA[k] + this.bB[k]);
+              const e2 = Math.abs(rew - pA);
+              this.gS += 0.1 * (e2 - this.gS);
+              this.gL += 5e-3 * (e2 - this.gL);
             }
             if (v36d && this.learn) {
               const dw = v37f ? 1 - this.dDelta * this.dHat[k] : 1;
@@ -3271,8 +3306,12 @@
           return is40(this.o.mind ?? MIND_DEFAULT) && !this.o.rpeLesion ? this.wSite[k] + M40.mK * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]) : this.wSite[k];
         }
         /** v4.0 REM: move an unexperienced option's Beta belief toward a dreamt mean vh with low confidence (pseudo-count dreamC). Value (wSite) is untouched; the dream raises or lowers expected reward AND keeps uncertainty high, so novelty flows through the single uncertainty term */
+        lp;
+        gS = 0.5;
+        gL = 0.5;
+        /* v4.0 FP AE-1: fast vs slow global surprise (unexpected uncertainty); high surprise (ACh-like, Hasselmo 1999) suppresses consolidating replay of the stale feature model */
         dreamBelief(k, vh) {
-          const c = M40.dreamC, lr = M40.dreamLr;
+          const c = M40.dreamC, lr = M40.dreamLr * (M40.dreamGate > 0 ? Math.max(0, 1 - M40.dreamGate * Math.max(0, this.gS - this.gL)) : 1);
           this.bA[k] += lr * (1 + c * vh - this.bA[k]);
           this.bB[k] += lr * (1 + c * (1 - vh) - this.bB[k]);
         }
@@ -3436,7 +3475,7 @@
             if (this.affect) w += M40.affK * this.affect.bias(k);
             if (this.neo) w += M40.markK * this.marks[k];
             w -= (1 + this.cortisol) * this.wAv[k] * clamp(1.2 - 0.6 * this.ghrelin);
-            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * ((M40.kgK > 0 ? M40.kgK * this.kgV[k] : this.uSD(k) - sdMu) / SD0 + M40.eK * (hBin(this.dDelta * this.dHat[k]) - hdMu) / Math.LN2 + (M40.tsK ? M40.tsK * (this.uSD(k) / SD0) * gaussQ(this.ent) : 0)) : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
+            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * ((M40.kgK > 0 ? M40.kgK * this.kgV[k] : this.uSD(k) - sdMu) / SD0 + M40.eK * (hBin(this.dDelta * this.dHat[k]) - hdMu) / Math.LN2 + (M40.tsK ? M40.tsK * (this.uSD(k) / SD0) * gaussQ(this.ent) : 0) + (M40.curK > 0 && this.lp ? M40.curK * this.lp.bonus(k) : 0)) : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
             if (is37(this.o.mind ?? MIND_DEFAULT)) {
               const avail = 1 - M37.depW * this.dDelta * this.dHat[k];
               if (!this.o.rpeLesion) w += (v40 ? M40.mK : M37.bmW) * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]);

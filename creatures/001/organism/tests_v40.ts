@@ -95,6 +95,13 @@ function hot3RM(S: number[]): M { const rate: number[] = []; const f = (mode: "m
 // v4.0 RPT-2R (NEW, disclosed; original RPT2 stays reported): same XOR read-out, but stimulus held for T ticks before reading CTX of modules 0-1,
 // because cross-module synapses deliver the other module's code one tick late (recurrence takes time; Lamme 2006) — the 1-tick original reads only the feedforward sweep.
 const rpt2R = (S: number[]): M => { const T = Number(process.env.RPT2T ?? 3); const f = (o: Partial<Opts>) => S.map((s) => { const g = warm31(s, o); const L = new Lin(2, 26); let ok = 0;
-  for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; for (let k = 0; k < T; k++) { show31(g, x); g.step(); } const v = ctx31(g, [0, 1]); const y = a ^ b; if (t >= 160) ok += +(am31(L.out(v)) === y); L.learn(v, y, 0.1); show31(g, new Array(16).fill(0)); g.step(); } return ok / 60; });
+  for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; for (let k = 0; k < T; k++) { show31(g, x); g.step(); } const v = ctx31(g, [0, 1]); const y = process.env.RPT2Y === "a" ? a : process.env.RPT2Y === "b" ? b : a ^ b; if (t >= 160) ok += +(am31(L.out(v)) === y); L.learn(v, y, 0.1); show31(g, new Array(16).fill(0)); g.step(); } return ok / 60; });
   return { full: f({}), "cross-module CTX synapses lesioned": f({ mixLesion: true }) }; };
-export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, N13: n13 };
+
+// v4.0 AE-1R (NEW, disclosed; original AE-1 stays reported): same reversal schedule as AE-1, but scores only forages in the 360 awake ticks that
+// start at the first forage after each reversal (the adaptation window), so slept-through and late-block foraging do not dilute it.
+const ae1R = (S: number[]): M => { const D = 1440; const f = (o: Partial<Opts>) => S.map((s) => { const g: any = new Organism({ seed: s, ...o }); const p0 = g.pTrue.slice(); let rv = 0; while (g.t < 480) g.step(); let rew = 0, n = 0, open = -1, armed = false, r0 = 0, f0 = 0;
+  while (g.t < 480 + 2 * D) { const pr = g.rewards, pf = g.foraged; g.step(); if (g.foraged > pf && armed) { armed = false; open = g.t; } if (open >= 0 && g.t - open <= 360) { rew += g.rewards - pr; n += g.foraged - pf; }
+    if ((g.t - 480) % 720 === 0) { rv++; armed = true; open = -1; for (let k = 0; k < 16; k++) g.pTrue[k] = rv % 2 ? 0.6 - p0[k] : p0[k]; } } void r0; void f0; return rew / Math.max(1, n); });
+  return { full: f({}), "RPE learning lesioned": f({ rpeLesion: true }) }; };
+export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, N13: n13 };
