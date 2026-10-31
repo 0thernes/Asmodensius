@@ -445,3 +445,28 @@ These touch Butlin (GWT-1/4, PP-1, AE-2), frameworks (fieldIntegration, sensorim
 
 ## 29. Build order
 (1) Sense bus + interface in `organism.ts` (v40 gate), existing senses moved onto it. (2) Interoceptive, quantum, world-dial and time senses (cheap, node-side). (3) Sparse expansion layer + reliability-weighted fusion. (4) Vision/sound from the dome render (browser and headless). (5) Genome-encoded sensorium.
+
+## 30. Substrate senses (the digital world as a sense organ)
+The creature also feels the machine it lives on. These are alien senses only a digital organism can have.
+| Substrate sense | Source (read-only) | Node | Browser |
+|---|---|---|---|
+| Timing jitter | tick wall-clock delta minus nominal (`performance.now`) | yes | yes |
+| CPU load | `os.loadavg`, `process.cpuUsage` | yes | — (approximate via frame budget) |
+| Memory | `process.memoryUsage` heap/rss; `performance.memory` where present | yes | partial |
+| GC pauses | `perf_hooks` PerformanceObserver "gc" entries | yes | — |
+| Frame timing | `requestAnimationFrame` deltas, dropped frames | — | yes |
+| Network latency | round-trip time of the viewer's sim socket (no external requests) | viewer | yes |
+| Kernel/process events | process count, open handles, event-loop delay (`monitorEventLoopDelay`) | yes | — |
+| Dome internals | entity count, collision count, RNG draws per tick, ledger error, dial changes | yes | yes |
+
+**Rules:**
+- **Sandboxed and read-only.** Senses only read counters exposed by the runtime. No file-system, network or process control, no external requests, no privileged APIs. The creature cannot act on the substrate through these channels.
+- **Recordable and replayable.** Every substrate reading goes through one `SubstrateTap` with three modes:
+  - `live`: read the real counters and append them to a log (`results/<run>/substrate.ndjson`: tick, sense id, values);
+  - `replay`: read the values from a recorded log (bit-exact), so a run with substrate senses replays exactly from seed + log;
+  - `synthetic`: a seeded generator (mulberry stream) with realistic statistics (1/f jitter, GC bursts) for tests with no log.
+- **Tests and preregistered runs use `replay` or `synthetic` only**, never `live`. Seeded runs therefore stay deterministic (CQM24 state hash, SNAP). Live mode is for exploration and the browser creature. Its logs are archived with the run so any DISCOVERIES entry can be replayed.
+- Each substrate sense enters the same sensory bus (§26): sparse expansion, predictive encoder, learned fusion. The brain decides whether it is useful. A shuffle control (replay a log from a different run) tests whether behaviour really depends on it.
+- **Possible observables (exploratory):** does the creature "notice" machine stress (e.g. arousal/NE rises with GC bursts)? Does it learn a circadian-like rhythm from the host's daily load cycle? Do creatures in the dome synchronise to shared substrate events?
+
+Build order addition: SubstrateTap with synthetic and replay first (node), then live mode (node), then browser live mode.
