@@ -15,3 +15,16 @@ export class ApicalGain extends TwoModule { gain = 3;
   step(a: number, b: number, lesion: boolean): number[] { const N = this.N, pA = this.A, pB = this.B; const u = (i: number) => { const own = i < N ? a : b, other = i < N ? pB : pA; const ff = Math.max(0, this.Wa[i][0] * own + this.Wa[i][1] * 0.5);
       const ap = lesion ? 0 : this.Wx[i].reduce((s, w, j) => s + w * other[j], 0); const g = 1 / (1 + Math.exp(-(ap - (this.th[i] - 0.5) * 0.5) / 0.1)); return ff * (lesion ? 1 : 1 + this.gain * (g - 0.5)) ; };
     const nA = Array.from({ length: N }, (_, i) => u(i)), nB = Array.from({ length: N }, (_, i) => u(N + i)); this.A = nA; this.B = nB; return [...nA, ...nB]; } }
+
+/** v4.0 learned selectivity (original code): cross-module apical weights start all-excitatory and unselective (like the creature's), then
+ *  self-organise by Hebbian growth with per-cell synaptic normalisation (heterosynaptic competition; von der Malsburg 1973; Miller, Keller &
+ *  Stryker 1989 ocular dominance; Oja 1982), so each apical tree comes to sample one feature group of the other module. */
+export class LearnedApical extends ApicalGain {
+  constructor(N: number, seed: number) { super(N, seed); for (const row of this.Wx) for (let j = 0; j < row.length; j++) row[j] = Math.abs(row[j]) + 0.05; this.norm(); }
+  norm(): void { for (const row of this.Wx) { const s = row.reduce((a, b) => a + b, 0); for (let j = 0; j < row.length; j++) row[j] *= 1 / s; } }
+  /** centre apical drive on the population mean (feedforward inhibition) so weights carry a sign-free but selective signal */
+  learn(eta = 0.05): void { const N = this.N; for (let i = 0; i < 2 * N; i++) { const post = i < N ? this.A[i] : this.B[i - N], pre = i < N ? this.B : this.A; const pm = pre.reduce((a, b) => a + b, 0) / N;
+      for (let j = 0; j < N; j++) this.Wx[i][j] = Math.max(0, this.Wx[i][j] + eta * post * (pre[j] - pm)); } this.norm(); }
+  step(a: number, b: number, lesion: boolean): number[] { const N = this.N, pA = this.A, pB = this.B; const u = (i: number) => { const own = i < N ? a : b, other = i < N ? pB : pA; const ff = Math.max(0, this.Wa[i][0] * own + this.Wa[i][1] * 0.5);
+      const om = other.reduce((x, y) => x + y, 0) / N; const ap = lesion ? 0 : this.Wx[i].reduce((s, w, j) => s + w * (other[j] - om), 0) * N; const g = 1 / (1 + Math.exp(-(ap - (this.th[i] - 0.5) * 0.2) / 0.1)); return ff * (lesion ? 1 : 1 + this.gain * (g - 0.5)); };
+    const nA = Array.from({ length: N }, (_, i) => u(i)), nB = Array.from({ length: N }, (_, i) => u(N + i)); this.A = nA; this.B = nB; return [...nA, ...nB]; } }

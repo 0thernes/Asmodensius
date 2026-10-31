@@ -89,3 +89,7 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 ## 2026-10-31 3:48 PM PT turn
 - AE-1 real bottleneck = exploitation (near-uniform choice despite accurate values). uK 1→0.3 passes the ORIGINAL AE-1 on dev 2577 and held-out 2593, 2609. Recheck 2609: thaler9 1.66/4.70, CQM12 1.62/4.57, UAL 1.08/3.07, AE-1 1.36/3.84, AINF −0.01/−0.02, 308 forages, 0 deaths. Default changed.
 - Apical-gain conjunction passes alone (d 5.28 / 4.00) but not in the creature: the cross-module synapses carry almost no b information.
+
+## 2026-10-31 3:55 PM PT turn
+- uK 0.3 confirmed on fresh block 2625: every pass item plus viability passes.
+- Feedforward-inhibition centring makes unselective excitatory cross wiring conjunctive in isolation (d ~10) but not in the creature (null on 2673). Hebbian self-organisation fails alone.
