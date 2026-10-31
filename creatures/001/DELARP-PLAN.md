@@ -241,4 +241,64 @@ The rest are already concept-level.
 - [ ] Approve reframing R-013/14/15/20/21/22/25 (§7.1) and the canvas tile change. The canvas will be edited only after approval.
 - [ ] Decide R-004/R-005 (Eshkol/Moonlab/quantum): lab tool only vs. kept in the organism.
 - [ ] Approve the quality list (§8.4) and the cluster collapse (§9).
+- [ ] Approve the two-tier assessment (§12–13): 6 strict claims + 28 graded qualities.
 - [ ] Then: write and freeze preregistrations/v4.0.md (R items + retirements) **after Round 20 completes**, before any v4.0 test seed.
+
+---
+# Part III: Graded evidence profiles (Round 21 direction, 2026-10-31)
+
+Direction (Alex): be less rigid. Keep honesty and real measurement, but judge most qualities the way a biologist, ecologist or artist would. That means graded evidence profiles from observable behaviour with simple controls, not brittle d/t gates on everything. Value open-ended, emergent, ecological and aesthetic richness.
+
+## 12. Two tiers of claims
+
+### 12.1 Tier S: strict core claims (preregistered statistics, unchanged rules)
+Only claims that are load-bearing for "this is a living, learning, integrated organism":
+| Claim | Test(s) | Why strict |
+|---|---|---|
+| Viability | VIAB-a/b/c (steady state, ordered starvation and death, recovery) | Everything else rests on a real energy ledger. |
+| Learning | Q-LEARN (RPE/STDP learning vs. learning lesion), Q-RETAIN (CQM08R) | The core claim of a brain, not a script. |
+| Broadcast / workspace | Q-BCAST (WS-1R, degraded input, broadcast lesion) | The central integration claim. |
+| Interoception | Q-INTERO (INSGLC style: decodes body state; afferent cut + label shuffle) | Body–brain coupling is the organism's identity. |
+| Reproducibility | snapshot/restore, state hash | Engineering honesty. |
+Rules stay as they are: frozen R-suffixed prereg before test seeds, fresh test seeds, dev-only tuning, d ≥ 0.8 and Welch t ≥ 2.75 vs. every control, non-ceiling rule, and failures stay on record.
+
+### 12.2 Tier G: graded qualities (everything else among the 34)
+Each quality gets an **evidence profile**, not a PASS/FAIL:
+| Grade | Meaning (all must hold for the grade) |
+|---|---|
+| **Strong** | The behaviour is clearly observable across most seeds and contexts (e.g. ≥ 3/4 of dev+test seeds). One simple causal control removes or clearly weakens it (lesion, shuffle or random). The direction holds in ≥ 2 independent seed blocks. Effect sizes are reported, with no threshold. |
+| **Emerging** | Seen in some seeds/contexts or only under some conditions, OR a control weakens it only partly, OR the effect is consistent but small. Report where it shows up and where it does not. |
+| **Absent** | Not observed, or not distinguishable from its control. |
+| **Untested** | No mechanism or no measurement yet. |
+Honesty guards that are kept from the strict tier:
+- Observations come from the real organism, never a stand-alone model.
+- Every grade has ≥ 1 control (lesion or shuffle), so the grade means "the brain does this", not "it happened once".
+- A grade is assigned by a written rubric per quality, fixed **before** looking at that round's data. The rubric may be revised between rounds, with a dated note. No silent regrading.
+- Failures and downgrades are shown, not hidden. Grades are never summed into a single score or a consciousness claim.
+- Ceiling is not a failure here. If a behaviour is easy and robust, that is Strong, with a note that the task may be too easy.
+
+### 12.3 Evidence types allowed in Tier G (beyond d/t)
+- **Behavioural ethology**: time budgets (forage/rest/explore/sleep), ethograms, sequences, individual differences between seeds ("personalities"), behaviour across dome conditions.
+- **Ecological**: population dynamics in the dome, niche use, coexistence of species, responses along the utopia-to-hell ladder, recovery after perturbation (resilience curves).
+- **Neural observation**: raster/field signatures, ignition events, replay content during sleep, PCI-style complexity, representational geometry, lesion dose–response curves.
+- **Open-endedness / emergence**: novelty growth over long runs, new behaviours not coded as rules, surprising interactions. These are logged as **observations** with seed, time and replay file, then checked against a shuffle/no-plasticity run.
+- **Aesthetic / experiential richness**: visual and sonic variety driven by internal state (measured: state→visual mutual information; diversity of rendered states over a day; lesion → visual change, which is the "nothing cosmetic" check). Plus qualitative notes from human viewing (Alex as curator), clearly labelled as subjective.
+- **Case studies**: annotated episodes ("seed 2017, day 3: reversal after food crash") with replay files, in the style of a field notebook.
+
+## 13. Which of the 34 qualities go where
+- **Tier S (strict)**: Q-LEARN, Q-RETAIN, Q-BCAST, Q-INTERO, Q-HOMEO/Q-ENERGY (via VIAB). Six qualities, plus reproducibility.
+- **Tier G (graded)**: Q-PRED, Q-TOPDOWN, Q-CURIO, Q-AGENCY, Q-VALENCE, Q-GOAL, Q-ASSOC, Q-RECUR, Q-BIND, Q-MOD, Q-CAP, Q-ATTN, Q-META, Q-META-ACT, Q-SIM, Q-SELFATTN, Q-SELF, Q-SOCIAL-ATTN, Q-INTEG, Q-GEN, Q-PLAN, Q-BODY, Q-LINEAGE, Q-ECO, Q-ADAPT-BODY, Q-NOVEL, Q-COMM, Q-ROBUST. That is 28 graded.
+- A graded quality can be promoted to Tier S later with a new preregistration, when the claim needs it (e.g. for a paper).
+- The R items proposed in §4b (CUR-1R, REC-1R, REV-1R, META-1R, ATT-1R, REC-2R, EVO-1R, ECO-1R, MORPH-1R, DEV-1R) become **graded protocols**: the same task and control, read as a profile instead of a gate. Only WS-1R stays a strict prereg item.
+
+## 14. What this changes elsewhere in the plan
+- **§4 / §8**: "retire / redefine" still applies, but only Tier S items need frozen R-suffixed preregs. Tier G uses a per-round **rubric file** (`assessments/RUBRIC-vX.md`), committed before the round's data are read.
+- **Conflicts (§2)** become less fatal. Under graded reading, curiosity vs. dreaming is a **trade-off to describe** (e.g. Q-CURIO Strong, Q-GEN Emerging), not two FAILs. Still, merge the mechanisms (§3), because one coherent brain is the goal.
+- **Scorecard / canvas / site (§10.5)**: the headline shows the strict claims (PASS/FAIL), then a **profile map**: 28 qualities × {Strong, Emerging, Absent, Untested} with short notes, a field-notebook page of observed emergent episodes, and a gallery (visual/sonic states with their internal-state source). No totals or rankings.
+- **Pipeline (§10)**: add `assessments/` per round: the rubric, profile JSON (grade, evidence, controls, seeds, replay links), and the notebook. CI checks only that every grade references a control and a data file.
+- **Prereg template (§10.3)**: add `tier: S | G`. Tier G entries need a rubric and a control, not a pass threshold.
+- **Release gate (R-018)**: proposed as "all Tier S claims PASS, nothing cosmetic, every quality graded with evidence", not "grade A everywhere".
+
+## 15. Risks
+- A graded scheme can drift into storytelling. The guard is controls on every grade, rubrics committed before the data, visible downgrades, and replay files for every claim.
+- Grades are not comparable with the old d/t rollups. The history stays on record as it is.
