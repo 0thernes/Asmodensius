@@ -1,0 +1,3 @@
+ARCHIVED 2026-10-31: original site/gen.py text:
+CAP-B is a 2D contact-physics crawler.
+"B":"CAP-B contact-physics crawler (harness body, not the rendered creature)"

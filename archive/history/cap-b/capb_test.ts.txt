@@ -1,0 +1,5 @@
+// ARCHIVED 2026-10-31: CAP-B test block from creatures/001/harness/v27tests.ts. Not built.
+  if (want("CAP-B")) { const run = (mode: string) => SEEDS.map((s) => { const r = mulberry(s * 263 + 2701); const jit = Array.from({ length: 12 }, () => (r() * 2 - 1) * 0.01); const phi0 = r() * 6.283185307; const rp = mulberry(s * 263 + 2702);
+      const phases = mode === "uncoord" ? Array.from({ length: 6 }, () => rp() * 6.283185307) : Array.from({ length: 6 }, (_, i) => i * 6.283185307 / 5);
+      return crawl({ phases, mu: mode === "nofric" ? 0 : 0.6, aniso: mode === "iso" ? 1 : 3, phi0, jit }); });
+    const F = run("full"); out.push(item("CAP-B", P, "Embodied contact physics: crawling (benchmark class B)", "forward CoM displacement (m, 40 s)", "2D mass-spring chain, penalty contact, anisotropic Coulomb friction, CPG traveling wave", [compare("uncoordinated gait (random phases)", F, run("uncoord")), compare("no contact friction", F, run("nofric")), compare("isotropic friction", F, run("iso"))])); }

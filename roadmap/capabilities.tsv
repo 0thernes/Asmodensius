@@ -5,7 +5,7 @@ Heritable variation across page reloads	Avida, Tierra (in-memory only)	Offspring
 Self-reproduction of the full creature state	Langton loops; Evoloops	Child instance regenerates the parent's network with ≥99% weight fidelity vs random-init control
 Open-ended morphological novelty	Chromaria; POET	Novelty archive keeps growing (slope >0) over 10^5 steps vs fixed-environment control
 Connectome-seeded controller from FlyWire subgraph	Shiu et al. 2024 LIF model	Steering task accuracy from FlyWire-derived weights exceeds degree-preserving shuffled connectome (d≥0.8)
-C. elegans locomotion circuit transplant	c302; BAAIWorm	Forward/backward switching matches published reversal rates within 20% vs shuffled-synapse control
+Grown approach/escape switching circuit (own developmental wiring; retired the copied-worm-circuit item 2026-10-31)	concept only: escape/approach switching (published ethology)	Approach/escape switching emerges in 001's grown wiring and beats a shuffled-synapse control
 Sleep-like offline consolidation	Wake-sleep algorithm (Hinton 1995); NCA	Post-"sleep" recall improves vs no-sleep control on held-out cues
 Homeostatic temperature regulation	Ashby Homeostat; Daisyworld	Internal variable stays within band 2× longer than open-loop control under drifting external temperature
 Interoceptive prediction of energy	Seth interoceptive inference (theory)	Energy forecast error at 20 steps lower than persistence baseline (d≥0.8)

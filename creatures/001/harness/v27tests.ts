@@ -1,13 +1,10 @@
 // FROZEN v2.7 tests (preregistrations/v2.7.md). Do not edit after first test-seed run.
 import { mulberry, SEEDS, compare, item, Item, auroc } from "./harness";
 import { maze, newModel, MN } from "./v26mech";
-import { seekPref, crawl, stateOf, reproduce } from "./v27mech";
+import { seekPref, stateOf, reproduce } from "./v27mech";
 const fs = require("fs"), path = require("path");
 export function v27Tests(dataDir: string, only?: string): Item[] { const want = (id: string) => !only || only === id; const P = "Prereg v2.7"; const out: Item[] = [];
-  if (want("CAP-B")) { const run = (mode: string) => SEEDS.map((s) => { const r = mulberry(s * 263 + 2701); const jit = Array.from({ length: 12 }, () => (r() * 2 - 1) * 0.01); const phi0 = r() * 6.283185307; const rp = mulberry(s * 263 + 2702);
-      const phases = mode === "uncoord" ? Array.from({ length: 6 }, () => rp() * 6.283185307) : Array.from({ length: 6 }, (_, i) => i * 6.283185307 / 5);
-      return crawl({ phases, mu: mode === "nofric" ? 0 : 0.6, aniso: mode === "iso" ? 1 : 3, phi0, jit }); });
-    const F = run("full"); out.push(item("CAP-B", P, "Embodied contact physics: crawling (benchmark class B)", "forward CoM displacement (m, 40 s)", "2D mass-spring chain, penalty contact, anisotropic Coulomb friction, CPG traveling wave", [compare("uncoordinated gait (random phases)", F, run("uncoord")), compare("no contact friction", F, run("nofric")), compare("isotropic friction", F, run("iso"))])); }
+  /* CAP-B retired 2026-10-31 (originality rule): see archive/history/cap-b/; historical v2.7 outcome kept in results */
   if (want("CAP-S")) { const goal = MN * MN - 1, DX = [1, -1, 0, 0], DY = [0, 0, 1, -1]; const mv = (c: number, d: number) => { const x = c % MN + DX[d], y = Math.floor(c / MN) + DY[d]; return x < 0 || y < 0 || x >= MN || y >= MN ? -1 : y * MN + x; };
     const run = (mode: string) => SEEDS.map((s) => { const W = maze(mulberry(s * 251 + 2751)); const truth = newModel(); W.forEach((w, c) => w.forEach((wall, d) => { truth[c][d] = wall ? 2 : 1; })); const pm = newModel(); W.forEach((w, c) => w.forEach((wall, d) => { if (wall) pm[c][d] = 2; }));
       // trained peer: shortest path using the true map

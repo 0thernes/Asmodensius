@@ -6,7 +6,7 @@ import { execSync } from "child_process"; import { readFileSync } from "fs";
 export type Finding = { file: string; line: number; kind: "FAIL" | "ALLOWED"; why: string; text: string };
 const OWN = /tsotchke|eshkol|moonlab|quantum_rng|neuralese|alex donahue|asmodensius/i;
 const PROJECTS = /\b(openworm|c302|sibernetic|owmeta|lenia|avida|tierra|polyworld|framsticks|norns?\b|creatures engine|neat-python|neuroevolution of augmenting|biota|darwinbots|evolve 4\.0|bibites|brian2|nest simulator|neuron simulator)\b/i;
-const WORM = /\b(AVA[LR]|AVB[LR]|AVD[LR]|PVC[LR]|loadConn|hermaphrodite connectome)\b/; // C. elegans identified-neuron wiring = literal OpenWorm-derived circuit
+const WORM = /\b(AVA[LR]|AVB[LR]|AVD[LR]|PVC[LR]|loadConn|hermaphrodite connectome)\b/; const CRAWL = /\b(crawl\s*\(|contact-physics crawler|mass-spring chain|undulat\w*|serpentine gait)/i; // worm-style crawler bodies (CAP-B) // C. elegans identified-neuron wiring = literal OpenWorm-derived circuit
 const PORT = /\b(ported from|adapted from|copied from|translated from|based on the code|vendored)\b/i;
 const LICENSE = /(copyright \(c\)|@license|spdx-license-identifier|licensed under the)/i;
 const STD = /(react|three\.js|three\.module|orbitcontrols|mrdoob|facebook)/i;
@@ -19,6 +19,7 @@ export function originality(root = "."): { pass: boolean; fails: number; allowed
     src.split("\n").forEach((l, i) => { const t = l.length > 240 ? l.slice(0, 240) : l; const hit = (kind: Finding["kind"], why: string) => F.push({ file: f, line: i + 1, kind, why, text: t.trim().slice(0, 160) });
       if (PROJECTS.test(l)) hit("FAIL", "names another A-Life/neuro-sim project in code (port or distinctive mechanic?)");
       else if (WORM.test(l)) hit("FAIL", "literal C. elegans connectome circuit (copied anatomy, not a concept)");
+      else if (CRAWL.test(l)) hit("FAIL", "worm-style crawler body (copied body plan, CAP-B)");
       else if (PORT.test(l) && !OWN.test(l)) hit("FAIL", "code says it was ported/adapted from elsewhere");
       else if (LICENSE.test(l) && !OWN.test(l)) hit(STD.test(l) || STD.test(f) ? "ALLOWED" : "FAIL", "third-party licence header (bundled library?)"); }); }
   const dedup = new Map<string, Finding>(); for (const x of F) { const k = `${x.file}|${x.why}`; if (!dedup.has(k)) dedup.set(k, x); } const out = [...dedup.values()];
