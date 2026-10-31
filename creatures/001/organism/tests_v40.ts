@@ -1,6 +1,8 @@
 // v4.0 R-tests (preregistrations/v4.0.md, DRAFT). New tests; the originals stay on record unchanged.
 import { Organism, Opts } from "./organism";
-import { OptOut } from "./fp/hot3";
+import { OptOut, MarginConf } from "./fp/hot3";
+import { Lin } from "./organism";
+import { warm as warm31, show as show31, ctx as ctx31, am as am31 } from "./tests_v31";
 type M = Record<string, number[]>;
 const D = 1440; const mk = (seed: number, o: Partial<Opts> = {}): Organism => new Organism({ seed, ...o } as Opts);
 const wr = (seed: number) => { let a = seed * 7349 + 101; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; };
@@ -81,4 +83,18 @@ function hot3R(S: number[]): M { const rate: number[] = []; const f = (mode: "me
       const ok = g.mind.action === c; const cf = mode === "shuf" ? rr() : g.mind.conf; const out = mode === "rand" ? rr() < rate[si] : o.decide(cf, acc); const rw = out ? acc : ok ? 1 : 0; if (t >= 160) { R += rw; n++; outs += +out; }
       o.learn(cf, ok); acc += 0.05 * ((ok ? 1 : 0) - acc); g.mind.rew = rw - 0.4; g.mind.teachConf(ok); g.mind.teachAction(c); g.mind.teach(m, c); blank(g); } if (mode === "meta") rate[si] = outs / n; return R / n; });
   const meta = f("meta"); return { "metacognitive opt-out": meta, "random opt-out (matched rate)": f("rand"), "confidence shuffled": f("shuf") }; }
-export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, N13: n13 };
+/** HOT-3RM (NEW variant of HOT-3R, disclosed): identical task and arms, but confidence = MarginConf (running percentile of the creature's decision margin g.mind.margin). */
+function hot3RM(S: number[]): M { const rate: number[] = []; const f = (mode: "meta" | "rand" | "shuf") => S.map((s, si) => { const g: any = mk(s); at(g, 480); const r = wr(s), rr = wr(s + 99991);
+    for (let k = 0; k < 120; k++) { const c = [0, 1, 2, 3].map(() => Math.floor(r() * 4)); const x = new Array(16).fill(0); c.forEach((cc, m) => (x[m * 4 + cc] = 1)); show(g, x); g.step(); c.forEach((cc, m) => g.mind.teach(m, cc)); blank(g); }
+    const o = new OptOut(), mc = new MarginConf(); let acc = 0.5, R = 0, n = 0, outs = 0;
+    for (let t = 0; t < 260; t++) { const m = Math.floor(r() * 4), c = Math.floor(r() * 4); const x = new Array(16).fill(0); x[m * 4 + c] = 0.5 + 0.7 * r(); for (let i = 0; i < 16; i++) x[i] += 0.3 * Math.abs(gq(r)); show(g, x); g.step();
+      const ok = g.mind.action === c; const q = mc.read(g.mind.margin); const cf = mode === "shuf" ? rr() : q; const out = mode === "rand" ? rr() < rate[si] : o.decide(cf, acc); const rw = out ? acc : ok ? 1 : 0; if (t >= 160) { R += rw; n++; outs += +out; }
+      o.learn(cf, ok); acc += 0.05 * ((ok ? 1 : 0) - acc); g.mind.rew = rw - 0.4; g.mind.teachConf(ok); g.mind.teachAction(c); g.mind.teach(m, c); blank(g); } if (mode === "meta") rate[si] = outs / n; return R / n; });
+  const meta = f("meta"); return { "metacognitive opt-out": meta, "random opt-out (matched rate)": f("rand"), "confidence shuffled": f("shuf") }; }
+
+// v4.0 RPT-2R (NEW, disclosed; original RPT2 stays reported): same XOR read-out, but stimulus held for T ticks before reading CTX of modules 0-1,
+// because cross-module synapses deliver the other module's code one tick late (recurrence takes time; Lamme 2006) — the 1-tick original reads only the feedforward sweep.
+const rpt2R = (S: number[]): M => { const T = Number(process.env.RPT2T ?? 3); const f = (o: Partial<Opts>) => S.map((s) => { const g = warm31(s, o); const L = new Lin(2, 26); let ok = 0;
+  for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; for (let k = 0; k < T; k++) { show31(g, x); g.step(); } const v = ctx31(g, [0, 1]); const y = a ^ b; if (t >= 160) ok += +(am31(L.out(v)) === y); L.learn(v, y, 0.1); show31(g, new Array(16).fill(0)); g.step(); } return ok / 60; });
+  return { full: f({}), "cross-module CTX synapses lesioned": f({ mixLesion: true }) }; };
+export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, N13: n13 };

@@ -41,3 +41,8 @@
 
 - Knowledge gradient / value of information (v4.0 kgK option): Howard RA (1966) Information value theory, IEEE Trans Syst Sci Cybern 2:22-26; Frazier PI, Powell WB, Dayanik S (2008) A knowledge-gradient policy for sequential information collection, SIAM J Control Optim 47:2410-2439.
 - Veto of prepared action ("free won't", v4.0 N13): Brass M, Haggard P (2007) To do or not to do: the neural signature of self-control, J Neurosci 27:9141-9145.
+
+## v4.0 additions (2026-10-31, 3:02 PM PT turn)
+- `organism/fp/rpt2.ts` (TwoModule): original code. Dendritic coincidence detection after Larkum, Zhu & Sakmann 1999 (Nature 398:338), Häusser & Mel 2003, mixed selectivity after Rigotti et al. 2013 (Nature 497:585); recurrence timing after Lamme 2006.
+- `MarginConf` (fp/hot3.ts): confidence from decision margin after Kiani & Shadlen 2009 (Science 324:759), Kepecs et al. 2008 (Nature 455:227).
+- Alex Donahue's own work: SUPER CREATURE (CQM, `cq5/src/sim/super-creature.ts`) was reviewed as a mechanism source; it is the user's own code and free to reuse. No code copied this turn; the online next-beat sense predictors are noted as a candidate for activeInference.

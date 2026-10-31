@@ -6,12 +6,12 @@ import { compare, item, Item, auroc } from "../harness/harness";
 const D = 1440; const mean = (a: number[]): number => a.reduce((s, x) => s + x, 0) / Math.max(1, a.length);
 const mk = (seed: number, o: Partial<Opts> = {}): Organism => new Organism({ seed, ...o });
 const at = (g: Organism, tick: number): void => { while (g.t < tick) g.step(); };
-const warm = (seed: number, o: Partial<Opts> = {}): Organism => { const g = mk(seed, o); at(g, 480); return g; }; // 08:00 day 0, awake
-const am = (a: ArrayLike<number>): number => { let b = 0; for (let i = 1; i < a.length; i++) if (a[i] > a[b]) b = i; return b; };
+export const warm = (seed: number, o: Partial<Opts> = {}): Organism => { const g = mk(seed, o); at(g, 480); return g; }; // 08:00 day 0, awake
+export const am = (a: ArrayLike<number>): number => { let b = 0; for (let i = 1; i < a.length; i++) if (a[i] > a[b]) b = i; return b; };
 const oneHot = (m: number, c: number, amp = 1): number[] => { const x = new Array(16).fill(0); x[m * 4 + c] = amp; return x; };
-const show = (g: Organism, x: number[]): void => { for (let i = 0; i < 16; i++) g.sens[i] = Math.max(0, x[i]); };
-const blank = (g: Organism, n = 1): void => { for (let k = 0; k < n; k++) { g.sens.fill(0); g.step(); } };
-const ctx = (g: Organism, mods = [0, 1, 2, 3]): number[] => { const v: number[] = []; for (const m of mods) for (let j = 0; j < 13; j++) v.push(g.rate[R0.CTX + m * 13 + j]); return v; };
+export const show = (g: Organism, x: number[]): void => { for (let i = 0; i < 16; i++) g.sens[i] = Math.max(0, x[i]); };
+export const blank = (g: Organism, n = 1): void => { for (let k = 0; k < n; k++) { g.sens.fill(0); g.step(); } };
+export const ctx = (g: Organism, mods = [0, 1, 2, 3]): number[] => { const v: number[] = []; for (const m of mods) for (let j = 0; j < 13; j++) v.push(g.rate[R0.CTX + m * 13 + j]); return v; };
 const spearman = (a: number[], b: number[]): number => { const rk = (x: number[]): number[] => { const i = x.map((v, k) => [v, k]).sort((p, q) => p[0] - q[0]); const r = new Array(x.length); i.forEach(([, k], n) => (r[k] = n)); return r; };
   const ra = rk(a), rb = rk(b), ma = mean(ra), mb = mean(rb); let s = 0, sa = 0, sb = 0; for (let k = 0; k < a.length; k++) { s += (ra[k] - ma) * (rb[k] - mb); sa += (ra[k] - ma) ** 2; sb += (rb[k] - mb) ** 2; } return s / Math.sqrt(sa * sb + 1e-12); };
 const corr = (a: number[], b: number[]): number => { const ma = mean(a), mb = mean(b); let s = 0, sa = 0, sb = 0; for (let k = 0; k < a.length; k++) { s += (a[k] - ma) * (b[k] - mb); sa += (a[k] - ma) ** 2; sb += (b[k] - mb) ** 2; } return sa && sb ? s / Math.sqrt(sa * sb) : 0; };

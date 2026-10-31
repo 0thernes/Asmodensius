@@ -74,3 +74,9 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
   - Mixed, so volX stays off.
   - **Flag:** AE-1 at defaults is only d 0.26-0.58 on these three fresh blocks, so the earlier 0.88-1.24 margin does not replicate.
 - **Recheck on 2209-2224, defaults vs l4+volX:** thaler9 2.25 → 1.62, CQM12 1.49 → 1.50, UAL 2.25 → 1.98, AINF 0.07 → −0.02. Viability 318 forages, 0 deaths in both.
+
+## 2026-10-31 3:02 PM PT turn (dev seeds 2225–2368)
+- HOT3RM (new, disclosed): dev 2257 d 1.41 t 3.98 but held-out 2273 d 0.53 t 0.65 → not confirmed. Original HOT-3 stays failing.
+- RPT-2 isolated dendritic module: dev 2289 d 0.87 t 2.47 (fails t), held-out 2305 d 1.43 t 4.05. RPT2R in creature (new, disclosed): null at T=1/3/5. Original RPT-2 stays failing.
+- AE-1 diagnosis: night (no foraging) covers ~1/3 of the scored window and the first reversal is slept through with replay of the old contingency; the RPE effect is confined to daytime post-reversal bins. Recheck with l4 alone: 2321 AE-1 d 1.39 t 3.92, held-out 2353 d 0.81 t 2.29 → not confirmed.
+- l4-only recheck passes held on both blocks: thaler9, CQM12, UAL, viability (0 deaths). AINF null.
