@@ -181,3 +181,21 @@ Then activeInference, RPT-2, CQM10, CQM01/04/03R, RPTLATE, LTC. The ceiling item
 - uK 0.3 confirmation block 2625 (defaults): thaler9 1.39/3.93, CQM12 1.05/2.98, AE-1 1.43/4.05, UAL 1.66/4.69, HOT-1 1.80/5.10, AINF −0.07/−0.19 (null as before), viability 343 forages, 0 deaths → **confirmed**.
 - RPT-2 feature-selective cross wiring, isolated (fp/rpt2.ts LearnedApical): (a) Hebbian growth plus per-cell normalisation (competitive self-organisation, Miller 1989): 2641 d 0.82 t 2.33 (fails); (b) all-excitatory unselective weights, with feedforward inhibition centring the apical drive on the source-population mean (Pouille & Scanziani 2001): 2641 d 9.54 t 26.98, held-out 2657 d 10.32 t 29.18 → **passes alone**. In creature (ffi option, default off) RPT2R 2673: aG2 0.32/0.91, aG4 −0.52/−1.48 → null. The creature's cross-module signal is too weakly b-selective at the spike level for centring to recover it. Not yet localised further.
 - HOT-3R: not attempted this turn (time).
+
+## 4:02 PM PT turn (dev seeds 2689–2768)
+- RPT-2 trace of b (fp/diag_rpt2_trace.ts, fp/diag_rpt2_xor.ts; seed 2689):
+  - b is not lost. It is in module-1 spikes (max d′ 2.0–3.2) and reaches module 0 by tick 2–3 (max d′ 1.2–1.5).
+  - An offline decoder (600 trials) reads a 0.95–0.98 and b 0.97–1.00 from modules 0+1, but XOR only 0.48–0.56. Per-unit a×b interaction is ≤0.1.
+  - The integrated apical signal carries b well (d′ up to 1.88).
+  - **Source of the loss:** CTX somatic current is dominated by the slow NMDA persistence current (mean |nmdaS| 8.97 vs ext 0.15, fast NMDA 0.47, dend 0.62). Apical gain on the fast feedforward drive therefore barely changes spiking, so there is no conjunction.
+- Fixes tried (all default off):
+  - apL: apical plateau integration.
+  - apAll: gain on the total drive.
+  - apH: homeostatic apical centring and scaling (Triesch 2005).
+  - These raise interaction only slightly (0.145). RPT2R 2705: −0.30/−0.85, −0.69/−1.94, −0.17/−0.48 → null.
+  - Next principled step: let the slow NMDA persistence be reset or gated by stimulus onset, so the soma reflects the current trial's coincidence.
+- HOT-3R start: HOT3RM at the new defaults (uK 0.3), not tuned:
+  - 2721: 0.85/2.40 and 0.56/1.59 (fails).
+  - 2737: 1.37/3.86 and 1.21/3.43 (passes).
+  - 2753: 1.06/3.00 and 1.15/3.26 (passes).
+  - 2 of 3 fresh blocks pass both controls. This is provisional, not confirmed.

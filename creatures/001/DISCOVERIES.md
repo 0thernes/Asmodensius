@@ -93,3 +93,7 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 ## 2026-10-31 3:55 PM PT turn
 - uK 0.3 confirmed on fresh block 2625: every pass item plus viability passes.
 - Feedforward-inhibition centring makes unselective excitatory cross wiring conjunctive in isolation (d ~10) but not in the creature (null on 2673). Hebbian self-organisation fails alone.
+
+## 2026-10-31 4:02 PM PT turn
+- RPT-2 loss localised: the CTX soma is driven by a slow NMDA persistence current (~60× the feedforward drive), so cross-module coincidence cannot gate spiking. b itself is transmitted. Apical gating variants are null in the creature (2705).
+- HOT3RM at uK 0.3: passes both controls on 2737 and 2753, fails on 2721. Provisional.
