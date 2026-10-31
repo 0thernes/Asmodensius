@@ -1218,7 +1218,7 @@
     }
     return { g, berry, trace: g[0][0] + g[1][1] + g[2][2] };
   }
-  var clamp, IG0, REGIONS, R0, RN, NNEU, INHIB, CP, TA, Q3, Health, NMOD, MW, msoftmax, margmax, mdot, Lin, RLS, Kal, Mind, TUNE, MT31, MT, LTC_TAU0, CX, LTC_INIT, LTC_LEARNED, M35, M36, M37, M38, M39, MIND_DEFAULT, ge35, ge36, is37, is38, is39, is40, M40, V40OPTS, hBin, gaussQ, betaSD, SD0, SITES, Organism;
+  var clamp, IG0, REGIONS, R0, RN, NNEU, INHIB, CP, TA, Q3, Health, NMOD, MW, msoftmax, margmax, mdot, Lin, RLS, Kal, Mind, TUNE, MT31, MT, LTC_TAU0, CX, LTC_INIT, LTC_LEARNED, M35, M36, M37, M38, M39, MIND_DEFAULT, ge35, ge36, is37, is38, is39, phiN, is40, M40, V40OPTS, hBin, gaussQ, betaSD, SD0, SITES, Organism;
   var init_organism = __esm({
     "../../creatures/001/organism/organism.ts"() {
       init_define_process_env();
@@ -1996,8 +1996,12 @@
       is37 = (m) => m === "v37" || m === "v38" || m === "v39" || m === "v40";
       is38 = (m) => m === "v38" || m === "v39" || m === "v40";
       is39 = (m) => m === "v39" || m === "v40";
+      phiN = (z) => {
+        const t = 1 / (1 + 0.3275911 * Math.abs(z) / Math.SQRT2), e = 1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-z * z / 2);
+        return 0.5 * (1 + (z >= 0 ? e : -e));
+      };
       is40 = (m) => m === "v40";
-      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01 };
+      M40 = { uK: 1, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0 };
       try {
         const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2769,7 +2773,22 @@
           const v38e = is38(o.mind ?? MIND_DEFAULT);
           const fatDef = v38e ? clamp(1 - this.fat / M38.fSet) : 0;
           if (awake && !this.dead && r() * (this.affect ? 1 / this.affect.forageMul() : 1) < (o.fixedDrive ? 0.12 : clamp((3 * hunger - 0.1 + (v38e ? M38.fK * fatDef : 0)) * (o.genes ? o.genes[2] : 1)))) {
-            const { k, sp } = this.choose(da);
+            let { k, sp } = this.choose(da);
+            if (is40(o.mind ?? MIND_DEFAULT) && (o.veto ?? "own") !== "off") {
+              const kk = o.veto === "shuffle" ? (k * 7 + 3 + o.seed % 5) % SITES : k;
+              const harm = this.wAv[kk] * (1 + this.cortisol);
+              this.vetoLog.push(harm);
+              if (this.vetoLog.length > 2e3) this.vetoLog.shift();
+              if (harm > M40.vetoThr && this.access[k]) {
+                this.vetoes++;
+                const a0 = this.access[k];
+                this.access[k] = 0;
+                const c2 = this.choose(da);
+                this.access[k] = a0;
+                k = c2.k;
+                sp += c2.sp;
+              }
+            }
             decideSpikes = sp;
             this.foraged++;
             this.lastChoice = k;
@@ -2788,6 +2807,7 @@
             this.lastVisit[k] = this.t;
             if (o.danger && r() < this.danger[k]) {
               this.damage(0.08);
+              this.harms++;
               this.predErr += 0.5;
               if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.3 * (1 - this.wAv[k]);
             } else if (!o.aversiveLesion && this.learn) this.wAv[k] += 0.05 * (0 - this.wAv[k]);
@@ -3124,6 +3144,10 @@
         }
         // spiking race between striatal channels; noise from quantum (Born-rule) or classical source, amplitude set by tonic DA
         /** value estimate the chooser uses for site k: v4.0 blends the Beta posterior mean (mK) into the striatal value, so a dreamt belief counts; before v4.0 it is wSite */
+        kgV = new Float32Array(SITES);
+        vetoes = 0;
+        harms = 0;
+        vetoLog = [];
         valueEst(k) {
           return is40(this.o.mind ?? MIND_DEFAULT) && !this.o.rpeLesion ? this.wSite[k] + M40.mK * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]) : this.wSite[k];
         }
@@ -3244,6 +3268,25 @@
             hdMu = 0;
             for (let k = 0; k < SITES; k++) if (this.access[k]) hdMu += hBin(this.dDelta * this.dHat[k]);
             hdMu /= Math.max(1, na);
+            if (M40.kgK > 0) {
+              let m1 = -1, m2 = -1;
+              for (let k = 0; k < SITES; k++) if (this.access[k]) {
+                const mu = this.bA[k] / (this.bA[k] + this.bB[k]);
+                if (mu > m1) {
+                  m2 = m1;
+                  m1 = mu;
+                } else if (mu > m2) m2 = mu;
+              }
+              let kgM = 0;
+              for (let k = 0; k < SITES; k++) {
+                const mu = this.bA[k] / (this.bA[k] + this.bB[k]), sd = Math.max(1e-6, betaSD(this.bA[k], this.bB[k]));
+                const z = -Math.abs(mu - (mu >= m1 ? m2 : m1)) / sd;
+                this.kgV[k] = this.access[k] ? sd * (z * phiN(z) + Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI)) : 0;
+                if (this.access[k]) kgM += this.kgV[k];
+              }
+              kgM /= Math.max(1, na);
+              for (let k = 0; k < SITES; k++) this.kgV[k] -= kgM;
+            }
           }
           const uGate = 0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E);
           const drive = new Float32Array(SITES);
@@ -3274,7 +3317,7 @@
             if (this.affect) w += M40.affK * this.affect.bias(k);
             if (this.neo) w += M40.markK * this.marks[k];
             w -= (1 + this.cortisol) * this.wAv[k] * clamp(1.2 - 0.6 * this.ghrelin);
-            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * ((betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 + M40.eK * (hBin(this.dDelta * this.dHat[k]) - hdMu) / Math.LN2 + (M40.tsK ? M40.tsK * (betaSD(this.bA[k], this.bB[k]) / SD0) * gaussQ(this.ent) : 0)) : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
+            w += v40 ? this.o.efeLesion ? 0 : M40.uK * this.temper * (this.affect ? this.affect.uMul() : 1) * (this.selfM ? 1 + M40.cautK * (0.25 - this.selfM.caution()) : 1) * uGate * ((M40.kgK > 0 ? M40.kgK * this.kgV[k] : betaSD(this.bA[k], this.bB[k]) - sdMu) / SD0 + M40.eK * (hBin(this.dDelta * this.dHat[k]) - hdMu) / Math.LN2 + (M40.tsK ? M40.tsK * (betaSD(this.bA[k], this.bB[k]) / SD0) * gaussQ(this.ent) : 0)) : ge36(this.o.mind ?? MIND_DEFAULT) ? this.o.efeLesion ? 0 : M36.efeK * (0.5 + clamp(this.nm.ACh.E) + 0.5 * clamp(this.nm.NE.E)) * (betaIG(this.bA[k], this.bB[k]) - igM) / IG0 : ge35(this.o.mind ?? MIND_DEFAULT) ? beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / M35.efeTau)) / Math.pow(1 + this.visits[k], M35.efeVis) : beta * (1 - Math.exp(-(this.t - this.lastVisit[k]) / 200)) / Math.sqrt(1 + this.visits[k]);
             if (is37(this.o.mind ?? MIND_DEFAULT)) {
               const avail = 1 - M37.depW * this.dDelta * this.dHat[k];
               if (!this.o.rpeLesion) w += (v40 ? M40.mK : M37.bmW) * (this.bA[k] / (this.bA[k] + this.bB[k]) - this.wSite[k]);
