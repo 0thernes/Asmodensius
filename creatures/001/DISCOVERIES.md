@@ -111,3 +111,8 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - Audit: GWT-3R, PROJ-R and CQM08R survive matched-capacity or graded controls. CQM18-R does not (recovery = readout relearning only) and is demoted.
 - RPT-2: signed selective cross input works in isolation but not in the creature (best d 0.92, t 2.59). The missing ingredient is an operating-point nonlinearity.
 - HOT3RM paired passes on fresh held-out 2881 (dz 1.51, t 6.05).
+
+## 4:20 PM PT turn
+- CQM10 failure is over-eating (hyperglycaemia 33%), not under-foraging. An insulin→AgRP gate cuts it to 13% (d −3.27 → −0.64); not adopted.
+- CQM16 already passes on fresh dev 2913 (d 6.69).
+- RPT-2: a rest-rectified dendrite with xsel puts XOR information into the cortex (offline 0.74), but RPT2R's online readout does not extract it.

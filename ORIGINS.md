@@ -53,3 +53,4 @@
 - organism onR: original code; onset-recruited inhibition truncating persistent activity after Gutkin et al. 2001 (J Comput Neurosci 11:121), Cardin et al. 2009 (Nature 459:663).
 - v4.0 PROJ-R: comparator model of self/other attribution, Frith, Blakemore & Wolpert 2000 (Phil Trans R Soc B). CQM18-R afferent-remap lesion: Merzenich et al. 1983 (Neuroscience). RPT-2 diagnosis: Rigotti et al. 2013 (Nature); van Vreeswijk & Sompolinsky 1996 (Science); Larkum 2013 (TINS).
 - v4.0 audit/RPT-2: Baars 1988; Dehaene & Naccache 2001 (Cognition); McClelland, McNaughton & O'Reilly 1995 (Psych Rev); Ko et al. 2011 (Nature); Gilbert & Wiesel 1989 (J Neurosci); Pouille & Scanziani 2001 (Science).
+- v4.0 CQM10/RPT-2: Woods et al. 1979 (Nature); Könner et al. 2007 (Cell Metab); Schwartz et al. 2000 (Nature); Schiller et al. 2000 (Nature); Polsky, Mel & Schiller 2004 (Nat Neurosci).

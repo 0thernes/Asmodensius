@@ -235,3 +235,20 @@ Paired diff vs shuffled: mean 0.037, sd 0.024 (n=64, dz≈1.5). Unpaired d is di
 - **Not adopted.** Selectivity is necessary but not sufficient. The creature's balanced linear operating regime leaves no rectifying nonlinearity at the operating point (the isolated model has one). The next principled step is an operating-point nonlinearity, e.g. a firing threshold within the input range. That was not tried, to avoid sweeping toward the test.
 ### HOT3RM paired (pre-chosen, disclosed; B13)
 Fresh held-out block 2881: unpaired d 0.77 / t 2.19 (fails), paired dz 1.51 / t 6.05 vs shuffled, and dz 1.38 / t 5.52 vs random matched-rate. **Passes paired.**
+
+## 4:20 PM PT turn (dev seeds 2897–2944)
+### RPT-2: xsel + rest-rectified dendrite (dTh → 0+, NMDA spike needs net depolarisation; Schiller et al. 2000; Polsky, Mel & Schiller 2004)
+- Offline XOR decode (2897): xsel 3 → 0.70–0.74, xsel 8 → 0.63–0.71 (vs 0.50 baseline). Top a×b interaction 0.17–0.20, up from 0.03.
+- RPT2R (online readout, 2897): xsel 8 + rect d 0.31; xsel 3 + rect d 0.03; xsel 8 alone d 0.48. **Not adopted.** The information is now present, but the test's online 160-trial readout does not extract it. I did not change the test or sweep toward it.
+### Ranking of the unbuilt goals (dev 2913)
+- **CQM16 already passes:** d 6.69 / t 18.92 vs PID lesion.
+- **CQM10 fails:** d −2.78.
+- **CQM03R fails:** d −1.70.
+- **EVO (CQM01/04):** the run exceeded 12 min and was not finished.
+- **LTC:** not started.
+### CQM10 (closest): diagnosis, then module
+- **Diagnosis:** the doc's "under-forages" is wrong. Hyperglycaemia (glc ≥ 4.5) occurs 33% of the time vs 4% with fixed drive; there are no low-glucose, ATP or S failures. The leptin-deficit term (fK 4, fat ≪ fSet) keeps feeding drive high regardless of glucose.
+- **Neuro:** central insulin inhibits AgRP feeding neurons, so meal-related satiety overrides the leptin-deficit drive (Woods et al. 1979 Nature; Könner et al. 2007 Cell Metab; Schwartz et al. 2000 Nature).
+- **Module `M40.insS`:** the fat-deficit drive is multiplied by clamp(2 − insulin/0.3), i.e. full suppression at 2× the creature's own basal insulin. One choice, no sweep.
+- **Isolated (fp/allo.ts):** 2897 d 14.51 / t 41.05; held-out 2929 d 11.93 / t 33.74.
+- **In the creature:** hyperglycaemia 33% → 13%. CQM10 on 2897 goes from d −3.27 to −0.64 (0.912 vs fixed 0.975). It still does not beat fixed drive, so it is **not adopted** (off). Without adoption, the recheck of passes is not triggered.

@@ -2108,7 +2108,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
+      M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
       try {
         const e40 = typeof process !== "undefined" ? process.env.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2921,7 +2921,7 @@
           const hunger = R.HYP - 0.8 * this.vagal * 0.5;
           let decideSpikes = 0;
           const v38e = is38(o.mind ?? MIND_DEFAULT);
-          const fatDef = v38e ? clamp(1 - this.fat / M38.fSet) : 0;
+          const fatDef = (v38e ? clamp(1 - this.fat / M38.fSet) : 0) * (M40.insS > 0 ? clamp(2 - this.insulin / 0.3) : 1);
           if (awake && !this.dead && r() * (this.affect ? 1 / this.affect.forageMul() : 1) < (o.fixedDrive ? 0.12 : clamp((3 * hunger - 0.1 + (v38e ? M38.fK * fatDef : 0)) * (o.genes ? o.genes[2] : 1)))) {
             let { k, sp } = this.choose(da);
             if (is40(o.mind ?? MIND_DEFAULT) && (o.veto ?? "own") !== "off") {
