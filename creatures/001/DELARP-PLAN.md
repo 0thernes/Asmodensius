@@ -408,3 +408,40 @@ These go beyond Butlin 14, the 10 frameworks and CQM 25. They are **exploratory*
 - New requirement **R-049 "Beyond the lists"**: explore the theories and findings in §22–24; results logged in DISCOVERIES.md; promotion to measured tests via prereg. Stage "2 Architecture", status "in progress".
 - New requirement **R-050 "DISCOVERIES log"**: surprising or never-before-seen behaviours, each with a replay seed; no gates.
 - A canvas section "Beyond the lists" with a table of §22 (theory → observable) and a "Discoveries" counter.
+
+---
+# Part VII: Multisensory intake (v4.0 design, 2026-10-31)
+Goal: the creature takes in the world through many senses, including alien ones, and the brain **learns** to fuse them. No hand-wired meaning per sense.
+
+## 26. One sensory bus, many transducers
+Every sense is a **transducer** that writes a fixed-size, time-stamped vector onto a shared sensory bus: `Sense = { id, dims, rateHz, read(world, body) → Float32Array, cost }`. Each transducer has an energy cost (ATP ledger), so evolution can grow or shrink senses.
+| Sense | Source | Notes |
+|---|---|---|
+| Vision | dome render of the creature's viewpoint (low-res retina, e.g. 32×32×3, log-polar fovea) | from the real render; covers the "vision from its own render" roadmap row |
+| Sound | dome audio field (other creatures' calls, events); cochlea-like filterbank, 32 bands | creatures already sonify; they can hear each other |
+| Touch / proprioception | contact, pressure on the shell and arm, joint angles | AE-2 body |
+| Chemosense | food odour gradients, toxins, pheromone field (hive channel) | gradient following as a principle |
+| Interoception | blood glucose, ketones, HR, gut fill, hormones, temperature, ATP | existing INS path, generalised onto the bus |
+| **EM field sense** (alien) | dome electric/magnetic dial fields and other creatures' spike-driven E-fields | electroreception/magnetoreception-like |
+| **Quantum sense** (alien) | the creature's own Q3/Moonlab stream: Born-rule bits, QGT trace, Berry phase | it can feel its own quantum layer |
+| **Data-stream sense** (alien) | any raw numeric stream piped into the dome (e.g. weather dials, a market or sensor feed, text-free) | tokenless: numbers only, consistent with "no LLM" |
+| **World-dial sense** (alien) | God-panel dial states (gravity, toxicity, light, chaos) | a sense of "the laws of its world" |
+| Time sense | circadian phase, ultradian, interval timers | |
+
+## 27. Learned fusion (no per-sense hand wiring)
+1. **Sensory expansion layer** (fly mushroom-body principle): each transducer projects through sparse random weights into a large, sparse code (KC-like, ~2–5% active, global inhibition). This is where the parameter count scales toward ~100M (sparse random projections are cheap and biologically plausible).
+2. **Per-sense predictive encoders**: each sense has a small recurrent predictor of its own next input. Prediction errors (not raw input) go upward (predictive coding, PP-1).
+3. **Multisensory association cortex**: modules receive prediction errors from several senses. Coincidence (Hebbian/STDP) and the workspace learn cross-modal links. Reliability-weighted fusion (each sense weighted by its learned precision, as in optimal cue integration; Ernst & Banks 2002) via NE/ACh gain.
+4. **Attention as precision**: the workspace raises the gain of the sense that is currently most informative for value (link to the single value-plus-uncertainty term: senses that reduce uncertainty about food get weight).
+5. **Evolvable sensorium**: the genome encodes which transducers exist, their resolution and gain. Unused senses cost energy and can be lost; mutations can add a sense. Individual variation in sensory profile.
+
+## 28. Observables (exploratory first; promotable to tests)
+- **Learned fusion**: decoding a dome event from 2 senses beats the best single sense; lesioning one sense degrades it gracefully (reliability weighting).
+- **Cross-modal transfer**: learning in one sense transfers to another (sound → vision of a food type).
+- **Alien-sense use**: the creature uses EM or quantum sense in behaviour (shuffle that channel → behaviour changes) — DISCOVERIES candidate.
+- **Sensory evolution**: across generations, sensory profiles adapt to the dome environment vs. a neutral-drift baseline.
+- **Illusions**: conflicting cues produce ventriloquism-like capture (illusion rows R-006).
+These touch Butlin (GWT-1/4, PP-1, AE-2), frameworks (fieldIntegration, sensorimotor) and CQM06 (perceptual integration).
+
+## 29. Build order
+(1) Sense bus + interface in `organism.ts` (v40 gate), existing senses moved onto it. (2) Interoceptive, quantum, world-dial and time senses (cheap, node-side). (3) Sparse expansion layer + reliability-weighted fusion. (4) Vision/sound from the dome render (browser and headless). (5) Genome-encoded sensorium.
