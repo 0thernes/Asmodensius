@@ -1,5 +1,7 @@
 # DELARP-PLAN: v4.0 consolidation (de-LARP audit)
 
+> **Read Part V first.** Alex's correction of 2026-10-31 overrides Parts I–IV wherever they conflict. Butlin 14, the 10 frameworks and CQM 25 stay as the evaluation lists, all A-Life, brain and neurology content stays, and only literal physical, visual or mechanical copying of the 150 projects is dropped.
+
 Status: PLAN ONLY. Read-only audit of organism.ts v3.9, harness/, preregistrations/ v1–v3.9, results (v3.8 = latest complete scored round; v3.9 queue still running, not read or touched) and lab/.
 Nothing here alters a frozen preregistration or any recorded result. The v3.9 Round-20 results are scored as frozen when the queue finishes.
 
@@ -334,3 +336,31 @@ Honesty guards that are kept from the strict tier:
 - §4b MORPH-1R / EVO-1R / ECO-1R become long-run dome experiments with a neutral-drift baseline and frequency-across-runs reporting (Tier G).
 - §10 pipeline: add `pipeline/evolve.ts` (long dome runs, many master seeds, low priority within the 3-job cap) and a lineage/phylogeny log in `assessments/`.
 - §11 checklist: items 1–3 approved. Remaining: write `assessments/RUBRIC-v4.0.md` and freeze `preregistrations/v4.0.md` (Tier S only) after Round 20 completes.
+
+---
+# Part V: Alex's CORRECTION (2026-10-31), which overrides Parts I–IV where they conflict
+
+## 19. What changes
+1. **Butlin 14, the 10 frameworks and CQM 25 stay the evaluation lists**, with their rollups (x/14, x/10, x/25). They are **not** collapsed into the 34 qualities.
+   - §4a "retire", §4c "drop rollups", §8 "replaces" and §12–13 "34 qualities" are **withdrawn** as replacements.
+   - What survives from them: §8 becomes an **interpretation aid**. Each list item gets a short "brain quality" note and a principle (P1–P5) tag. The proposed R tests (WS-1R, CUR-1R, REC-1R, REV-1R, META-1R, ATT-1R, REC-2R, EVO-1R, ECO-1R, MORPH-1R, DEV-1R) become **additional R versions of list items** (e.g. thaler9-R, activeInference-R, AE-1R, CQM04R), preregistered as before. They do not replace the items.
+   - The graded lens (§12: strong / emerging / absent from behaviour + lesion/shuffle control) is applied **alongside** d/t for every list item, as an extra column. Strict d/t stays the pass rule for the lists, and core claims (viability, learning, retention, broadcast, interoception, reproducibility) must pass strictly.
+   - Fixes kept: duplicates (CQM13/19/20/21 = HOT-2/RPT-1/GWT-3/iit4; ctm ≈ GWT-3) are **flagged as shared mechanisms** in reports, but still counted as the list defines them. Ceiling items are scored through their degraded-input R versions (already preregistered: GWT-3R, ctm-R, CQM08R, K1aR/cR), and the originals stay on record. AST-1R stays on record as unpassable by design.
+2. **All A-Life, brain and neurology content stays**, including LTC (as state-dependent time constants inside the shared cortex), the latent/curvature layers, the GPU net (it must be wired in, per "nothing cosmetic"), the lab instruments and CAP-S/CAP-R.
+3. **Eshkol, Moonlab and the quantum layer stay inside the creature** (§16), integrated as the organism's source of chance and an observable internal signal. NIST is a disclosed diagnostic, not a gate.
+4. **Evolution, randomness, chaos, mutation, drift and individual variation are embraced** (§17), with real effects told apart from noise by neutral-drift/shuffle baselines, replication across runs, dose–response and replay files.
+5. **The ONLY thing dropped: literal physical, visual or mechanical copying of the 150 projects.**
+   - **CAP-C**: the c302 *C. elegans* connectome import. Archived; result stays on record.
+   - **CAP-B**: the worm crawler body (segment chain, setae friction, worm CPG). Archived; the body capability is shown by 001's own body (AE-2 reaching, dome locomotion).
+   - **Project-specific ports in the roadmap**: c302/BAAIWorm reversal-rate matching, FlyWire subgraph import, Polyworld-specific vision/mating mechanics, Creatures-specific modulators, Brian2/NEST output matching. Restated as concepts (§9.2).
+   - The 150 projects inform **concepts** through the 8 capability clusters (§9). They are references, never templates.
+   - Concepts from those projects stay welcome (connectome-informed wiring principles, crawling as one way to move, heredity, ecology).
+
+## 20. Mechanism conflicts still to fix in v4.0 (list items stay, mechanisms merge)
+The consolidation of §3 still applies to **mechanisms**: one value-and-uncertainty drive instead of 5 stacked curiosity terms, and REM writing uncertainty instead of overwriting values. This resolves thaler9 vs. activeInference vs. AE-1/UAL **without dropping any list item**. The per-indicator bolt-ons (xsW, tdIter, evQ, vK) are merged into the shared workspace rather than removed from the evaluation.
+
+## 21. Canvas (edited 2026-10-31 to match)
+- R-013/14/15 restored to "pass all 14 / 10 / 25", with notes on the graded lens, shared mechanisms and ceiling R versions.
+- R-018: release when strong across the three lists, with strict d/t for core claims and nothing cosmetic.
+- R-020/21/22/25 keep the concept-through-clusters wording.
+- The top section "v4.0 plan" maps each principle to its Butlin/framework/CQM items. The old tables are no longer labelled "history" (they are the live lists).
