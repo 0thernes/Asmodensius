@@ -36,6 +36,15 @@ function ainfR4(S: number[], H = 2880, pOld = 0.5): M { const f = (o: Partial<Op
     for (let k = 0; k < n; k++) g.access[k] = 1; const set = () => { for (let k = 0; k < n; k++) g.pTrue[k] = old[k] ? pOld : st[k] ? 0.85 : 0.05; }; set(); const r0 = g.rewards, f0 = g.foraged;
     while (g.t < 3 * D + 480) { for (let k = 0; k < n; k++) if (!old[k] && r() < 1 / H) st[k] = r() < 0.3 ? 1 : 0; set(); g.step(); } return (g.rewards - r0) / Math.max(1, g.foraged - f0); });
   return { full: f({}), "epistemic term lesioned": f({ efeLesion: true }) }; }
+/** Diagnostic for AINFR4 (not a test): per arm, fraction of phase-2 forages on currently-rich new sites ("exploit"), and on any new site ("explore+exploit"). */
+function ainfR4diag(S: number[], H = 2880, pOld = 0.5): M { const out: M = {}; for (const [nm, o] of [["full", {}], ["lesion", { efeLesion: true }]] as [string, Partial<Opts>][]) { const a: number[] = [], b: number[] = [], c: number[] = [];
+    for (const s of S) { const g: any = mk(s, o); const r = wr(s); const n = g.pTrue.length; const old = Array.from(g.access as Uint8Array);
+      for (let k = 0; k < n; k++) if (old[k]) g.pTrue[k] = pOld; while (g.t < D + 480) g.step(); const st = Array.from({ length: n }, () => (r() < 0.3 ? 1 : 0));
+      for (let k = 0; k < n; k++) g.access[k] = 1; const set = () => { for (let k = 0; k < n; k++) g.pTrue[k] = old[k] ? pOld : st[k] ? 0.85 : 0.05; }; set(); let nr = 0, nn = 0, nf = 0, known = 0, kn = 0;
+      while (g.t < 3 * D + 480) { for (let k = 0; k < n; k++) if (!old[k] && r() < 1 / H) st[k] = r() < 0.3 ? 1 : 0; set(); const f0 = g.foraged; g.step(); if (g.foraged > f0) { const k = g.choices[g.choices.length - 1]; nf++; if (!old[k]) { nn++; if (st[k]) nr++; }
+          /* belief quality: does the creature's value estimate rank a rich new site above the old ones? */ let bestRich = -1, bestV = -1e9; for (let j = 0; j < n; j++) { const v = g.valueEst(j); if (v > bestV) { bestV = v; bestRich = !old[j] && st[j] ? 1 : 0; } } known += bestRich; kn++; } }
+      a.push(nr / Math.max(1, nf)); b.push(nn / Math.max(1, nf)); c.push(known / Math.max(1, kn)); }
+    out[nm + ":onRich"] = a; out[nm + ":onNew"] = b; out[nm + ":argmaxValueIsRich"] = c; } return out; }
 const at = (g: Organism, t: number): void => { while (g.t < t) g.step(); };
 const show = (g: Organism, x: number[]): void => { for (let i = 0; i < 16; i++) g.sens[i] = Math.max(0, x[i]); };
 const blank = (g: Organism): void => { g.sens.fill(0); g.step(); };
@@ -60,5 +69,5 @@ const gq = (r: () => number): number => Math.sqrt(-2 * Math.log(r() + 1e-12)) * 
  *  to track predicted harm (logged: vetoes, and mean predicted harm). */
 function n13(S: number[]): M { const f = (o: Partial<Opts>) => S.map((s) => { const g: any = mk(s, { danger: true, ...o }); at(g, 480); const r0 = g.rewards, h0 = g.harms, f0 = g.foraged; at(g, 480 + 2 * D);
     return (g.rewards - r0 - (g.harms - h0)) / Math.max(1, g.foraged - f0); });
-  return { own: f({ veto: "own" }), shuffle: f({ veto: "shuffle" }), off: f({ veto: "off" }) }; }
-export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), N09: n09, N13: n13 };
+  return { own: f({ veto: "own" }), shuffle: f({ veto: "shuffle" }), off: f({ veto: "off" }), intShuf: f({ veto: "intShuf" }) }; }
+export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, N13: n13 };

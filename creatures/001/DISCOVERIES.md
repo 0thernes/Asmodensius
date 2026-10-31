@@ -42,3 +42,16 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - Fresh-block reference (defaults, 2064-2079): thaler9 2.13, CQM12 1.98, AINF 0.07, AE-1 1.10, UAL 1.32; viability 0 deaths, 342 forages over 3 days. This is not a confirmation block for anything retuned on it.
 - **N13 "free won't"** (Opts.veto own/shuffle/off; after the decision race the creature reads its own learned harm prediction for the chosen act and can cancel it and re-decide): own vs lens-shuffled d 0.57 (t 1.60), own vs off d 0.23. vetoThr 0.15 gives the same result; 0.5 is worse. Most harm is already priced into the race, so the veto is mostly redundant. Grade A is not met.
 - **N09 curvature metacognition** (HOT-3 opt-out with an accuracy table split by curvature-peak flag): curv vs blind d -0.01, vs shuffled flag d 0.21. Null result: in this task the curvature carries no information about errors beyond confidence.
+
+## 2026-10-31 (2:45 PM PT): AINF-R exploitation/belief bottleneck diagnosis (dev 2080-2095)
+- Diagnostic (AINFR4D): the full creature visits new sites LESS than the epistemic lesion (37% vs 47% of forages; rich hits 24% vs 38%).
+- Three causes found in the belief machinery:
+  1. **Dream confabulation of certainty.** REM recombination writes pseudo-counts (dreamC 6) into never-visited sites, so their Beta SD (0.20) falls below that of visited sites (0.21-0.23).
+  2. **Aleatoric/epistemic conflation.** Beta SD is largest for p≈0.5 sites, so the bonus favours noisy known sites over rich ones.
+  3. **Volatility from raw |RPE|.** Outcome noise drives the leak, so beliefs forget at a half-life of about 170 ticks in a world with hazard 1/2880.
+- Fixes are added as options, all off by default:
+  - srcMon: real-outcome counts only (Johnson & Raye 1981).
+  - epiN: count-based ignorance 0.5/sqrt(n+1).
+  - volX: unexpected uncertainty = |RPE| minus 2w(1-w) (Yu & Dayan 2005).
+- AINFR4 d results: default −0.77; srcMon −0.55; srcMon+epiN −0.36; srcMon+epiN+volLeak 0 **+0.12**; srcMon+epiN+volX+volLeak 0.03 +0.22.
+- The epistemic lesion still explores enough by decision noise (lesion 0.59 per forage), so directed info-seeking has almost no margin here. Not passing.
