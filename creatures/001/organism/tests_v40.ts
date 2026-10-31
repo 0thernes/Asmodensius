@@ -2,6 +2,7 @@
 import { Organism, Opts } from "./organism";
 import { OptOut, MarginConf } from "./fp/hot3";
 import { Lin } from "./organism";
+import { warm as warm36, blank as blank36, pretrain as pre36, noisy as noisy36 } from "./tests_v36";
 import { warm as warm31, show as show31, ctx as ctx31, am as am31 } from "./tests_v31";
 type M = Record<string, number[]>;
 const D = 1440; const mk = (seed: number, o: Partial<Opts> = {}): Organism => new Organism({ seed, ...o } as Opts);
@@ -120,4 +121,20 @@ const cqm18R = (S: number[]): M => { const f = (freeze: boolean) => S.map((s) =>
   const W0 = L.W.slice(); for (let k = 0; k < L.nOut; k++) for (let i = 0; i < n; i++) L.W[k * (n + 1) + i] = W0[k * (n + 1) + perm[i]];
   lesioned = true; if (freeze) g.learn = false; /* frozen = no synaptic OR readout plasticity after the lesion */ let ok = 0; for (let t = 0; t < 160; t++) { const r = tr(); if (t >= 100) ok += +r; } return ok / 60; });
   return { full: f(false), "plasticity frozen after lesion": f(true) }; };
-export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, PROJR: projR, CQM18R: cqm18R, N13: n13 };
+
+// v4.0 AUDIT (disclosed diagnostics, not new pass items): graded and matched-capacity controls for the four R variants
+const audGWT = (S: number[]): M => { const f = (o: Partial<Opts>) => S.map((s) => { const g: any = warm36(s, o); pre36(g); let ok = 0; for (let t = 0; t < 160; t++) { const m = Math.floor(g.r() * 4), c = Math.floor(g.r() * 4); show31(g, noisy36(g, m, c)); g.step(); if (t >= 100) ok += +(g.mind.recvOut() === c); g.mind.teachRecv(c); g.mind.teach(m, c); blank36(g); } return ok / 60; });
+  return { full: f({}), "broadcast gain 0.5": f({ bcGain: 0.5 }), "broadcast gain 0.25": f({ bcGain: 0.25 }), "no competition (average of all modules broadcast)": f({ gwLesion: true }) }; };
+const audC08 = (S: number[]): M => { const f = (o: Partial<Opts>) => S.map((s) => { const g: any = warm36(s, o); pre36(g); const tr = (m: number, cls: number[], learn: boolean): boolean => { const c = cls[Math.floor(g.r() * 2)]; show31(g, noisy36(g, m, c)); g.step(); const okk = g.mind.action === c; if (learn) { g.mind.teachAction(c); g.mind.teach(m, c); } blank36(g); return okk; };
+  for (let t = 0; t < 100; t++) tr(0, [0, 1], true); for (let t = 0; t < 100; t++) tr(1, [2, 3], true); let ok = 0; for (let t = 0; t < 40; t++) ok += +tr(0, [0, 1], false); return ok / 40; });
+  return { full: f({}), "replay rate 0.5": f({ replayP: 0.5 }), "replay rate 0.2": f({ replayP: 0.2 }), "matched-count replay, shuffled labels": f({ replayShuf: true }) }; };
+const audPROJ = (S: number[]): M => { const r = projR(S) as any; const f = (o: Partial<Opts>) => S.map((s) => { const g: any = warm31(s, o); g.mind.gTrue = 0.5 + 1.5 * g.r(); let ok = 0;
+  for (let t = 0; t < 160; t++) { g.mind.arm = 0; const ext = g.r() < 0.5; const u = (g.r() < 0.5 ? -1 : 1) * (0.3 + 0.7 * g.r()); g.mind.efference = u; g.mind.push = ext ? (g.r() < 0.5 ? -1 : 1) * 0.6 * g.r() : 0; g.step();
+    const obs = g.mind.dArmObs, pred = g.mind.dArmPred; const saysExt = Math.abs(obs - pred) > 0.25 * Math.max(0.05, Math.abs(pred)); if (t >= 100) ok += +(saysExt === ext); } return ok / 60; });
+  return { full: r.full, "unlearned copy (gain fixed 1)": f({ fwdLesion: true }), "efference copy lesioned": r["efference copy lesioned"] }; };
+const audC18 = (S: number[]): M => { const f = (frac: number, mode: "full" | "frozen" | "readout") => S.map((s) => { const g: any = warm31(s); let les = false; const tr = (): boolean => { const c = Math.floor(g.r() * 4); const x = new Array(16).fill(0); x[c] = 1; show31(g, x); g.step(); const okk = am31(g.mind.post[0]) === c; if (!(les && mode === "frozen")) g.mind.teach(0, c); show31(g, new Array(16).fill(0)); g.step(); return okk; };
+  for (let t = 0; t < 120; t++) tr(); const L = g.mind.cls[0], n = L.nIn; const idx = [...Array(n).keys()].filter(() => g.r() < frac); const sh = idx.slice(); for (let i = sh.length - 1; i > 0; i--) { const j = Math.floor(g.r() * (i + 1)); [sh[i], sh[j]] = [sh[j], sh[i]]; }
+  const W0 = L.W.slice(); for (let k = 0; k < L.nOut; k++) idx.forEach((ii, q) => { L.W[k * (n + 1) + ii] = W0[k * (n + 1) + sh[q]]; });
+  les = true; if (mode !== "full") g.learn = false; let ok = 0; for (let t = 0; t < 160; t++) { const r = tr(); if (t >= 100) ok += +r; } return ok / 60; });
+  return { full: f(1, "full"), "readout-only plasticity (cortex frozen)": f(1, "readout"), "partial remap 30%, all frozen": f(0.3, "frozen"), "frozen": f(1, "frozen") }; };
+export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, PROJR: projR, AUDGWT: audGWT, AUDC08: audC08, AUDPROJ: audPROJ, AUDC18: audC18, CQM18R: cqm18R, N13: n13 };

@@ -1815,7 +1815,7 @@
             g.predErr += 0.15;
             this.cost += 4e-4;
           }
-          for (let i = 0; i < 8; i++) this.bcOut[i] = o.bcLesion ? 0 : this.bc[i];
+          for (let i = 0; i < 8; i++) this.bcOut[i] = o.bcLesion ? 0 : (o.bcGain ?? 1) * this.bc[i];
           this.att = [1, 1, 1, 1];
           if (!o.seqLesion && this.win >= 0) {
             const c = margmax(this.post[this.win]);
@@ -1937,8 +1937,10 @@
             const n = g.stage === 0 ? 1 : g.stage >= 2 && g.stage <= 3 ? 6 : 0;
             for (let k = 0; k < n; k++) {
               const e2 = this.epi[Math.floor(g.r() * this.epi.length)];
-              this.act.learn(e2.x, e2.y, 0.05);
-              this.replays++;
+              if ((o.replayP ?? 1) >= 1 || g.r() < (o.replayP ?? 1)) {
+                this.act.learn(e2.x, o.replayShuf ? Math.floor(g.r() * 4) : e2.y, 0.05);
+                this.replays++;
+              }
             }
             this.cost += 1e-5 * n;
           }
@@ -2106,7 +2108,7 @@
         return 0.5 * (1 + (z >= 0 ? e : -e));
       };
       is40 = (m) => m === "v40";
-      M40 = { uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
+      M40 = { xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
       try {
         const e40 = typeof process !== "undefined" ? process.env.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2406,6 +2408,15 @@
               const rx = mulberry2(o.seed * 6113 + 29);
               for (let m = 0; m < 4; m++) for (let n = 0; n < 4; n++) if (m !== n) {
                 for (let a = 0; a < 13; a++) for (let b = 0; b < 13; b++) if (rx() < M35.xP) add(E(m, a), E(n, b), M35.xW * (0.5 + rx()), 3, 0);
+              }
+            }
+            if (M40.xsel > 0) {
+              const rs = mulberry2(o.seed * 4409 + 23);
+              for (let m = 0; m < 4; m++) for (let bb = 0; bb < 13; bb++) {
+                const n = m ^ 1, p = Math.floor(rs() * 4);
+                const k = Array.from({ length: 13 }, (_, a) => Math.exp(-((3 * a / 12 - p) ** 2) / (2 * 0.5 ** 2)));
+                const mu = k.reduce((x, y) => x + y, 0) / 13;
+                for (let a = 0; a < 13; a++) add(E(n, a), E(m, bb), M40.xsel * (k[a] - mu), 3, 0);
               }
             }
             if (is39(o.mind ?? MIND_DEFAULT) && M39.xsW > 0) {

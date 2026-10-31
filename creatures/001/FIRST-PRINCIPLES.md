@@ -218,3 +218,20 @@ Module-0 cells: a-effect up to 0.35, b-effect ≤0.09 (mean 0.027 ≈ mixLesion 
 - GWT-3R and CQM08R (C08R) already existed (v3.6); rerun on new seeds.
 ### HOT3RM block variance
 Paired diff vs shuffled: mean 0.037, sd 0.024 (n=64, dz≈1.5). Unpaired d is diluted by between-seed accuracy SD (0.03–0.044); shuffled-arm accuracy correlates −0.56 with the diff. Expected block d≈1 → ~half of blocks pass. Source = between-seed baseline variance, not the mechanism. A paired analysis would be a disclosed variant; not adopted this turn.
+
+## 4:13 PM PT turn (dev seeds 2849–2896)
+### Audit of the R variants (graded and matched-capacity controls; dev 2849, held-out 2865)
+- GWT-3R (Baars 1988; Dehaene & Naccache 2001: one selected content is broadcast, ignition is all-or-none). The matched-capacity alternative (same channel, average of all modules, no competition) fails: d 5.25 / 5.54. Broadcast gain 0.5 is harmless, gain 0.25 collapses (threshold-like). **Survives.**
+- PROJ-R (Frith, Blakemore & Wolpert 2000: attribution needs an ACCURATE learned forward prediction). Unlearned copy (gain fixed at 1): d 1.53/1.23, t 4.34/3.49. **Survives.** The d≈5 contrast against a lesioned copy was the trivial switch.
+- CQM08R (McClelland, McNaughton & O'Reilly 1995: interleaved replay of old content). Dose-response: replay rate 0.5 gives d 0.70/0.43 (n.s.), 0.2 gives d 1.63/1.85. Matched-count replay with shuffled labels: d 5.19/6.12, so the replay content matters, not the extra updates. **Survives.**
+- CQM18-R (Merzenich et al. 1983: cortical remapping by plasticity). Recovery is entirely the readout delta rule: cortex frozen with only the readout learning gives 1.00 vs 1.00. A 30% remap, all frozen, is n.s. (redundancy). **Fails the audit.** It tests readout relearning, not cortical remapping. Demoted to a diagnostic; the original CQM18 stays reported.
+- New test-only options default to identity, with no extra RNG draw (bcGain, replayP, replayShuf). C08R and GWT3R on 2833 reproduce bit-identically.
+### RPT-2 fix candidate: dense, signed, feature-selective cross input (M40.xsel, default 0)
+**Neuro:** like-to-like long-range connectivity (Ko et al. 2011; Gilbert & Wiesel 1989). The negative lobe stands for disynaptic feedforward inhibition (Pouille & Scanziani 2001). Random conjunctive fan-in gives mixed selectivity (Rigotti et al. 2013).
+- Each cell's cross kernel is zero-mean, so E/I balance can't cancel it, and it depends on which b is present.
+- **Isolated** (SignedSelective, somatic rectification): XOR 2849 d 9.42/t 26.63; held-out 2865 d 3.20/t 9.04.
+- **Creature, offline decode (2849):** xsel 1 or 3 gives XOR 0.47–0.55. xsel 8 gives 0.58–0.61 and doubles a×b interaction (0.13). xsel 20 degrades a/b decoding.
+- **Creature, RPT2R (2849):** xsel 3 d −0.27. xsel 8 d 0.92 / t 2.59 (fails t).
+- **Not adopted.** Selectivity is necessary but not sufficient. The creature's balanced linear operating regime leaves no rectifying nonlinearity at the operating point (the isolated model has one). The next principled step is an operating-point nonlinearity, e.g. a firing threshold within the input range. That was not tried, to avoid sweeping toward the test.
+### HOT3RM paired (pre-chosen, disclosed; B13)
+Fresh held-out block 2881: unpaired d 0.77 / t 2.19 (fails), paired dz 1.51 / t 6.05 vs shuffled, and dz 1.38 / t 5.52 vs random matched-rate. **Passes paired.**

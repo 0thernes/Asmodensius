@@ -28,3 +28,10 @@ export class LearnedApical extends ApicalGain {
   step(a: number, b: number, lesion: boolean): number[] { const N = this.N, pA = this.A, pB = this.B; const u = (i: number) => { const own = i < N ? a : b, other = i < N ? pB : pA; const ff = Math.max(0, this.Wa[i][0] * own + this.Wa[i][1] * 0.5);
       const om = other.reduce((x, y) => x + y, 0) / N; const ap = lesion ? 0 : this.Wx[i].reduce((s, w, j) => s + w * (other[j] - om), 0) * N; const g = 1 / (1 + Math.exp(-(ap - (this.th[i] - 0.5) * 0.2) / 0.1)); return ff * (lesion ? 1 : 1 + this.gain * (g - 0.5)); };
     const nA = Array.from({ length: N }, (_, i) => u(i)), nB = Array.from({ length: N }, (_, i) => u(N + i)); this.A = nA; this.B = nB; return [...nA, ...nB]; } }
+
+/** v4.0 signed-selective variant (original code): cross weights are a zero-mean tuning kernel around one preferred source cell (selective
+ *  excitation minus disynaptic inhibition; Pouille & Scanziani 2001; Ko et al. 2011), summed at the SOMA with a rectifying threshold — no
+ *  dendritic nonlinearity. Tests whether selectivity + somatic threshold alone suffices for a×b mixing. */
+export class SignedSelective extends TwoModule { constructor(N: number, seed: number) { super(N, seed); for (let i = 0; i < 2 * N; i++) { const p = Math.floor(((i * 7919 + seed) % 1000) / 1000 * N); const k = Array.from({ length: N }, (_, j) => Math.exp(-((j - p) ** 2) / 2)); const mu = k.reduce((x, y) => x + y, 0) / N; this.Wx[i] = k.map((x) => 2 * (x - mu)); } }
+  step(a: number, b: number, lesion: boolean): number[] { const N = this.N, pA = this.A, pB = this.B; const u = (i: number) => { const own = i < N ? a : b, other = i < N ? pB : pA; const ff = this.Wa[i][0] * own + this.Wa[i][1] * 0.5; const x = lesion ? 0 : this.Wx[i].reduce((s, w, j) => s + w * other[j], 0); return Math.max(0, ff + x - 0.3 * this.th[i]); };
+    const nA = Array.from({ length: N }, (_, i) => u(i)), nB = Array.from({ length: N }, (_, i) => u(N + i)); this.A = nA; this.B = nB; return [...nA, ...nB]; } }

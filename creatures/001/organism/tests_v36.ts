@@ -4,11 +4,11 @@
 import { Organism, Opts, Lin, R0, RN } from "./organism";
 const mean = (a: number[]): number => a.reduce((s, x) => s + x, 0) / Math.max(1, a.length);
 const mk = (seed: number, o: Partial<Opts> = {}): Organism => new Organism({ seed, ...o });
-const warm = (seed: number, o: Partial<Opts> = {}): Organism => { const g = mk(seed, o); while (g.t < 480) g.step(); return g; };
+export const warm = (seed: number, o: Partial<Opts> = {}): Organism => { const g = mk(seed, o); while (g.t < 480) g.step(); return g; };
 const show = (g: Organism, x: number[]): void => { for (let i = 0; i < 16; i++) g.sens[i] = Math.max(0, x[i]); };
-const blank = (g: Organism): void => { g.sens.fill(0); g.step(); };
-const pretrain = (g: Organism, n = 120): void => { for (let k = 0; k < n; k++) { const c = [0, 1, 2, 3].map(() => Math.floor(g.r() * 4)); const x = new Array(16).fill(0); c.forEach((cc, m) => (x[m * 4 + cc] = 1)); show(g, x); g.step(); c.forEach((cc, m) => g.mind.teach(m, cc)); blank(g); } };
-const noisy = (g: Organism, m: number, c: number): number[] => { const x = new Array(16).fill(0); x[m * 4 + c] = 0.5 + 0.7 * g.r(); for (let i = 0; i < 16; i++) x[i] += 0.3 * Math.abs(g.gauss()); return x; };
+export const blank = (g: Organism): void => { g.sens.fill(0); g.step(); };
+export const pretrain = (g: Organism, n = 120): void => { for (let k = 0; k < n; k++) { const c = [0, 1, 2, 3].map(() => Math.floor(g.r() * 4)); const x = new Array(16).fill(0); c.forEach((cc, m) => (x[m * 4 + cc] = 1)); show(g, x); g.step(); c.forEach((cc, m) => g.mind.teach(m, cc)); blank(g); } };
+export const noisy = (g: Organism, m: number, c: number): number[] => { const x = new Array(16).fill(0); x[m * 4 + c] = 0.5 + 0.7 * g.r(); for (let i = 0; i < 16; i++) x[i] += 0.3 * Math.abs(g.gauss()); return x; };
 type M = Record<string, number[]>;
 export const TESTS36: Record<string, (seeds: number[]) => M> = {
   GWT3R: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); pretrain(g); let ok = 0; for (let t = 0; t < 160; t++) { const m = Math.floor(g.r() * 4), c = Math.floor(g.r() * 4); show(g, noisy(g, m, c)); g.step(); if (t >= 100) ok += +(g.mind.recvOut() === c); g.mind.teachRecv(c); g.mind.teach(m, c); blank(g); } return ok / 60; });

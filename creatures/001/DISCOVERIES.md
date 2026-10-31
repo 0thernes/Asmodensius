@@ -106,3 +106,8 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - RPT-2 additivity is due to b-invariant, sparse cross input in a balanced linear regime (not threshold/saturation).
 - PROJ-R, CQM18-R (new, disclosed), GWT-3R and CQM08R pass on 2801/2817/2833 (see FIRST-PRINCIPLES.md).
 - HOT3RM variance comes from between-seed baseline SD (paired dz≈1.5, unpaired block d≈1).
+
+## 4:13 PM PT turn
+- Audit: GWT-3R, PROJ-R and CQM08R survive matched-capacity or graded controls. CQM18-R does not (recovery = readout relearning only) and is demoted.
+- RPT-2: signed selective cross input works in isolation but not in the creature (best d 0.92, t 2.59). The missing ingredient is an operating-point nonlinearity.
+- HOT3RM paired passes on fresh held-out 2881 (dz 1.51, t 6.05).
