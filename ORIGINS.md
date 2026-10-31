@@ -51,3 +51,4 @@
 - fp/rpt2.ts LearnedApical and organism ffi: original code; competitive Hebbian after von der Malsburg 1973, Oja 1982, Miller, Keller & Stryker 1989; feedforward inhibition after Pouille & Scanziani 2001 (Science 293:1159), Isaacson & Scanziani 2011 (Neuron 72:231).
 - organism apL/apAll/apH: original code; dendritic plateau after Schiller et al. 2000, Larkum 1999; intrinsic homeostasis after Triesch 2005 (ICANN), Desai, Rutherford & Turrigiano 1999 (Nat Neurosci 2:515).
 - organism onR: original code; onset-recruited inhibition truncating persistent activity after Gutkin et al. 2001 (J Comput Neurosci 11:121), Cardin et al. 2009 (Nature 459:663).
+- v4.0 PROJ-R: comparator model of self/other attribution, Frith, Blakemore & Wolpert 2000 (Phil Trans R Soc B). CQM18-R afferent-remap lesion: Merzenich et al. 1983 (Neuroscience). RPT-2 diagnosis: Rigotti et al. 2013 (Nature); van Vreeswijk & Sompolinsky 1996 (Science); Larkum 2013 (TINS).

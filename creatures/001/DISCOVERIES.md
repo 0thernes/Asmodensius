@@ -101,3 +101,8 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 ## 2026-10-31 4:06 PM PT turn
 - Onset reset of slow NMDA removes persistence (|nmdaS| 8.97→0.44) but does not create a×b conjunctions; RPT2R null (2785). Not adopted.
 - HOT3RM held-out 2769: passes vs random, fails vs shuffled (t 2.33). Not confirmed.
+
+## 4:08 PM PT turn
+- RPT-2 additivity is due to b-invariant, sparse cross input in a balanced linear regime (not threshold/saturation).
+- PROJ-R, CQM18-R (new, disclosed), GWT-3R and CQM08R pass on 2801/2817/2833 (see FIRST-PRINCIPLES.md).
+- HOT3RM variance comes from between-seed baseline SD (paired dz≈1.5, unpaired block d≈1).

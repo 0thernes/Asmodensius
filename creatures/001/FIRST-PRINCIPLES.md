@@ -207,3 +207,14 @@ Then activeInference, RPT-2, CQM10, CQM01/04/03R, RPTLATE, LTC. The ceiling item
   - RPT2R 2785: onR0.8 −0.13/−0.37; plus apical gating −0.02/−0.05; onR1 plus apical gating −0.44/−1.25 → null.
   - So slow-NMDA dominance was not the sole cause; the spiking soma remains near-additive in a and b. Not adopted, so defaults are unchanged and the 2625 recheck still stands.
 - HOT3RM held-out 2769 (no tuning): vs random 1.01/2.85 (passes), vs shuffled 0.82/2.33 (t fails) → **not confirmed**. Tally: 2 of 4 fresh blocks pass both controls.
+
+## 4:08 PM PT turn (dev seeds 2801–2848)
+### RPT-2: why cortical cells stay additive (unit diagnostics, seed 2801; no fix yet)
+Module-0 cells: a-effect up to 0.35, b-effect ≤0.09 (mean 0.027 ≈ mixLesion 0.025), a×b interaction ≤0.05. No saturated/silent units (rates 0.1–0.5, v p5/p50/p95 −1.24/0/2.55): a linear regime, not threshold/saturation. Cross synapses only lower mean rate (0.354→0.304): the cross drive is non-specific and cancelled by E/I balance (normalization). Fan-in is sparse (~1.8 module-1 synapses/cell), and one-hot b makes total cross drive b-invariant, so no cell can see b-specific input. Patchy wiring (xsW 1, 3) still null. Root cause = connectivity carries no b identity to individual cells + balanced linear regime.
+**Neuro:** multiplicative mixing needs convergent, feature-specific input onto a nonlinear dendrite (Larkum 2013; Rigotti et al. 2013, mixed selectivity); balanced networks linearize population responses (van Vreeswijk & Sompolinsky 1996).
+### Ceiling tests → R variants (NEW, disclosed; originals still reported)
+- PROJ-R: graded external pushes (0–0.6) on half the trials on top of own commands; comparator threshold unchanged. Neuro: Frith, Blakemore & Wolpert 2000.
+- CQM18-R: the original 40% CTX lesion is bypassed by the L4 path. The R lesion remaps afferents (permutation of the module-0 readout inputs; Merzenich et al. 1983); frozen = no synaptic or readout plasticity after lesion.
+- GWT-3R and CQM08R (C08R) already existed (v3.6); rerun on new seeds.
+### HOT3RM block variance
+Paired diff vs shuffled: mean 0.037, sd 0.024 (n=64, dz≈1.5). Unpaired d is diluted by between-seed accuracy SD (0.03–0.044); shuffled-arm accuracy correlates −0.56 with the diff. Expected block d≈1 → ~half of blocks pass. Source = between-seed baseline variance, not the mechanism. A paired analysis would be a disclosed variant; not adopted this turn.

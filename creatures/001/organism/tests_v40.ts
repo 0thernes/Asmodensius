@@ -104,4 +104,20 @@ const ae1R = (S: number[]): M => { const D = 1440; const f = (o: Partial<Opts>) 
   while (g.t < 480 + 2 * D) { const pr = g.rewards, pf = g.foraged; g.step(); if (g.foraged > pf && armed) { armed = false; open = g.t; } if (open >= 0 && g.t - open <= 360) { rew += g.rewards - pr; n += g.foraged - pf; }
     if ((g.t - 480) % 720 === 0) { rv++; armed = true; open = -1; for (let k = 0; k < 16; k++) g.pTrue[k] = rv % 2 ? 0.6 - p0[k] : p0[k]; } } void r0; void f0; return rew / Math.max(1, n); });
   return { full: f({}), "RPE learning lesioned": f({ rpeLesion: true }) }; };
-export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, N13: n13 };
+
+// v4.0 PROJ-R (NEW, disclosed; original PROJ stays reported as ceiling): every trial carries an own command (efference) and on half the trials an
+// added external push of graded size (0..0.6, so small pushes are near the comparator's limit); question: was there an external contribution?
+// Comparator theory predicts graded, non-ceiling accuracy; lesioning the efference copy removes the prediction (Frith, Blakemore & Wolpert 2000).
+const projR = (S: number[]): M => { const f = (o: Partial<Opts>) => S.map((s) => { const g: any = warm31(s, o); g.mind.gTrue = 0.5 + 1.5 * g.r(); let ok = 0;
+  for (let t = 0; t < 160; t++) { g.mind.arm = 0; const ext = g.r() < 0.5; const u = (g.r() < 0.5 ? -1 : 1) * (0.3 + 0.7 * g.r()); g.mind.efference = u; g.mind.push = ext ? (g.r() < 0.5 ? -1 : 1) * 0.6 * g.r() : 0; g.step();
+    const obs = g.mind.dArmObs, pred = g.mind.dArmPred; const saysExt = Math.abs(obs - pred) > 0.25 * Math.max(0.05, Math.abs(pred)); if (t >= 100) ok += +(saysExt === ext); } return ok / 60; });
+  return { full: f({}), "efference copy lesioned": f({ efferenceLesion: true }) }; };
+// v4.0 CQM18-R (NEW, disclosed; original CQM18 stays reported as ceiling): the original 40% CTX-synapse lesion is bypassed by the L4 input path, so it
+// cannot hurt. Here the lesion remaps the afferent code (random permutation of the module-0 readout's input lines, like nerve-crossing remapping;
+// Merzenich et al. 1983), dropping accuracy to chance. Recovery needs plasticity (vs plasticity frozen).
+const cqm18R = (S: number[]): M => { const f = (freeze: boolean) => S.map((s) => { const g: any = warm31(s); let lesioned = false; const tr = (): boolean => { const c = Math.floor(g.r() * 4); const x = new Array(16).fill(0); x[c] = 1; show31(g, x); g.step(); const okk = am31(g.mind.post[0]) === c; if (!(freeze && lesioned)) g.mind.teach(0, c); show31(g, new Array(16).fill(0)); g.step(); return okk; };
+  for (let t = 0; t < 120; t++) tr(); const L = g.mind.cls[0], n = L.nIn; const perm = [...Array(n).keys()]; for (let i = n - 1; i > 0; i--) { const j = Math.floor(g.r() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+  const W0 = L.W.slice(); for (let k = 0; k < L.nOut; k++) for (let i = 0; i < n; i++) L.W[k * (n + 1) + i] = W0[k * (n + 1) + perm[i]];
+  lesioned = true; if (freeze) g.learn = false; /* frozen = no synaptic OR readout plasticity after the lesion */ let ok = 0; for (let t = 0; t < 160; t++) { const r = tr(); if (t >= 100) ok += +r; } return ok / 60; });
+  return { full: f(false), "plasticity frozen after lesion": f(true) }; };
+export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, PROJR: projR, CQM18R: cqm18R, N13: n13 };

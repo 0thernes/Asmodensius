@@ -22,14 +22,6 @@
     }
   };
 
-  // <define:process.env>
-  var define_process_env_default;
-  var init_define_process_env = __esm({
-    "<define:process.env>"() {
-      define_process_env_default = {};
-    }
-  });
-
   // ../src/rng.ts
   function mulberry(seed) {
     let a = seed >>> 0;
@@ -48,7 +40,6 @@
   }
   var init_rng = __esm({
     "../src/rng.ts"() {
-      init_define_process_env();
     }
   });
 
@@ -56,7 +47,6 @@
   var seededDice, BASE_WORLD, LADDER, PAYOFF, KICK_PARTS;
   var init_god = __esm({
     "../src/biosphere/god.ts"() {
-      init_define_process_env();
       init_rng();
       seededDice = (seed) => ({ name: "classical-seeded", next: mulberry(seed * 2654435761) });
       BASE_WORLD = { deathRule: "organism", respawnAfter: 0, dayLength: 12, lightScale: 1, lightMode: "cycle", lightToCreatures: false, oneShot: false, timeWarp: 1, timeWarpR: 4, foodCapScale: 1, growthScale: 1, gravity: 1, toxicity: 0, electric: null, sensoryLoad: 0, quantumKicks: 0, sensoryLinesR: 0, temperature: 20, wind: 0, o2: 0.21, co2: 4e-4, radiation: 0, recycling: 0, parasites: 0, game: "none", gameStrategy: "fixed", ph: 7, singularity: 0, grazers: 0 };
@@ -73,7 +63,6 @@
   var DEFAULT_DOME, Dome;
   var init_dome = __esm({
     "../src/biosphere/dome.ts"() {
-      init_define_process_env();
       init_rng();
       init_god();
       DEFAULT_DOME = { radius: 12, cell: 1, foodCap: 30, growth: 4e-3, seed: 1, touchRadius: 1.2 };
@@ -444,7 +433,6 @@
   var LearningProgress;
   var init_cur = __esm({
     "../../creatures/001/organism/fp/cur.ts"() {
-      init_define_process_env();
       LearningProgress = class {
         p;
         eF;
@@ -471,7 +459,6 @@
   var InputLayer;
   var init_l4 = __esm({
     "../../creatures/001/organism/fp/l4.ts"() {
-      init_define_process_env();
       InputLayer = class {
         constructor(nIn, K, seed) {
           this.nIn = nIn;
@@ -503,7 +490,6 @@
   var ProtoPosterior;
   var init_hot1 = __esm({
     "../../creatures/001/organism/fp/hot1.ts"() {
-      init_define_process_env();
       ProtoPosterior = class {
         constructor(K, D) {
           this.K = K;
@@ -548,7 +534,6 @@
   var cl, Affect;
   var init_affect = __esm({
     "../../creatures/001/organism/affect.ts"() {
-      init_define_process_env();
       cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
       Affect = class {
         constructor(nOpt, persona, off) {
@@ -830,7 +815,6 @@
   var CORTEX_GENES, OVERGROW, gs;
   var init_develop = __esm({
     "../../creatures/001/organism/develop.ts"() {
-      init_define_process_env();
       CORTEX_GENES = ["tc", "tcSig", "eI", "iE", "rec0", "xsSig"];
       OVERGROW = 1.15;
       gs = (r) => {
@@ -844,7 +828,6 @@
   var SubstrateTap;
   var init_substrate = __esm({
     "../../creatures/001/organism/substrate.ts"() {
-      init_define_process_env();
       init_organism();
       SubstrateTap = class {
         constructor(mode, seed, replayLog = []) {
@@ -934,7 +917,6 @@
   var cl2, fin, SensoryBus, SelfModel, Curvature, HOOKS, NeoHooks;
   var init_v40mods = __esm({
     "../../creatures/001/organism/v40mods.ts"() {
-      init_define_process_env();
       init_substrate();
       cl2 = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
       fin = (x) => Number.isFinite(x) ? x : 0;
@@ -1325,7 +1307,6 @@
   var clamp, IG0, REGIONS, R0, RN, NNEU, INHIB, CP, TA, Q3, Health, NMOD, MW, msoftmax, margmax, mdot, Lin, RLS, Kal, Mind, TUNE, MT31, MT, LTC_TAU0, CX, LTC_INIT, LTC_LEARNED, M35, M36, M37, M38, M39, MIND_DEFAULT, ge35, ge36, is37, is38, is39, phiN, is40, M40, V40OPTS, hBin, gaussQ, betaSD, SD0, SITES, Organism;
   var init_organism = __esm({
     "../../creatures/001/organism/organism.ts"() {
-      init_define_process_env();
       init_cur();
       init_l4();
       init_hot1();
@@ -2092,24 +2073,24 @@
       M38 = { efeC: 0.5, efeRef: 1, fK: 4, fSet: 400, thK: 1, thMin: 0.6, mMax: 180, fast: 1, ketSpare: 0, ketEx: 8e-4, ffaInh: 6, gngK: 2, protK: 2, ketK: 4 };
       M39 = { ketPS: 0.5, fCrit: 20, p3K: 3, mDeath: 60, lipE: 0.5, xsW: 0, xsSig: 0.5, tdIter: 0, evQ: 0, vK: 0 };
       try {
-        const e9 = typeof process !== "undefined" ? define_process_env_default.V39TUNE : void 0;
+        const e9 = typeof process !== "undefined" ? process.env.V39TUNE : void 0;
         if (e9) Object.assign(M39, JSON.parse(e9));
       } catch {
       }
       try {
-        const e = typeof process !== "undefined" ? define_process_env_default.V35TUNE : void 0;
+        const e = typeof process !== "undefined" ? process.env.V35TUNE : void 0;
         if (e) Object.assign(M35, JSON.parse(e));
-        const e6 = typeof process !== "undefined" ? define_process_env_default.V36TUNE : void 0;
+        const e6 = typeof process !== "undefined" ? process.env.V36TUNE : void 0;
         if (e6) Object.assign(M36, JSON.parse(e6));
-        const e7 = typeof process !== "undefined" ? define_process_env_default.V37TUNE : void 0;
+        const e7 = typeof process !== "undefined" ? process.env.V37TUNE : void 0;
         if (e7) Object.assign(M37, JSON.parse(e7));
-        const e8 = typeof process !== "undefined" ? define_process_env_default.V38TUNE : void 0;
+        const e8 = typeof process !== "undefined" ? process.env.V38TUNE : void 0;
         if (e8) Object.assign(M38, JSON.parse(e8));
       } catch {
       }
       MIND_DEFAULT = (() => {
         try {
-          const e = typeof process !== "undefined" ? define_process_env_default.ORG_MIND : void 0;
+          const e = typeof process !== "undefined" ? process.env.ORG_MIND : void 0;
           return e === "v34" ? "v34" : e === "v35" ? "v35" : e === "v36" ? "v36" : e === "v37" ? "v37" : e === "v38" ? "v38" : e === "v39" ? "v39" : "v40";
         } catch {
           return "v40";
@@ -2127,13 +2108,13 @@
       is40 = (m) => m === "v40";
       M40 = { uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
       try {
-        const e40 = typeof process !== "undefined" ? define_process_env_default.V40TUNE : void 0;
+        const e40 = typeof process !== "undefined" ? process.env.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
       } catch {
       }
       V40OPTS = {};
       try {
-        const e = typeof process !== "undefined" ? define_process_env_default.V40OPTS : void 0;
+        const e = typeof process !== "undefined" ? process.env.V40OPTS : void 0;
         if (e) V40OPTS = JSON.parse(e);
       } catch {
       }
@@ -3693,7 +3674,6 @@
   var NM, regionOf, NEU, Creature001, make001;
   var init_c001 = __esm({
     "../src/adapters/c001.ts"() {
-      init_define_process_env();
       init_organism();
       init_affect();
       init_develop();
@@ -3975,7 +3955,6 @@
   // main.ts
   var require_main = __commonJS({
     "main.ts"() {
-      init_define_process_env();
       init_dome();
       init_c001();
       var LAYERS = ["emotion", "mood", "attitude", "personality", "dysreg", "risk"];
