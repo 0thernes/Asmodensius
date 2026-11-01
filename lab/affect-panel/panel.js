@@ -1557,6 +1557,54 @@
     }
   }
 
+  // ../../creatures/001/organism/fp/l5.ts
+  var softplus = (x) => x > 20 ? x : Math.log1p(Math.exp(x));
+
+  class L5Pool {
+    U;
+    N;
+    gA;
+    Wb;
+    Wa;
+    y;
+    constructor(U, N, r, gA = 4) {
+      this.U = U;
+      this.N = N;
+      this.gA = gA;
+      const s = 2 / Math.sqrt(N);
+      this.Wb = new Float64Array(U * N).map(() => (r() * 2 - 1) * s);
+      this.Wa = new Float64Array(U * N).map(() => (r() * 2 - 1) * s);
+      this.y = new Float64Array(U);
+    }
+    oja(W, u, x, eta) {
+      const N = this.N;
+      let y = 0;
+      for (let k = 0;k < N; k++)
+        y += W[u * N + k] * x[k];
+      for (let k = 0;k < N; k++)
+        W[u * N + k] += eta * y * (x[k] - y * W[u * N + k]);
+    }
+    learn(own, oth, eta = 0.01) {
+      for (let u = 0;u < this.U; u++) {
+        this.oja(this.Wb, u, own, eta);
+        if (oth)
+          this.oja(this.Wa, u, oth, eta);
+      }
+    }
+    step(own, oth, mode = "mul") {
+      for (let u = 0;u < this.U; u++) {
+        let b = 0, a = 0;
+        for (let k = 0;k < this.N; k++) {
+          b += this.Wb[u * this.N + k] * own[k];
+          if (oth)
+            a += this.Wa[u * this.N + k] * oth[k];
+        }
+        this.y[u] = mode === "mul" ? softplus(b) / (1 + Math.exp(-this.gA * a)) : softplus(b) + 0.5 * softplus(a);
+      }
+      return this.y;
+    }
+  }
+
   // ../../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
@@ -2563,7 +2611,7 @@
   };
   var is40 = (m) => m === "v40";
   var M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
-  var M50 = { dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+  var M50 = { l5: 0, aomV: 0, dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
   if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2"))
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "3")
@@ -2574,6 +2622,8 @@
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "6")
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1 });
+  if (typeof process !== "undefined" && process.env?.ORG_V5 === "7")
+    Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5 });
   if (typeof process !== "undefined" && process.env?.M50J)
     Object.assign(M50, JSON.parse(process.env.M50J));
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "2")
@@ -2727,6 +2777,29 @@
     }
     dmW;
     aomM;
+    l5 = new Float64Array(32);
+    l5P;
+    l5Tr;
+    l5Step() {
+      if (!(M50.l5 > 0))
+        return;
+      const N = 13;
+      if (!this.l5P) {
+        const r = mulberry2(this.o.seed * 3491 + 7);
+        this.l5P = [0, 1, 2, 3].map(() => new L5Pool(8, N, r));
+      }
+      this.l5Tr ??= new Float64Array(52);
+      for (let i = 0;i < 52; i++)
+        this.l5Tr[i] += 0.5 * (this.rate[R0.CTX + i] - this.rateAvg[R0.CTX + i] - this.l5Tr[i]);
+      const cen = (m) => Array.from(this.l5Tr.subarray(m * N, m * N + N));
+      for (let m = 0;m < 4; m++) {
+        if (this.learn)
+          this.l5P[m].learn(cen(m), this.o.mixLesion ? null : cen(m ^ 1), M50.l5Eta ?? 0.01);
+        const y = this.l5P[m].step(cen(m), this.o.mixLesion ? null : cen(m ^ 1));
+        for (let u = 0;u < 8; u++)
+          this.l5[m * 8 + u] = y[u];
+      }
+    }
     dmulStep(ext) {
       if (!(M50.dmul > 0) || this.o.mixLesion)
         return;
@@ -3355,6 +3428,7 @@
         const gate = awake ? 1 : rem ? 0.2 : 0.05;
         this.cfmStep(ext);
         this.dmulStep(ext);
+        this.l5Step();
         for (let i = 0;i < 16; i++) {
           ext[R0.SENS + i] += TUNE.sensIn * gate * (this.sens[i] + (this.bus ? this.bus.out[i] : 0)) * M.att[i >> 2];
           ext[R0.THAL + i] += M.td[i];
@@ -4279,6 +4353,8 @@
         let w = this.wSite[k] + (is39(this.o.mind ?? MIND_DEFAULT) && M39.vK > 0 ? M39.vK * (this.wSite[k] - wMu) : 0);
         if (v32 && this.level >= 3)
           w += 0.5 * (clamp(this.featC[this.siteC[k]] + this.featS[this.siteS[k]]) - w);
+        if (M50.aomV > 0 && this.aomM)
+          w += M50.aomV * (this.aomM.pred(k, this.t) - this.wSite[k]);
         if (M50.aom > 0 && this.aomM && !this.o.efeLesion)
           w += M50.aomK * this.aomM.ig(k, this.t);
         if (this.affect)

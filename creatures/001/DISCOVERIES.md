@@ -370,3 +370,15 @@ Reading (dev + held-out):
 - **Foraging:** the drop happens at v5 -> v5.3 (EFM), with ATP unchanged and 0 deaths, so it is efficiency, not harm.
 - **AE1, pooled over 48 seeds (3317-3364):** v5-core 0.99/4.85 passes; v5.5 0.54/2.65 fails. The B20 pool came out the other way round, so AE1 is a noise-level borderline test.
 
+
+## B22 / v5.6: L5 conjunctive pool and depletion-aware value (2026-11-01)
+- **L5 pool in isolation:** XOR decode reaches 0.64 (dev 3365) and 0.67 (held-out 3381), vs about 0.52 for the additive pool and the apical cut (d 1.4-2.5). It passes, though the effect is weak.
+- **L5 in the creature:** RPT2R and the new disclosed RPT2R-L5 are both null (held-out 0.07 and 0.19).
+  - Dev diagnostic: ridge decode of XOR from the L5 pool is 0.58, while single cues decode at 0.97.
+  - Disclosed dev iterations: a dendritic trace, then Oja weights. Neither moved it.
+  - Reading: the cortex encodes a and b cleanly, but in a few cells that a random or principal-component dendrite does not isolate. A conjunction needs dendrites tuned to the cue cells (learned selectivity), and that is the open problem.
+- **AOM value in isolation:** reward 136/141 vs 113/117 for a value blind to depletion (d 1.95/2.52). It passes.
+- **AOM value in the creature:** AINF is null (held-out -0.10). Raw AINF reward is unchanged (56.1 vs 56.1). The creature reward is not limited by depletion-blind choice at its forage rate.
+- **AE1, 48-seed pool (3397-3444):** v5-core 0.78/3.82, v5.6 0.37/1.82. Borderline: across three pools the winner flips.
+- **Gains, not targeted (not claimed):** v5.6 passes HOT3RM (0.97/2.75) and CQM12 on held-out only.
+
