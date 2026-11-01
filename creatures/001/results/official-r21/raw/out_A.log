@@ -85,3 +85,4 @@ Node.js v24.22.1
 L4 learned=0.3090  handset=0.2924  fixed=0.3024 209s
 EVO CQM01:full=0.1257  CQM02:full=49.75  CQM03:full=0.8677  CQM04:full=1.025  CQM01:offspring genomes random=0.04647  CQM02:no mutation=5.938  CQM03:births on a fixed schedule=0.000  CQM04:random survival=1.011 9290s
 L2 learned=0.03466  handset=0.06254  fixed=0.05247 920s
+L1 learned=0.3904  handset=0.4115  fixed=0.3967 883s
