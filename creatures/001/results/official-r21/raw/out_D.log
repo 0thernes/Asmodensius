@@ -35,3 +35,7 @@ C15 full=0.3427  repair lesioned=0.09331 428s
 C17 full=-3.073  PID lesioned=-2341 359s
 C24 identical=1.000 12s
 C22 full=73.02  aversive learning lesioned=-146.5 330s
+RPT2R full=0.8264  cross-module CTX synapses lesioned=0.5313 125s
+RPT2RL5 full=0.8451  cross-module CTX synapses lesioned=0.5410 109s
+HOT3RM metacognitive opt-out=0.8217  random opt-out (matched rate)=0.7821  confidence shuffled=0.7903 125s
+PROJR full=0.8330  efference copy lesioned=0.4934 42s
