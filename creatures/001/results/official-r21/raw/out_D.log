@@ -50,3 +50,5 @@ C03R full=0.004261  births random in number=0.3656 3195s
 K1 full=1.000  v3.1 cortex=1.000  no developmental waves=1.000  no STDP=1.000  no homeostasis (intrinsic + inhibitory)=1.000  E/I loops lesioned=1.000 112s
 K1R full=0.9552  v3.1 cortex=0.9670  no developmental waves=0.9569  no STDP=0.9590  no homeostasis (intrinsic + inhibitory)=0.9597  E/I loops lesioned=0.9642 121s
 K2 full=0.3441  NMDA-like current lesioned=0.2712 58s
+LIGHT melatonin at midnight, dome dark minus lit=0.9533 178s
+NOISESIGN v36 |P(+)-0.5|=0.01646  v35 |P(+)-0.5|=0.2916 18s

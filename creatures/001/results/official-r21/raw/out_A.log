@@ -51,3 +51,4 @@ K1 full=1.000  v3.1 cortex=1.000  no developmental waves=1.000  no STDP=1.000  n
 K1R full=0.9642  v3.1 cortex=0.9604  no developmental waves=0.9583  no STDP=0.9580  no homeostasis (intrinsic + inhibitory)=0.9566  E/I loops lesioned=0.9688 112s
 K2 full=0.3316  NMDA-like current lesioned=0.2708 55s
 LIGHT melatonin at midnight, dome dark minus lit=0.9707 157s
+NOISESIGN v36 |P(+)-0.5|=0.02453  v35 |P(+)-0.5|=0.2918 17s
