@@ -1,25 +1,33 @@
 FAIL RPT-1 recurrence: delayed recall [Missing] (not run)
-FAIL RPT-2 integration: XOR readout [Missing] (not run)
+FAIL RPT-2 integration: XOR readout [Not established]
+   vs cross-module CTX synapses lesioned: full 0.5139 ctrl 0.5271 d -0.17 t -0.81
 FAIL GWT-1 specialist modules [Missing] (not run)
 FAIL GWT-2 limited-capacity selection [Missing] (not run)
-FAIL GWT-3 global broadcast [Missing] (not run)
+FAIL GWT-3 global broadcast [Ceiling] (fails non-ceiling rule)
+   vs broadcast lesioned: full 1.000 ctrl 0.2403 d 26.15 t 128.10
 FAIL GWT-4 state-dependent attention [Missing] (not run)
 FAIL HOT-1 generative top-down [Missing] (not run)
 FAIL HOT-2 metacognitive monitoring (AUROC) [Missing] (not run)
-FAIL HOT-3 metacognitive agency (opt-out) [Missing] (not run)
+FAIL HOT-3 metacognitive agency (opt-out) [Not established]
+   vs no opt-out: full 0.7909 ctrl 0.7917 d -0.01 t -0.07
+   vs random opt-out at same rate: full 0.7909 ctrl 0.7858 d 0.10 t 0.47
 FAIL HOT-4 quality space (Spearman) [Missing] (not run)
 FAIL AST-1 attention schema [Missing] (not run)
 FAIL PP-1 predictive coding [Missing] (not run)
-FAIL AE-1 agency / RL under reversals [Missing] (not run)
+PASS AE-1 agency / RL under reversals [Bounded test evidence]
+   vs RPE learning lesioned: full 0.3429 ctrl 0.2868 d 1.19 t 5.84
 FAIL AE-2 embodiment: reaching [Missing] (not run)
 FAIL thaler9 creative recombination [Missing] (not run)
 FAIL iit4 phi proxy [Missing] (not run)
-FAIL activeInference EFE choice in depleting world [Missing] (not run)
+FAIL activeInference EFE choice in depleting world [Not established]
+   vs epistemic term lesioned: full 54.83 ctrl 54.67 d 0.01 t 0.05
 FAIL attentionSchema model of another's attention [Missing] (not run)
 FAIL fieldIntegration binding by phase locking [Missing] (not run)
-FAIL ual trace conditioning [Missing] (not run)
+PASS ual trace conditioning [Bounded test evidence]
+   vs eligibility traces lesioned: full 0.1118 ctrl 0.01027 d 1.36 t 6.66
 FAIL sensorimotor efference prediction [Missing] (not run)
-FAIL projective self/other ownership [Missing] (not run)
+FAIL projective self/other ownership [Ceiling] (fails non-ceiling rule)
+   vs efference copy lesioned: full 1.000 ctrl 0.5118 d 10.72 t 52.51
 FAIL ctm report agrees with action [Missing] (not run)
 FAIL CQM01 heredity [Missing] (not run)
 FAIL CQM02 open-endedness [Missing] (not run)
@@ -39,11 +47,11 @@ FAIL CQM16 self-maintenance (alive fraction) [Missing] (not run)
 FAIL CQM17 homeostasis (−glucose variance) [Missing] (not run)
 FAIL CQM18 resilience after 40% CTX lesion [Missing] (not run)
 FAIL CQM22 valence trade-off [Missing] (not run)
-FAIL butlin14 rollup of 14 Butlin items [0/14 pass] (rollup)
+FAIL butlin14 rollup of 14 Butlin items [1/14 pass] (rollup)
 FAIL CQM24 reproducibility (state hash) [Missing] (not run)
 PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":4151,"plasticSynapses":331,"valueSynapses":2698,"kinetics":390,"quantum":19,"total":7258})
 FAIL CQM23 substrate pluralism [Not applicable] (JS only)
 FAIL GWT-3R global broadcast, degraded stimuli [Missing] (not run)
 FAIL ctm-R report agrees with action, degraded stimuli [Missing] (not run)
 FAIL CQM08R continual retention, degraded stimuli [Missing] (not run)
-ROLLUPS: Butlin 0/14, frameworks 0/10, CQM 1/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 0/3; v3.7 items 0/0; v3.9 items 0/0; MISSING RPT1,RPT2,GWT1,GWT2,GWT3,GWT4,HOT1,HOT2,HOT3,HOT4,AST1,PP1,AE1,AE2,NOVEL,IIT,AINF,ASO,FIELD,UAL,SM,PROJ,CTM,EVO,EVO,EVO,EVO,C05,C06,C07,C08,C09,C10,C11,NOVEL,C14,C15,C16,C17,C18,C22,K1,K2,L1,L2,L3,L4,L5,GWT3R,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
+ROLLUPS: Butlin 1/14, frameworks 1/10, CQM 1/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 0/3; v3.7 items 0/0; v3.9 items 0/0; MISSING RPT1,GWT1,GWT2,GWT4,HOT1,HOT2,HOT4,AST1,PP1,AE2,NOVEL,IIT,ASO,FIELD,SM,CTM,EVO,EVO,EVO,EVO,C05,C06,C07,C08,C09,C10,C11,NOVEL,C14,C15,C16,C17,C18,C22,K1,K2,L1,L2,L3,L4,L5,GWT3R,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
