@@ -240,6 +240,7 @@ if (typeof process !== "undefined" && process.env?.ORG_V5 === "7") Object.assign
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "8") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1 }); /* v5.7 = v5.6 + phasic surprise-gated L5 learning (B23) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "9") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1, l5Fb: 0.5 }); /* v5.8 = v5.7 + L5 feedback (B24) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "10") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1, dn: 4 }); /* v5.9 = v5.7 + divisive normalisation of cortical drive (B25) */
+if (typeof process !== "undefined" && process.env?.ORG_V5 === "11") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0, l5Ph: 1 }); /* v5.7b = v5.7 without AOM value (B25 AE1 fix) */
 if (typeof process !== "undefined" && process.env?.M50J) Object.assign(M50, JSON.parse(process.env.M50J)); /* dev override */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "2") Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
  /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
