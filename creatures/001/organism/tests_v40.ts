@@ -155,4 +155,10 @@ const evoS = (S: number[]): M => { const out: M = {}; const put = (k: string, v:
     let lag = 0; for (let L = 0; L <= 2; L++) lag = Math.max(lag, Math.abs(corrS(N.slice(0, N.length - L), F.slice(L)))); return { h: pairs.length > 3 ? corrS(pairs.map((p) => p[0]), pairs.map((p) => p[1])) : 0, eco: lag, reach }; };
   for (const s of S) { const f = run(s, "full"); put("CQM01:full", f.h); put("CQM03:full", f.eco); put("CQM04:full", f.reach); put("CQM01:offspring genomes random", run(s, "randomOffspring").h); put("CQM03:births on a fixed schedule", run(s, "fixedBirths").eco); put("CQM04:random survival", run(s, "randomSurvival").reach); }
   return out; };
-export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, PROJR: projR, EVOS: evoS, AUDC16: audC16, AUDGWT: audGWT, AUDC08: audC08, AUDPROJ: audPROJ, AUDC18: audC18, CQM18R: cqm18R, N13: n13 };
+
+// v5 CQM16-R (NEW, disclosed; original CQM16 stays reported): ANTICIPATION, not feedback. A fixed meal (gut glucose +6) at 10:00 every day for
+// 4 days; score = fraction of the 120 ticks after the day-3/4 meals with blood glucose in 2..4.5. Allostasis predicts the scheduled challenge is
+// met early (Sterling 2012; cephalic-phase insulin, Teff 2000); control = same creature with learned anticipation lesioned (reactive feedback only).
+const cqm16R = (S: number[]): M => { const f = (o: Partial<Opts>) => S.map((s) => { const g: any = new Organism({ seed: s, ...o } as any); let ok = 0, n = 0; while (g.t < 4 * 1440) { const m = g.t % 1440; if (m === 600) g.gut.glc += 6; g.step(); if (g.t >= 2 * 1440 && m >= 600 && m < 720) { n++; ok += +(g.blood.glc > 2 && g.blood.glc < 4.5); } } return ok / Math.max(1, n); });
+  return { full: f({}), "anticipation lesioned (reactive only)": f({ cephLesion: true }) }; };
+export const TESTS40: Record<string, (S: number[]) => M> = { AINFR: (S) => ainfR3(S), AINFR4: (S) => ainfR4(S), AINFR4D: (S) => ainfR4diag(S), N09: n09, HOT3R: hot3R, HOT3RM: hot3RM, RPT2R: rpt2R, AE1R: ae1R, PROJR: projR, C16R: cqm16R, EVOS: evoS, AUDC16: audC16, AUDGWT: audGWT, AUDC08: audC08, AUDPROJ: audPROJ, AUDC18: audC18, CQM18R: cqm18R, N13: n13 };
