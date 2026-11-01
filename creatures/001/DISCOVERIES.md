@@ -188,3 +188,24 @@ Reading:
 - Foraging: v5 270 and v5.1 264 vs v4.0 320, with 0 deaths in every arm. This is consistent with less over-eating (insS; C10 d −3.4 → −0.8), not with starvation.
 
 ## Held-out 3041-3056 (B17, chosen before the run): v5.1 vs v4.0 (column 3 = v5.1)
+| Test | v4.0 d/t | v5-core d/t | pass v4/v5 |
+|---|---|---|---|
+| AE1 | 1.29/3.65 | 1.63/4.61 | ✓/✓ |
+| viability (forages, deaths) | 316, 0 | 274, 0 |  |
+| AINF | 0.00/0.00 | -0.03/-0.09 | ✗/✗ |
+| C03R | -2.20/-6.23 | -2.17/-6.15 | ✗/✗ |
+| C08R | 5.86/16.59 | 9.46/26.75 | ✓/✓ |
+| C10 | -3.51/-9.94 | -1.01/-2.86 | ✗/✗ |
+| C16 | 11.27/31.89 | 11.59/32.77 | ✓/✓ |
+| C16R | 0.00/0.00 | 0.05/0.13 | ✗/✗ |
+| GWT3R | 14.36/40.61 | 3.06/8.67 | ✓/✓ |
+| HOT1 | 1.32/3.74 | 0.92/2.60 | ✓/✗ |
+| HOT3RM | 0.39/1.11 | 0.38/1.08 | ✗/✗ |
+| HOT3RM-P | 0.50/1.99 | 1.06/4.26 | ✗/✓ |
+| thaler9 | 2.07/5.85 | 1.38/3.91 | ✓/✓ |
+| CQM12 | 1.99/5.63 | 1.20/3.39 | ✓/✓ |
+| PROJR | 3.74/10.59 | 4.23/11.97 | ✓/✓ |
+| RPT2R | 0.24/0.68 | -0.59/-1.68 | ✗/✗ |
+| UAL | 1.75/4.94 | 1.45/4.10 | ✓/✓ |
+
+Reading: on held-out data, v5.1 also ties v4.0 overall. HOT1 is lost (t 2.60). HOT3RM-P is gained (v4.0 fails it on this block). GWT3R shrinks a lot (14.4 to 3.1) but still passes. CQM16-R is null again (d 0.05). Viability: v4.0 316 forages, v5.1 274, 0 deaths in both. Verdict: v5-core is the candidate; v5.1 stays behind the flag. EVO-S baselines are deferred.
