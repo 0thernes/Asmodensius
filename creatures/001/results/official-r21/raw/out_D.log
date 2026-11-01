@@ -11,3 +11,8 @@ C16 full=0.8728  allostatic (PID) lesion=0.3965 366s
 C08 full=0.9974  replay lesioned=0.9906 93s
 RPT1 full=0.3313  recurrent CTX synapses lesioned=0.2639 97s
 GWT1 full=0.2601  topography scrambled at build=0.008565 120s
+GWT2 full=0.9646  workspace lesioned (action reads module average)=0.5760 143s
+HOT1 full=-0.04729  top-down lesioned=-0.07429 82s
+GWT4 full=0.9649  attention not driven by workspace state=0.1913 139s
+HOT2 full=0.6508  confidence shuffled (S)=0.4895 59s
+HOT4 full=0.6213  sensory lines permuted every trial=0.001426 59s

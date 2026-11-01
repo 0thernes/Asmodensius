@@ -11,3 +11,8 @@ C18 full=1.000  plasticity frozen after lesion=1.000 85s
 C08 full=0.9984  replay lesioned=0.9917 93s
 RPT1 full=0.3024  recurrent CTX synapses lesioned=0.2378 84s
 GWT1 full=0.2578  topography scrambled at build=-0.003588 109s
+GWT2 full=0.9691  workspace lesioned (action reads module average)=0.5628 150s
+GWT4 full=0.9670  attention not driven by workspace state=0.1920 162s
+HOT1 full=-0.04822  top-down lesioned=-0.07491 86s
+HOT2 full=0.6443  confidence shuffled (S)=0.4898 60s
+HOT4 full=0.6408  sensory lines permuted every trial=0.01495 63s
