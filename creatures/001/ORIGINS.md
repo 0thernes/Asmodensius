@@ -1,0 +1,1 @@
+- Eshkol (Tsotchke, MIT; credited) is used as the exact-gradient engine for the isolated temporal core. BPTT: Werbos 1990, Proc IEEE 78:1550. Adam: Kingma & Ba 2015. Model-based rollout: Sutton 1990 (Dyna). Second-order error prediction for confidence: Fleming & Daw 2017, Psychol Rev 124:91.
