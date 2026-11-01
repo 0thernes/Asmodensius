@@ -6,3 +6,8 @@ UAL full=0.1118  eligibility traces lesioned=0.01027 90s
 AINF full=54.83  epistemic term lesioned=54.67 393s
 PROJ full=1.000  efference copy lesioned=0.5118 77s
 C10 full=0.8870  fixed foraging drive=0.9732 602s
+C18 full=1.000  plasticity frozen after lesion=1.000 88s
+C16 full=0.8728  allostatic (PID) lesion=0.3965 366s
+C08 full=0.9974  replay lesioned=0.9906 93s
+RPT1 full=0.3313  recurrent CTX synapses lesioned=0.2639 97s
+GWT1 full=0.2601  topography scrambled at build=0.008565 120s

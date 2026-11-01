@@ -8,3 +8,6 @@ AINF full=53.77  epistemic term lesioned=53.75 371s
 C16 full=0.8680  allostatic (PID) lesion=0.3964 383s
 C10 full=0.8944  fixed foraging drive=0.9814 567s
 C18 full=1.000  plasticity frozen after lesion=1.000 85s
+C08 full=0.9984  replay lesioned=0.9917 93s
+RPT1 full=0.3024  recurrent CTX synapses lesioned=0.2378 84s
+GWT1 full=0.2578  topography scrambled at build=-0.003588 109s
