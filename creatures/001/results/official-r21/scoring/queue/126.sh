@@ -1,0 +1,1 @@
+[ -s /tmp/r21/out_Dshuf/test_RPT2R.json ] || M50J='{"vshuf":1}' ORG_V5=16 ORG_MIND=v40 V40TUNE='{}' NSEEDS=48 SEEDBASE=1064 V39OUT=/tmp/r21/out_Dshuf nice -n 15 node /tmp/r21/run_wild.js test RPT2R >> /tmp/r21/out_Dshuf.log 2>&1

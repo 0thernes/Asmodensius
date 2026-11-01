@@ -1,0 +1,1 @@
+[ -s /tmp/r21/out_D/viab/steady_1064.json ] || ORG_V5=16 ORG_MIND=v40 nice -n 15 node /tmp/r21/via_wild.js steady 1064 12 > /tmp/r21/out_D/viab/steady_1064.tmp && mv /tmp/r21/out_D/viab/steady_1064.tmp /tmp/r21/out_D/viab/steady_1064.json
