@@ -75,6 +75,7 @@ const margmax = (a: ArrayLike<number>): number => { let b = 0; for (let i = 1; i
 const mdot = (w: Float64Array, x: ArrayLike<number>, off = 0): number => { let s = 0; for (let i = 0; i < x.length; i++) s += w[off + i] * x[i]; return s + w[off + x.length]; };
 // linear softmax readout with delta rule (cross-entropy gradient)
 import { tsotchkeEntropy } from "./tsotchke";
+import { TPC } from "./fp/tpc";
 export class Lin { W: Float64Array; constructor(public nOut: number, public nIn: number) { this.W = new Float64Array(nOut * (nIn + 1)); }
   out(x: ArrayLike<number>): number[] { const z: number[] = []; for (let k = 0; k < this.nOut; k++) z.push(mdot(this.W, x, k * (this.nIn + 1))); return z; }
   learn(x: ArrayLike<number>, target: number, lr: number, beta = 3): void { const p = msoftmax(this.out(x), beta); for (let k = 0; k < this.nOut; k++) { const g = (k === target ? 1 : 0) - p[k]; const o = k * (this.nIn + 1); for (let i = 0; i < this.nIn; i++) this.W[o + i] += lr * g * x[i]; this.W[o + this.nIn] += lr * g; } }
@@ -224,9 +225,10 @@ export const LTC_DEFAULT = false;
 /** v4.0 parameters (dev-tuned on seeds 2000+ only; not frozen). uK: weight of the single uncertainty term; mK: blend of the Beta posterior mean into value; dreamC: pseudo-count a REM dream writes into an unexperienced option's belief; dreamLr: step toward the dreamt belief; tempSD: log-SD of per-individual temperament (curiosity gain) */
 export const M40: Record<string, number> = { insS: 0, xsel: 0 /* v4.0 RPT-2 candidate, off */, uK: 0.3 /* 2026-10-31 3:48 PM PT: AE-1 exploitation diagnosis; dev 2577, held-out 2593 + 2609 */, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
 // v5-core flag (ORG_V5=1): one coherent configuration of the general mechanisms (CORE-ARCHITECTURE.md): signed selective apical cross-area input + dendritic NMDA rectification (cortex), insulin-gated drive (body layer). Off by default.
-export const M50: Record<string, number> = { ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+export const M50: Record<string, number> = { tpc: 0 /* v5.2 temporal predictive core */, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
 /* v5.1 (ORG_V5=2): v5-core + the missing core pieces of CORE-ARCHITECTURE.md */
 if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2")) Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 });
+if (typeof process !== "undefined" && process.env?.ORG_V5 === "3") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { tpc: 1 }); /* v5.2 = v5-core + TPC (prereg B18) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "2") Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
  /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
 try { const e40 = typeof process !== "undefined" ? process.env.V40TUNE : undefined; if (e40) Object.assign(M40, JSON.parse(e40)); } catch { /* browser */ }
@@ -273,6 +275,7 @@ export class Organism {
   rateVar?: Float64Array; cephW = new Float64Array(24); cephH: number[] = [];
   /** v5.1 allostasis: learned, clock-indexed forecast of the glucose rise over the next 20 ticks drives insulin BEFORE the rise (cephalic-phase /
    *  anticipatory insulin; Powley 1977; Teff 2000; Sterling 2012). Delta rule on the hour bin seen 20 ticks ago. Original code. */
+  tpcM?: TPC; tpcTerm(e: number): number { if (!(M50.tpc > 0)) return 0; const m = (this.tpcM ??= new TPC(19, mulberry(this.o.seed * 7919 + 11), { K: 20 })); const f = m.step([e, Math.sin(this.scnPhase), Math.cos(this.scnPhase), ...Array.from(this.sens).slice(0, 16)]); return this.o.cephLesion ? 0 : M50.tpc * 1.5 * Math.max(0, f[0] - e); } /* v5.2 TPC: learned K-step forecast of own glucose error from interoception, clock and senses; anticipatory insulin = forecast rise (fp/tpc.ts, isolated check B) */
   cephPred(): number { const b = (ph: number) => Math.floor((((ph % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI)) / (2 * Math.PI) * 24) % 24; const g = this.blood.glc / 3;
     this.cephH.push(g, this.scnPhase); if (this.cephH.length > 42) { const g0 = this.cephH.shift()!, p0 = this.cephH.shift()!; if (this.learn) { const k = b(p0); this.cephW[k] += 0.05 * (Math.max(0, g - g0) - this.cephW[k]); } }
     return this.cephW[b(this.scnPhase + (20 / 1440) * 2 * Math.PI)]; }
@@ -381,7 +384,7 @@ export class Organism {
     const gutFill = this.gut.glc + this.gut.fat + this.gut.prot; const bg = this.blood.glc / 3; // ~1 = setpoint
     // allostatic setpoint anticipates morning activity; PID on glucose
     const set = 1 + 0.08 * scnOut; const e = bg - set; this.pidI = clamp(this.pidI + 0.002 * e, -0.5, 0.5); const dE = e - this.pidPrev; this.pidPrev = e;
-    this.insulin += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 + (o.pidGain ?? 1) * (1.5 * e + (o.pidP ? 0 : this.pidI + 3 * dE)) + (M50.ceph > 0 && !o.cephLesion ? M50.ceph * this.cephPred() : 0) + 0.2 * this.para * (o.vagotomy ? 0.3 : 1))) - this.insulin);
+    this.insulin += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 + (o.pidGain ?? 1) * (1.5 * e + (o.pidP ? 0 : this.pidI + 3 * dE)) + (M50.ceph > 0 && !o.cephLesion ? M50.ceph * this.cephPred() : 0) + this.tpcTerm(bg - 1) + 0.2 * this.para * (o.vagotomy ? 0.3 : 1))) - this.insulin);
     this.glucagon += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 - 1.5 * e - this.pidI + 0.3 * this.symp)) - this.glucagon);
     this.cortisol += 0.02 * (clamp(0.35 + 0.25 * (o.scnLesion ? 0 : Math.cos(2 * Math.PI * (hour - 7) / 24)) + 0.6 * clamp(0.85 - bg) + 0.2 * (forced ? 1 : 0) + 0.4 * clamp(0.8 - this.integrity)) - this.cortisol); // tissue damage is a stressor
     this.ghrelin += 0.01 * (clamp(1 - gutFill / 6) - this.ghrelin); this.leptin = clamp(this.fat / 800);
