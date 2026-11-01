@@ -7,22 +7,22 @@ Port integration check (Alex): (a) ablating the ported module moves >=2 other su
 
 | # | P | List | Item | Status | Specialist folder | Standalone | Ported | Integ a/b/c | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | P0 | Butlin | RPT-2 | partial (R21 A v5.7b) | - | - | - | - |  |
-| 2 | P0 | Butlin | GWT-2 | missing (R21 A v5.7b) | - | - | - | - |  |
+| 1 | P0 | Butlin | RPT-2 | partial (RPT2R passes with v6hub on dev) | specialists/RPT2R | v6hub d3.76 | combo battery running | pending | fast weights hurt RPT2R |
+| 2 | P0 | Butlin | GWT-2 | passes dev; R21 fail is ceiling rule | specialists/GWT2 | scGW +0.98 d | - | - | test needs harder distractors |
 | 3 | P0 | Butlin | GWT-3 | partial (R21 A v5.7b) | - | - | - | - |  |
 | 4 | P0 | Butlin | GWT-4 | missing (R21 A v5.7b) | - | - | - | - |  |
-| 5 | P0 | Butlin | HOT-3 | partial (R21 A v5.7b) | - | - | - | - |  |
-| 6 | P0 | Frameworks | activeInference | missing (R21 A v5.7b) | - | - | - | - |  |
+| 5 | P0 | Butlin | HOT-3 | partial (dev: HOT3RM passes with scAIm) | specialists/HOT3RM | 10 variants screened; v01 PASS 3 dev blocks; hybrid A PASS 540 | scAIm+scCI: battery running | a FAIL / b PASS / c running | confidence pathway inert in natural life (trained only by harness) |
+| 6 | P0 | Frameworks | activeInference | missing (test under-powered) | specialists/AINF | 10 variants, all fail | - | - | paired or longer test needed |
 | 7 | P0 | Frameworks | projective | partial (R21 A v5.7b) | - | - | - | - |  |
 | 8 | P0 | Frameworks | ctm | partial (R21 A v5.7b) | - | - | - | - |  |
 | 9 | P0 | Frameworks | butlin14 | missing (R21 A v5.7b) | - | - | - | - |  |
 | 10 | P0 | CQM | CQM01 | pending (R21 A v5.7b) | - | - | - | - |  |
 | 11 | P0 | CQM | CQM02 | pending (R21 A v5.7b) | - | - | - | - |  |
-| 12 | P0 | CQM | CQM03 | pending (R21 A v5.7b) | - | - | - | - |  |
-| 13 | P0 | CQM | CQM04 | pending (R21 A v5.7b) | - | - | - | - |  |
+| 12 | P0 | CQM | CQM03 | ill-posed for brain | specialists/C03R | not attempted | - | - | birth rule in harness |
+| 13 | P0 | CQM | CQM04 | largely ill-posed | specialists/CQM04 | queued | - | - | selection in harness |
 | 14 | P0 | CQM | CQM06 | missing (R21 A v5.7b) | - | - | - | - |  |
 | 15 | P0 | CQM | CQM08 | partial (R21 A v5.7b) | - | - | - | - |  |
-| 16 | P0 | CQM | CQM10 | missing (R21 A v5.7b) | - | - | - | - |  |
+| 16 | P0 | CQM | CQM10 | missing | specialists/GWT2 | no SC module helps | - | - | queued homeostatic specialist |
 | 17 | P0 | CQM | CQM18 | missing (R21 A v5.7b) | - | - | - | - |  |
 | 18 | P0 | CQM | CQM20 (=GWT-3) | partial (R21 A v5.7b) | - | - | - | - |  |
 | 19 | P0 | CQM | CQM23 | missing (R21 A v5.7b) | - | - | - | - |  |

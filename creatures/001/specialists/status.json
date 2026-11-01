@@ -1,1 +1,7 @@
-{}
+{"Butlin:HOT-3":{"status":"partial (dev: HOT3RM passes with scAIm)","folder":"specialists/HOT3RM","solo":"10 variants screened; v01 PASS 3 dev blocks; hybrid A PASS 540","port":"scAIm+scCI: battery running","integ":"a FAIL / b PASS / c running","note":"confidence pathway inert in natural life (trained only by harness)"},
+"Frameworks:activeInference":{"status":"missing (test under-powered)","folder":"specialists/AINF","solo":"10 variants, all fail","port":"-","integ":"-","note":"paired or longer test needed"},
+"CQM:CQM03":{"status":"ill-posed for brain","folder":"specialists/C03R","solo":"not attempted","port":"-","integ":"-","note":"birth rule in harness"},
+"CQM:CQM04":{"status":"largely ill-posed","folder":"specialists/CQM04","solo":"queued","port":"-","integ":"-","note":"selection in harness"},
+"Butlin:GWT-2":{"status":"passes dev; R21 fail is ceiling rule","folder":"specialists/GWT2","solo":"scGW +0.98 d","port":"-","integ":"-","note":"test needs harder distractors"},
+"CQM:CQM10":{"status":"missing","folder":"specialists/GWT2","solo":"no SC module helps","port":"-","integ":"-","note":"queued homeostatic specialist"},
+"Butlin:RPT-2":{"status":"partial (RPT2R passes with v6hub on dev)","folder":"specialists/RPT2R","solo":"v6hub d3.76","port":"combo battery running","integ":"pending","note":"fast weights hurt RPT2R"}}
