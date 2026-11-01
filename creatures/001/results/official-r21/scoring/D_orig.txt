@@ -83,6 +83,8 @@ PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":
 FAIL CQM23 substrate pluralism [Not applicable] (JS only)
 PASS GWT-3R global broadcast, degraded stimuli [Bounded test evidence]
    vs broadcast lesioned: full 0.7927 ctrl 0.2514 d 8.60 t 42.15
-FAIL ctm-R report agrees with action, degraded stimuli [Missing] (not run)
-FAIL CQM08R continual retention, degraded stimuli [Missing] (not run)
-ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 15/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 1/3; v3.7 items 0/0; v3.9 items 0/0; MISSING EVO,EVO,EVO,EVO,K1,K2,L1,L2,L3,L4,L5,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
+PASS ctm-R report agrees with action, degraded stimuli [Bounded test evidence]
+   vs broadcast lesioned: full 0.8854 ctrl 0.2771 d 10.93 t 53.54
+PASS CQM08R continual retention, degraded stimuli [Bounded test evidence]
+   vs replay lesioned: full 0.8229 ctrl 0.1057 d 6.91 t 33.87
+ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 15/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 3/3; v3.7 items 0/0; v3.9 items 0/0; MISSING EVO,EVO,EVO,EVO,K1,K2,L1,L2,L3,L4,L5,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB

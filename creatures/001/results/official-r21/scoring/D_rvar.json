@@ -1,7 +1,7 @@
 [
  {
   "id": "RPT2R",
-  "status": "PARTIAL",
+  "status": "PASS",
   "cmps": [
    {
     "control": "cross-module CTX synapses lesioned",
@@ -12,10 +12,10 @@
    },
    {
     "control": "shuffled pairing (vshuf)",
-    "full": null,
-    "ctrl": null,
-    "d": null,
-    "t": null
+    "full": 0.8263888888888892,
+    "ctrl": 0.5541666666666666,
+    "d": 2.74,
+    "t": 13.44
    }
   ]
  },
@@ -91,7 +91,16 @@
  },
  {
   "id": "C16R",
-  "status": "MISSING"
+  "status": "FAIL",
+  "cmps": [
+   {
+    "control": "anticipation lesioned (reactive only)",
+    "full": 0.45546875000000003,
+    "ctrl": 0.20616319444444445,
+    "d": 0.78,
+    "t": 3.84
+   }
+  ]
  },
  {
   "id": "CQM18R",
