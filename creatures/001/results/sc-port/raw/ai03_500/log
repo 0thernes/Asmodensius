@@ -1,0 +1,3 @@
+RPT2R full=0.5188  cross-module CTX synapses lesioned=0.5313 35s
+GWT2 full=0.9573  workspace lesioned (action reads module average)=0.5677 25s
+HOT3RM metacognitive opt-out=0.8117  random opt-out (matched rate)=0.7457  confidence shuffled=0.7455 38s
