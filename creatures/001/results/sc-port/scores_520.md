@@ -2,6 +2,7 @@
 | arm | HOT3RM |
 |---|---|
 | h3base | fail 0.67/1.3 |
+| h3port | PASS 1.26/3.6 |
 | h3v01 | PASS 1.71/3.4 |
 | h3v02 | fail 1.10/2.2 |
 | h3v03 | fail 1.11/2.2 |
