@@ -1,1 +1,1 @@
-[ -s /tmp/r21/out_D/viab/refeed_1110.json ] || ORG_V5=16 ORG_MIND=v40 nice -n 15 node /tmp/r21/via_wild.js refeed 1110 3 8 > /tmp/r21/out_D/viab/refeed_1110.tmp && mv /tmp/r21/out_D/viab/refeed_1110.tmp /tmp/r21/out_D/viab/refeed_1110.json
+[ -s /tmp/r21/out_D/test_L1.json ] || ORG_V5=16 ORG_MIND=v40 V40TUNE='{}' NSEEDS=48 SEEDBASE=1064 V39OUT=/tmp/r21/out_D nice -n 15 node /tmp/r21/run_wild.js test L1 >> /tmp/r21/out_D.log 2>&1

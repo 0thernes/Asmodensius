@@ -1,1 +1,1 @@
-[ -s /tmp/r21/out_D/viab/starve_1111.json ] || ORG_V5=16 ORG_MIND=v40 nice -n 15 node /tmp/r21/via_wild.js starve 1111 20 > /tmp/r21/out_D/viab/starve_1111.tmp && mv /tmp/r21/out_D/viab/starve_1111.tmp /tmp/r21/out_D/viab/starve_1111.json
+[ -s /tmp/r21/out_A/test_L3.json ] || ORG_V5=11 ORG_MIND=v40 V40TUNE='{}' NSEEDS=48 SEEDBASE=1064 V39OUT=/tmp/r21/out_A nice -n 15 node /tmp/r21/run_v40.js test L3 >> /tmp/r21/out_A.log 2>&1

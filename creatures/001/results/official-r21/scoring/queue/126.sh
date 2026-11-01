@@ -1,1 +1,1 @@
-[ -s /tmp/r21/out_Dshuf/test_RPT2R.json ] || M50J='{"vshuf":1}' ORG_V5=16 ORG_MIND=v40 V40TUNE='{}' NSEEDS=48 SEEDBASE=1064 V39OUT=/tmp/r21/out_Dshuf nice -n 15 node /tmp/r21/run_wild.js test RPT2R >> /tmp/r21/out_Dshuf.log 2>&1
+[ -s /tmp/r21/out_D/viab/steady_1065.json ] || ORG_V5=16 ORG_MIND=v40 nice -n 15 node /tmp/r21/via_wild.js steady 1065 12 > /tmp/r21/out_D/viab/steady_1065.tmp && mv /tmp/r21/out_D/viab/steady_1065.tmp /tmp/r21/out_D/viab/steady_1065.json

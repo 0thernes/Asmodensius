@@ -1,1 +1,1 @@
-[ -s /tmp/r21/out_D/viab/starve_1093.json ] || ORG_V5=16 ORG_MIND=v40 nice -n 15 node /tmp/r21/via_wild.js starve 1093 20 > /tmp/r21/out_D/viab/starve_1093.tmp && mv /tmp/r21/out_D/viab/starve_1093.tmp /tmp/r21/out_D/viab/starve_1093.json
+[ -s /tmp/r21/out_D/viab/starve_1097.json ] || ORG_V5=16 ORG_MIND=v40 nice -n 15 node /tmp/r21/via_wild.js starve 1097 20 > /tmp/r21/out_D/viab/starve_1097.tmp && mv /tmp/r21/out_D/viab/starve_1097.tmp /tmp/r21/out_D/viab/starve_1097.json
