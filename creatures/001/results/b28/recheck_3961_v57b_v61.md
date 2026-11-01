@@ -1,7 +1,7 @@
 | Test | v57b d/t | v61 d/t | pass v4/v5 |
 |---|---|---|---|
 | AE1 | 0.43/1.22 | — | ✗/— |
-| viability (forages, deaths) | — | — |  |
+| viability (forages, deaths) | 238, 0 | — |  |
 | AINF | -0.01/-0.04 | — | ✗/— |
 | C03R | -2.32/-6.57 | — | ✗/— |
 | C08R | 8.73/24.69 | — | ✓/— |
