@@ -33,3 +33,6 @@ C09 full=-0.6102  persistence forecast=-1.341 210s
 C14 full=0.7674  signal line cut=0.2622 211s
 C15 full=0.3583  repair lesioned=0.09589 306s
 C17 full=-2.785  PID lesioned=-2287 361s
+C24 identical=1.000 11s
+RPT2R full=0.5233  cross-module CTX synapses lesioned=0.5313 122s
+C22 full=70.03  aversive learning lesioned=-145.8 339s
