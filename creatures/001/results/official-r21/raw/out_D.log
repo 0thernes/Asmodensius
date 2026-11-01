@@ -30,3 +30,4 @@ C05 full=-1.970e-15  leaky ledger=-0.004521 246s
 C07 full=-0.04079  plasticity frozen=-0.06250 64s
 C11 full=0.8126  model-free only=0.1832 58s
 C09 full=-0.6342  persistence forecast=-1.341 220s
+C14 full=0.7562  signal line cut=0.2535 214s
