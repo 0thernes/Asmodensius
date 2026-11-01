@@ -22,3 +22,6 @@ AE2 full=-0.01346  forward model lesioned (gain fixed at prior)=-0.3134 60s
 IIT full=0.6071  recurrent + cross-module CTX lesioned=0.4477 172s
 NOVEL thaler9:full=0.3693  thaler9:dreams with shuffled content=0.3070  CQM12:full=-0.01147  CQM12:dreams shuffled=-0.01891 472s
 ASO full=-0.03148  last-observation predictor=-0.09103 69s
+FIELD full=0.4146  field coupling lesioned=0.3438 76s
+SM full=-0.02142  efference copy lesioned=-0.6305 57s
+CTM full=0.9969  broadcast lesioned=0.2538 90s
