@@ -5,3 +5,6 @@ GWT3 full=1.000  broadcast lesioned=0.2514 83s
 UAL full=0.1225  eligibility traces lesioned=0.02790 138s
 PROJ full=1.000  efference copy lesioned=0.4861 63s
 AINF full=53.77  epistemic term lesioned=53.75 371s
+C16 full=0.8680  allostatic (PID) lesion=0.3964 383s
+C10 full=0.8944  fixed foraging drive=0.9814 567s
+C18 full=1.000  plasticity frozen after lesion=1.000 85s
