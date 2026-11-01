@@ -1,0 +1,4 @@
+{"seeds":3365,"l5":"0.639","add":"0.523","cut":"0.523","d/t vs add":"1.43/4.06","d/t vs cut":"1.51/4.27"}
+{"seeds":3381,"l5":"0.671","add":"0.519","cut":"0.550","d/t vs add":"2.47/6.99","d/t vs cut":"1.74/4.91"}
+{"seeds":3365,"full":"136.1","noIG":"122.3","noCurve":"97.9","d/t vs noIG":"0.97/2.74","d/t vs noCurve":"3.28/9.28","blindValue":"113.1","d/t vs blindValue":"1.95/5.51"}
+{"seeds":3381,"full":"141.4","noIG":"129.0","noCurve":"98.6","d/t vs noIG":"1.22/3.45","d/t vs noCurve":"4.72/13.36","blindValue":"116.8","d/t vs blindValue":"2.52/7.14"}
