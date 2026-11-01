@@ -7,3 +7,4 @@ RPT2RL5 full=0.8531  cross-module CTX synapses lesioned=0.5063 56s
 UAL full=0.1366  eligibility traces lesioned=0.02963 65s
 GWT2 full=0.9604  workspace lesioned (action reads module average)=0.5771 85s
 AINF full=52.81  epistemic term lesioned=58.38 245s
+C10 full=0.9068  fixed foraging drive=0.9648 438s
