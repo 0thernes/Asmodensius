@@ -1,6 +1,6 @@
 # OFFICIAL Round 21 scorecard (Creature #1)
 
-Generated 2026-11-01 13:55 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
+Generated 2026-11-01 14:15 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
 
 **Run status:** test files done: arm A 56/63, arm D 56/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
 
