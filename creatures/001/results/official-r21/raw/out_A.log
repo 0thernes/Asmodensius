@@ -31,3 +31,5 @@ C07 full=-0.03997  plasticity frozen=-0.06250 58s
 C11 full=0.8010  model-free only=0.1689 53s
 C09 full=-0.6102  persistence forecast=-1.341 210s
 C14 full=0.7674  signal line cut=0.2622 211s
+C15 full=0.3583  repair lesioned=0.09589 306s
+C17 full=-2.785  PID lesioned=-2287 361s
