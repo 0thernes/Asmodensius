@@ -1,0 +1,3 @@
+dev iteration 1 (gate x centred rates): gated 0.567, ungated 0.626, random 0.607 -> fail; iteration 2 (plasticity on phasic change response):
+{"seeds":3445,"gated":"0.985","ungated":"0.982","random":"0.607","d/t vs ungated":"0.14/0.39","d/t vs random":"5.56/15.72"}
+{"seeds":3461,"gated":"0.974","ungated":"0.963","random":"0.601","d/t vs ungated":"0.32/0.91","d/t vs random":"6.35/17.95"}
