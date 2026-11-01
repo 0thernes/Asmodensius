@@ -46,3 +46,4 @@ C16R full=0.4555  anticipation lesioned (reactive only)=0.2062 336s
 C08R full=0.8229  replay lesioned=0.1057 73s
 CTMR full=0.8854  broadcast lesioned=0.2771 85s
 C01R full=0.3098  offspring genomes random=0.04745 3178s
+C03R full=0.004261  births random in number=0.3656 3195s
