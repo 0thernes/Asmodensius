@@ -26,3 +26,7 @@ FIELD full=0.4410  field coupling lesioned=0.3375 77s
 SM full=-0.02088  efference copy lesioned=-0.6013 52s
 CTM full=0.9934  broadcast lesioned=0.2531 84s
 C06 full=-0.04146  integration lesion (modality 0 only)=-0.04524 89s
+C05 full=-1.720e-15  leaky ledger=-0.004534 247s
+C07 full=-0.03997  plasticity frozen=-0.06250 58s
+C11 full=0.8010  model-free only=0.1689 53s
+C09 full=-0.6102  persistence forecast=-1.341 210s

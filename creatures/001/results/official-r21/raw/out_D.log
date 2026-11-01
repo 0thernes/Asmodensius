@@ -25,3 +25,8 @@ ASO full=-0.03148  last-observation predictor=-0.09103 69s
 FIELD full=0.4146  field coupling lesioned=0.3438 76s
 SM full=-0.02142  efference copy lesioned=-0.6305 57s
 CTM full=0.9969  broadcast lesioned=0.2538 90s
+C06 full=-0.04338  integration lesion (modality 0 only)=-0.04926 88s
+C05 full=-1.970e-15  leaky ledger=-0.004521 246s
+C07 full=-0.04079  plasticity frozen=-0.06250 64s
+C11 full=0.8126  model-free only=0.1832 58s
+C09 full=-0.6342  persistence forecast=-1.341 220s
