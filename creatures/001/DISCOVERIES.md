@@ -318,3 +318,36 @@ Notes:
 | PROJR | 5.11/14.46 | 4.75/13.44 | ✓/✓ |
 | RPT2R | -0.15/-0.41 | -0.11/-0.32 | ✗/✗ |
 | UAL | 1.93/5.47 | 1.39/3.94 | ✓/✓ |
+
+## B19 EFM held-out 3125-3140 (chosen before the run; design frozen at bbdc6f2)
+| Test | v5-core d/t | v5.3 EFM d/t | pass v5/v5.3 |
+|---|---|---|---|
+| AE1 | 1.27/3.60 | 0.90/2.54 | ✓/✗ |
+| viability (forages, deaths) | 255, 0 | 238, 0 |  |
+| AINF | 0.02/0.05 | 0.04/0.11 | ✗/✗ |
+| C03R | -2.32/-6.57 | -2.23/-6.30 | ✗/✗ |
+| C08R | 6.47/18.29 | 6.19/17.51 | ✓/✓ |
+| C10 | -0.76/-2.16 | -0.17/-0.48 | ✗/✗ |
+| C16 | 12.36/34.96 | 12.76/36.08 | ✓/✓ |
+| C16R | 0.00/0.00 | 1.23/3.49 | ✗/✓ |
+| GWT3R | 8.34/23.59 | 9.17/25.93 | ✓/✓ |
+| HOT1 | 2.09/5.92 | 2.66/7.53 | ✓/✓ |
+| HOT3RM | 0.50/1.41 | 0.52/1.48 | ✗/✗ |
+| HOT3RM-P | 1.44/5.76 | 1.24/4.96 | ✓/✓ |
+| thaler9 | 1.65/4.67 | 2.29/6.49 | ✓/✓ |
+| CQM12 | 1.38/3.90 | 1.81/5.13 | ✓/✓ |
+| PROJR | 5.93/16.77 | 3.69/10.45 | ✓/✓ |
+| RPT2R | 0.00/0.00 | -0.03/-0.09 | ✗/✗ |
+| UAL | 0.67/1.88 | 1.37/3.88 | ✗/✓ |
+
+Reading (dev + held-out):
+- The Eshkol-trained forward model moves the drive tests, the property it targets:
+  - C10: −0.90 → −0.02 (dev) and −0.76 → −0.17 (held-out). The over-eating deficit is gone, though not yet a pass.
+  - CQM16-R: 0 → 0.55 (dev) and **1.23/3.49 ✓ (held-out)**. This is the first measurable meal anticipation, but it replicates on only one of two blocks.
+- RPT2R, AINF, C03R and HOT3RM do not move. A glucose forecaster plus forage rollout does not touch binding, active inference, ecology or metacognition; those need the model to reach the cortex and the task-action chooser.
+- Passes recheck: no systematic loss.
+  - Lost on one block each: CQM12 (dev 0.91/2.56) and AE1 (held-out 0.90/2.54; AE1 is borderline per the 48-seed pooled check).
+  - UAL passes on held-out, where v5-core does not.
+- Forages drop a further ~7%, with no deaths.
+- Forecast quality in the creature (q31): corr(forecast, glucose error 20 ticks ahead) = 0.93-0.98.
+- During the CQM16-R meal, glucose exceeds 4.5 for most of the window even with the forecast, because insulin saturates at its clamp. I did not raise the clamp, since that would tune to the test.
