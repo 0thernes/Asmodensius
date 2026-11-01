@@ -6,3 +6,4 @@ AE2 full=-0.01345  forward model lesioned (gain fixed at prior)=-0.2984 58s
 RPT1 full=0.3198  recurrent CTX synapses lesioned=0.2479 98s
 RPT2RL5 full=0.8292  cross-module CTX synapses lesioned=0.5677 130s
 UAL full=0.1240  eligibility traces lesioned=0.02209 89s
+AE1 full=0.3374  RPE learning lesioned=0.3067 211s
