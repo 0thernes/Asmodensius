@@ -1,8 +1,8 @@
 # OFFICIAL Round 21 scorecard (Creature #1)
 
-Generated 2026-11-01 10:55 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
+Generated 2026-11-01 11:15 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
 
-**Run status:** test files done: arm A 22/63, arm D 21/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
+**Run status:** test files done: arm A 34/63, arm D 33/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
 
 Pass = d>=0.8 AND Welch t>=2.75 vs every control (+ non-ceiling rule). PARTIAL = passes some controls but not all, or the original fails while a disclosed R variant passes. Official totals count originals only.
 
@@ -13,8 +13,8 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 | List | A v5.7b official | A with R variants | D v5.7d official | D with R variants |
 |---|---|---|---|---|
 | Butlin | 9/14 (partial 0, pending 0) | 9/14 (partial 0, pending 0) | 9/14 (partial 0, pending 0) | 9/14 (partial 0, pending 0) |
-| Frameworks | 2/10 (partial 0, pending 5) | 2/10 (partial 0, pending 5) | 1/10 (partial 0, pending 6) | 1/10 (partial 0, pending 6) |
-| CQM | 5/25 (partial 0, pending 15) | 5/25 (partial 0, pending 15) | 4/25 (partial 0, pending 16) | 4/25 (partial 0, pending 16) |
+| Frameworks | 6/10 (partial 0, pending 0) | 6/10 (partial 0, pending 0) | 5/10 (partial 0, pending 0) | 5/10 (partial 0, pending 0) |
+| CQM | 12/25 (partial 0, pending 7) | 12/25 (partial 0, pending 7) | 11/25 (partial 0, pending 8) | 11/25 (partial 0, pending 8) |
 
 ## Butlin 14
 
@@ -39,15 +39,15 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 
 | Item | A v5.7b | A d/t | D v5.7d | D d/t | R variants (A / D) |
 |---|---|---|---|---|---|
-| thaler9 | PENDING |  | PENDING |  |  |
-| iit4 | PASS | d 2.46 t 12.03 | PENDING |  |  |
+| thaler9 | PASS | d 1.29 t 6.31 | PASS | d 1.74 t 8.53 |  |
+| iit4 | PASS | d 2.46 t 12.03 | PASS | d 2.50 t 12.23 |  |
 | activeInference | FAIL | d 0.00 t 0.01 | FAIL | d 0.01 t 0.05 |  |
-| attentionSchema | PENDING |  | PENDING |  |  |
-| fieldIntegration | PENDING |  | PENDING |  |  |
+| attentionSchema | PASS | d 7.85 t 38.46 | PASS | d 8.86 t 43.42 |  |
+| fieldIntegration | PASS | d 1.20 t 5.87 | FAIL | d 0.76 t 3.72 |  |
 | ual | PASS | d 1.06 t 5.19 | PASS | d 1.36 t 6.66 |  |
-| sensorimotor | PENDING |  | PENDING |  |  |
+| sensorimotor | PASS | d 3.31 t 16.19 | PASS | d 3.64 t 17.85 |  |
 | projective | FAIL | d 9.62 t 47.15 | FAIL | d 10.72 t 52.51 | PROJR: PENDING / PENDING |
-| ctm | PENDING |  | PENDING |  | ctm-R: PENDING / PENDING |
+| ctm | FAIL | d 17.04 t 83.47 | FAIL | d 21.35 t 104.61 | ctm-R: PENDING / PENDING |
 | butlin14 | FAIL |  | FAIL |  |  |
 
 ## CQM 25
@@ -58,23 +58,23 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 | CQM02 | PENDING |  | PENDING |  |  |
 | CQM03 | PENDING |  | PENDING |  | CQM03R: PENDING / PENDING |
 | CQM04 | PENDING |  | PENDING |  |  |
-| CQM05 | PENDING |  | PENDING |  |  |
-| CQM06 | PENDING |  | PENDING |  |  |
-| CQM07 | PENDING |  | PENDING |  |  |
+| CQM05 | PASS | d 39.05 t 191.32 | PASS | d 38.29 t 187.58 |  |
+| CQM06 | FAIL | d 0.30 t 1.48 | FAIL | d 0.56 t 2.76 |  |
+| CQM07 | PASS | d 5.81 t 28.48 | PASS | d 6.48 t 31.74 |  |
 | CQM08 | FAIL | d 0.59 t 2.91 | FAIL | d 0.59 t 2.90 | CQM08R: PENDING / PENDING |
-| CQM09 | PENDING |  | PENDING |  |  |
+| CQM09 | PASS | d 6.09 t 29.81 | PASS | d 5.23 t 25.63 |  |
 | CQM10 | FAIL | d -0.82 t -4.02 | FAIL | d -0.81 t -3.95 |  |
-| CQM11 | PENDING |  | PENDING |  |  |
-| CQM12 | PENDING |  | PENDING |  |  |
+| CQM11 | PASS | d 7.04 t 34.48 | PASS | d 7.29 t 35.72 |  |
+| CQM12 | PASS | d 1.03 t 5.07 | PASS | d 1.33 t 6.52 |  |
 | CQM13 (=HOT-2) | PASS | d 2.06 t 10.09 | PASS | d 2.10 t 10.30 |  |
-| CQM14 | PENDING |  | PENDING |  |  |
-| CQM15 | PENDING |  | PENDING |  |  |
+| CQM14 | PASS | d 4.73 t 23.18 | PASS | d 3.74 t 18.33 |  |
+| CQM15 | PASS | d 1.68 t 8.22 | PENDING |  |  |
 | CQM16 | PASS | d 7.25 t 35.52 | PASS | d 7.88 t 38.63 | C16R: PENDING / PENDING |
 | CQM17 | PENDING |  | PENDING |  |  |
 | CQM18 | FAIL | d 0.00 t 0.00 | FAIL | d 0.00 t 0.00 | CQM18R: PENDING / PENDING |
 | CQM19 (=RPT-1) | PASS | d 1.04 t 5.10 | PASS | d 1.13 t 5.55 |  |
 | CQM20 (=GWT-3) | FAIL | d 19.44 t 95.25 | FAIL | d 26.15 t 128.10 |  |
-| CQM21 (=iit4) | PASS | d 2.46 t 12.03 | PENDING |  |  |
+| CQM21 (=iit4) | PASS | d 2.46 t 12.03 | PASS | d 2.50 t 12.23 |  |
 | CQM22 | PENDING |  | PENDING |  |  |
 | CQM23 | FAIL |  | FAIL |  |  |
 | CQM24 | PENDING |  | PENDING |  |  |

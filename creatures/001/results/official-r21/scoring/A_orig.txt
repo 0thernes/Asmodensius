@@ -27,35 +27,48 @@ PASS AE-1 agency / RL under reversals [Bounded test evidence]
    vs RPE learning lesioned: full 0.3248 ctrl 0.2868 d 0.98 t 4.80
 PASS AE-2 embodiment: reaching [Bounded test evidence]
    vs forward model lesioned (gain fixed at prior): full -0.01312 ctrl -0.3048 d 2.48 t 12.14
-FAIL thaler9 creative recombination [Missing] (not run)
+PASS thaler9 creative recombination [Bounded test evidence] (shares mechanism with V3-C3)
+   vs thaler9:dreams with shuffled content: full 0.3595 ctrl 0.3040 d 1.29 t 6.31
 PASS iit4 phi proxy [Bounded test evidence]
    vs recurrent + cross-module CTX lesioned: full 0.5947 ctrl 0.4477 d 2.46 t 12.03
 FAIL activeInference EFE choice in depleting world [Not established]
    vs epistemic term lesioned: full 53.77 ctrl 53.75 d 0.00 t 0.01
-FAIL attentionSchema model of another's attention [Missing] (not run)
-FAIL fieldIntegration binding by phase locking [Missing] (not run)
+PASS attentionSchema model of another's attention [Bounded test evidence]
+   vs last-observation predictor: full -0.03205 ctrl -0.09274 d 7.85 t 38.46
+PASS fieldIntegration binding by phase locking [Bounded test evidence]
+   vs field coupling lesioned: full 0.4410 ctrl 0.3375 d 1.20 t 5.87
 PASS ual trace conditioning [Bounded test evidence]
    vs eligibility traces lesioned: full 0.1225 ctrl 0.02790 d 1.06 t 5.19
-FAIL sensorimotor efference prediction [Missing] (not run)
+PASS sensorimotor efference prediction [Bounded test evidence]
+   vs efference copy lesioned: full -0.02088 ctrl -0.6013 d 3.31 t 16.19
 FAIL projective self/other ownership [Ceiling] (fails non-ceiling rule)
    vs efference copy lesioned: full 1.000 ctrl 0.4861 d 9.62 t 47.15
-FAIL ctm report agrees with action [Missing] (not run)
+FAIL ctm report agrees with action [Ceiling] (fails non-ceiling rule)
+   vs broadcast lesioned: full 0.9934 ctrl 0.2531 d 17.04 t 83.47
 FAIL CQM01 heredity [Missing] (not run)
 FAIL CQM02 open-endedness [Missing] (not run)
 FAIL CQM03 ecological coupling [Missing] (not run)
 FAIL CQM04 morphology (reach gene) [Missing] (not run)
-FAIL CQM05 embodied consistency (−ledger error) [Missing] (not run)
-FAIL CQM06 perceptual integration [Missing] (not run)
-FAIL CQM07 learning/plasticity [Missing] (not run)
+PASS CQM05 embodied consistency (−ledger error) [Bounded test evidence]
+   vs leaky ledger: full -1.720e-15 ctrl -0.004534 d 39.05 t 191.32
+FAIL CQM06 perceptual integration [Not established]
+   vs integration lesion (modality 0 only): full -0.04146 ctrl -0.04524 d 0.30 t 1.48
+PASS CQM07 learning/plasticity [Bounded test evidence]
+   vs plasticity frozen: full -0.03997 ctrl -0.06250 d 5.81 t 28.48
 FAIL CQM08 continual retention [Ceiling] (fails non-ceiling rule)
    vs replay lesioned: full 0.9984 ctrl 0.9917 d 0.59 t 2.91
-FAIL CQM09 causal interoceptive model [Missing] (not run)
+PASS CQM09 causal interoceptive model [Bounded test evidence]
+   vs persistence forecast: full -0.6102 ctrl -1.341 d 6.09 t 29.81
 FAIL CQM10 goal regulation (viable fraction) [Not established]
    vs fixed foraging drive: full 0.8944 ctrl 0.9814 d -0.82 t -4.02
-FAIL CQM11 planning [Missing] (not run)
-FAIL CQM12 compositional transfer [Missing] (not run)
-FAIL CQM14 signalling game [Missing] (not run)
-FAIL CQM15 boundary (integrity>0.7) [Missing] (not run)
+PASS CQM11 planning [Bounded test evidence]
+   vs model-free only: full 0.8010 ctrl 0.1689 d 7.04 t 34.48
+PASS CQM12 compositional transfer [Bounded test evidence]
+   vs CQM12:dreams shuffled: full -0.01254 ctrl -0.01922 d 1.03 t 5.07
+PASS CQM14 signalling game [Bounded test evidence]
+   vs signal line cut: full 0.7674 ctrl 0.2622 d 4.73 t 23.18
+PASS CQM15 boundary (integrity>0.7) [Bounded test evidence]
+   vs repair lesioned: full 0.3583 ctrl 0.09589 d 1.68 t 8.22
 PASS CQM16 self-maintenance (alive fraction) [Bounded test evidence]
    vs allostatic (PID) lesion: full 0.8680 ctrl 0.3964 d 7.25 t 35.52
 FAIL CQM17 homeostasis (−glucose variance) [Missing] (not run)
@@ -69,4 +82,4 @@ FAIL CQM23 substrate pluralism [Not applicable] (JS only)
 FAIL GWT-3R global broadcast, degraded stimuli [Missing] (not run)
 FAIL ctm-R report agrees with action, degraded stimuli [Missing] (not run)
 FAIL CQM08R continual retention, degraded stimuli [Missing] (not run)
-ROLLUPS: Butlin 9/14, frameworks 2/10, CQM 5/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 0/3; v3.7 items 0/0; v3.9 items 0/0; MISSING NOVEL,ASO,FIELD,SM,CTM,EVO,EVO,EVO,EVO,C05,C06,C07,C09,C11,NOVEL,C14,C15,C17,C22,K1,K2,L1,L2,L3,L4,L5,GWT3R,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
+ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 12/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 0/3; v3.7 items 0/0; v3.9 items 0/0; MISSING EVO,EVO,EVO,EVO,C17,C22,K1,K2,L1,L2,L3,L4,L5,GWT3R,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
