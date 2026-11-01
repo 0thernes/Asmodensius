@@ -320,3 +320,7 @@ Dev diagnostic (q30, 3077–3080): in CQM16-R's window insulin is already satura
 ## B24 (2026-11-01)
 - L5->cortex feedback (v5.8) does not let the original RPT2R see the product: the readout cells are rate-saturated (decode unchanged at 0.600); v5.8 rejected.
 - AE1 regression since v5.5 is not caused by the AOM information-gain term (lesion worsens AE1 0.58 -> 0.16 on 48 seeds); IG kept.
+
+## B25 (2026-11-01)
+- AE1 regression traced by 48-seed single-feature bisection to the AOM value term (aomV 0.5, v5.6); dropping it restores AE1 (1.05/5.16). v5.7b adopted.
+- Cortical readout rates are quantised (7 levels), not saturated; divisive normalisation does not add a^b. The conjunction exists only in the L5 pool.

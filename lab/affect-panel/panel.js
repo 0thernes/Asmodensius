@@ -2622,7 +2622,7 @@ var phiN = (z) => {
 };
 var is40 = (m) => m === "v40";
 var M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
-var M50 = { l5Fb: 0, l5Ph: 0, l5: 0, aomV: 0, dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+var M50 = { dn: 0, l5Fb: 0, l5Ph: 0, l5: 0, aomV: 0, dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
 if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2"))
   Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 });
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "3")
@@ -2639,6 +2639,10 @@ if (typeof process !== "undefined" && process.env?.ORG_V5 === "8")
   Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1 });
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "9")
   Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1, l5Fb: 0.5 });
+if (typeof process !== "undefined" && process.env?.ORG_V5 === "10")
+  Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1, dn: 4 });
+if (typeof process !== "undefined" && process.env?.ORG_V5 === "11")
+  Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0, l5Ph: 1 });
 if (typeof process !== "undefined" && process.env?.M50J)
   Object.assign(M50, JSON.parse(process.env.M50J));
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "2")
@@ -2798,6 +2802,7 @@ class Organism {
   l5Sp;
   l5Dp;
   l5FW;
+  dnP = new Float64Array(4);
   l5Fb(ext) {
     if (!(M50.l5Fb > 0) || !this.l5P || this.o.mixLesion)
       return;
@@ -3587,7 +3592,7 @@ class Organism {
           dec = Math.exp(-1 / tau);
           this.tau[i] = tau;
         }
-        this.v[i] = dec * this.v[i] + g * I * (o.ltc || ts !== 1 ? (1 - dec) / 0.2 : 1);
+        this.v[i] = dec * this.v[i] + g * (M50.dn > 0 && i >= R0.CTX && i < R0.CTX + 52 ? I / (1 + M50.dn * this.dnP[Math.floor((i - R0.CTX) / 13)]) : I) * (o.ltc || ts !== 1 ? (1 - dec) / 0.2 : 1);
         inp[i] = 0;
         this.xTr[i] *= 0.7;
         this.yTr[i] *= 0.7;
@@ -3661,6 +3666,12 @@ class Organism {
       for (let si = 0;si < syn.w.length; si++)
         if (syn.plastic[si] && cnt[syn.post[si]] && this.xTr[syn.pre[si]] > 0.05)
           syn.w[si] = clamp(syn.w[si] + 0.003 * this.xTr[syn.pre[si]] * (0.5 + da) - 0.0005 * (syn.w[si] - 0.35), 0.01, 2);
+    }
+    for (let m = 0;m < 4; m++) {
+      let c = 0;
+      for (let j = 0;j < 13; j++)
+        c += cnt[R0.CTX + m * 13 + j] / SUB;
+      this.dnP[m] = c / 13;
     }
     for (const [n] of REGIONS) {
       let s = 0;

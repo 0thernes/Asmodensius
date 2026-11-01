@@ -9,3 +9,5 @@
 - v5.7: phasic LC-NE gating of plasticity (Sara 2009 Nat Rev Neurosci 10:211; Yu & Dayan 2005 Neuron 46:681); Oja 1982; divisive normalisation (Carandini & Heeger 2012 Nat Rev Neurosci 13:51); L5 apical-basal coincidence (Larkum 2013). Design: Alex Donahue; Eshkol/QGTL lineage (Tsotchke).
 
 - B24 L5 feedback: top-down apical-to-soma coupling motif (Larkum 2013, Trends Neurosci 36:141). Built for Alex Donahue; Tsotchke Eshkol/QGTL credited as before.
+
+- B25 divisive normalisation of cortical drive (Carandini & Heeger 2012, Nat Rev Neurosci 13:51); tested, not adopted. Credit: Alex Donahue; Tsotchke Eshkol/QGTL.
