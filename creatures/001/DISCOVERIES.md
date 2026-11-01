@@ -297,3 +297,24 @@ Notes:
 - Per-seed values on 3077/3093 were reshuffled by any perturbation to the glucose path; the full-arm mean barely moved (0.355 vs 0.362) and the earlier flip came from the full arm's SD.
 - Pooled, v5-core alone passes AE1 and does better without the TPC, so the TPC does not cause AE1.
 - Methodological lesson: report AE1 pooled over ≥ 48 seeds.
+
+## B19 EFM dev block 3109-3124
+| Test | v5-core d/t | v5.3 EFM d/t | pass v5/v5.3 |
+|---|---|---|---|
+| AE1 | 0.78/2.21 | 0.65/1.83 | ✗/✗ |
+| viability (forages, deaths) | 263, 0 | 236, 0 |  |
+| AINF | -0.06/-0.16 | -0.04/-0.11 | ✗/✗ |
+| C03R | -2.00/-5.65 | -1.77/-4.99 | ✗/✗ |
+| C08R | 8.18/23.14 | 7.47/21.14 | ✓/✓ |
+| C10 | -0.90/-2.55 | -0.02/-0.06 | ✗/✗ |
+| C16 | 9.92/28.05 | 11.32/32.01 | ✓/✓ |
+| C16R | 0.00/0.00 | 0.55/1.55 | ✗/✗ |
+| GWT3R | 10.35/29.27 | 14.52/41.06 | ✓/✓ |
+| HOT1 | 1.67/4.73 | 2.17/6.14 | ✓/✓ |
+| HOT3RM | 0.73/2.07 | 0.84/2.37 | ✗/✗ |
+| HOT3RM-P | 1.14/4.56 | 1.13/4.50 | ✓/✓ |
+| thaler9 | 1.56/4.41 | 1.81/5.11 | ✓/✓ |
+| CQM12 | 1.10/3.11 | 0.91/2.56 | ✓/✗ |
+| PROJR | 5.11/14.46 | 4.75/13.44 | ✓/✓ |
+| RPT2R | -0.15/-0.41 | -0.11/-0.32 | ✗/✗ |
+| UAL | 1.93/5.47 | 1.39/3.94 | ✓/✓ |
