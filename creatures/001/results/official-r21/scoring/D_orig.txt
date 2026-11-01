@@ -45,10 +45,14 @@ FAIL projective self/other ownership [Ceiling] (fails non-ceiling rule)
    vs efference copy lesioned: full 1.000 ctrl 0.5118 d 10.72 t 52.51
 FAIL ctm report agrees with action [Ceiling] (fails non-ceiling rule)
    vs broadcast lesioned: full 0.9969 ctrl 0.2538 d 21.35 t 104.61
-FAIL CQM01 heredity [Missing] (not run)
-FAIL CQM02 open-endedness [Missing] (not run)
-FAIL CQM03 ecological coupling [Missing] (not run)
-FAIL CQM04 morphology (reach gene) [Missing] (not run)
+FAIL CQM01 heredity [Not established]
+   vs CQM01:offspring genomes random: full 0.1275 ctrl 0.02978 d 0.53 t 2.58
+PASS CQM02 open-endedness [Bounded test evidence]
+   vs CQM02:no mutation: full 49.77 ctrl 5.938 d 12.61 t 61.79
+PASS CQM03 ecological coupling [Bounded test evidence] (control correlation is 0 by construction (constant population))
+   vs CQM03:births on a fixed schedule: full 0.8796 ctrl 0.000 d 6.57 t 32.20
+FAIL CQM04 morphology (reach gene) [Not established]
+   vs CQM04:random survival: full 1.056 ctrl 1.011 d 0.12 t 0.59
 PASS CQM05 embodied consistency (−ledger error) [Bounded test evidence]
    vs leaky ledger: full -1.970e-15 ctrl -0.004521 d 38.29 t 187.58
 FAIL CQM06 perceptual integration [Not established]
@@ -118,4 +122,7 @@ FAIL CQM03R ecological coupling |corr(food, next births)|, control: random birth
    vs births random in number: full 0.004261 ctrl 0.3656 d -2.50 t -12.27
 PASS CQM01R heredity corr(parent, offspring forage rate), founders at 0.9 fSet (unsaturated drive) [Bounded test evidence]
    vs offspring genomes random: full 0.3098 ctrl 0.04745 d 1.47 t 7.19
-ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 15/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/1; MISSING EVO,EVO,EVO,EVO,L1,L2,L3,L5,SNAP,RPTLATE,VIAB
+FAIL VIAB-a steady state with ample food: fat/glycogen slopes days 7-12 not negative (CI) + intake ~= expenditure [fat slope -18.29 [-21.26, -15.32]/d, glycogen -0.112 [-0.462, 0.239]/d, |imbalance| 0.235, deaths 0/30]
+FAIL VIAB-b starvation: ordered stages (forage up, glycogen, ketosis, torpor, fat exhaustion) then organ-failure death in reserve-scaled window [44/48 seeds ordered and in window]
+FAIL VIAB-c recovery when food restored at day 3 [0/48 recovered; life (censored 8 d) 8 vs no-refeed 6.41, d 8.65 t 41.93]
+ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 17/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/4; MISSING L1,L2,L3,L5,SNAP,RPTLATE

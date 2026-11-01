@@ -1,8 +1,8 @@
 # OFFICIAL Round 21 scorecard (Creature #1)
 
-Generated 2026-11-01 14:55 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
+Generated 2026-11-01 15:17 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
 
-**Run status:** test files done: arm A 56/63, arm D 56/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
+**Run status:** test files done: arm A 57/63, arm D 57/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
 
 Pass = d>=0.8 AND Welch t>=2.75 vs every control (+ non-ceiling rule). PARTIAL = passes some controls but not all, or the original fails while a disclosed R variant passes. Official totals count originals only.
 
@@ -14,7 +14,7 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 |---|---|---|---|---|
 | Butlin | 9/14 (partial 3, pending 0) | 12/14 (partial 0, pending 0) | 9/14 (partial 3, pending 0) | 12/14 (partial 0, pending 0) |
 | Frameworks | 6/10 (partial 2, pending 0) | 8/10 (partial 0, pending 0) | 5/10 (partial 2, pending 0) | 7/10 (partial 0, pending 0) |
-| CQM | 15/25 (partial 2, pending 4) | 18/25 (partial 0, pending 3) | 15/25 (partial 2, pending 4) | 18/25 (partial 0, pending 3) |
+| CQM | 17/25 (partial 3, pending 0) | 20/25 (partial 0, pending 0) | 17/25 (partial 3, pending 0) | 20/25 (partial 0, pending 0) |
 
 ## Butlin 14
 
@@ -54,10 +54,10 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 
 | Item | A v5.7b | A d/t | D v5.7d | D d/t | R variants (A / D) |
 |---|---|---|---|---|---|
-| CQM01 | PENDING |  | PENDING |  | CQM01R: PASS / PASS |
-| CQM02 | PENDING |  | PENDING |  |  |
-| CQM03 | PENDING |  | PENDING |  | CQM03R: FAIL / FAIL |
-| CQM04 | PENDING |  | PENDING |  |  |
+| CQM01 | PARTIAL | d 0.44 t 2.17 | PARTIAL | d 0.53 t 2.58 | CQM01R: PASS / PASS |
+| CQM02 | PASS | d 14.47 t 70.89 | PASS | d 12.61 t 61.79 |  |
+| CQM03 | PASS | d 6.23 t 30.54 | PASS | d 6.57 t 32.20 | CQM03R: FAIL / FAIL |
+| CQM04 | FAIL | d 0.04 t 0.20 | FAIL | d 0.12 t 0.59 |  |
 | CQM05 | PASS | d 39.05 t 191.32 | PASS | d 38.29 t 187.58 |  |
 | CQM06 | FAIL | d 0.30 t 1.48 | FAIL | d 0.56 t 2.76 |  |
 | CQM07 | PASS | d 5.81 t 28.48 | PASS | d 6.48 t 31.74 |  |

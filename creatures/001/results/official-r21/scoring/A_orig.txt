@@ -45,10 +45,14 @@ FAIL projective self/other ownership [Ceiling] (fails non-ceiling rule)
    vs efference copy lesioned: full 1.000 ctrl 0.4861 d 9.62 t 47.15
 FAIL ctm report agrees with action [Ceiling] (fails non-ceiling rule)
    vs broadcast lesioned: full 0.9934 ctrl 0.2531 d 17.04 t 83.47
-FAIL CQM01 heredity [Missing] (not run)
-FAIL CQM02 open-endedness [Missing] (not run)
-FAIL CQM03 ecological coupling [Missing] (not run)
-FAIL CQM04 morphology (reach gene) [Missing] (not run)
+FAIL CQM01 heredity [Not established]
+   vs CQM01:offspring genomes random: full 0.1257 ctrl 0.04647 d 0.44 t 2.17
+PASS CQM02 open-endedness [Bounded test evidence]
+   vs CQM02:no mutation: full 49.75 ctrl 5.938 d 14.47 t 70.89
+PASS CQM03 ecological coupling [Bounded test evidence] (control correlation is 0 by construction (constant population))
+   vs CQM03:births on a fixed schedule: full 0.8677 ctrl 0.000 d 6.23 t 30.54
+FAIL CQM04 morphology (reach gene) [Not established]
+   vs CQM04:random survival: full 1.025 ctrl 1.011 d 0.04 t 0.20
 PASS CQM05 embodied consistency (−ledger error) [Bounded test evidence]
    vs leaky ledger: full -1.720e-15 ctrl -0.004534 d 39.05 t 191.32
 FAIL CQM06 perceptual integration [Not established]
@@ -79,7 +83,7 @@ PASS CQM22 valence trade-off [Bounded test evidence]
    vs aversive learning lesioned: full 70.03 ctrl -145.8 d 2.50 t 12.25
 FAIL butlin14 rollup of 14 Butlin items [9/14 pass] (rollup)
 PASS CQM24 reproducibility (state hash) [Tolerance test]
-PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":4151,"plasticSynapses":331,"valueSynapses":2698,"kinetics":390,"quantum":19,"total":7258})
+PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":4154,"plasticSynapses":331,"valueSynapses":2698,"kinetics":390,"quantum":19,"total":7261})
 FAIL CQM23 substrate pluralism [Not applicable] (JS only)
 FAIL K1a immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
    vs v3.1 cortex: full 1.000 ctrl 1.000 d 0.00 t 0.00
@@ -121,4 +125,4 @@ PASS CQM01R heredity corr(parent, offspring forage rate), founders at 0.9 fSet (
 FAIL VIAB-a steady state with ample food: fat/glycogen slopes days 7-12 not negative (CI) + intake ~= expenditure [fat slope -19.21 [-22.35, -16.07]/d, glycogen -0.101 [-0.283, 0.081]/d, |imbalance| 0.252, deaths 0/30]
 FAIL VIAB-b starvation: ordered stages (forage up, glycogen, ketosis, torpor, fat exhaustion) then organ-failure death in reserve-scaled window [45/48 seeds ordered and in window]
 FAIL VIAB-c recovery when food restored at day 3 [0/48 recovered; life (censored 8 d) 8 vs no-refeed 6.39, d 8.06 t 39.09]
-ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/4; MISSING EVO,EVO,EVO,EVO,L1,L2,L3,L5,SNAP,RPTLATE
+ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 17/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/4; MISSING L1,L2,L3,L5,SNAP,RPTLATE
