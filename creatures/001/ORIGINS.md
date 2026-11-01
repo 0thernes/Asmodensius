@@ -11,3 +11,5 @@
 - B24 L5 feedback: top-down apical-to-soma coupling motif (Larkum 2013, Trends Neurosci 36:141). Built for Alex Donahue; Tsotchke Eshkol/QGTL credited as before.
 
 - B25 divisive normalisation of cortical drive (Carandini & Heeger 2012, Nat Rev Neurosci 13:51); tested, not adopted. Credit: Alex Donahue; Tsotchke Eshkol/QGTL.
+
+- B26 two-compartment cortical cells (Larkum 2013; Poirazi, Brannon & Mel 2003, Neuron 37:989); tested, not adopted. Credit: Alex Donahue; Tsotchke Eshkol/QGTL.

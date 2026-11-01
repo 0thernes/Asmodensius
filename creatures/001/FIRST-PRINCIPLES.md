@@ -324,3 +324,6 @@ Dev diagnostic (q30, 3077–3080): in CQM16-R's window insulin is already satura
 ## B25 (2026-11-01)
 - AE1 regression traced by 48-seed single-feature bisection to the AOM value term (aomV 0.5, v5.6); dropping it restores AE1 (1.05/5.16). v5.7b adopted.
 - Cortical readout rates are quantised (7 levels), not saturated; divisive normalisation does not add a^b. The conjunction exists only in the L5 pool.
+
+## B26 (2026-11-01)
+- Putting the learned apical-basal coincidence rule into each cortical cell makes cortex weakly nonlinear in a·b (decode 0.69 -> 0.73; RPT2R d 0.17 -> 0.41) but not enough to pass, and it dilutes the L5 pool readout. v5.7b AE1 fix replicated on fresh 48 seeds (0.95/4.68).
