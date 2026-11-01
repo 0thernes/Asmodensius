@@ -209,3 +209,29 @@ Reading:
 | UAL | 1.75/4.94 | 1.45/4.10 | ✓/✓ |
 
 Reading: on held-out data, v5.1 also ties v4.0 overall. HOT1 is lost (t 2.60). HOT3RM-P is gained (v4.0 fails it on this block). GWT3R shrinks a lot (14.4 to 3.1) but still passes. CQM16-R is null again (d 0.05). Viability: v4.0 316 forages, v5.1 274, 0 deaths in both. Verdict: v5-core is the candidate; v5.1 stays behind the flag. EVO-S baselines are deferred.
+
+## Nov 1 PHT: B18 TPC dev block 3077-3092 (column 1 = v5-core, column 2 = v5.2 = v5-core + TPC; the table's header labels are generic)
+| Test | v5-core d/t | v5.2 TPC d/t | pass v5/v5.2 |
+|---|---|---|---|
+| AE1 | 0.45/1.28 | 1.30/3.67 | ✗/✓ |
+| viability (forages, deaths) | 264, 0 | 267, 0 |  |
+| AINF | 0.03/0.08 | -0.08/-0.22 | ✗/✗ |
+| C03R | -2.08/-5.87 | -2.12/-5.99 | ✗/✗ |
+| C08R | 6.48/18.32 | 10.89/30.80 | ✓/✓ |
+| C10 | -0.76/-2.14 | -1.11/-3.13 | ✗/✗ |
+| C16 | 8.45/23.90 | 8.96/25.34 | ✓/✓ |
+| C16R | 0.00/0.00 | -0.01/-0.02 | ✗/✗ |
+| GWT3R | 8.80/24.90 | 10.95/30.96 | ✓/✓ |
+| HOT1 | 2.41/6.83 | 2.33/6.59 | ✓/✓ |
+| HOT3RM | 0.92/2.60 | 0.93/2.63 | ✗/✗ |
+| HOT3RM-P | 1.35/5.41 | 2.12/8.49 | ✓/✓ |
+| thaler9 | 2.27/6.41 | 1.95/5.51 | ✓/✓ |
+| CQM12 | 1.14/3.22 | 0.99/2.80 | ✓/✓ |
+| PROJR | 4.20/11.87 | 5.43/15.35 | ✓/✓ |
+| RPT2R | -0.48/-1.34 | -0.31/-0.87 | ✗/✗ |
+| UAL | 1.67/4.72 | 1.64/4.63 | ✓/✓ |
+
+Reading: TPC moves none of the failing set (C16R −0.01, C10 −1.11, AINF, RPT2R, C03R, HOT3RM all unchanged). AE1 passes in v5.2 on dev only; check against held-out 3093.
+
+EVO-S baselines (3061-3076, 16 seeds; v5-core):
+Caveat: CQM03's control (births on a fixed schedule) is 0 by construction, so d 17 is degenerate and not a valid pass. CQM01 passes; CQM04 does not.
