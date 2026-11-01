@@ -232,6 +232,7 @@ if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.en
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "3") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { tpc: 1 }); /* v5.2 = v5-core + TPC (prereg B18) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "4") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1 }); /* v5.3 = v5-core + EFM (prereg B19) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "5") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1 }); /* v5.4 = v5.3 + cortical forward model + error-model precision (prereg B20) */
+if (typeof process !== "undefined" && process.env?.M50J) Object.assign(M50, JSON.parse(process.env.M50J)); /* dev override */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "2") Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
  /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
 try { const e40 = typeof process !== "undefined" ? process.env.V40TUNE : undefined; if (e40) Object.assign(M40, JSON.parse(e40)); } catch { /* browser */ }
