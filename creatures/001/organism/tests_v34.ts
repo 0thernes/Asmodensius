@@ -1,5 +1,5 @@
 // v3.4 tests (preregistrations/v3.4.md §C): cortex items K1a..K1e, K2 persistence, and the v3.3 LTC suite re-run with learned / hand-set / fixed arms.
-import { Organism, Opts, R0 } from "./organism";
+import { Organism, Opts, R0, MW } from "./organism";
 import { rpt1 } from "./tests_v31";
 type M = Record<string, number[]>;
 const at = (g: Organism, t: number): void => { while (g.t < t) g.step(); };
@@ -10,8 +10,8 @@ const blank = (g: Organism, n = 1): void => { for (let k = 0; k < n; k++) { g.se
 // K1: RPT-1 protocol at zero delay; metric = the Mind's own module-0 classifier accuracy on trials 100..159
 export const k1 = (S: number[], o: Partial<Opts>): number[] => S.map((s) => { const g = warm(s, o); let ok = 0; for (let t = 0; t < 160; t++) { const c = Math.floor(g.r() * 4); show(g, 0, c); g.step(); if (t >= 100) ok += +(am(g.mind.post[0]) === c); g.mind.teach(0, c); blank(g); } return ok / 60; });
 // K2: RPT-1 protocol (2 blank ticks); metric = nearest-centroid probe (test-owned) on module-0 rates, centroids from all earlier trials
-export const k2 = (S: number[], o: Partial<Opts>): number[] => S.map((s) => { const g = warm(s, o); let ok = 0; const cen = [0, 1, 2, 3].map(() => new Array(13).fill(0)), n = [0, 0, 0, 0];
-  for (let t = 0; t < 160; t++) { const c = Math.floor(g.r() * 4); show(g, 0, c); g.step(); blank(g, 2); const v = Array.from(g.rate.slice(R0.CTX, R0.CTX + 13));
+export const k2 = (S: number[], o: Partial<Opts>): number[] => S.map((s) => { const g = warm(s, o); let ok = 0; const cen = [0, 1, 2, 3].map(() => new Array(MW).fill(0)), n = [0, 0, 0, 0];
+  for (let t = 0; t < 160; t++) { const c = Math.floor(g.r() * 4); show(g, 0, c); g.step(); blank(g, 2); const v = Array.from(g.rate.slice(R0.CTX, R0.CTX + MW));
     if (t >= 100) { let b = 0, bd = Infinity; for (let k = 0; k < 4; k++) { const d = cen[k].reduce((a, x, j) => a + (x / Math.max(1, n[k]) - v[j]) ** 2, 0); if (d < bd) { bd = d; b = k; } } ok += +(b === c); }
     v.forEach((x, j) => (cen[c][j] += x)); n[c]++; g.mind.teach(0, c); blank(g); } return ok / 60; });
 const D = 1440;

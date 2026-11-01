@@ -1,7 +1,7 @@
 // v3.1 tests (preregistrations/v3.1.md): Butlin-14, 10 frameworks, CQM-25, all run on the integrated organism (organism.ts = browser code).
 // Each function returns per-seed metrics for the full organism and each one-mechanism-lesion control. Readouts marked "probe" are measurement
 // devices owned by the test (linear decoders trained on organism state), not organism mechanisms.
-import { Organism, Opts, SITES, R0, Lin } from "./organism";
+import { Organism, Opts, SITES, R0, Lin, MW } from "./organism";
 import { compare, item, Item, auroc } from "../harness/harness";
 const D = 1440; const mean = (a: number[]): number => a.reduce((s, x) => s + x, 0) / Math.max(1, a.length);
 const mk = (seed: number, o: Partial<Opts> = {}): Organism => new Organism({ seed, ...o });
@@ -11,7 +11,7 @@ export const am = (a: ArrayLike<number>): number => { let b = 0; for (let i = 1;
 const oneHot = (m: number, c: number, amp = 1): number[] => { const x = new Array(16).fill(0); x[m * 4 + c] = amp; return x; };
 export const show = (g: Organism, x: number[]): void => { for (let i = 0; i < 16; i++) g.sens[i] = Math.max(0, x[i]); };
 export const blank = (g: Organism, n = 1): void => { for (let k = 0; k < n; k++) { g.sens.fill(0); g.step(); } };
-export const ctx = (g: Organism, mods = [0, 1, 2, 3]): number[] => { const v: number[] = []; for (const m of mods) for (let j = 0; j < 13; j++) v.push(g.rate[R0.CTX + m * 13 + j]); return v; };
+export const ctx = (g: Organism, mods = [0, 1, 2, 3]): number[] => { const v: number[] = []; for (const m of mods) for (let j = 0; j < MW; j++) v.push(g.rate[R0.CTX + m * MW + j]); return v; };
 const spearman = (a: number[], b: number[]): number => { const rk = (x: number[]): number[] => { const i = x.map((v, k) => [v, k]).sort((p, q) => p[0] - q[0]); const r = new Array(x.length); i.forEach(([, k], n) => (r[k] = n)); return r; };
   const ra = rk(a), rb = rk(b), ma = mean(ra), mb = mean(rb); let s = 0, sa = 0, sb = 0; for (let k = 0; k < a.length; k++) { s += (ra[k] - ma) * (rb[k] - mb); sa += (ra[k] - ma) ** 2; sb += (rb[k] - mb) ** 2; } return s / Math.sqrt(sa * sb + 1e-12); };
 const corr = (a: number[], b: number[]): number => { const ma = mean(a), mb = mean(b); let s = 0, sa = 0, sb = 0; for (let k = 0; k < a.length; k++) { s += (a[k] - ma) * (b[k] - mb); sa += (a[k] - ma) ** 2; sb += (b[k] - mb) ** 2; } return sa && sb ? s / Math.sqrt(sa * sb) : 0; };
@@ -24,9 +24,9 @@ type M = Record<string, number[]>; // arm name -> per-seed metric
 export const TESTS: Record<string, (seeds: number[]) => M> = {
   // ---------------- Butlin-14 ----------------
   RPT1: (S) => ({ full: rpt1(S, {}), "recurrent CTX synapses lesioned": rpt1(S, { recLesion: true }) }),
-  RPT2: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); const L = new Lin(2, 26); let ok = 0; for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; show(g, x); g.step(); const v = ctx(g, [0, 1]); const y = a ^ b; if (t >= 160) ok += +(am(L.out(v)) === y); L.learn(v, y, 0.1); blank(g); } led("RPT2", g); return ok / 60; });
+  RPT2: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); const L = new Lin(2, 2 * MW); let ok = 0; for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; show(g, x); g.step(); const v = ctx(g, [0, 1]); const y = a ^ b; if (t >= 160) ok += +(am(L.out(v)) === y); L.learn(v, y, 0.1); blank(g); } led("RPT2", g); return ok / 60; });
     return { full: f({}), "cross-module CTX synapses lesioned": f({ mixLesion: true }) }; },
-  GWT1: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); const R = [0, 1, 2, 3].map(() => new Lin(4, 52)); // probe decoders read all of cortex
+  GWT1: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); const R = [0, 1, 2, 3].map(() => new Lin(4, 4 * MW)); // probe decoders read all of cortex
       const trial = (learn: boolean): boolean[] => { const c = [0, 1, 2, 3].map(() => Math.floor(g.r() * 4)); const x = new Array(16).fill(0); c.forEach((cc, m) => (x[m * 4 + cc] = 1)); show(g, x); g.step(); const v = ctx(g); const ok = c.map((cc, m) => am(R[m].out(v)) === cc); if (learn) c.forEach((cc, m) => R[m].learn(v, cc, 0.08)); blank(g); return ok; };
       for (let t = 0; t < 200; t++) trial(true); const base = [0, 0, 0, 0]; for (let t = 0; t < 40; t++) trial(false).forEach((b, m) => (base[m] += +b / 40));
       let score = 0; for (let m = 0; m < 4; m++) { g.lesionModule(m, true); const acc = [0, 0, 0, 0]; for (let t = 0; t < 30; t++) trial(false).forEach((b, n) => (acc[n] += +b / 30)); g.lesionModule(m, false); const own = base[m] - acc[m]; const cross = mean([0, 1, 2, 3].filter((n) => n !== m).map((n) => base[n] - acc[n])); score += (own - cross) / 4; }
@@ -52,7 +52,7 @@ export const TESTS: Record<string, (seeds: number[]) => M> = {
     return { full, "no opt-out": f("none"), "random opt-out at same rate": f("rand", rate) }; },
   HOT4: (S) => { const f = (perm: boolean) => S.map((s) => { const g = warm(s); const X: number[] = [], V: number[][] = []; for (let t = 0; t < 60; t++) { const p = 3 * g.r(); const x = new Array(16).fill(0); for (let j = 0; j < 4; j++) x[j] = Math.exp(-((j - p) ** 2) / 0.8);
         if (perm) { const o = [0, 1, 2, 3]; for (let i = 3; i > 0; i--) { const k = Math.floor(g.r() * (i + 1)); [o[i], o[k]] = [o[k], o[i]]; } const y = o.map((k) => x[k]); for (let j = 0; j < 4; j++) x[j] = y[j]; }
-        show(g, x); const acc = new Array(13).fill(0); for (let k = 0; k < 3; k++) { g.step(); ctx(g, [0]).forEach((v, j) => (acc[j] += v)); } X.push(p); V.push(acc); blank(g); }
+        show(g, x); const acc = new Array(MW).fill(0); for (let k = 0; k < 3; k++) { g.step(); ctx(g, [0]).forEach((v, j) => (acc[j] += v)); } X.push(p); V.push(acc); blank(g); }
       const dx: number[] = [], dv: number[] = []; for (let i = 0; i < 60; i++) for (let j = i + 1; j < 60; j++) { dx.push(Math.abs(X[i] - X[j])); dv.push(Math.hypot(...V[i].map((v, k) => v - V[j][k]))); } led("HOT4", g); return spearman(dx, dv); });
     return { full: f(false), "sensory lines permuted every trial": f(true) }; },
   AST1: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); let e = 0; for (let t = 0; t < 300; t++) { if (t % 50 === 0) g.mind.afTarget = 2 * g.r() - 1; g.step(); if (t >= 60) e += g.mind.afErr; } led("AST1", g); return -e / 240; });
@@ -91,8 +91,8 @@ export const TESTS: Record<string, (seeds: number[]) => M> = {
   // ---------------- CQM ----------------
   EVO: (S) => evo(S),
   C05: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = mk(s, o); at(g, 2 * D); return -g.ledgerError(); }); return { full: f({}), "leaky ledger": f({ leakyLedger: true }) }; },
-  C06: (S) => { const f = (single: boolean) => S.map((s) => { const g = warm(s); const L = new Lin(1, single ? 13 : 26); let e = 0; for (let t = 0; t < 200; t++) { const q = 3 * g.r(); const x = new Array(16).fill(0); for (let j = 0; j < 4; j++) { x[j] = Math.exp(-((j - q) ** 2) / 0.8) + 0.35 * g.gauss(); x[4 + j] = Math.exp(-((j - q) ** 2) / 0.8) + 0.35 * g.gauss(); } show(g, x);
-        const acc = new Array(26).fill(0); for (let k = 0; k < 2; k++) { g.step(); ctx(g, [0, 1]).forEach((v, j) => (acc[j] += v)); } const v = single ? acc.slice(0, 13) : acc; const est = L.out(v)[0]; if (t >= 140) e += (est - q / 3) ** 2; L.regress(v, [q / 3], 0.3); blank(g); } led("C06", g); return -e / 60; });
+  C06: (S) => { const f = (single: boolean) => S.map((s) => { const g = warm(s); const L = new Lin(1, single ? MW : 2 * MW); let e = 0; for (let t = 0; t < 200; t++) { const q = 3 * g.r(); const x = new Array(16).fill(0); for (let j = 0; j < 4; j++) { x[j] = Math.exp(-((j - q) ** 2) / 0.8) + 0.35 * g.gauss(); x[4 + j] = Math.exp(-((j - q) ** 2) / 0.8) + 0.35 * g.gauss(); } show(g, x);
+        const acc = new Array(2 * MW).fill(0); for (let k = 0; k < 2; k++) { g.step(); ctx(g, [0, 1]).forEach((v, j) => (acc[j] += v)); } const v = single ? acc.slice(0, MW) : acc; const est = L.out(v)[0]; if (t >= 140) e += (est - q / 3) ** 2; L.regress(v, [q / 3], 0.3); blank(g); } led("C06", g); return -e / 60; });
     return { full: f(false), "integration lesion (modality 0 only)": f(true) }; },
   C07: (S) => ppTask(S, { ppFreeze: true }, "plasticity frozen"),
   C08: (S) => { const f = (o: Partial<Opts>) => S.map((s) => { const g = warm(s, o); pretrain(g); const tr = (m: number, cls: number[], learn: boolean): boolean => { const c = cls[Math.floor(g.r() * 2)]; show(g, oneHot(m, c)); g.step(); const okk = g.mind.action === c; if (learn) { g.mind.teachAction(c); g.mind.teach(m, c); } blank(g); return okk; };

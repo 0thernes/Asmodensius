@@ -1,7 +1,7 @@
 // v4.0 R-tests (preregistrations/v4.0.md, DRAFT). New tests; the originals stay on record unchanged.
 import { Organism, Opts } from "./organism";
 import { OptOut, MarginConf } from "./fp/hot3";
-import { Lin } from "./organism";
+import { Lin, MW } from "./organism";
 import { warm as warm36, blank as blank36, pretrain as pre36, noisy as noisy36 } from "./tests_v36";
 import { warm as warm31, show as show31, ctx as ctx31, am as am31 } from "./tests_v31";
 type M = Record<string, number[]>;
@@ -95,11 +95,11 @@ function hot3RM(S: number[]): M { const rate: number[] = []; const f = (mode: "m
 
 // v4.0 RPT-2R (NEW, disclosed; original RPT2 stays reported): same XOR read-out, but stimulus held for T ticks before reading CTX of modules 0-1,
 // because cross-module synapses deliver the other module's code one tick late (recurrence takes time; Lamme 2006) — the 1-tick original reads only the feedforward sweep.
-const rpt2R = (S: number[]): M => { const T = Number(process.env.RPT2T ?? 3); const f = (o: Partial<Opts>) => S.map((s) => { const g = warm31(s, o); const L = new Lin(2, 26); let ok = 0;
+const rpt2R = (S: number[]): M => { const T = Number(process.env.RPT2T ?? 3); const f = (o: Partial<Opts>) => S.map((s) => { const g = warm31(s, o); const L = new Lin(2, 2 * MW); let ok = 0;
   for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; for (let k = 0; k < T; k++) { show31(g, x); g.step(); } const v = ctx31(g, [0, 1]); const y = process.env.RPT2Y === "a" ? a : process.env.RPT2Y === "b" ? b : a ^ b; if (t >= 160) ok += +(am31(L.out(v)) === y); L.learn(v, y, 0.1); show31(g, new Array(16).fill(0)); g.step(); } return ok / 60; });
   return { full: f({}), "cross-module CTX synapses lesioned": f({ mixLesion: true }) }; };
 // v5.6 RPT2R-L5 (NEW, disclosed B22; original RPT2R stays reported): same protocol, readout = ctx31 rates + the module pair's L5 conjunctive pool.
-const rpt2RL5 = (S: number[]): M => { const T = Number(process.env.RPT2T ?? 3); const f = (o: Partial<Opts>) => S.map((s) => { const g = warm31(s, o); const L = new Lin(2, 42); let ok = 0;
+const rpt2RL5 = (S: number[]): M => { const T = Number(process.env.RPT2T ?? 3); const f = (o: Partial<Opts>) => S.map((s) => { const g = warm31(s, o); const L = new Lin(2, 2 * MW + 16); let ok = 0;
   for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; for (let k = 0; k < T; k++) { show31(g, x); g.step(); } const v = ctx31(g, [0, 1]).concat(Array.from((g as any).l5 ?? new Float64Array(32)).slice(0, 16) as number[]); const y = process.env.RPT2Y === "a" ? a : process.env.RPT2Y === "b" ? b : a ^ b; if (t >= 160) ok += +(am31(L.out(v)) === y); L.learn(v, y, 0.1); show31(g, new Array(16).fill(0)); g.step(); } return ok / 60; });
   return { full: f({}), "cross-module CTX synapses lesioned": f({ mixLesion: true }) }; };
 
