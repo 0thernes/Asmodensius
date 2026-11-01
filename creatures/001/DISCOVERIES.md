@@ -285,3 +285,15 @@ Notes:
   - in roll.ts, credit was assigned to the wrong trial.
 - (3) The learned error model beats shuffled confidence by a lot. It beats the readout margin only trivially (+0.004), so the second-order model adds almost nothing over the margin in this task.
 - Not yet wired into the creature. B18's TS TPC in the creature moved none of the failing tests. The next step is to feed the Eshkol dream model's forecast to the drives on dev seeds.
+
+## AE1 "depends on the core": resolved as borderline noise (B19, seeds 3141-3188, 48 fresh seeds)
+| Block | v5-core d/t | v5.2 (TPC) d/t |
+|---|---|---|
+| 3141 | 1.08/3.06 | 0.89/2.52 |
+| 3157 | 0.93/2.63 | 0.73/2.08 |
+| 3173 | 1.61/4.55 | 1.04/2.93 |
+| pooled 48 | **1.21/5.92** | 0.90/4.41 |
+- AE1's effect is d ≈ 0.7-1.6 per 16-seed block in every configuration, so pass/fail flips by block.
+- Per-seed values on 3077/3093 were reshuffled by any perturbation to the glucose path; the full-arm mean barely moved (0.355 vs 0.362) and the earlier flip came from the full arm's SD.
+- Pooled, v5-core alone passes AE1 and does better without the TPC, so the TPC does not cause AE1.
+- Methodological lesson: report AE1 pooled over ≥ 48 seeds.
