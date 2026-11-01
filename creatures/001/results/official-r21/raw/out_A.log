@@ -1,1 +1,4 @@
 RPT2 full=0.5087  cross-module CTX synapses lesioned=0.5271 478s
+AE1 full=0.3248  RPE learning lesioned=0.2868 1516s
+HOT3 full=0.7911  no opt-out=0.7904  random opt-out at same rate=0.7899 150s
+GWT3 full=1.000  broadcast lesioned=0.2514 83s
