@@ -267,3 +267,8 @@ Isolated checks (`fp/dev_tpc.ts`, dev 3077–3084, 8 seeds):
 - I tried lam 0.3 and K = 1 on dev; neither changed A (disclosed).
 Creature wiring (ORG_V5=3 = v5-core + TPC): input is [glucose error, clock sin/cos, 16 senses], K = 20. The forecast rise adds to the insulin target (the same form as isolated check B). It is lesioned by `cephLesion` (CQM16-R control).
 Dev diagnostic (q30, 3077–3080): in CQM16-R's window insulin is already saturated (~0.9–1.0) and glucose is high. The test gives only 2 meal days before scoring, so a learned clock→meal forecast has 2 examples. On 2–4 seeds TPC scored worse than its lesion (0.12 vs 0.30). A symmetric-forecast variant was also worse (0.20 vs 0.37). The isolation-validated form is kept and frozen.
+
+## v5.3 EFM (prereg B19)
+- **Design:** a 10-unit forward model of the creature's own glucose, 20 ticks ahead. It is trained only in sleep by exact BPTT; the TS port matches Eshkol's gradient to 2e-16. Its forecast feeds the insulin drive, and a 1-step rollout (forage vs not) gates foraging.
+- **Moved:** the drive-level tests. C10 deficit removed; CQM16-R passes on held-out data.
+- **Not moved:** cortical tests (RPT2R, AINF, HOT3RM) and ecology (C03R). Principle: a forward model helps only the decisions it is wired into, so the next step is to wire it into the cortex and the task-action chooser.
