@@ -240,3 +240,24 @@ EVO-S baselines (3061-3076, 16 seeds; v5-core):
 | CQM03 | 0.800 | births on a fixed schedule | 0.000 | 17.14 | 48.49 |
 | CQM04 | 1.239 | random survival | 1.058 | 0.45 | 1.27 |
 Caveat: CQM03's control (births on a fixed schedule) is 0 by construction, so d 17 is degenerate and not a valid pass. CQM01 passes; CQM04 does not.
+
+## B18 TPC held-out 3093-3108 (chosen before the run)
+| Test | v5-core d/t | v5.2 TPC d/t | pass v5/v5.2 |
+|---|---|---|---|
+| AE1 | 0.69/1.95 | 1.29/3.66 | ✗/✓ |
+| viability (forages, deaths) | 254, 0 | 249, 0 |  |
+| AINF | 0.01/0.03 | -0.13/-0.36 | ✗/✗ |
+| C03R | -2.07/-5.85 | -1.85/-5.23 | ✗/✗ |
+| C08R | 4.79/13.53 | 9.75/27.57 | ✓/✓ |
+| C10 | -0.56/-1.60 | -0.75/-2.11 | ✗/✗ |
+| C16 | 7.08/20.02 | 7.14/20.20 | ✓/✓ |
+| C16R | 0.00/0.00 | -0.22/-0.61 | ✗/✗ |
+| GWT3R | 11.49/32.50 | 9.16/25.91 | ✓/✓ |
+| HOT1 | 2.81/7.94 | 1.98/5.61 | ✓/✓ |
+| HOT3RM | 0.91/2.59 | 0.74/2.10 | ✗/✗ |
+| HOT3RM-P | 1.40/5.60 | 1.18/4.71 | ✓/✓ |
+| thaler9 | 2.00/5.66 | 1.83/5.17 | ✓/✓ |
+| CQM12 | 1.38/3.90 | 1.09/3.07 | ✓/✓ |
+| PROJR | 4.27/12.09 | 4.26/12.06 | ✓/✓ |
+| RPT2R | -0.37/-1.04 | -0.04/-0.12 | ✗/✗ |
+| UAL | 1.58/4.48 | 1.04/2.95 | ✓/✓ |
