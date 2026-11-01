@@ -303,3 +303,16 @@ Dev diagnostic (q30, 3077–3080): in CQM16-R's window insulin is already satura
 - **AE1, 48-seed pool (3397-3444):** v5-core 0.78/3.82, v5.6 0.37/1.82. Borderline: across three pools the winner flips.
 - **Gains, not targeted (not claimed):** v5.6 passes HOT3RM (0.97/2.75) and CQM12 on held-out only.
 
+
+## B23 / v5.7: diagnosis first, then phasic surprise-gated dendritic learning (2026-11-01)
+- **Bottleneck map** (results/b23/BOTTLENECK-MAP.md, dev 3445 only):
+  - AINF: reward is set by how many forages hunger permits. An oracle for site choice adds only +3.3 reward (d of about 0.24), so AINF on raw reward cannot detect exploration.
+  - RPT2R: a and b are linearly present at every stage, and each module already carries both. No stage computes a*b (the oracle feature gives 0.93), so the missing piece is a product, not lost information.
+- **v5.7:** L5 dendritic weights learn (Oja) from the phasic change response, gated by sensory surprise (phasic LC-NE), with divisive normalisation of each dendritic drive.
+  - Isolation: 0.98 vs 0.61 for random dendrites (held-out d 6.35).
+  - The surprise gate itself adds nothing over ungated phasic learning (d 0.3). The active ingredient is plasticity driven by stimulus transients.
+  - Disclosed dev iterations: gating on centred rates failed; then the phasic signal; then normalisation.
+- **Creature, disclosed variant RPT2R-L5:** dev 1.26/3.56, held-out **1.70/4.81 (passes)**.
+  - The original RPT2R (ctx31 rates only) is unchanged and still fails (held-out 0.12). The L5 pool does not feed back into cortex, so every other test is identical.
+- **AE1, 48-seed pools across B21-B23:** v5-core 0.99, 0.78, 0.89 vs v5.5+ 0.54, 0.37, 0.18. This is no longer noise: v5.5 and later regress AE1. The suspected cause is the AOM information-gain term (added in v5.5), not yet isolated.
+

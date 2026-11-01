@@ -5,3 +5,5 @@
 - v5.5 DMUL: Larkum, Zhu & Sakmann 1999 Nature 398:338; Larkum 2013 TINS 36:141 (apical-basal coincidence). AOM: Kalman yield tracking with information gain (Lindley 1956; Schmidhuber 1991 curiosity; Friston et al. 2015 epistemic value); restless-bandit exploration (Daw et al. 2006 Nature 441:876). Design: Alex Donahue; engine lineage: Eshkol/QGTL (Tsotchke).
 
 - v5.6 L5 pool: Larkum 2013 TINS 36:141; Oja 1982 J Math Biol 15:267 (Hebbian PCA). Depletion-aware value: marginal value theorem (Charnov 1976 Theor Pop Biol 9:129); model-based choice (Daw, Niv & Dayan 2005). Design: Alex Donahue; Eshkol/QGTL lineage (Tsotchke).
+
+- v5.7: phasic LC-NE gating of plasticity (Sara 2009 Nat Rev Neurosci 10:211; Yu & Dayan 2005 Neuron 46:681); Oja 1982; divisive normalisation (Carandini & Heeger 2012 Nat Rev Neurosci 13:51); L5 apical-basal coincidence (Larkum 2013). Design: Alex Donahue; Eshkol/QGTL lineage (Tsotchke).

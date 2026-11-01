@@ -1567,6 +1567,9 @@
     Wb;
     Wa;
     y;
+    norm = false;
+    vb;
+    va;
     constructor(U, N, r, gA = 4) {
       this.U = U;
       this.N = N;
@@ -1598,6 +1601,15 @@
           b += this.Wb[u * this.N + k] * own[k];
           if (oth)
             a += this.Wa[u * this.N + k] * oth[k];
+        }
+        if (this.norm) {
+          this.vb ??= new Float64Array(this.U).fill(0.001);
+          this.va ??= new Float64Array(this.U).fill(0.001);
+          this.vb[u] += 0.02 * (b * b - this.vb[u]);
+          this.va[u] += 0.02 * (a * a - this.va[u]);
+          b /= Math.sqrt(this.vb[u]) + 0.000001;
+          if (oth)
+            a /= Math.sqrt(this.va[u]) + 0.000001;
         }
         this.y[u] = mode === "mul" ? softplus(b) / (1 + Math.exp(-this.gA * a)) : softplus(b) + 0.5 * softplus(a);
       }
@@ -2611,7 +2623,7 @@
   };
   var is40 = (m) => m === "v40";
   var M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
-  var M50 = { l5: 0, aomV: 0, dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+  var M50 = { l5Ph: 0, l5: 0, aomV: 0, dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
   if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2"))
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "3")
@@ -2624,6 +2636,8 @@
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "7")
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5 });
+  if (typeof process !== "undefined" && process.env?.ORG_V5 === "8")
+    Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1 });
   if (typeof process !== "undefined" && process.env?.M50J)
     Object.assign(M50, JSON.parse(process.env.M50J));
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "2")
@@ -2780,21 +2794,40 @@
     l5 = new Float64Array(32);
     l5P;
     l5Tr;
+    l5Sp;
+    l5Dp;
     l5Step() {
       if (!(M50.l5 > 0))
         return;
       const N = 13;
       if (!this.l5P) {
         const r = mulberry2(this.o.seed * 3491 + 7);
-        this.l5P = [0, 1, 2, 3].map(() => new L5Pool(8, N, r));
+        this.l5P = [0, 1, 2, 3].map(() => {
+          const P = new L5Pool(8, N, r);
+          P.norm = M50.l5Ph > 0;
+          return P;
+        });
       }
       this.l5Tr ??= new Float64Array(52);
       for (let i = 0;i < 52; i++)
         this.l5Tr[i] += 0.5 * (this.rate[R0.CTX + i] - this.rateAvg[R0.CTX + i] - this.l5Tr[i]);
       const cen = (m) => Array.from(this.l5Tr.subarray(m * N, m * N + N));
+      let sur = 0;
+      this.l5Sp ??= new Float64Array(16);
+      for (let i = 0;i < 16; i++) {
+        sur += Math.abs(this.sens[i] - this.l5Sp[i]);
+        this.l5Sp[i] = this.sens[i];
+      }
+      const ph = M50.l5Ph > 0, dX = this.l5Dp ? Array.from(this.l5Tr, (v, i) => v - this.l5Dp[i]) : null;
+      this.l5Dp = Float64Array.from(this.l5Tr);
+      const dm = (m) => dX.slice(m * N, m * N + N);
       for (let m = 0;m < 4; m++) {
-        if (this.learn)
-          this.l5P[m].learn(cen(m), this.o.mixLesion ? null : cen(m ^ 1), M50.l5Eta ?? 0.01);
+        if (this.learn && (!ph ? true : dX !== null && sur > 0.1)) {
+          if (ph)
+            this.l5P[m].learn(dm(m), this.o.mixLesion ? null : dm(m ^ 1), 0.02);
+          else
+            this.l5P[m].learn(cen(m), this.o.mixLesion ? null : cen(m ^ 1), M50.l5Eta ?? 0.01);
+        }
         const y = this.l5P[m].step(cen(m), this.o.mixLesion ? null : cen(m ^ 1));
         for (let u = 0;u < 8; u++)
           this.l5[m * 8 + u] = y[u];
@@ -3715,7 +3748,7 @@
       const v38e = is38(o.mind ?? MIND_DEFAULT);
       const fatDef = (v38e ? clamp(1 - this.fat / M38.fSet) : 0) * (M40.insS > 0 ? clamp(2 - this.insulin / 0.3) : 1);
       this.efmA = 0;
-      if (awake && !this.dead && r() * (this.affect ? 1 / this.affect.forageMul() : 1) < (o.fixedDrive ? 0.12 : clamp((3 * hunger - 0.1 + (v38e ? M38.fK * fatDef : 0)) * (o.genes ? o.genes[2] : 1)) * this.efmRoll())) {
+      if (awake && !this.dead && (typeof process !== "undefined" && process.env?.PROBE === "timingAlways" ? true : r() * (this.affect ? 1 / this.affect.forageMul() : 1) < (o.fixedDrive ? 0.12 : clamp((3 * hunger - 0.1 + (v38e ? M38.fK * fatDef : 0)) * (o.genes ? o.genes[2] : 1)) * this.efmRoll()))) {
         this.efmA = 1;
         let { k, sp } = this.choose(da);
         if (is40(o.mind ?? MIND_DEFAULT) && (o.veto ?? "own") !== "off") {
@@ -4277,6 +4310,20 @@
       return this.affect ? this.affect.state() : null;
     }
     choose(da) {
+      const PR = typeof process !== "undefined" ? process.env?.PROBE : undefined;
+      if (PR === "siteOracle" || PR === "siteRandom") {
+        let bk = -1, bv = -1;
+        for (let k = 0;k < SITES; k++)
+          if (this.access[k]) {
+            const v = PR === "siteOracle" ? this.pTrue[k] : Math.random();
+            if (v > bv) {
+              bv = v;
+              bk = k;
+            }
+          }
+        if (bk >= 0)
+          return { k: bk, sp: 0 };
+      }
       const W = 3 + 5 * (this.level - 1);
       const sig = 0.35 * (0.2 + 2 * clamp(da)) * (1 + 0.2 * this.qgtTrace) * (this.affect ? this.affect.noiseMul() : 1) * (this.curv ? this.curv.noiseMul() : 1);
       const cnt = new Float32Array(SITES), v = new Float32Array(SITES);
