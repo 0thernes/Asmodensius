@@ -48,3 +48,4 @@ CTMR full=0.8986  broadcast lesioned=0.2687 78s
 C03R full=0.01716  births random in number=0.3689 2657s
 C01R full=0.2740  offspring genomes random=0.06579 3171s
 K1 full=1.000  v3.1 cortex=1.000  no developmental waves=1.000  no STDP=1.000  no homeostasis (intrinsic + inhibitory)=1.000  E/I loops lesioned=1.000 114s
+K1R full=0.9642  v3.1 cortex=0.9604  no developmental waves=0.9583  no STDP=0.9580  no homeostasis (intrinsic + inhibitory)=0.9566  E/I loops lesioned=0.9688 112s
