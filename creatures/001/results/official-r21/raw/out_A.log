@@ -42,3 +42,6 @@ PROJR full=0.8319  efference copy lesioned=0.5014 37s
 AE1R full=0.3080  RPE learning lesioned=0.2926 213s
 CQM18R full=1.000  plasticity frozen after lesion=0.2597 59s
 GWT3R full=0.7899  broadcast lesioned=0.2517 56s
+C16R full=0.4666  anticipation lesioned (reactive only)=0.2244 325s
+C08R full=0.8198  replay lesioned=0.1089 64s
+CTMR full=0.8986  broadcast lesioned=0.2687 78s

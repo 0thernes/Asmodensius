@@ -1,23 +1,93 @@
 [
  {
   "id": "RPT2R",
-  "status": "MISSING"
+  "status": "PARTIAL",
+  "cmps": [
+   {
+    "control": "cross-module CTX synapses lesioned",
+    "full": 0.8263888888888892,
+    "ctrl": 0.5312500000000001,
+    "d": 3.36,
+    "t": 16.44
+   },
+   {
+    "control": "shuffled pairing (vshuf)",
+    "full": null,
+    "ctrl": null,
+    "d": null,
+    "t": null
+   }
+  ]
  },
  {
   "id": "RPT2RL5",
-  "status": "MISSING"
+  "status": "PASS",
+  "cmps": [
+   {
+    "control": "cross-module CTX synapses lesioned",
+    "full": 0.8451388888888887,
+    "ctrl": 0.5409722222222222,
+    "d": 3.43,
+    "t": 16.81
+   }
+  ]
  },
  {
   "id": "HOT3RM",
-  "status": "MISSING"
+  "status": "PARTIAL",
+  "cmps": [
+   {
+    "control": "random opt-out (matched rate)",
+    "full": 0.8217349060768321,
+    "ctrl": 0.7821230184460582,
+    "d": 0.95,
+    "t": 4.67
+   },
+   {
+    "control": "confidence shuffled",
+    "full": 0.8217349060768321,
+    "ctrl": 0.7902593626032665,
+    "d": 0.75,
+    "t": 3.68
+   }
+  ]
+ },
+ {
+  "id": "HOT3RM-P",
+  "status": "PASS",
+  "cmps": [
+   {
+    "control": "confidence shuffled (paired)",
+    "dz": 1.09,
+    "t": 7.55
+   }
+  ]
  },
  {
   "id": "AE1R",
-  "status": "MISSING"
+  "status": "FAIL",
+  "cmps": [
+   {
+    "control": "RPE learning lesioned",
+    "full": 0.3270999021711405,
+    "ctrl": 0.29262227395399304,
+    "d": 0.56,
+    "t": 2.76
+   }
+  ]
  },
  {
   "id": "PROJR",
-  "status": "MISSING"
+  "status": "PASS",
+  "cmps": [
+   {
+    "control": "efference copy lesioned",
+    "full": 0.832986111111111,
+    "ctrl": 0.4934027777777778,
+    "d": 4.68,
+    "t": 22.95
+   }
+  ]
  },
  {
   "id": "C16R",
@@ -25,6 +95,15 @@
  },
  {
   "id": "CQM18R",
-  "status": "MISSING"
+  "status": "FAIL(ceiling)",
+  "cmps": [
+   {
+    "control": "plasticity frozen after lesion",
+    "full": 1,
+    "ctrl": 0.2791666666666667,
+    "d": 6.33,
+    "t": 31.03
+   }
+  ]
  }
 ]
