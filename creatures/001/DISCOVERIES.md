@@ -186,3 +186,5 @@ Reading:
 - v5.1 loses AE1 and HOT3RM-P and weakens GWT3R and thaler9. The learned and normalized pieces do not yet help; they stay behind the flag and are not adopted.
 - CQM16-R (anticipation vs reactive feedback, ceph lesion): d 0.12, a null. v4.0 and v5-core have no cephalic forecast, so they score 0 by construction. The creature does not yet anticipate meals.
 - Foraging: v5 270 and v5.1 264 vs v4.0 320, with 0 deaths in every arm. This is consistent with less over-eating (insS; C10 d −3.4 → −0.8), not with starvation.
+
+## Held-out 3041-3056 (B17, chosen before the run): v5.1 vs v4.0 (column 3 = v5.1)
