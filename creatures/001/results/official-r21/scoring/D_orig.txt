@@ -97,6 +97,10 @@ FAIL K1e immediate classification (post[0] acc, trials 100..159) [Ceiling] (fail
    vs E/I loops lesioned: full 1.000 ctrl 1.000 d 0.00 t 0.00
 PASS K2 persistence: centroid probe 2 blank ticks after stimulus [Bounded test evidence]
    vs NMDA-like current lesioned: full 0.3441 ctrl 0.2712 d 1.25 t 6.13
+FAIL V3.4-L2a sleep effect (sleep − forced wake) — learned-gate LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.05460 ctrl 0.07244 d -0.22 t -1.08
+FAIL V3.4-L2b sleep effect (sleep − forced wake) — hand-set LTC vs fixed [Not established]
+   vs fixed-tau LIF: full 0.03279 ctrl 0.07244 d -0.46 t -2.26
 FAIL V3.4-L4a delayed recall (RPT-1) — learned-gate LTC vs fixed [Not established]
    vs fixed-tau LIF: full 0.3226 ctrl 0.3313 d -0.13 t -0.62
 FAIL V3.4-L4b delayed recall (RPT-1) — hand-set LTC vs fixed [Not established]
@@ -125,4 +129,4 @@ PASS CQM01R heredity corr(parent, offspring forage rate), founders at 0.9 fSet (
 FAIL VIAB-a steady state with ample food: fat/glycogen slopes days 7-12 not negative (CI) + intake ~= expenditure [fat slope -18.29 [-21.26, -15.32]/d, glycogen -0.112 [-0.462, 0.239]/d, |imbalance| 0.235, deaths 0/30]
 FAIL VIAB-b starvation: ordered stages (forage up, glycogen, ketosis, torpor, fat exhaustion) then organ-failure death in reserve-scaled window [44/48 seeds ordered and in window]
 FAIL VIAB-c recovery when food restored at day 3 [0/48 recovered; life (censored 8 d) 8 vs no-refeed 6.41, d 8.65 t 41.93]
-ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 17/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/4; MISSING L1,L2,L3,L5,SNAP,RPTLATE
+ROLLUPS: Butlin 9/14, frameworks 5/10, CQM 17/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/4; MISSING L1,L3,L5,SNAP,RPTLATE
