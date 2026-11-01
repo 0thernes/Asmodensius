@@ -7,3 +7,4 @@ RPT1 full=0.3375  recurrent CTX synapses lesioned=0.2333 86s
 RPT2RL5 full=0.6583  cross-module CTX synapses lesioned=0.5740 107s
 UAL full=0.1021  eligibility traces lesioned=-0.001068 110s
 AE1 full=0.3401  RPE learning lesioned=0.3016 257s
+C10 full=0.9175  fixed foraging drive=0.9736 141s
