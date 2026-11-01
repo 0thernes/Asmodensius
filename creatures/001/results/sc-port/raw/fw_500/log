@@ -5,3 +5,4 @@ AINF full=51.75  epistemic term lesioned=53.00 250s
 AE2 full=-0.01331  forward model lesioned (gain fixed at prior)=-0.3079 48s
 RPT1 full=0.3375  recurrent CTX synapses lesioned=0.2333 86s
 RPT2RL5 full=0.6583  cross-module CTX synapses lesioned=0.5740 107s
+UAL full=0.1021  eligibility traces lesioned=-0.001068 110s
