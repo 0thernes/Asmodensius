@@ -229,7 +229,7 @@ export const LTC_DEFAULT = false;
 /** v4.0 parameters (dev-tuned on seeds 2000+ only; not frozen). uK: weight of the single uncertainty term; mK: blend of the Beta posterior mean into value; dreamC: pseudo-count a REM dream writes into an unexperienced option's belief; dreamLr: step toward the dreamt belief; tempSD: log-SD of per-individual temperament (curiosity gain) */
 export const M40: Record<string, number> = { insS: 0, xsel: 0 /* v4.0 RPT-2 candidate, off */, uK: 0.3 /* 2026-10-31 3:48 PM PT: AE-1 exploitation diagnosis; dev 2577, held-out 2593 + 2609 */, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
 // v5-core flag (ORG_V5=1): one coherent configuration of the general mechanisms (CORE-ARCHITECTURE.md): signed selective apical cross-area input + dendritic NMDA rectification (cortex), insulin-gated drive (body layer). Off by default.
-export const M50: Record<string, number> = { l5Ph: 0 /* v5.7 phasic surprise-gated dendritic learning (B23) */, l5: 0 /* v5.6 L5 conjunctive pool (B22) */, aomV: 0 /* v5.6 depletion-aware value (B22) */, dmul: 0 /* v5.5 two-compartment coincidence (B21) */, dmulK: 0.5, aom: 0 /* v5.5 action-outcome model + IG (B21) */, aomK: 1, cfm: 0 /* v5.4 cortical forward model (B20) */, cfmK: 0.6, cfmP: 1, efm: 0 /* v5.3 Eshkol-trained forward model (B19) */, tpc: 0 /* v5.2 temporal predictive core */, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+export const M50: Record<string, number> = { l5Fb: 0 /* v5.8 L5 -> cortex feedback gain (B24) */, l5Ph: 0 /* v5.7 phasic surprise-gated dendritic learning (B23) */, l5: 0 /* v5.6 L5 conjunctive pool (B22) */, aomV: 0 /* v5.6 depletion-aware value (B22) */, dmul: 0 /* v5.5 two-compartment coincidence (B21) */, dmulK: 0.5, aom: 0 /* v5.5 action-outcome model + IG (B21) */, aomK: 1, cfm: 0 /* v5.4 cortical forward model (B20) */, cfmK: 0.6, cfmP: 1, efm: 0 /* v5.3 Eshkol-trained forward model (B19) */, tpc: 0 /* v5.2 temporal predictive core */, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
 /* v5.1 (ORG_V5=2): v5-core + the missing core pieces of CORE-ARCHITECTURE.md */
 if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2")) Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 });
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "3") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { tpc: 1 }); /* v5.2 = v5-core + TPC (prereg B18) */
@@ -238,6 +238,7 @@ if (typeof process !== "undefined" && process.env?.ORG_V5 === "5") Object.assign
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "6") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1 }); /* v5.5 = v5.4 + DMUL + AOM (prereg B21) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "7") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5 }); /* v5.6 = v5.5 + L5 pool + AOM value (prereg B22) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "8") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1 }); /* v5.7 = v5.6 + phasic surprise-gated L5 learning (B23) */
+if (typeof process !== "undefined" && process.env?.ORG_V5 === "9") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1, l5: 1, aomV: 0.5, l5Ph: 1, l5Fb: 0.5 }); /* v5.8 = v5.7 + L5 feedback (B24) */
 if (typeof process !== "undefined" && process.env?.M50J) Object.assign(M50, JSON.parse(process.env.M50J)); /* dev override */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "2") Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
  /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
@@ -297,6 +298,10 @@ export class Organism {
   cfmPrec(): number { return M50.cfm > 0 && M50.cfmP > 0 && this.cfmM ? 1 / (1 + M50.cfmP * Math.max(0, this.cfmEh / Math.max(1e-6, this.cfmEb) - 1)) : 1; }
   dmW?: Float64Array; aomM?: AOM; l5 = new Float64Array(32); l5P?: L5Pool[]; l5Tr?: Float64Array; l5Sp?: Float64Array; l5Dp?: Float64Array;
   /* v5.6 L5: graded conjunctive output pool per module, basal = own module centred rates, apical = paired module (cut by mixLesion) */
+  l5FW?: Float64Array;
+  /* v5.8 L5 feedback: each module's L5 pool drives that module's 13 E cells (fixed random weights); the conjunction it carries depends on cross-module apical input (cut by mixLesion) */
+  l5Fb(ext: Float32Array | Float64Array): void { if (!(M50.l5Fb > 0) || !this.l5P || this.o.mixLesion) return; if (!this.l5FW) { const r = mulberry(this.o.seed * 2741 + 3); this.l5FW = new Float64Array(52 * 8).map(() => (r() * 2 - 1) / Math.sqrt(8)); }
+    for (let j = 0; j < 52; j++) { const m = Math.floor(j / 13); let s = 0; for (let u = 0; u < 8; u++) s += this.l5FW[j * 8 + u] * this.l5[m * 8 + u]; ext[R0.CTX + j] += M50.l5Fb * s; } }
   l5Step(): void { if (!(M50.l5 > 0)) return; const N = 13; if (!this.l5P) { const r = mulberry(this.o.seed * 3491 + 7); this.l5P = [0, 1, 2, 3].map(() => { const P = new L5Pool(8, N, r); P.norm = M50.l5Ph > 0; return P; }); }
     this.l5Tr ??= new Float64Array(52); for (let i = 0; i < 52; i++) this.l5Tr[i] += 0.5 * (this.rate[R0.CTX + i] - this.rateAvg[R0.CTX + i] - this.l5Tr[i]); /* dendritic integration (tau 2 ticks) */
     const cen = (m: number) => Array.from(this.l5Tr!.subarray(m * N, m * N + N));
@@ -447,7 +452,7 @@ export class Organism {
     if (this.curv) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += M40.insK * this.curv.felt(); /* v4.0: felt thought curvature */
     if (o.insulaLesion) add("INS", -5); if (o.scnLesion) add("SCN", -5);
     { const M = this.mind; const gate = awake ? 1 : rem ? 0.2 : 0.05; // thalamic sensory gating by sleep stage; attention gain per modality; top-down prediction into THAL; broadcast -> HIP; motor -> MOT; pain -> INS
-      this.cfmStep(ext); this.dmulStep(ext); this.l5Step();
+      this.cfmStep(ext); this.dmulStep(ext); this.l5Step(); this.l5Fb(ext);
       for (let i = 0; i < 16; i++) { ext[R0.SENS + i] += TUNE.sensIn * gate * (this.sens[i] + (this.bus ? this.bus.out[i] : 0)) * M.att[i >> 2]; ext[R0.THAL + i] += M.td[i]; }
       if (o.cortex !== "v31" && this.t < CX.dev && !o.devLesion) { const rd = this.rd; this.devSens.fill(0); for (let m = 0; m < 4; m++) if (rd() < 0.5) { const p = 3 * rd(); for (let j = 0; j < 4; j++) this.devSens[m * 4 + j] = Math.exp(-((j - p) ** 2) / 0.5); }
         for (let i = 0; i < 16; i++) ext[R0.THAL + i] += CX.devAmp * this.devSens[i]; } // v3.4 developmental spontaneous waves injected at the thalamic relay (retinogeniculate-wave analogue, not sleep-gated), ticks 0..CX.dev-1

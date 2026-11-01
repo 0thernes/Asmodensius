@@ -6,7 +6,7 @@ const ev = (X: number[][], y: number[], lam = 1) => { const w = ridge(X.slice(0,
 const rng = (g: any, r0: number, n: number) => Array.from({ length: n }, (_, i) => g.rate[r0 + i] as number);
 const out: Record<string, number[]> = {}; const add = (k: string, v: number) => (out[k] ??= []).push(v);
 const NS = Number(process.env.NS ?? 16);
-for (let s = 3445; s < 3445 + NS; s++) { const g: any = warm(s); const st: Record<string, number[][]> = {}; const A: number[] = [], B: number[] = [], X: number[] = []; const push = (k: string, v: number[]) => (st[k] ??= []).push(v);
+for (let s = Number(process.env.SB ?? 3445); s < Number(process.env.SB ?? 3445) + NS; s++) { const g: any = warm(s); const st: Record<string, number[][]> = {}; const A: number[] = [], B: number[] = [], X: number[] = []; const push = (k: string, v: number[]) => (st[k] ??= []).push(v);
   for (let t = 0; t < 220; t++) { const a = g.r() < 0.5 ? 1 : 0, b = g.r() < 0.5 ? 1 : 0; const x = new Array(16).fill(0); x[a] = 1; x[4 + b] = 1; const acc = new Array(26).fill(0);
     for (let k = 0; k < 3; k++) { show(g, x); g.step(); ctx(g, [0, 1]).forEach((v, i) => (acc[i] += v / 3)); }
     push("1 sens", rng(g, R0.SENS, 16)); push("2 thal", rng(g, R0.THAL, 16)); push("3 ctx m0 (a side)", ctx(g, [0])); push("4 ctx m1 (b side)", ctx(g, [1])); push("5 ctx31 m0+m1 (test readout)", ctx(g, [0, 1])); push("6 ctx m0+m1, 3-tick mean", acc);
