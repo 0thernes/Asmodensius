@@ -1,22 +1,32 @@
-FAIL RPT-1 recurrence: delayed recall [Missing] (not run)
+PASS RPT-1 recurrence: delayed recall [Bounded test evidence]
+   vs recurrent CTX synapses lesioned: full 0.3313 ctrl 0.2639 d 1.13 t 5.55
 FAIL RPT-2 integration: XOR readout [Not established]
    vs cross-module CTX synapses lesioned: full 0.5139 ctrl 0.5271 d -0.17 t -0.81
-FAIL GWT-1 specialist modules [Missing] (not run)
-FAIL GWT-2 limited-capacity selection [Missing] (not run)
+PASS GWT-1 specialist modules [Bounded test evidence]
+   vs topography scrambled at build: full 0.2601 ctrl 0.008565 d 3.19 t 15.64
+FAIL GWT-2 limited-capacity selection [Ceiling] (fails non-ceiling rule)
+   vs workspace lesioned (action reads module average): full 0.9646 ctrl 0.5760 d 8.43 t 41.29
 FAIL GWT-3 global broadcast [Ceiling] (fails non-ceiling rule)
    vs broadcast lesioned: full 1.000 ctrl 0.2403 d 26.15 t 128.10
-FAIL GWT-4 state-dependent attention [Missing] (not run)
-FAIL HOT-1 generative top-down [Missing] (not run)
-FAIL HOT-2 metacognitive monitoring (AUROC) [Missing] (not run)
+FAIL GWT-4 state-dependent attention [Ceiling] (fails non-ceiling rule)
+   vs attention not driven by workspace state: full 0.9649 ctrl 0.1913 d 20.04 t 98.16
+PASS HOT-1 generative top-down [Bounded test evidence]
+   vs top-down lesioned: full -0.04729 ctrl -0.07429 d 2.13 t 10.45
+PASS HOT-2 metacognitive monitoring (AUROC) [Bounded test evidence]
+   vs confidence shuffled (S): full 0.6508 ctrl 0.4895 d 2.10 t 10.30
 FAIL HOT-3 metacognitive agency (opt-out) [Not established]
    vs no opt-out: full 0.7909 ctrl 0.7917 d -0.01 t -0.07
    vs random opt-out at same rate: full 0.7909 ctrl 0.7858 d 0.10 t 0.47
-FAIL HOT-4 quality space (Spearman) [Missing] (not run)
-FAIL AST-1 attention schema [Missing] (not run)
-FAIL PP-1 predictive coding [Missing] (not run)
+PASS HOT-4 quality space (Spearman) [Bounded test evidence]
+   vs sensory lines permuted every trial: full 0.6213 ctrl 0.001426 d 6.50 t 31.84
+PASS AST-1 attention schema [Bounded test evidence]
+   vs schema lesioned (raw observation): full -0.04294 ctrl -0.06109 d 0.97 t 4.74
+PASS PP-1 predictive coding [Bounded test evidence]
+   vs predictor lesioned (running mean): full -0.04079 ctrl -0.04434 d 1.06 t 5.18
 PASS AE-1 agency / RL under reversals [Bounded test evidence]
    vs RPE learning lesioned: full 0.3429 ctrl 0.2868 d 1.19 t 5.84
-FAIL AE-2 embodiment: reaching [Missing] (not run)
+PASS AE-2 embodiment: reaching [Bounded test evidence]
+   vs forward model lesioned (gain fixed at prior): full -0.01346 ctrl -0.3134 d 2.62 t 12.85
 FAIL thaler9 creative recombination [Missing] (not run)
 FAIL iit4 phi proxy [Missing] (not run)
 FAIL activeInference EFE choice in depleting world [Not established]
@@ -36,22 +46,26 @@ FAIL CQM04 morphology (reach gene) [Missing] (not run)
 FAIL CQM05 embodied consistency (−ledger error) [Missing] (not run)
 FAIL CQM06 perceptual integration [Missing] (not run)
 FAIL CQM07 learning/plasticity [Missing] (not run)
-FAIL CQM08 continual retention [Missing] (not run)
+FAIL CQM08 continual retention [Ceiling] (fails non-ceiling rule)
+   vs replay lesioned: full 0.9974 ctrl 0.9906 d 0.59 t 2.90
 FAIL CQM09 causal interoceptive model [Missing] (not run)
-FAIL CQM10 goal regulation (viable fraction) [Missing] (not run)
+FAIL CQM10 goal regulation (viable fraction) [Not established]
+   vs fixed foraging drive: full 0.8870 ctrl 0.9732 d -0.81 t -3.95
 FAIL CQM11 planning [Missing] (not run)
 FAIL CQM12 compositional transfer [Missing] (not run)
 FAIL CQM14 signalling game [Missing] (not run)
 FAIL CQM15 boundary (integrity>0.7) [Missing] (not run)
-FAIL CQM16 self-maintenance (alive fraction) [Missing] (not run)
+PASS CQM16 self-maintenance (alive fraction) [Bounded test evidence]
+   vs allostatic (PID) lesion: full 0.8728 ctrl 0.3965 d 7.88 t 38.63
 FAIL CQM17 homeostasis (−glucose variance) [Missing] (not run)
-FAIL CQM18 resilience after 40% CTX lesion [Missing] (not run)
+FAIL CQM18 resilience after 40% CTX lesion [Ceiling] (fails non-ceiling rule)
+   vs plasticity frozen after lesion: full 1.000 ctrl 1.000 d 0.00 t 0.00
 FAIL CQM22 valence trade-off [Missing] (not run)
-FAIL butlin14 rollup of 14 Butlin items [1/14 pass] (rollup)
+FAIL butlin14 rollup of 14 Butlin items [9/14 pass] (rollup)
 FAIL CQM24 reproducibility (state hash) [Missing] (not run)
 PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":4151,"plasticSynapses":331,"valueSynapses":2698,"kinetics":390,"quantum":19,"total":7258})
 FAIL CQM23 substrate pluralism [Not applicable] (JS only)
 FAIL GWT-3R global broadcast, degraded stimuli [Missing] (not run)
 FAIL ctm-R report agrees with action, degraded stimuli [Missing] (not run)
 FAIL CQM08R continual retention, degraded stimuli [Missing] (not run)
-ROLLUPS: Butlin 1/14, frameworks 1/10, CQM 1/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 0/3; v3.7 items 0/0; v3.9 items 0/0; MISSING RPT1,GWT1,GWT2,GWT4,HOT1,HOT2,HOT4,AST1,PP1,AE2,NOVEL,IIT,ASO,FIELD,SM,CTM,EVO,EVO,EVO,EVO,C05,C06,C07,C08,C09,C10,C11,NOVEL,C14,C15,C16,C17,C18,C22,K1,K2,L1,L2,L3,L4,L5,GWT3R,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
+ROLLUPS: Butlin 9/14, frameworks 1/10, CQM 4/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 0/3; v3.7 items 0/0; v3.9 items 0/0; MISSING NOVEL,IIT,ASO,FIELD,SM,CTM,EVO,EVO,EVO,EVO,C05,C06,C07,C09,C11,NOVEL,C14,C15,C17,C22,K1,K2,L1,L2,L3,L4,L5,GWT3R,CTMR,C08R,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
