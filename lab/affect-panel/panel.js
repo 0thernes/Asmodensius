@@ -2109,6 +2109,7 @@
       };
       is40 = (m) => m === "v40";
       M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
+      if (typeof process !== "undefined" && process.env?.ORG_V5 === "1") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 });
       try {
         const e40 = typeof process !== "undefined" ? process.env.V40TUNE : void 0;
         if (e40) Object.assign(M40, JSON.parse(e40));
@@ -2660,7 +2661,7 @@
           this.pidI = clamp(this.pidI + 2e-3 * e, -0.5, 0.5);
           const dE = e - this.pidPrev;
           this.pidPrev = e;
-          this.insulin += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 + 1.5 * e + this.pidI + 3 * dE + 0.2 * this.para * (o.vagotomy ? 0.3 : 1))) - this.insulin);
+          this.insulin += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 + (o.pidGain ?? 1) * (1.5 * e + (o.pidP ? 0 : this.pidI + 3 * dE)) + 0.2 * this.para * (o.vagotomy ? 0.3 : 1))) - this.insulin);
           this.glucagon += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 - 1.5 * e - this.pidI + 0.3 * this.symp)) - this.glucagon);
           this.cortisol += 0.02 * (clamp(0.35 + 0.25 * (o.scnLesion ? 0 : Math.cos(2 * Math.PI * (hour - 7) / 24)) + 0.6 * clamp(0.85 - bg) + 0.2 * (forced ? 1 : 0) + 0.4 * clamp(0.8 - this.integrity)) - this.cortisol);
           this.ghrelin += 0.01 * (clamp(1 - gutFill / 6) - this.ghrelin);

@@ -116,3 +116,6 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - CQM10 failure is over-eating (hyperglycaemia 33%), not under-foraging. An insulin→AgRP gate cuts it to 13% (d −3.27 → −0.64); not adopted.
 - CQM16 already passes on fresh dev 2913 (d 6.69).
 - RPT-2: a rest-rectified dendrite with xsel puts XOR information into the cortex (offline 0.74), but RPT2R's online readout does not extract it.
+
+## 4:48 PM PT: direction change to CORE-ARCHITECTURE.md; v5-core vs v4.0 (dev 2993, 16 seeds, d/t vs each test's own control)
+v5-core = ORG_V5=1 (xsel 3, dTh 0+, insS). Single dev block; no held-out yet. Earlier this turn (before the change): the CQM16 audit (P-only and gain 0.25 controls n.s., so the test measures any insulin feedback, not allostasis); the q12 XOR 0.74 did not replicate over 8 seeds (0.54), so there is no online/offline gap; the CQM10 residual is meal absorption with insulin saturated at its ceiling plus an ungated ghrelin/HYP term; LTC isolated beats oracle fixed τ (2945 d 2.27, 2961 d 3.19); EVO-S designed, not run.
