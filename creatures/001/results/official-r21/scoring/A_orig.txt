@@ -118,4 +118,7 @@ FAIL CQM03R ecological coupling |corr(food, next births)|, control: random birth
    vs births random in number: full 0.01716 ctrl 0.3689 d -2.31 t -11.32
 PASS CQM01R heredity corr(parent, offspring forage rate), founders at 0.9 fSet (unsaturated drive) [Bounded test evidence]
    vs offspring genomes random: full 0.2740 ctrl 0.06579 d 1.09 t 5.34
-ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/1; MISSING EVO,EVO,EVO,EVO,L1,L2,L3,L5,SNAP,RPTLATE,VIAB
+FAIL VIAB-a steady state with ample food: fat/glycogen slopes days 7-12 not negative (CI) + intake ~= expenditure [fat slope -19.21 [-22.35, -16.07]/d, glycogen -0.101 [-0.283, 0.081]/d, |imbalance| 0.252, deaths 0/30]
+FAIL VIAB-b starvation: ordered stages (forage up, glycogen, ketosis, torpor, fat exhaustion) then organ-failure death in reserve-scaled window [45/48 seeds ordered and in window]
+FAIL VIAB-c recovery when food restored at day 3 [0/48 recovered; life (censored 8 d) 8 vs no-refeed 6.39, d 8.06 t 39.09]
+ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/6; v3.7 items 0/3; v3.9 items 1/4; MISSING EVO,EVO,EVO,EVO,L1,L2,L3,L5,SNAP,RPTLATE
