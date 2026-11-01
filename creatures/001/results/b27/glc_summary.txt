@@ -1,0 +1,2 @@
+v57b glcMean 3.37 high 0.128 low 0 atpLow 0
+v60 glcMean 6.82 high 0.29 low 0.006 atpLow 0
