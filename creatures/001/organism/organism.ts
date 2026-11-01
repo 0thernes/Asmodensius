@@ -76,7 +76,7 @@ const mdot = (w: Float64Array, x: ArrayLike<number>, off = 0): number => { let s
 // linear softmax readout with delta rule (cross-entropy gradient)
 import { tsotchkeEntropy } from "./tsotchke";
 import { TPC } from "./fp/tpc";
-import { EFM } from "./fp/efm";
+import { EFM, EFMV } from "./fp/efm";
 export class Lin { W: Float64Array; constructor(public nOut: number, public nIn: number) { this.W = new Float64Array(nOut * (nIn + 1)); }
   out(x: ArrayLike<number>): number[] { const z: number[] = []; for (let k = 0; k < this.nOut; k++) z.push(mdot(this.W, x, k * (this.nIn + 1))); return z; }
   learn(x: ArrayLike<number>, target: number, lr: number, beta = 3): void { const p = msoftmax(this.out(x), beta); for (let k = 0; k < this.nOut; k++) { const g = (k === target ? 1 : 0) - p[k]; const o = k * (this.nIn + 1); for (let i = 0; i < this.nIn; i++) this.W[o + i] += lr * g * x[i]; this.W[o + this.nIn] += lr * g; } }
@@ -137,7 +137,7 @@ export class Mind {
     // state-dependent attention: workspace content (winner module, its class) sets thalamic gain of other modules next tick (learned by RPE)
     this.att = [1, 1, 1, 1]; if (!o.seqLesion && this.win >= 0) { const c = margmax(this.post[this.win]); for (let m = 0; m < NMOD; m++) if (m !== this.win) this.att[m] = 1 + 2 * Math.max(0, this.Wq[(this.win * 4 + c) * 4 + m]); }
     // action readout from workspace content; stochastic selection with DA-set temperature
-    const z = this.act.out(this.bc); this.actP = msoftmax(z, 2 + 6 * Math.min(1, g.nm.DA.E + 0.2)); const srt = this.actP.slice().sort((a, b) => b - a); this.margin = srt[0] - srt[1];
+    const z = this.act.out(this.bc); this.actP = msoftmax(z, (2 + 6 * Math.min(1, g.nm.DA.E + 0.2)) * (g.cfmPrec ? g.cfmPrec() : 1)); const srt = this.actP.slice().sort((a, b) => b - a); this.margin = srt[0] - srt[1];
     this.lastAct = this.action; let u = g.r(); let a = 0; for (; a < 3; a++) { u -= this.actP[a]; if (u < 0) break; } this.action = a;
     // metacognition: second-order monitor on margin, consistency, NE, adenosine
     if (v35) { /* v3.5 higher-order monitor: reads first-order states (chosen-action probability, margin, winner posterior, evidence amplitude, greedy flag, NE, adenosine) */ const wm = this.win >= 0 ? this.win : margmax(this.amp); this.confF = [this.actP[this.action], this.margin, Math.max(...this.post[wm]), 4 * this.amp[wm], this.action === margmax(this.actP) ? 1 : 0, ne, g.S, 1]; if (is37(o.mind ?? MIND_DEFAULT)) { this.confF = this.confF.concat([this.win >= 0 ? 1 : 0]); if (is39(o.mind ?? MIND_DEFAULT) && M39.evQ > 0) { const sv = Array.from(g.sens.slice(wm * 4, wm * 4 + 4)).sort((x, y) => y - x); this.confF.push(M39.evQ * (sv[0] - sv[1])); } /* v3.9: the monitor also reads early sensory evidence strength (top-minus-second line in the winning module), a first-order quality cue that metacognition uses (Fleming & Daw 2017 second-order model) */ /* v3.7: the monitor also reads whether the content reached the workspace (no ignition = no access = guess; Dehaene 2014) */ this.conf = 1 / (1 + Math.exp(-this.confF.reduce((s, v, i) => s + v * this.meta3[i], 0))); } else this.conf = 1 / (1 + Math.exp(-this.confF.reduce((s, v, i) => s + v * this.meta2[i], 0))); }
@@ -226,11 +226,12 @@ export const LTC_DEFAULT = false;
 /** v4.0 parameters (dev-tuned on seeds 2000+ only; not frozen). uK: weight of the single uncertainty term; mK: blend of the Beta posterior mean into value; dreamC: pseudo-count a REM dream writes into an unexperienced option's belief; dreamLr: step toward the dreamt belief; tempSD: log-SD of per-individual temperament (curiosity gain) */
 export const M40: Record<string, number> = { insS: 0, xsel: 0 /* v4.0 RPT-2 candidate, off */, uK: 0.3 /* 2026-10-31 3:48 PM PT: AE-1 exploitation diagnosis; dev 2577, held-out 2593 + 2609 */, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
 // v5-core flag (ORG_V5=1): one coherent configuration of the general mechanisms (CORE-ARCHITECTURE.md): signed selective apical cross-area input + dendritic NMDA rectification (cortex), insulin-gated drive (body layer). Off by default.
-export const M50: Record<string, number> = { efm: 0 /* v5.3 Eshkol-trained forward model (B19) */, tpc: 0 /* v5.2 temporal predictive core */, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+export const M50: Record<string, number> = { cfm: 0 /* v5.4 cortical forward model (B20) */, cfmK: 0.6, cfmP: 1, efm: 0 /* v5.3 Eshkol-trained forward model (B19) */, tpc: 0 /* v5.2 temporal predictive core */, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
 /* v5.1 (ORG_V5=2): v5-core + the missing core pieces of CORE-ARCHITECTURE.md */
 if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2")) Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 });
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "3") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { tpc: 1 }); /* v5.2 = v5-core + TPC (prereg B18) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "4") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1 }); /* v5.3 = v5-core + EFM (prereg B19) */
+if (typeof process !== "undefined" && process.env?.ORG_V5 === "5") Object.assign(M40, { xsel: 3, dTh: 1e-6, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1 }); /* v5.4 = v5.3 + cortical forward model + error-model precision (prereg B20) */
 if (typeof process !== "undefined" && process.env?.ORG_V5 === "2") Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
  /* dev-tuned 2026-10-31 on seeds 2000-2015 (run C2): dreamC 2->4, module gains halved */
 try { const e40 = typeof process !== "undefined" ? process.env.V40TUNE : undefined; if (e40) Object.assign(M40, JSON.parse(e40)); } catch { /* browser */ }
@@ -277,6 +278,16 @@ export class Organism {
   rateVar?: Float64Array; cephW = new Float64Array(24); cephH: number[] = [];
   /** v5.1 allostasis: learned, clock-indexed forecast of the glucose rise over the next 20 ticks drives insulin BEFORE the rise (cephalic-phase /
    *  anticipatory insulin; Powley 1977; Teff 2000; Sterling 2012). Delta rule on the hour bin seen 20 ticks ago. Original code. */
+  cfmM?: EFMV; cfmX: number[][] = []; cfmPj?: Float64Array; cfmY?: Float64Array; cfmW = new Float64Array(17); cfmHp?: Float64Array; cfmEh = 0; cfmEb = 0.05; cfmR?: () => number;
+  /* v5.4 CFM: RNN over the 16 senses predicting next-tick senses; trained only in sleep by exact BPTT; hidden state re-enters cortex as cross-module input (cut by mixLesion). Error model: NLMS from hidden state to the model's own realized squared error. */
+  cfmStep(ext: Float32Array | Float64Array): void { if (!(M50.cfm > 0)) return; const H = 16; const m = (this.cfmM ??= new EFMV(16, 16, (this.cfmR = mulberry(this.o.seed * 6007 + 29)), H));
+    if (!this.cfmPj) { this.cfmPj = new Float64Array(52 * H).map(() => (this.cfmR!() * 2 - 1) / Math.sqrt(H)); }
+    const x = Array.from(this.sens, (v) => +v); if (this.stage === 0) { this.cfmX.push(x); if (this.cfmX.length > 2000) this.cfmX.shift(); }
+    if (this.cfmY && this.cfmHp) { let se = 0; for (let i = 0; i < 16; i++) se += (this.cfmY[i] - x[i]) ** 2; se /= 16; const f = [...this.cfmHp, 1]; let pr = 0, nn = 1e-6; for (let i = 0; i < 17; i++) { pr += this.cfmW[i] * f[i]; nn += f[i] * f[i]; } const d = se - pr; for (let i = 0; i < 17; i++) this.cfmW[i] += (0.1 * d * f[i]) / nn; this.cfmEb += 0.01 * (se - this.cfmEb); }
+    this.cfmY = m.advanceV(x); this.cfmHp = Float64Array.from(m.h); { let pr = this.cfmW[16]; for (let i = 0; i < 16; i++) pr += this.cfmW[i] * m.h[i]; this.cfmEh = pr; }
+    if (this.asleep && this.learn && this.cfmX.length > 60) { const T = 30, n = this.cfmX.length, a = Math.floor(this.cfmR!() * (n - T - 1)); m.adam(m.gradV(this.cfmX.slice(a, a + T), this.cfmX.slice(a + 1, a + T + 1), 4), 0.005); }
+    if (!this.o.mixLesion) for (let j = 0; j < 52; j++) { let s = 0; for (let k = 0; k < H; k++) s += this.cfmPj[j * H + k] * m.h[k]; ext[R0.CTX + j] += M50.cfmK * s; } }
+  cfmPrec(): number { return M50.cfm > 0 && M50.cfmP > 0 && this.cfmM ? 1 / (1 + M50.cfmP * Math.max(0, this.cfmEh / Math.max(1e-6, this.cfmEb) - 1)) : 1; }
   efmM?: EFM; efmX: number[][] = []; efmE: number[] = []; efmA = 0; efmR?: () => number; efmF = 0;
   efmTerm(e: number, gutFill: number): number { if (!(M50.efm > 0)) return 0; const m = (this.efmM ??= new EFM(5, (this.efmR = mulberry(this.o.seed * 7919 + 13)), 10)); const x = [e, gutFill / 10, this.efmA, Math.sin(this.scnPhase), Math.cos(this.scnPhase)];
     this.efmX.push(x); this.efmE.push(e); if (this.efmX.length > 3000) { this.efmX.shift(); this.efmE.shift(); } this.efmF = m.advance(x);
@@ -418,6 +429,7 @@ export class Organism {
     if (this.curv) for (let i = 0; i < RN.INS; i++) ext[R0.INS + i] += M40.insK * this.curv.felt(); /* v4.0: felt thought curvature */
     if (o.insulaLesion) add("INS", -5); if (o.scnLesion) add("SCN", -5);
     { const M = this.mind; const gate = awake ? 1 : rem ? 0.2 : 0.05; // thalamic sensory gating by sleep stage; attention gain per modality; top-down prediction into THAL; broadcast -> HIP; motor -> MOT; pain -> INS
+      this.cfmStep(ext);
       for (let i = 0; i < 16; i++) { ext[R0.SENS + i] += TUNE.sensIn * gate * (this.sens[i] + (this.bus ? this.bus.out[i] : 0)) * M.att[i >> 2]; ext[R0.THAL + i] += M.td[i]; }
       if (o.cortex !== "v31" && this.t < CX.dev && !o.devLesion) { const rd = this.rd; this.devSens.fill(0); for (let m = 0; m < 4; m++) if (rd() < 0.5) { const p = 3 * rd(); for (let j = 0; j < 4; j++) this.devSens[m * 4 + j] = Math.exp(-((j - p) ** 2) / 0.5); }
         for (let i = 0; i < 16; i++) ext[R0.THAL + i] += CX.devAmp * this.devSens[i]; } // v3.4 developmental spontaneous waves injected at the thalamic relay (retinogeniculate-wave analogue, not sleep-gated), ticks 0..CX.dev-1
