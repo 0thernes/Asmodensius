@@ -52,3 +52,33 @@ K1R full=0.9552  v3.1 cortex=0.9670  no developmental waves=0.9569  no STDP=0.95
 K2 full=0.3441  NMDA-like current lesioned=0.2712 58s
 LIGHT melatonin at midnight, dome dark minus lit=0.9533 178s
 NOISESIGN v36 |P(+)-0.5|=0.01646  v35 |P(+)-0.5|=0.2916 18s
+INSGLC full=0.6992  visceral afferent cut=0.4999  labels shuffled=0.5005 612s
+file:///tmp/r21/run_wild.js:2861
+      const fb = this.affect.step({ t: this.t, DA: this.nm.DA.E, NE: this.nm.NE.E, S5: this.nm["5HT"].E, cortisol: this.cortisol, ghrelin: this.ghrelin, atp: this.atp / 2, integrity: this.integrity, sleepS: this.S, awake: this.stage === 0, r: this.affR });
+                             ^
+
+TypeError: this.affect.step is not a function
+    at Organism.step (file:///tmp/r21/run_wild.js:2861:30)
+    at file:///tmp/r21/run_wild.js:5645:9
+    at Array.map (<anonymous>)
+    at SNAP (file:///tmp/r21/run_wild.js:5635:32)
+    at file:///tmp/r21/run_wild.js:6667:12
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1
+file:///tmp/r21/run_wild.js:2861
+      const fb = this.affect.step({ t: this.t, DA: this.nm.DA.E, NE: this.nm.NE.E, S5: this.nm["5HT"].E, cortisol: this.cortisol, ghrelin: this.ghrelin, atp: this.atp / 2, integrity: this.integrity, sleepS: this.S, awake: this.stage === 0, r: this.affR });
+                             ^
+
+TypeError: this.affect.step is not a function
+    at Organism.step (file:///tmp/r21/run_wild.js:2861:30)
+    at f (file:///tmp/r21/run_wild.js:5699:14)
+    at RPTLATE (file:///tmp/r21/run_wild.js:5715:15)
+    at file:///tmp/r21/run_wild.js:6667:12
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.1
