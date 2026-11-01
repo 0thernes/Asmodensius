@@ -395,3 +395,7 @@ Reading (dev + held-out):
   - The original RPT2R (ctx31 rates only) is unchanged and still fails (held-out 0.12). The L5 pool does not feed back into cortex, so every other test is identical.
 - **AE1, 48-seed pools across B21-B23:** v5-core 0.99, 0.78, 0.89 vs v5.5+ 0.54, 0.37, 0.18. This is no longer noise: v5.5 and later regress AE1. The suspected cause is the AOM information-gain term (added in v5.5), not yet isolated.
 
+
+## B24 (2026-11-01)
+- L5->cortex feedback (v5.8) does not let the original RPT2R see the product: the readout cells are rate-saturated (decode unchanged at 0.600); v5.8 rejected.
+- AE1 regression since v5.5 is not caused by the AOM information-gain term (lesion worsens AE1 0.58 -> 0.16 on 48 seeds); IG kept.
