@@ -1498,6 +1498,65 @@
     }
   }
 
+  // ../../creatures/001/organism/fp/dmul.ts
+  var dmulOut = (basal, apical, gA = 4, th = 0.5) => Math.max(0, basal) / (1 + Math.exp(-gA * (apical - th)));
+
+  // ../../creatures/001/organism/fp/aom.ts
+  class AOM {
+    K;
+    NB;
+    BW;
+    q;
+    m;
+    P;
+    last;
+    c;
+    nc;
+    useCurve;
+    constructor(K, NB = 9, BW = 15, q = 0.00002, useCurve = true) {
+      this.K = K;
+      this.NB = NB;
+      this.BW = BW;
+      this.q = q;
+      this.m = new Float64Array(K).fill(0.3);
+      this.P = new Float64Array(K).fill(0.04);
+      this.last = new Float64Array(K).fill(-1e9);
+      this.c = new Float64Array(NB).fill(1);
+      this.nc = new Float64Array(NB);
+      this.useCurve = useCurve;
+    }
+    bin(k, t) {
+      return this.useCurve ? Math.min(this.NB - 1, Math.floor((t - this.last[k]) / this.BW)) : this.NB - 1;
+    }
+    tick() {
+      for (let k = 0;k < this.K; k++)
+        this.P[k] = Math.min(0.25, this.P[k] + this.q);
+    }
+    pred(k, t) {
+      return Math.min(1, Math.max(0, this.m[k] * this.c[this.bin(k, t)]));
+    }
+    ig(k, t) {
+      const b = this.bin(k, t), c = this.c[b], m = this.m[k], p = this.pred(k, t);
+      const vc = this.useCurve ? 0.25 / (this.nc[b] + 1) : 0;
+      const V = c * c * this.P[k] + m * m * vc;
+      return 0.5 * Math.log(1 + V / (p * (1 - p) + 0.02));
+    }
+    observe(k, t, r) {
+      const b = this.bin(k, t), c = this.c[b], p = this.pred(k, t), R = p * (1 - p) + 0.02;
+      const G = this.P[k] * c / (c * c * this.P[k] + R);
+      this.m[k] += G * (r - p);
+      this.P[k] *= 1 - G * c;
+      this.m[k] = Math.min(1, Math.max(0.01, this.m[k]));
+      if (this.useCurve && b < this.NB - 1) {
+        this.c[b] += 0.3 / (this.nc[b] + 3) * (r / Math.max(0.05, this.m[k]) - c);
+        this.c[b] = Math.max(0, Math.min(1.5, this.c[b]));
+        this.nc[b]++;
+      }
+      if (r > 0)
+        this.last[k] = t;
+    }
+  }
+
   // ../../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
@@ -2504,7 +2563,7 @@
   };
   var is40 = (m) => m === "v40";
   var M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
-  var M50 = { cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+  var M50 = { dmul: 0, dmulK: 0.5, aom: 0, aomK: 1, cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
   if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2"))
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "3")
@@ -2513,6 +2572,8 @@
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "5")
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1 });
+  if (typeof process !== "undefined" && process.env?.ORG_V5 === "6")
+    Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1, dmul: 1, aom: 1 });
   if (typeof process !== "undefined" && process.env?.M50J)
     Object.assign(M50, JSON.parse(process.env.M50J));
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "2")
@@ -2663,6 +2724,26 @@
     }
     cfmPrec() {
       return M50.cfm > 0 && M50.cfmP > 0 && this.cfmM ? 1 / (1 + M50.cfmP * Math.max(0, this.cfmEh / Math.max(0.000001, this.cfmEb) - 1)) : 1;
+    }
+    dmW;
+    aomM;
+    dmulStep(ext) {
+      if (!(M50.dmul > 0) || this.o.mixLesion)
+        return;
+      const N = 13;
+      if (!this.dmW) {
+        const r = mulberry2(this.o.seed * 5099 + 41);
+        this.dmW = new Float64Array(52 * N).map(() => (r() * 2 - 1) / Math.sqrt(N) * 2);
+      }
+      for (let j = 0;j < 52; j++) {
+        const m = Math.floor(j / N), pm = m ^ 1;
+        let ap = 0;
+        for (let k = 0;k < N; k++) {
+          const ix = R0.CTX + pm * N + k;
+          ap += this.dmW[j * N + k] * (this.rate[ix] - this.rateAvg[ix]);
+        }
+        ext[R0.CTX + j] += M50.dmulK * (dmulOut(this.rate[R0.CTX + j], ap, 4, 0) - 0.5 * this.rate[R0.CTX + j]);
+      }
     }
     efmM;
     efmX = [];
@@ -3273,6 +3354,7 @@
         const M = this.mind;
         const gate = awake ? 1 : rem ? 0.2 : 0.05;
         this.cfmStep(ext);
+        this.dmulStep(ext);
         for (let i = 0;i < 16; i++) {
           ext[R0.SENS + i] += TUNE.sensIn * gate * (this.sens[i] + (this.bus ? this.bus.out[i] : 0)) * M.att[i >> 2];
           ext[R0.THAL + i] += M.td[i];
@@ -3601,6 +3683,8 @@
           this.depl[k] = 1;
         this.visits[k]++;
         this.lastVisit[k] = this.t;
+        if (M50.aom > 0)
+          (this.aomM ??= new AOM(SITES)).observe(k, this.t, got ? 1 : 0);
         if (o.danger && r() < this.danger[k]) {
           this.damage(0.08);
           this.harms++;
@@ -3794,6 +3878,8 @@
           this.bB[k] = 1 + (this.bB[k] - 1) * fg;
         }
       }
+      if (M50.aom > 0)
+        (this.aomM ??= new AOM(SITES)).tick();
       for (let k = 0;k < SITES; k++) {
         if (this.depl[k] > 0)
           this.depl[k] = Math.max(0, this.depl[k] - 1 / 120);
@@ -4193,6 +4279,8 @@
         let w = this.wSite[k] + (is39(this.o.mind ?? MIND_DEFAULT) && M39.vK > 0 ? M39.vK * (this.wSite[k] - wMu) : 0);
         if (v32 && this.level >= 3)
           w += 0.5 * (clamp(this.featC[this.siteC[k]] + this.featS[this.siteS[k]]) - w);
+        if (M50.aom > 0 && this.aomM && !this.o.efeLesion)
+          w += M50.aomK * this.aomM.ig(k, this.t);
         if (this.affect)
           w += M40.affK * this.affect.bias(k);
         if (this.neo)

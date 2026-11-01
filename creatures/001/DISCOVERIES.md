@@ -361,3 +361,12 @@ Reading (dev + held-out):
 - **CQM16-R second replication (v5.3, seeds 3221-3236):** 0.75/2.12. Same direction, but it did not reach the pass rule.
 - **Limitation:** the task-action chooser has no action-to-sensory consequences in these tests, so a task-level rollout is undefined. Rollout stays in foraging only.
 
+
+## B21 / v5.5: dendritic binding (DMUL) and action-outcome model (AOM) (2026-11-01)
+- **DMUL in isolation:** a linear XOR decode reaches 0.95 on dev 3285 and 0.97 on held-out 3301. The additive control (same weights) and the apical cut both sit near 0.5 (held-out d 7.6). Isolation passes.
+- **DMUL in the spiking cortex:** RPT2R is null (dev -0.18, held-out 0.30). Disclosed dev iterations: additive injection; then a centred (burst vs suppression) version; a K sweep from 0.5 to 10 peaked at 0.58. Cue identity still decodes (a: 0.94), so the conjunction is lost when the gate is turned into spike counts in already saturated cells.
+- **AOM in isolation:** on a depleting 16-site bandit, information gain beats no-information-gain with d 1.23/1.27 on dev/held-out (t 3.5) and beats a model without the consequence curve with d 3.6-4.9. Isolation passes.
+- **AOM in the creature:** AINF is null (dev 0.06, held-out -0.03). The creature already carries several epistemic terms, and information gain adds nothing that shows in reward.
+- **Foraging:** the drop happens at v5 -> v5.3 (EFM), with ATP unchanged and 0 deaths, so it is efficiency, not harm.
+- **AE1, pooled over 48 seeds (3317-3364):** v5-core 0.99/4.85 passes; v5.5 0.54/2.65 fails. The B20 pool came out the other way round, so AE1 is a noise-level borderline test.
+
