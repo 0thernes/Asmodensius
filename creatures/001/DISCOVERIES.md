@@ -137,3 +137,52 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 | UAL | 1.40/3.95 | 1.36/3.84 | ✓/✓ |
 | viability (forages, deaths) | 322, 0 | 278, 0 |  |
 v5-core = ORG_V5=1 (xsel 3, dTh 0+, insS). Single dev block; no held-out yet. Earlier this turn (before the change): the CQM16 audit (P-only and gain 0.25 controls n.s., so the test measures any insulin feedback, not allostasis); the q12 XOR 0.74 did not replicate over 8 seeds (0.54), so there is no online/offline gap; the CQM10 residual is meal absorption with insulin saturated at its ceiling plus an ungated ghrelin/HYP term; LTC isolated beats oracle fixed τ (2945 d 2.27, 2961 d 3.19); EVO-S designed, not run.
+
+## Nov 1 PHT: fresh dev block 3025-3040 (16 seeds). v4.0 vs v5-core vs v5.1
+v5-core (ORG_V5=1) vs v4.0:
+| Test | v4.0 d/t | v5-core d/t | pass v4/v5 |
+|---|---|---|---|
+| AE1 | 1.58/4.46 | 1.15/3.25 | ✓/✓ |
+| AINF | -0.14/-0.40 | 0.04/0.10 | ✗/✗ |
+| C03R | -1.63/-4.60 | -2.12/-6.00 | ✗/✗ |
+| C08R | 8.16/23.08 | 11.10/31.41 | ✓/✓ |
+| C10 | -3.39/-9.58 | -0.81/-2.30 | ✗/✗ |
+| C16 | 72.89/206.15 | 9.33/26.39 | ✓/✓ |
+| C16R | 0.00/0.00 | 0.00/0.00 | ✗/✗ |
+| GWT3R | 10.49/29.67 | 9.28/26.24 | ✓/✓ |
+| HOT1 | 1.73/4.91 | 3.00/8.49 | ✓/✓ |
+| HOT3RM | 0.74/2.09 | 0.62/1.76 | ✗/✗ |
+| HOT3RM-P | 0.95/3.79 | 1.02/4.07 | ✓/✓ |
+| thaler9 | 2.67/7.56 | 2.02/5.72 | ✓/✓ |
+| CQM12 | 1.75/4.95 | 1.52/4.29 | ✓/✓ |
+| PROJR | 4.52/12.79 | 4.19/11.85 | ✓/✓ |
+| RPT2R | -0.09/-0.26 | -0.30/-0.85 | ✗/✗ |
+| UAL | 1.09/3.09 | 1.03/2.90 | ✓/✓ |
+| viability (forages, deaths) | 320, 0 | 264, 0 |  |
+
+v5.1 (ORG_V5=2: hebX, mmG, zr, ltcC, ceph) vs v4.0 (column 3 = v5.1):
+| Test | v4.0 d/t | v5-core d/t | pass v4/v5 |
+|---|---|---|---|
+| AE1 | 1.58/4.46 | 0.24/0.68 | ✓/✗ |
+| AINF | -0.14/-0.40 | 0.01/0.02 | ✗/✗ |
+| C03R | -1.63/-4.60 | -2.34/-6.61 | ✗/✗ |
+| C08R | 8.16/23.08 | 8.43/23.84 | ✓/✓ |
+| C10 | -3.39/-9.58 | -0.87/-2.46 | ✗/✗ |
+| C16 | 72.89/206.15 | 9.63/27.24 | ✓/✓ |
+| C16R | 0.00/0.00 | 0.12/0.34 | ✗/✗ |
+| GWT3R | 10.49/29.67 | 4.49/12.71 | ✓/✓ |
+| HOT1 | 1.73/4.91 | 1.47/4.16 | ✓/✓ |
+| HOT3RM | 0.74/2.09 | 0.21/0.58 | ✗/✗ |
+| HOT3RM-P | 0.95/3.79 | 0.21/0.84 | ✓/✗ |
+| thaler9 | 2.67/7.56 | 1.14/3.23 | ✓/✓ |
+| CQM12 | 1.75/4.95 | 1.23/3.48 | ✓/✓ |
+| PROJR | 4.52/12.79 | 5.64/15.94 | ✓/✓ |
+| RPT2R | -0.09/-0.26 | -0.32/-0.91 | ✗/✗ |
+| UAL | 1.09/3.09 | 1.15/3.24 | ✓/✓ |
+| viability (forages, deaths) | 320, 0 | 270, 0 |  |
+
+Reading:
+- v5-core is at parity with v4.0. It passes the same 10 tests and none flip.
+- v5.1 loses AE1 and HOT3RM-P and weakens GWT3R and thaler9. The learned and normalized pieces do not yet help; they stay behind the flag and are not adopted.
+- CQM16-R (anticipation vs reactive feedback, ceph lesion): d 0.12, a null. v4.0 and v5-core have no cephalic forecast, so they score 0 by construction. The creature does not yet anticipate meals.
+- Foraging: v5 270 and v5.1 264 vs v4.0 320, with 0 deaths in every arm. This is consistent with less over-eating (insS; C10 d −3.4 → −0.8), not with starvation.
