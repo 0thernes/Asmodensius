@@ -118,4 +118,22 @@ Controls via `V40OPTS` (busShuffle, selfBody, glitchInj, glitchNoise, neoRandom,
 - RPT-2: a rest-rectified dendrite with xsel puts XOR information into the cortex (offline 0.74), but RPT2R's online readout does not extract it.
 
 ## 4:48 PM PT: direction change to CORE-ARCHITECTURE.md; v5-core vs v4.0 (dev 2993, 16 seeds, d/t vs each test's own control)
+| Test | v4.0 d/t | v5-core d/t | pass v4/v5 |
+|---|---|---|---|
+| AE1 | 0.81/2.29 | 1.47/4.15 | ✗/✓ |
+| AINF | 0.01/0.03 | -0.03/-0.10 | ✗/✗ |
+| C03R | -1.65/-4.67 | -1.18/-3.34 | ✗/✗ |
+| C08R | 6.76/19.11 | 10.24/28.95 | ✓/✓ |
+| C10 | -4.09/-11.58 | -1.14/-3.23 | ✗/✗ |
+| C16 | 42.27/119.56 | 9.99/28.25 | ✓/✓ |
+| GWT3R | 8.76/24.77 | 9.70/27.44 | ✓/✓ |
+| HOT1 | 1.91/5.41 | 2.09/5.90 | ✓/✓ |
+| HOT3RM | 0.61/1.72 | 0.59/1.67 | ✗/✗ |
+| HOT3RM-P | 0.99/3.97 | 0.92/3.69 | ✓/✓ |
+| thaler9 | 1.75/4.95 | 2.33/6.60 | ✓/✓ |
+| CQM12 | 1.39/3.92 | 1.76/4.99 | ✓/✓ |
+| PROJR | 5.45/15.42 | 3.36/9.49 | ✓/✓ |
+| RPT2R | -0.08/-0.23 | 0.78/2.20 | ✗/✗ |
+| UAL | 1.40/3.95 | 1.36/3.84 | ✓/✓ |
+| viability (forages, deaths) | 322, 0 | 278, 0 |  |
 v5-core = ORG_V5=1 (xsel 3, dTh 0+, insS). Single dev block; no held-out yet. Earlier this turn (before the change): the CQM16 audit (P-only and gain 0.25 controls n.s., so the test measures any insulin feedback, not allostasis); the q12 XOR 0.74 did not replicate over 8 seeds (0.54), so there is no online/offline gap; the CQM10 residual is meal absorption with insulin saturated at its ceiling plus an ungated ghrelin/HYP term; LTC isolated beats oracle fixed τ (2945 d 2.27, 2961 d 3.19); EVO-S designed, not run.
