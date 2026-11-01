@@ -39,3 +39,6 @@ RPT2R full=0.8264  cross-module CTX synapses lesioned=0.5313 125s
 RPT2RL5 full=0.8451  cross-module CTX synapses lesioned=0.5410 109s
 HOT3RM metacognitive opt-out=0.8217  random opt-out (matched rate)=0.7821  confidence shuffled=0.7903 125s
 PROJR full=0.8330  efference copy lesioned=0.4934 42s
+AE1R full=0.3271  RPE learning lesioned=0.2926 201s
+CQM18R full=1.000  plasticity frozen after lesion=0.2792 55s
+GWT3R full=0.7927  broadcast lesioned=0.2514 55s

@@ -39,3 +39,6 @@ C22 full=70.03  aversive learning lesioned=-145.8 339s
 RPT2RL5 full=0.6361  cross-module CTX synapses lesioned=0.5410 112s
 HOT3RM metacognitive opt-out=0.8292  random opt-out (matched rate)=0.7906  confidence shuffled=0.7950 128s
 PROJR full=0.8319  efference copy lesioned=0.5014 37s
+AE1R full=0.3080  RPE learning lesioned=0.2926 213s
+CQM18R full=1.000  plasticity frozen after lesion=0.2597 59s
+GWT3R full=0.7899  broadcast lesioned=0.2517 56s
