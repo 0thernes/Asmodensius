@@ -1319,6 +1319,110 @@
     }
   }
 
+  // ../../creatures/001/organism/fp/efm.ts
+  class EFM {
+    H;
+    D;
+    p;
+    m;
+    v;
+    k = 0;
+    h;
+    trained = 0;
+    constructor(D, r, H = 10) {
+      this.H = H;
+      this.D = D;
+      const n = H * H + H * D + H + H + 1;
+      this.p = new Float64Array(n).map(() => (r() * 2 - 1) * 0.3);
+      this.m = new Float64Array(n);
+      this.v = new Float64Array(n);
+      this.h = new Float64Array(H);
+    }
+    get n() {
+      return this.p.length;
+    }
+    cell(p, h, x) {
+      const H = this.H, D = this.D, nh = new Float64Array(H), oX = H * H, oB = oX + H * D;
+      for (let i = 0;i < H; i++) {
+        let s = p[oB + i];
+        for (let j = 0;j < H; j++)
+          s += p[i * H + j] * h[j];
+        for (let d = 0;d < D; d++)
+          s += p[oX + i * D + d] * x[d];
+        nh[i] = Math.tanh(s);
+      }
+      return nh;
+    }
+    out(p, h) {
+      const H = this.H, oO = H * H + H * this.D + H;
+      let s = p[oO + H];
+      for (let j = 0;j < H; j++)
+        s += p[oO + j] * h[j];
+      return s;
+    }
+    loss(p, xs, ys, B) {
+      let h = new Float64Array(this.H), L = 0;
+      for (let t = 0;t < xs.length; t++) {
+        h = this.cell(p, h, xs[t]);
+        if (t >= B)
+          L += (this.out(p, h) - ys[t]) ** 2;
+      }
+      return L / Math.max(1, xs.length - B);
+    }
+    grad(xs, ys, B) {
+      const H = this.H, D = this.D, p = this.p, T = xs.length, g = new Float64Array(this.n), oX = H * H, oB = oX + H * D, oO = oB + H, oBo = oO + H;
+      const hs = [new Float64Array(H)];
+      for (let t = 0;t < T; t++)
+        hs.push(this.cell(p, hs[t], xs[t]));
+      const N = Math.max(1, T - B);
+      let dh = new Float64Array(H);
+      for (let t = T - 1;t >= 0; t--) {
+        const h = hs[t + 1], hp = hs[t];
+        if (t >= B) {
+          const e = 2 * (this.out(p, h) - ys[t]) / N;
+          g[oBo] += e;
+          for (let j = 0;j < H; j++) {
+            g[oO + j] += e * h[j];
+            dh[j] += e * p[oO + j];
+          }
+        }
+        const da = new Float64Array(H);
+        for (let i = 0;i < H; i++)
+          da[i] = dh[i] * (1 - h[i] * h[i]);
+        const ndh = new Float64Array(H);
+        for (let i = 0;i < H; i++) {
+          g[oB + i] += da[i];
+          for (let j = 0;j < H; j++) {
+            g[i * H + j] += da[i] * hp[j];
+            ndh[j] += da[i] * p[i * H + j];
+          }
+          for (let d = 0;d < D; d++)
+            g[oX + i * D + d] += da[i] * xs[t][d];
+        }
+        dh = ndh;
+      }
+      return g;
+    }
+    adam(g, lr = 0.01) {
+      this.k++;
+      const b1 = 0.9, b2 = 0.999;
+      for (let i = 0;i < this.n; i++) {
+        const gi = Math.max(-5, Math.min(5, g[i]));
+        this.m[i] = b1 * this.m[i] + (1 - b1) * gi;
+        this.v[i] = b2 * this.v[i] + (1 - b2) * gi * gi;
+        this.p[i] -= lr * this.m[i] / (1 - b1 ** this.k) / (Math.sqrt(this.v[i] / (1 - b2 ** this.k)) + 0.00000001);
+      }
+      this.trained++;
+    }
+    advance(x) {
+      this.h = this.cell(this.p, this.h, x);
+      return this.out(this.p, this.h);
+    }
+    peek(x) {
+      return this.out(this.p, this.cell(this.p, this.h, x));
+    }
+  }
+
   // ../../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
@@ -2325,11 +2429,13 @@
   };
   var is40 = (m) => m === "v40";
   var M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
-  var M50 = { tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+  var M50 = { efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
   if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2"))
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "3")
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { tpc: 1 });
+  if (typeof process !== "undefined" && process.env?.ORG_V5 === "4")
+    Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "2")
     Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
   try {
@@ -2417,6 +2523,39 @@
     rateVar;
     cephW = new Float64Array(24);
     cephH = [];
+    efmM;
+    efmX = [];
+    efmE = [];
+    efmA = 0;
+    efmR;
+    efmF = 0;
+    efmTerm(e, gutFill) {
+      if (!(M50.efm > 0))
+        return 0;
+      const m = this.efmM ??= new EFM(5, this.efmR = mulberry2(this.o.seed * 7919 + 13), 10);
+      const x = [e, gutFill / 10, this.efmA, Math.sin(this.scnPhase), Math.cos(this.scnPhase)];
+      this.efmX.push(x);
+      this.efmE.push(e);
+      if (this.efmX.length > 3000) {
+        this.efmX.shift();
+        this.efmE.shift();
+      }
+      this.efmF = m.advance(x);
+      if (this.asleep && this.learn && this.efmX.length > 80) {
+        const K = 20, T = 40, B = 8, n = this.efmX.length;
+        const a = Math.floor(this.efmR() * (n - T - K));
+        m.adam(m.grad(this.efmX.slice(a, a + T), this.efmE.slice(a + K, a + K + T), B), 0.01);
+      }
+      return m.trained > 0 && !this.o.cephLesion ? 1.5 * Math.max(0, this.efmF - e) : 0;
+    }
+    efmRoll() {
+      const m = this.efmM;
+      if (!(M50.efm > 0) || !m || m.trained === 0 || this.o.cephLesion)
+        return 1;
+      const x = this.efmX[this.efmX.length - 1];
+      const dy = Math.abs(m.peek([x[0], x[1], 1, x[3], x[4]])), dn = Math.abs(m.peek([x[0], x[1], 0, x[3], x[4]]));
+      return 2 / (1 + Math.exp(-20 * (dn - dy)));
+    }
     tpcM;
     tpcTerm(e) {
       if (!(M50.tpc > 0))
@@ -2938,7 +3077,7 @@
       this.pidI = clamp(this.pidI + 0.002 * e, -0.5, 0.5);
       const dE = e - this.pidPrev;
       this.pidPrev = e;
-      this.insulin += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 + (o.pidGain ?? 1) * (1.5 * e + (o.pidP ? 0 : this.pidI + 3 * dE)) + (M50.ceph > 0 && !o.cephLesion ? M50.ceph * this.cephPred() : 0) + this.tpcTerm(bg - 1) + 0.2 * this.para * (o.vagotomy ? 0.3 : 1))) - this.insulin);
+      this.insulin += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 + (o.pidGain ?? 1) * (1.5 * e + (o.pidP ? 0 : this.pidI + 3 * dE)) + (M50.ceph > 0 && !o.cephLesion ? M50.ceph * this.cephPred() : 0) + this.tpcTerm(bg - 1) + this.efmTerm(bg - 1, gutFill) + 0.2 * this.para * (o.vagotomy ? 0.3 : 1))) - this.insulin);
       this.glucagon += 0.1 * ((o.pidLesion ? 0.3 : clamp(0.3 - 1.5 * e - this.pidI + 0.3 * this.symp)) - this.glucagon);
       this.cortisol += 0.02 * (clamp(0.35 + 0.25 * (o.scnLesion ? 0 : Math.cos(2 * Math.PI * (hour - 7) / 24)) + 0.6 * clamp(0.85 - bg) + 0.2 * (forced ? 1 : 0) + 0.4 * clamp(0.8 - this.integrity)) - this.cortisol);
       this.ghrelin += 0.01 * (clamp(1 - gutFill / 6) - this.ghrelin);
@@ -3277,7 +3416,9 @@
       let decideSpikes = 0;
       const v38e = is38(o.mind ?? MIND_DEFAULT);
       const fatDef = (v38e ? clamp(1 - this.fat / M38.fSet) : 0) * (M40.insS > 0 ? clamp(2 - this.insulin / 0.3) : 1);
-      if (awake && !this.dead && r() * (this.affect ? 1 / this.affect.forageMul() : 1) < (o.fixedDrive ? 0.12 : clamp((3 * hunger - 0.1 + (v38e ? M38.fK * fatDef : 0)) * (o.genes ? o.genes[2] : 1)))) {
+      this.efmA = 0;
+      if (awake && !this.dead && r() * (this.affect ? 1 / this.affect.forageMul() : 1) < (o.fixedDrive ? 0.12 : clamp((3 * hunger - 0.1 + (v38e ? M38.fK * fatDef : 0)) * (o.genes ? o.genes[2] : 1)) * this.efmRoll())) {
+        this.efmA = 1;
         let { k, sp } = this.choose(da);
         if (is40(o.mind ?? MIND_DEFAULT) && (o.veto ?? "own") !== "off") {
           const kk = o.veto === "shuffle" ? (k * 7 + 3 + o.seed % 5) % SITES : k;
