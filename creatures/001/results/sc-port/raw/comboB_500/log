@@ -8,3 +8,4 @@ UAL full=0.1110  eligibility traces lesioned=0.02113 26s
 GWT2 full=0.9625  workspace lesioned (action reads module average)=0.6000 27s
 AINF full=53.50  epistemic term lesioned=54.69 84s
 C10 full=0.9111  fixed foraging drive=0.9885 141s
+C16R full=0.4898  anticipation lesioned (reactive only)=0.2875 145s
