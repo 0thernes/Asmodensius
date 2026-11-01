@@ -1,0 +1,2 @@
+{"seeds":3285,"full":"140.8","noIG":"125.9","noCurve":"96.9","d/t vs noIG":"1.23/3.47","d/t vs noCurve":"4.87/13.77"}
+{"seeds":3301,"full":"140.3","noIG":"125.3","noCurve":"98.4","d/t vs noIG":"1.27/3.59","d/t vs noCurve":"3.58/10.12"}
