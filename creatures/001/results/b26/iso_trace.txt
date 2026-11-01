@@ -1,0 +1,22 @@
+C11
+ "1 sens | a^b": "0.508",
+ "2 thal | a^b": "0.571",
+ "3 ctx m0 (a side) | a^b": "0.579",
+ "4 ctx m1 (b side) | a^b": "0.654",
+ "5 ctx31 m0+m1 (test readout) | a^b": "0.692",
+ "6 ctx m0+m1, 3-tick mean | a^b": "0.708",
+ "7 all cortex 64 | a^b": "0.646",
+ "8 L5 pool m0+m1 | a^b": "0.721",
+ "9 whole brain | a^b": "0.617",
+ "10 oracle: ctx31 + a*b | a^b": "0.954"
+C12
+ "1 sens | a^b": "0.504",
+ "2 thal | a^b": "0.604",
+ "3 ctx m0 (a side) | a^b": "0.654",
+ "4 ctx m1 (b side) | a^b": "0.642",
+ "5 ctx31 m0+m1 (test readout) | a^b": "0.725",
+ "6 ctx m0+m1, 3-tick mean | a^b": "0.679",
+ "7 all cortex 64 | a^b": "0.683",
+ "8 L5 pool m0+m1 | a^b": "0.629",
+ "9 whole brain | a^b": "0.608",
+ "10 oracle: ctx31 + a*b | a^b": "0.879"
