@@ -272,3 +272,13 @@ Dev diagnostic (q30, 3077–3080): in CQM16-R's window insulin is already satura
 - **Design:** a 10-unit forward model of the creature's own glucose, 20 ticks ahead. It is trained only in sleep by exact BPTT; the TS port matches Eshkol's gradient to 2e-16. Its forecast feeds the insulin drive, and a 1-step rollout (forage vs not) gates foraging.
 - **Moved:** the drive-level tests. C10 deficit removed; CQM16-R passes on held-out data.
 - **Not moved:** cortical tests (RPT2R, AINF, HOT3RM) and ecology (C03R). Principle: a forward model helps only the decisions it is wired into, so the next step is to wire it into the cortex and the task-action chooser.
+
+## B20 / v5.4: cortical forward model (2026-11-01)
+- **What was built:** a 16-unit RNN over the senses, trained only in sleep by exact BPTT to predict the next tick. Its gradient was checked against finite differences to 4e-10, using the same cell as the Eshkol-verified EFM. Its hidden state re-enters the cortex as cross-module input. An NLMS error model predicts the RNN's own error and lowers the precision of the action readout.
+- **RPT2R:** not helped (dev -0.39, held-out -0.28). The learned forward features are near-linear, so they carry no XOR conjunction. Not tuned.
+- **AINF:** null (held-out 0.07). An epistemic route that runs through a forward model of the senses does not raise reward gain.
+- **HOT3RM:** passes on dev (1.02/2.88) but fails on held-out (0.87/2.46). Treat it as noise-level.
+- **AE1:** pooled over 48 seeds, v5.4 1.08/5.27 vs v5-core 0.65/3.18.
+- **CQM16-R second replication (v5.3, seeds 3221-3236):** 0.75/2.12. Same direction, but it did not reach the pass rule.
+- **Limitation:** the task-action chooser has no action-to-sensory consequences in these tests, so a task-level rollout is undefined. Rollout stays in foraging only.
+

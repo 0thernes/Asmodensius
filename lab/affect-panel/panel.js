@@ -1423,6 +1423,81 @@
     }
   }
 
+  class EFMV extends EFM {
+    Do;
+    constructor(D, Do, r, H = 16) {
+      super(D, r, H);
+      this.Do = Do;
+      const n = H * H + H * D + H + Do * H + Do;
+      this.p = new Float64Array(n).map(() => (r() * 2 - 1) * 0.3);
+      this.m = new Float64Array(n);
+      this.v = new Float64Array(n);
+    }
+    outV(p, h) {
+      const H = this.H, oO = H * H + H * this.D + H, y = new Float64Array(this.Do);
+      for (let d = 0;d < this.Do; d++) {
+        let s = p[oO + this.Do * H + d];
+        for (let j = 0;j < H; j++)
+          s += p[oO + d * H + j] * h[j];
+        y[d] = s;
+      }
+      return y;
+    }
+    lossV(p, xs, ys, B) {
+      let h = new Float64Array(this.H), L = 0;
+      for (let t = 0;t < xs.length; t++) {
+        h = this.cell(p, h, xs[t]);
+        if (t >= B) {
+          const y = this.outV(p, h);
+          for (let d = 0;d < this.Do; d++)
+            L += (y[d] - ys[t][d]) ** 2;
+        }
+      }
+      return L / (Math.max(1, xs.length - B) * this.Do);
+    }
+    gradV(xs, ys, B) {
+      const H = this.H, D = this.D, Do = this.Do, p = this.p, T = xs.length, g = new Float64Array(this.n), oX = H * H, oB = oX + H * D, oO = oB + H, oBo = oO + Do * H;
+      const hs = [new Float64Array(H)];
+      for (let t = 0;t < T; t++)
+        hs.push(this.cell(p, hs[t], xs[t]));
+      const N = Math.max(1, T - B) * Do;
+      let dh = new Float64Array(H);
+      for (let t = T - 1;t >= 0; t--) {
+        const h = hs[t + 1], hp = hs[t];
+        if (t >= B) {
+          const y = this.outV(p, h);
+          for (let d = 0;d < Do; d++) {
+            const e = 2 * (y[d] - ys[t][d]) / N;
+            g[oBo + d] += e;
+            for (let j = 0;j < H; j++) {
+              g[oO + d * H + j] += e * h[j];
+              dh[j] += e * p[oO + d * H + j];
+            }
+          }
+        }
+        const da = new Float64Array(H);
+        for (let i = 0;i < H; i++)
+          da[i] = dh[i] * (1 - h[i] * h[i]);
+        const ndh = new Float64Array(H);
+        for (let i = 0;i < H; i++) {
+          g[oB + i] += da[i];
+          for (let j = 0;j < H; j++) {
+            g[i * H + j] += da[i] * hp[j];
+            ndh[j] += da[i] * p[i * H + j];
+          }
+          for (let d = 0;d < D; d++)
+            g[oX + i * D + d] += da[i] * xs[t][d];
+        }
+        dh = ndh;
+      }
+      return g;
+    }
+    advanceV(x) {
+      this.h = this.cell(this.p, this.h, x);
+      return this.outV(this.p, this.h);
+    }
+  }
+
   // ../../creatures/001/organism/organism.ts
   function mulberry2(seed) {
     let a = seed >>> 0;
@@ -2109,7 +2184,7 @@
             this.att[m] = 1 + 2 * Math.max(0, this.Wq[(this.win * 4 + c) * 4 + m]);
       }
       const z = this.act.out(this.bc);
-      this.actP = msoftmax(z, 2 + 6 * Math.min(1, g.nm.DA.E + 0.2));
+      this.actP = msoftmax(z, (2 + 6 * Math.min(1, g.nm.DA.E + 0.2)) * (g.cfmPrec ? g.cfmPrec() : 1));
       const srt = this.actP.slice().sort((a, b) => b - a);
       this.margin = srt[0] - srt[1];
       this.lastAct = this.action;
@@ -2429,13 +2504,17 @@
   };
   var is40 = (m) => m === "v40";
   var M40 = { insS: 0, xsel: 0, uK: 0.3, mK: 0.5, dreamC: 6, dreamLr: 0.75, tempSD: 0.25, turn: 0, busOut: 0.15, insK: 0.15, cautK: 0.25, simK: 0.3, markK: 0.05, affK: 0.5, forget: 0, eK: 0, tsK: 0, volLeak: 0.01, vetoThr: 0.3, kgK: 0, srcMon: 0, epiN: 0, volX: 0, vetoI: 0, fpH1: 0, l4: 1, dTh: 0, dG: 1, dreamGate: 0, curK: 0, aG: 0, aTh: 1, som: 0, ffi: 0, apL: 0, apAll: 0, apH: 0, onR: 0 };
-  var M50 = { efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
+  var M50 = { cfm: 0, cfmK: 0.6, cfmP: 1, efm: 0, tpc: 0, ceph: 0, hebX: 0, mmG: 0, zr: 0, ltcC: 0 };
   if (typeof process !== "undefined" && (process.env?.ORG_V5 === "1" || process.env?.ORG_V5 === "2"))
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "3")
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { tpc: 1 });
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "4")
     Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1 });
+  if (typeof process !== "undefined" && process.env?.ORG_V5 === "5")
+    Object.assign(M40, { xsel: 3, dTh: 0.000001, insS: 1 }), Object.assign(M50, { efm: 1, cfm: 1 });
+  if (typeof process !== "undefined" && process.env?.M50J)
+    Object.assign(M50, JSON.parse(process.env.M50J));
   if (typeof process !== "undefined" && process.env?.ORG_V5 === "2")
     Object.assign(M50, { ceph: 1, hebX: 0.002, mmG: 1, zr: 1, ltcC: 1 });
   try {
@@ -2523,6 +2602,68 @@
     rateVar;
     cephW = new Float64Array(24);
     cephH = [];
+    cfmM;
+    cfmX = [];
+    cfmPj;
+    cfmY;
+    cfmW = new Float64Array(17);
+    cfmHp;
+    cfmEh = 0;
+    cfmEb = 0.05;
+    cfmR;
+    cfmStep(ext) {
+      if (!(M50.cfm > 0))
+        return;
+      const H = 16;
+      const m = this.cfmM ??= new EFMV(16, 16, this.cfmR = mulberry2(this.o.seed * 6007 + 29), H);
+      if (!this.cfmPj) {
+        this.cfmPj = new Float64Array(52 * H).map(() => (this.cfmR() * 2 - 1) / Math.sqrt(H));
+      }
+      const x = Array.from(this.sens, (v) => +v);
+      if (this.stage === 0) {
+        this.cfmX.push(x);
+        if (this.cfmX.length > 2000)
+          this.cfmX.shift();
+      }
+      if (this.cfmY && this.cfmHp) {
+        let se = 0;
+        for (let i = 0;i < 16; i++)
+          se += (this.cfmY[i] - x[i]) ** 2;
+        se /= 16;
+        const f = [...this.cfmHp, 1];
+        let pr = 0, nn = 0.000001;
+        for (let i = 0;i < 17; i++) {
+          pr += this.cfmW[i] * f[i];
+          nn += f[i] * f[i];
+        }
+        const d = se - pr;
+        for (let i = 0;i < 17; i++)
+          this.cfmW[i] += 0.1 * d * f[i] / nn;
+        this.cfmEb += 0.01 * (se - this.cfmEb);
+      }
+      this.cfmY = m.advanceV(x);
+      this.cfmHp = Float64Array.from(m.h);
+      {
+        let pr = this.cfmW[16];
+        for (let i = 0;i < 16; i++)
+          pr += this.cfmW[i] * m.h[i];
+        this.cfmEh = pr;
+      }
+      if (this.asleep && this.learn && this.cfmX.length > 60) {
+        const T = 30, n = this.cfmX.length, a = Math.floor(this.cfmR() * (n - T - 1));
+        m.adam(m.gradV(this.cfmX.slice(a, a + T), this.cfmX.slice(a + 1, a + T + 1), 4), 0.005);
+      }
+      if (!this.o.mixLesion)
+        for (let j = 0;j < 52; j++) {
+          let s = 0;
+          for (let k = 0;k < H; k++)
+            s += this.cfmPj[j * H + k] * m.h[k];
+          ext[R0.CTX + j] += M50.cfmK * s;
+        }
+    }
+    cfmPrec() {
+      return M50.cfm > 0 && M50.cfmP > 0 && this.cfmM ? 1 / (1 + M50.cfmP * Math.max(0, this.cfmEh / Math.max(0.000001, this.cfmEb) - 1)) : 1;
+    }
     efmM;
     efmX = [];
     efmE = [];
@@ -3131,6 +3272,7 @@
       {
         const M = this.mind;
         const gate = awake ? 1 : rem ? 0.2 : 0.05;
+        this.cfmStep(ext);
         for (let i = 0;i < 16; i++) {
           ext[R0.SENS + i] += TUNE.sensIn * gate * (this.sens[i] + (this.bus ? this.bus.out[i] : 0)) * M.att[i >> 2];
           ext[R0.THAL + i] += M.td[i];

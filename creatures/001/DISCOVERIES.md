@@ -351,3 +351,13 @@ Reading (dev + held-out):
 - Forages drop a further ~7%, with no deaths.
 - Forecast quality in the creature (q31): corr(forecast, glucose error 20 ticks ahead) = 0.93-0.98.
 - During the CQM16-R meal, glucose exceeds 4.5 for most of the window even with the forecast, because insulin saturates at its clamp. I did not raise the clamp, since that would tune to the test.
+
+## B20 / v5.4: cortical forward model (2026-11-01)
+- **What was built:** a 16-unit RNN over the senses, trained only in sleep by exact BPTT to predict the next tick. Its gradient was checked against finite differences to 4e-10, using the same cell as the Eshkol-verified EFM. Its hidden state re-enters the cortex as cross-module input. An NLMS error model predicts the RNN's own error and lowers the precision of the action readout.
+- **RPT2R:** not helped (dev -0.39, held-out -0.28). The learned forward features are near-linear, so they carry no XOR conjunction. Not tuned.
+- **AINF:** null (held-out 0.07). An epistemic route that runs through a forward model of the senses does not raise reward gain.
+- **HOT3RM:** passes on dev (1.02/2.88) but fails on held-out (0.87/2.46). Treat it as noise-level.
+- **AE1:** pooled over 48 seeds, v5.4 1.08/5.27 vs v5-core 0.65/3.18.
+- **CQM16-R second replication (v5.3, seeds 3221-3236):** 0.75/2.12. Same direction, but it did not reach the pass rule.
+- **Limitation:** the task-action chooser has no action-to-sensory consequences in these tests, so a task-level rollout is undefined. Rollout stays in foraging only.
+
