@@ -19,3 +19,6 @@ HOT4 full=0.6213  sensory lines permuted every trial=0.001426 59s
 AST1 full=-0.04294  schema lesioned (raw observation)=-0.06109 69s
 PP1 full=-0.04079  predictor lesioned (running mean)=-0.04434 74s
 AE2 full=-0.01346  forward model lesioned (gain fixed at prior)=-0.3134 60s
+IIT full=0.6071  recurrent + cross-module CTX lesioned=0.4477 172s
+NOVEL thaler9:full=0.3693  thaler9:dreams with shuffled content=0.3070  CQM12:full=-0.01147  CQM12:dreams shuffled=-0.01891 472s
+ASO full=-0.03148  last-observation predictor=-0.09103 69s

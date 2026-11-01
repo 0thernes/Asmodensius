@@ -20,3 +20,5 @@ AST1 full=-0.04279  schema lesioned (raw observation)=-0.06115 65s
 PP1 full=-0.03997  predictor lesioned (running mean)=-0.04432 63s
 AE2 full=-0.01312  forward model lesioned (gain fixed at prior)=-0.3048 57s
 IIT full=0.5947  recurrent + cross-module CTX lesioned=0.4477 189s
+ASO full=-0.03205  last-observation predictor=-0.09274 58s
+NOVEL thaler9:full=0.3595  thaler9:dreams with shuffled content=0.3040  CQM12:full=-0.01254  CQM12:dreams shuffled=-0.01922 435s
