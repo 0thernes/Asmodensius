@@ -5,7 +5,7 @@ import { L5Pool } from "./l5";
 const mul = (a: number) => () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 const run = (seed: number, arm: string): number => { const r = mul(seed), N = 13, gs = () => { let s = 0; for (let i = 0; i < 6; i++) s += r(); return s - 3; };
   const cueW = [0, 1].map(() => Array.from({ length: N }, (_, i) => (i < 3 ? (r() < 0.5 ? -1 : 1) * 0.5 : 0))), drW = [0, 1].map(() => Array.from({ length: N }, () => gs())); let dr = [0, 0];
-  const PA = new L5Pool(8, N, r), PB = new L5Pool(8, N, r); const mu = [new Float64Array(N), new Float64Array(N)]; let prev = [0, 0]; let xp: number[][] | null = null; const w = new Float64Array(2 * N + 17); let ok = 0;
+  const PA = new L5Pool(8, N, r), PB = new L5Pool(8, N, r); PA.norm = PB.norm = process.env.NORM === "1"; const mu = [new Float64Array(N), new Float64Array(N)]; let prev = [0, 0]; let xp: number[][] | null = null; const w = new Float64Array(2 * N + 17); let ok = 0;
   const tick = (cues: number[]) => { const x = [0, 1].map((m) => { dr[m] = 0.97 * dr[m] + 0.25 * gs(); return Array.from({ length: N }, (_, i) => cueW[m][i] * cues[m] + 0.6 * drW[m][i] * dr[m] + 0.15 * gs()); });
     const c = x.map((v, m) => v.map((q, i) => { mu[m][i] += 0.02 * (q - mu[m][i]); return q - mu[m][i]; })); const sur = Math.abs(cues[0] - prev[0]) + Math.abs(cues[1] - prev[1]); prev = cues.slice();
     const dx = xp ? x.map((v, m) => v.map((q, i) => q - xp![m][i])) : null; xp = x;

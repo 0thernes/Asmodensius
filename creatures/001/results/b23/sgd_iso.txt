@@ -1,3 +1,7 @@
 dev iteration 1 (gate x centred rates): gated 0.567, ungated 0.626, random 0.607 -> fail; iteration 2 (plasticity on phasic change response):
 {"seeds":3445,"gated":"0.985","ungated":"0.982","random":"0.607","d/t vs ungated":"0.14/0.39","d/t vs random":"5.56/15.72"}
 {"seeds":3461,"gated":"0.974","ungated":"0.963","random":"0.601","d/t vs ungated":"0.32/0.91","d/t vs random":"6.35/17.95"}
+with divisive normalisation (frozen creature design):
+{"seeds":3445,"gated":"0.986","ungated":"0.981","random":"0.831","d/t vs ungated":"0.22/0.61","d/t vs random":"1.90/5.38"}
+{"seeds":3461,"gated":"0.976","ungated":"0.963","random":"0.870","d/t vs ungated":"0.38/1.08","d/t vs random":"1.50/4.26"}
+creature dev 3445 RPT2R-L5 (dev iteration 3 = + normalisation): 0.625 vs cut 0.516, d 1.26 t 3.56
