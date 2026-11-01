@@ -252,3 +252,18 @@ Fresh held-out block 2881: unpaired d 0.77 / t 2.19 (fails), paired dz 1.51 / t 
 - **Module `M40.insS`:** the fat-deficit drive is multiplied by clamp(2 − insulin/0.3), i.e. full suppression at 2× the creature's own basal insulin. One choice, no sweep.
 - **Isolated (fp/allo.ts):** 2897 d 14.51 / t 41.05; held-out 2929 d 11.93 / t 33.74.
 - **In the creature:** hyperglycaemia 33% → 13%. CQM10 on 2897 goes from d −3.27 to −0.64 (0.912 vs fixed 0.975). It still does not beat fixed drive, so it is **not adopted** (off). Without adoption, the recheck of passes is not triggered.
+
+## Nov 1 PHT: one temporal predictive core (TPC) instead of per-test patches (prereg B18)
+Diagnosis: the failing set (RPT2R, HOT3RM, AINF, C10, C03R, CQM16-R) shares one missing property, a learned internal model that predicts across time.
+Mechanism (`organism/fp/tpc.ts`): a leaky recurrent state h (64 units, fixed random recurrence, spectral radius 0.9). It is driven by the input plus 0.8 × its own K-step forecast (reentry). Next-step and K-step readouts are learned by NLMS on the model's own prediction error. Because the forecast is fed back, the closed-loop dynamics are learned.
+Isolated checks (`fp/dev_tpc.ts`, dev 3077–3084, 8 seeds):
+| Task | TPC | no reentry | frozen readout |
+|---|---|---|---|
+| A: delayed match, 16-tick noisy delay (cue decodable) | 0.735 | 0.875 | 0.875 |
+| A: 40-tick delay | 0.459 | 0.484 | 0.484 |
+| B: scheduled meal, fraction of post-meal ticks in band | **0.984 ± 0.012** | 0.947 ± 0.012 | 0.946 |
+- Forecasting supports anticipation (B: d ≈ 3).
+- Feeding a learned forecast back does **not** sustain a memory and slightly hurts it (A). A forecast of the average future is not a hold. Sustained reentry needs an attractor (bistable/NMDA-like units), not prediction alone.
+- I tried lam 0.3 and K = 1 on dev; neither changed A (disclosed).
+Creature wiring (ORG_V5=3 = v5-core + TPC): input is [glucose error, clock sin/cos, 16 senses], K = 20. The forecast rise adds to the insulin target (the same form as isolated check B). It is lesioned by `cephLesion` (CQM16-R control).
+Dev diagnostic (q30, 3077–3080): in CQM16-R's window insulin is already saturated (~0.9–1.0) and glucose is high. The test gives only 2 meal days before scoring, so a learned clock→meal forecast has 2 examples. On 2–4 seeds TPC scored worse than its lesion (0.12 vs 0.30). A symmetric-forecast variant was also worse (0.20 vs 0.37). The isolation-validated form is kept and frozen.

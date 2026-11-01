@@ -55,3 +55,14 @@
 - v4.0 audit/RPT-2: Baars 1988; Dehaene & Naccache 2001 (Cognition); McClelland, McNaughton & O'Reilly 1995 (Psych Rev); Ko et al. 2011 (Nature); Gilbert & Wiesel 1989 (J Neurosci); Pouille & Scanziani 2001 (Science).
 - v4.0 CQM10/RPT-2: Woods et al. 1979 (Nature); Könner et al. 2007 (Cell Metab); Schwartz et al. 2000 (Nature); Schiller et al. 2000 (Nature); Polsky, Mel & Schiller 2004 (Nat Neurosci).
 - v5 CORE-ARCHITECTURE: Payeur et al. 2021 (Nat Neurosci); Halassa & Kastner 2017 (Nat Neurosci); Dehaene & Changeux 2011 (Neuron); Carandini & Heeger 2012 (Nat Rev Neurosci); Turrigiano 2008 (Cell); Yu & Dayan 2005 (Neuron); Borbély 1982; Sterling 2012; Hasani et al. 2021. Tsotchke (Eshkol, Moonlab, QGTL, QRNG) credited as engine.
+
+## Nov 1 PHT additions (TPC, prereg B18)
+- Echo-state reservoir with a learned readout: Jaeger 2001, GMD Report 148; Maass, Natschläger & Markram 2002, Neural Comput 14:2531.
+- NLMS / delta rule: Widrow & Hoff 1960.
+- Internal forward models: Wolpert, Ghahramani & Jordan 1995, Science 269:1880.
+- Predictive coding: Rao & Ballard 1999, Nat Neurosci 2:79.
+- Reentry: Edelman 1987; Lamme 2006, TICS 10:494. Persistent activity needs attractor dynamics: Wang 2001, TINS 24:455.
+- Allostasis / cephalic-phase insulin: Sterling 2012, Physiol Behav 106:5; Powley 1977, Psychol Rev 84:89; Teff 2000, Appetite 34:206.
+- Covariance plasticity: Sejnowski 1977, J Math Biol 4:303.
+- Tsotchke QGTL fidelity (credited): max |QGTL − JS| = 8.4e-8 over 20 tuning pairs.
+Composition and code are original.
