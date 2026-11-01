@@ -234,4 +234,9 @@ Reading: on held-out data, v5.1 also ties v4.0 overall. HOT1 is lost (t 2.60). H
 Reading: TPC moves none of the failing set (C16R −0.01, C10 −1.11, AINF, RPT2R, C03R, HOT3RM all unchanged). AE1 passes in v5.2 on dev only; check against held-out 3093.
 
 EVO-S baselines (3061-3076, 16 seeds; v5-core):
+| Test | full mean | control | control mean | d | Welch t |
+|---|---|---|---|---|---|
+| CQM01 | 0.177 | offspring genomes random | -0.076 | 1.48 | 4.18 |
+| CQM03 | 0.800 | births on a fixed schedule | 0.000 | 17.14 | 48.49 |
+| CQM04 | 1.239 | random survival | 1.058 | 0.45 | 1.27 |
 Caveat: CQM03's control (births on a fixed schedule) is 0 by construction, so d 17 is degenerate and not a valid pass. CQM01 passes; CQM04 does not.
