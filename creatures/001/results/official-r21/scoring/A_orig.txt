@@ -87,4 +87,8 @@ PASS ctm-R report agrees with action, degraded stimuli [Bounded test evidence]
    vs broadcast lesioned: full 0.8986 ctrl 0.2687 d 12.80 t 62.73
 PASS CQM08R continual retention, degraded stimuli [Bounded test evidence]
    vs replay lesioned: full 0.8198 ctrl 0.1089 d 7.98 t 39.07
-ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 3/3; v3.7 items 0/0; v3.9 items 0/0; MISSING EVO,EVO,EVO,EVO,K1,K2,L1,L2,L3,L4,L5,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,C03R,C01R,VIAB
+FAIL CQM03R ecological coupling |corr(food, next births)|, control: random birth counts [Not established]
+   vs births random in number: full 0.01716 ctrl 0.3689 d -2.31 t -11.32
+PASS CQM01R heredity corr(parent, offspring forage rate), founders at 0.9 fSet (unsaturated drive) [Bounded test evidence]
+   vs offspring genomes random: full 0.2740 ctrl 0.06579 d 1.09 t 5.34
+ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 3/3; v3.7 items 0/1; v3.9 items 1/1; MISSING EVO,EVO,EVO,EVO,K1,K2,L1,L2,L3,L4,L5,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,VIAB

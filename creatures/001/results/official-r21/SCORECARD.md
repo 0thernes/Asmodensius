@@ -1,8 +1,8 @@
 # OFFICIAL Round 21 scorecard (Creature #1)
 
-Generated 2026-11-01 12:15 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
+Generated 2026-11-01 12:35 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
 
-**Run status:** test files done: arm A 47/63, arm D 47/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
+**Run status:** test files done: arm A 49/63, arm D 48/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
 
 Pass = d>=0.8 AND Welch t>=2.75 vs every control (+ non-ceiling rule). PARTIAL = passes some controls but not all, or the original fails while a disclosed R variant passes. Official totals count originals only.
 
@@ -14,7 +14,7 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 |---|---|---|---|---|
 | Butlin | 9/14 (partial 3, pending 0) | 12/14 (partial 0, pending 0) | 9/14 (partial 3, pending 0) | 12/14 (partial 0, pending 0) |
 | Frameworks | 6/10 (partial 2, pending 0) | 8/10 (partial 0, pending 0) | 5/10 (partial 2, pending 0) | 7/10 (partial 0, pending 0) |
-| CQM | 15/25 (partial 2, pending 4) | 17/25 (partial 0, pending 4) | 15/25 (partial 2, pending 4) | 17/25 (partial 0, pending 4) |
+| CQM | 15/25 (partial 2, pending 4) | 18/25 (partial 0, pending 3) | 15/25 (partial 2, pending 4) | 18/25 (partial 0, pending 3) |
 
 ## Butlin 14
 
@@ -54,9 +54,9 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 
 | Item | A v5.7b | A d/t | D v5.7d | D d/t | R variants (A / D) |
 |---|---|---|---|---|---|
-| CQM01 | PENDING |  | PENDING |  | CQM01R: PENDING / PENDING |
+| CQM01 | PENDING |  | PENDING |  | CQM01R: PASS / PASS |
 | CQM02 | PENDING |  | PENDING |  |  |
-| CQM03 | PENDING |  | PENDING |  | CQM03R: PENDING / PENDING |
+| CQM03 | PENDING |  | PENDING |  | CQM03R: FAIL / PENDING |
 | CQM04 | PENDING |  | PENDING |  |  |
 | CQM05 | PASS | d 39.05 t 191.32 | PASS | d 38.29 t 187.58 |  |
 | CQM06 | FAIL | d 0.30 t 1.48 | FAIL | d 0.56 t 2.76 |  |
@@ -93,8 +93,8 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 - A GWT-3R: PASS d 10.03 t 49.15
 - A ctm-R: PASS d 12.80 t 62.73
 - A CQM08R: PASS d 7.98 t 39.07
-- A CQM03R: PENDING 
-- A CQM01R: PENDING 
+- A CQM03R: FAIL d -2.31 t -11.32
+- A CQM01R: PASS d 1.09 t 5.34
 - A K1aR: PENDING 
 - A K1cR: PENDING 
 - D RPT2R: PASS vs cross-module CTX synapses lesioned: d 3.36 t 16.44; vs shuffled pairing (vshuf): d 2.74 t 13.44
@@ -109,7 +109,7 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 - D ctm-R: PASS d 10.93 t 53.54
 - D CQM08R: PASS d 6.91 t 33.87
 - D CQM03R: PENDING 
-- D CQM01R: PENDING 
+- D CQM01R: PASS d 1.47 t 7.19
 - D K1aR: PENDING 
 - D K1cR: PENDING 
 
