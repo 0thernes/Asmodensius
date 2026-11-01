@@ -16,3 +16,7 @@ GWT4 full=0.9670  attention not driven by workspace state=0.1920 162s
 HOT1 full=-0.04822  top-down lesioned=-0.07491 86s
 HOT2 full=0.6443  confidence shuffled (S)=0.4898 60s
 HOT4 full=0.6408  sensory lines permuted every trial=0.01495 63s
+AST1 full=-0.04279  schema lesioned (raw observation)=-0.06115 65s
+PP1 full=-0.03997  predictor lesioned (running mean)=-0.04432 63s
+AE2 full=-0.01312  forward model lesioned (gain fixed at prior)=-0.3048 57s
+IIT full=0.5947  recurrent + cross-module CTX lesioned=0.4477 189s
