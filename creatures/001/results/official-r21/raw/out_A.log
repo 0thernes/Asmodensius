@@ -52,3 +52,4 @@ K1R full=0.9642  v3.1 cortex=0.9604  no developmental waves=0.9583  no STDP=0.95
 K2 full=0.3316  NMDA-like current lesioned=0.2708 55s
 LIGHT melatonin at midnight, dome dark minus lit=0.9707 157s
 NOISESIGN v36 |P(+)-0.5|=0.02453  v35 |P(+)-0.5|=0.2918 17s
+INSGLC full=0.6875  visceral afferent cut=0.4969  labels shuffled=0.4989 209s

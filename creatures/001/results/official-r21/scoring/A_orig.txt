@@ -81,14 +81,34 @@ FAIL butlin14 rollup of 14 Butlin items [9/14 pass] (rollup)
 PASS CQM24 reproducibility (state hash) [Tolerance test]
 PASS CQM25 scale (measured parameters) [Implementation identified] ({"synapses":4151,"plasticSynapses":331,"valueSynapses":2698,"kinetics":390,"quantum":19,"total":7258})
 FAIL CQM23 substrate pluralism [Not applicable] (JS only)
+FAIL K1a immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs v3.1 cortex: full 1.000 ctrl 1.000 d 0.00 t 0.00
+FAIL K1b immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no developmental waves: full 1.000 ctrl 1.000 d 0.00 t 0.00
+FAIL K1c immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no STDP: full 1.000 ctrl 1.000 d 0.00 t 0.00
+FAIL K1d immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs no homeostasis (intrinsic + inhibitory): full 1.000 ctrl 1.000 d 0.00 t 0.00
+FAIL K1e immediate classification (post[0] acc, trials 100..159) [Ceiling] (fails non-ceiling rule)
+   vs E/I loops lesioned: full 1.000 ctrl 1.000 d 0.00 t 0.00
+PASS K2 persistence: centroid probe 2 blank ticks after stimulus [Bounded test evidence]
+   vs NMDA-like current lesioned: full 0.3316 ctrl 0.2708 d 0.94 t 4.60
 PASS GWT-3R global broadcast, degraded stimuli [Bounded test evidence]
    vs broadcast lesioned: full 0.7899 ctrl 0.2517 d 10.03 t 49.15
 PASS ctm-R report agrees with action, degraded stimuli [Bounded test evidence]
    vs broadcast lesioned: full 0.8986 ctrl 0.2687 d 12.80 t 62.73
 PASS CQM08R continual retention, degraded stimuli [Bounded test evidence]
    vs replay lesioned: full 0.8198 ctrl 0.1089 d 7.98 t 39.07
+PASS NOISESIGN decision-noise sign bias on a biased qubit state, |P(+)-0.5| [v3.6 0.025 vs v3.5 0.292 (tolerance 0.05)]
+   vs v3.5 raw bit (lower is better): full 0.02453 ctrl 0.2918 d 13.78 t 67.50
+PASS LIGHT dome light input suppresses night melatonin [Steering check]
+   vs zero difference: full 0.9707 ctrl 0.000 d 10.14 t 49.68
+FAIL K1aR immediate classification, degraded stimulus (K1 protocol) [Ceiling] (fails non-ceiling rule)
+   vs v3.1 cortex: full 0.9642 ctrl 0.9604 d 0.13 t 0.66
+FAIL K1cR immediate classification, degraded stimulus (K1 protocol) [Ceiling] (fails non-ceiling rule)
+   vs no STDP: full 0.9642 ctrl 0.9580 d 0.24 t 1.18
 FAIL CQM03R ecological coupling |corr(food, next births)|, control: random birth counts [Not established]
    vs births random in number: full 0.01716 ctrl 0.3689 d -2.31 t -11.32
 PASS CQM01R heredity corr(parent, offspring forage rate), founders at 0.9 fSet (unsaturated drive) [Bounded test evidence]
    vs offspring genomes random: full 0.2740 ctrl 0.06579 d 1.09 t 5.34
-ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 0/0; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 3/3; v3.7 items 0/1; v3.9 items 1/1; MISSING EVO,EVO,EVO,EVO,K1,K2,L1,L2,L3,L4,L5,SNAP,NOISESIGN,LIGHT,INSGLC,RPTLATE,K1R,VIAB
+ROLLUPS: Butlin 9/14, frameworks 6/10, CQM 15/25; K items 1/6; LTC learned-vs-fixed passes 0/5, hand-set-vs-fixed 0/5; v3.6 items 5/5; v3.7 items 0/3; v3.9 items 1/1; MISSING EVO,EVO,EVO,EVO,L1,L2,L3,L4,L5,SNAP,INSGLC,RPTLATE,VIAB

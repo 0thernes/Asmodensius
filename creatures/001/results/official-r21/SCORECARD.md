@@ -1,8 +1,8 @@
 # OFFICIAL Round 21 scorecard (Creature #1)
 
-Generated 2026-11-01 13:15 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
+Generated 2026-11-01 13:35 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
 
-**Run status:** test files done: arm A 49/63, arm D 48/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
+**Run status:** test files done: arm A 54/63, arm D 54/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
 
 Pass = d>=0.8 AND Welch t>=2.75 vs every control (+ non-ceiling rule). PARTIAL = passes some controls but not all, or the original fails while a disclosed R variant passes. Official totals count originals only.
 
@@ -56,7 +56,7 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 |---|---|---|---|---|---|
 | CQM01 | PENDING |  | PENDING |  | CQM01R: PASS / PASS |
 | CQM02 | PENDING |  | PENDING |  |  |
-| CQM03 | PENDING |  | PENDING |  | CQM03R: FAIL / PENDING |
+| CQM03 | PENDING |  | PENDING |  | CQM03R: FAIL / FAIL |
 | CQM04 | PENDING |  | PENDING |  |  |
 | CQM05 | PASS | d 39.05 t 191.32 | PASS | d 38.29 t 187.58 |  |
 | CQM06 | FAIL | d 0.30 t 1.48 | FAIL | d 0.56 t 2.76 |  |
@@ -95,8 +95,8 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 - A CQM08R: PASS d 7.98 t 39.07
 - A CQM03R: FAIL d -2.31 t -11.32
 - A CQM01R: PASS d 1.09 t 5.34
-- A K1aR: PENDING 
-- A K1cR: PENDING 
+- A K1aR: FAIL d 0.13 t 0.66
+- A K1cR: FAIL d 0.24 t 1.18
 - D RPT2R: PASS vs cross-module CTX synapses lesioned: d 3.36 t 16.44; vs shuffled pairing (vshuf): d 2.74 t 13.44
 - D RPT2RL5: PASS vs cross-module CTX synapses lesioned: d 3.43 t 16.81
 - D HOT3RM: PARTIAL vs random opt-out (matched rate): d 0.95 t 4.67; vs confidence shuffled: d 0.75 t 3.68
@@ -108,10 +108,10 @@ Previous official (R20, v3.9): Butlin 9/14, frameworks 7/10, CQM 17/25.
 - D GWT-3R: PASS d 8.60 t 42.15
 - D ctm-R: PASS d 10.93 t 53.54
 - D CQM08R: PASS d 6.91 t 33.87
-- D CQM03R: PENDING 
+- D CQM03R: FAIL d -2.50 t -12.27
 - D CQM01R: PASS d 1.47 t 7.19
-- D K1aR: PENDING 
-- D K1cR: PENDING 
+- D K1aR: FAIL d -0.38 t -1.87
+- D K1cR: FAIL d -0.12 t -0.59
 
 ## NOVEL-100
 
