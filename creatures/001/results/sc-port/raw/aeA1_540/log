@@ -1,2 +1,4 @@
 AE1 full=0.3393  RPE learning lesioned=0.2907 210s
 AE2 full=-0.002326  forward model lesioned (gain fixed at prior)=-0.2683 13s
+AINF full=52.81  epistemic term lesioned=58.38 82s
+C10 full=0.9068  fixed foraging drive=0.9648 139s
