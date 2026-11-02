@@ -1,0 +1,4 @@
+RPT2R full=0.8552  cross-module CTX synapses lesioned=0.4979 68s
+RPT2RL5 full=0.8250  cross-module CTX synapses lesioned=0.5208 63s
+RPT1 full=0.3115  recurrent CTX synapses lesioned=0.2687 64s
+UAL full=0.1372  eligibility traces lesioned=0.07115 54s
