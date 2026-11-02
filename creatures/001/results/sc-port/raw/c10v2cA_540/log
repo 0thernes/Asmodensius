@@ -7,3 +7,5 @@ UAL full=0.1391  eligibility traces lesioned=0.02797 84s
 GWT2 full=0.9594  workspace lesioned (action reads module average)=0.5677 104s
 AE2 full=-0.003958  forward model lesioned (gain fixed at prior)=-0.2908 20s
 AINF full=44.88  epistemic term lesioned=44.44 161s
+C16R full=0.8143  anticipation lesioned (reactive only)=0.8245 631s
+RPT2RL5 full=0.8323  cross-module CTX synapses lesioned=0.5469 47s
