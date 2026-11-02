@@ -1,10 +1,10 @@
 {
 "Butlin:HOT-3": {
-"status": "partial: self-trained confidence built; no arm passes a+b+c yet",
+"status": "partial: st10 (conf->learning rate) fails (a) and (c)",
 "folder": "specialists/HOT3RM",
 "solo": "st01-st08 on Combo A; st05 HOT3RM PASS 500/520/540 + RPT1",
 "port": "not kept (trade-off)",
-"integ": "st05 a FAIL b PASS c PASS; st08 a PASS b PASS c 2/3 blocks + RPT1 0.87",
+"integ": "st10: a FAIL (0 subsystems vs Combo A and vs st10-minus-scCL), b PASS (0.47 sated/0.28 hungry), c FAIL (RPT1 540 0.97/2.7)",
 "note": "LC-coupling strength trades (a) vs HOT3RM/RPT1"
 },
 "Frameworks:activeInference": {
@@ -44,15 +44,15 @@
 "folder": "specialists/CQM10",
 "solo": "10 approaches + 3 hybrids; 7 PASS; best non-gaming v01 K0.5 1.27/3.6",
 "port": "not ported",
-"integ": "v01: a PASS, b inherent; c pending full battery for K0.5",
-"note": "v03/v05/v10/h11/h12 pass by under-eating: rejected"
+"integ": "v01K0.5: AE1 540 0.78/2.2 regression; v01K0.25 AE1 540 0.67/1.9; v02 on Combo A AE1 540 PASS 1.11/3.1 but AE1 500 0.34/1.0; no arm clean yet",
+"note": "v03/v05/v10/h11/h12 pass by under-eating: rejected; forage diag queued (loop_p6)"
 },
 "Butlin:RPT-2": {
 "status": "partial (RPT2R passes with v6hub on dev)",
 "folder": "specialists/RPT2R",
 "solo": "v6hub d3.76",
 "port": "in Combo A (provisional; skipped 10-way method)",
-"integ": "pending",
+"integ": "hybrids cArp1/7/8 (Combo A + rp2 v01/v07/v08, K3): RPT2R up to 8.34/23.6 but RPT1 fails on 540 in all three (0.92/0.69/0.21); probes queued (loop_p7)",
 "note": "Combo A PASS 500 3.76/10.6, 540 3.65/10.3; awaiting Alex on redoing via method"
 },
 "SC-PORT:combo": {
@@ -70,5 +70,9 @@
 "port": "Combo A",
 "integ": "pending",
 "note": ""
+},
+"Butlin:AE2": {
+"folder": "specialists/AE2",
+"status": "Combo A passes; hybrids aeA1 (RLS) / aeA3 (particle) only change AE2 tracking (+6.12/+5.14 d vs base on 500), every other test bit-identical to Combo A -> (a) expected FAIL; probes queued"
 }
 }

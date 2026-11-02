@@ -32,3 +32,9 @@ What C10 measures: fraction of days 2-4 with glucose in (2, 4.5), ATP>1.5, adeno
 Port status: NOT ported. v01 on Combo A (block 500 battery): C10 PASS 1.40/3.9, HOT3RM/RPT2R/RPT2RL5/UAL/AE2/GWT2 PASS, but RPT1 0.90/2.5 (Combo A 1.70) regresses; integration (a) PASS (NE, ACh, DA, foraging, rewards move), (b) inherent (gate reads blood glucose).
 
 v01 with gain K0.5 (gate from 3.6 mM): C10 PASS 1.27/3.6, RPT1 PASS 1.00/2.8, eats 65.8/day, fat 275: best CQM10 candidate; full battery + integration still to run before any port.
+
+## 2026-11-02 specialist round (dev 500/540; bundle sc10.js; partial, loop_p6/p7 still running)
+- HOT-3 st10 (conf -> learning rate): 500 HOT3RM PASS 1.52/4.3, RPT1 1.19/3.4; 540 HOT3RM PASS 1.21/3.4, RPT1 fail 0.97/2.7 (regression vs Combo A 1.11/3.1). Integ: a FAIL (no subsystem moves, probe seeds 600-615), b PASS, c FAIL. Not ported.
+- CQM10: v01K0.25 C10 PASS both blocks but AE1 fails (500 0.42, 540 0.67); v02 on Combo A: 540 all PASS incl AE1 1.11/3.1, 500 AE1 0.34/1.0 (Combo A itself fails AE1 on 500 at 0.76). Forage/fat diag pending. Not ported.
+- RPT2R hybrids cArp1/7/8: RPT2R 6.4-8.3 d, but RPT1 regresses on 540 (0.92, 0.69, 0.21) and cArp8 also on 500 (0.23). Not ported.
+- AE2 hybrids aeA1 (RLS) / aeA3 (particle filter) on Combo A: AE2 tracking gain only; all other tests identical to Combo A. Integration probe pending.
