@@ -8,3 +8,4 @@ GWT2 full=0.9708  workspace lesioned (action reads module average)=0.5844 26s
 AE1 full=0.3216  RPE learning lesioned=0.3026 75s
 AINF full=51.38  epistemic term lesioned=47.50 88s
 C10 full=0.9380  fixed foraging drive=0.9757 148s
+C16R full=0.4234  anticipation lesioned (reactive only)=0.1799 149s
