@@ -1,3 +1,4 @@
 HOT3RM metacognitive opt-out=0.8375  random opt-out (matched rate)=0.7749  confidence shuffled=0.7940 62s
 RPT1 full=0.3323  recurrent CTX synapses lesioned=0.2573 24s
 AE1 full=0.3345  RPE learning lesioned=0.2978 138s
+C10 full=0.9536  fixed foraging drive=0.9718 306s
