@@ -7,3 +7,5 @@ UAL full=0.08530  eligibility traces lesioned=-0.006215 39s
 AE1 full=0.3384  RPE learning lesioned=0.2953 134s
 GWT2 full=0.9740  workspace lesioned (action reads module average)=0.5927 48s
 AINF full=54.19  epistemic term lesioned=54.81 157s
+C10 full=0.9103  fixed foraging drive=0.9730 294s
+C16R full=0.5310  anticipation lesioned (reactive only)=0.2784 303s
