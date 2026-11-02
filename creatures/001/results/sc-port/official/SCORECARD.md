@@ -11,8 +11,8 @@ Cell: grade / weakest control d/t. Grade A = d≥0.8 and t≥2.75 vs every contr
 | UAL | claim | A 1.52/7.4 (n=48) | A 1.11/5.5 (n=48) | -0.00 |
 | HOT3RM | claim | A 0.99/4.8 (n=48) | A 1.43/7.0 (n=48) | +0.43 |
 | AE2 | claim | A 2.80/13.7 (n=48) | A 2.65/13.0 (n=48) | +3.56 |
-| AE1 | claim | pending (3/7) | pending (3/7) | . |
+| AE1 | claim | fail 0.58/4.3 (n=112) | fail 0.73/5.5 (n=112) | +0.17 |
 | GWT2 | must-hold | A 6.35/31.1 (n=48) | A 7.73/37.9 (n=48) | +0.29 |
-| AINF | reported | pending (2/3) | pending (2/3) | . |
-| C10 | reported | pending (2/3) | pending (2/3) | . |
-| C16R | reported | pending (2/3) | pending (2/3) | . |
+| AINF | reported | fail -0.03/-0.2 (n=48) | fail 0.12/0.6 (n=48) | +0.11 |
+| C10 | reported | fail -0.52/-2.5 (n=48) | fail -0.48/-2.3 (n=48) | +0.01 |
+| C16R | reported | fail 0.52/2.6 (n=48) | fail 0.50/2.4 (n=48) | -0.08 |
