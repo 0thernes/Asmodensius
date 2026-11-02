@@ -1,17 +1,1 @@
-/tmp/scp/sc9.js:2016
-        for (let i = 0; i < CE; i++) this.el[i] = lam * this.el[i] + xv[i];
-                                                ^
-
-TypeError: Cannot create property '0' on number 'NaN'
-    at Mind.step (/tmp/scp/sc9.js:2016:49)
-    at Organism.step (/tmp/scp/sc9.js:3689:19)
-    at /tmp/scp/sc9.js:4958:11
-    at Array.map (<anonymous>)
-    at f2 (/tmp/scp/sc9.js:4949:25)
-    at AE2 (/tmp/scp/sc9.js:4964:20)
-    at Object.<anonymous> (/tmp/scp/sc9.js:6705:12)
-    at Module._compile (node:internal/modules/cjs/loader:1929:14)
-    at Object..js (node:internal/modules/cjs/loader:2060:10)
-    at Module.load (node:internal/modules/cjs/loader:1651:32)
-
-Node.js v24.22.1
+AE2 full=-0.01426  forward model lesioned (gain fixed at prior)=-0.3345 10s
