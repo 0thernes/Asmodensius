@@ -14,6 +14,7 @@
 | h3v08 | fail 0.56/1.1 |
 | h3v09 | fail 0.86/1.7 |
 | h3v10 | PASS 1.66/3.3 |
+| st06 | PASS 1.19/3.4 |
 | stA | fail 0.70/2.0 |
 | stB | PASS 1.57/4.4 |
 | stE | PASS 1.76/5.0 |
