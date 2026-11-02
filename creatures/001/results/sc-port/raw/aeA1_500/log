@@ -1,0 +1,3 @@
+AE1 full=0.3316  RPE learning lesioned=0.3001 74s
+AE2 full=-0.002217  forward model lesioned (gain fixed at prior)=-0.3259 13s
+AINF full=52.88  epistemic term lesioned=54.56 82s
