@@ -1,8 +1,8 @@
 # OFFICIAL Round 21 scorecard (Creature #1)
 
-Generated 2026-11-01 15:57 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
+Generated 2026-11-01 16:18 PT by scoring/gen.py. Prereg: creatures/001/preregistrations/OFFICIAL-R21.md (commit f7ff08d, frozen before any test run). Test seeds 1064-1111 (n=48).
 
-**Run status:** test files done: arm A 60/63, arm D 60/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
+**Run status:** test files done: arm A 61/63, arm D 61/63. Items marked PENDING have not finished; totals below count only finished PASS items and are NOT final while anything is pending.
 
 Pass = d>=0.8 AND Welch t>=2.75 vs every control (+ non-ceiling rule). PARTIAL = passes some controls but not all, or the original fails while a disclosed R variant passes. Official totals count originals only.
 
