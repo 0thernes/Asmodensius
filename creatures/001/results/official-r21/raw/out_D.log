@@ -87,3 +87,4 @@ EVO CQM01:full=0.1275  CQM02:full=49.77  CQM03:full=0.8796  CQM04:full=1.056  CQ
 L2 learned=0.05460  handset=0.03279  fixed=0.07244 1033s
 L1 learned=0.4041  handset=0.3976  fixed=0.4213 608s
 L5 learned=-0.008377  handset=-0.008388  fixed=-0.03344 2047s
+L3 learned=0.05321  handset=0.05143  fixed=0.03969 944s
