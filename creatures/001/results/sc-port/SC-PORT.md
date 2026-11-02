@@ -22,9 +22,13 @@ Problem: the confidence monitor (meta3) was trained only by harness teachConf, s
 | st03 stC | scCI1 scST1 scSTs1 | PASS 1.10/3.1 | - | - | fail 0.18/0.5 | - |
 | st04 stD | scCI0.25 scST1 scSTs1 | PASS 1.02/2.9 | - | - | fail 0.77/2.2 | - |
 | st05 stE | scCI0.25 scST3 | PASS 1.18/3.4 | PASS 1.76/5.0 | PASS 1.29/3.6 | PASS 1.17/3.3 | FAIL (only foraged moves; NE/DA/cortisol t~2) |
-| st06-08 | scCI 0.35-0.5, scST 3-6 | see HOT3RM/README.md | | | | |
+| st06 | scCI0.5 scST3 | PASS 0.99/2.8 | PASS 1.19/3.4 | fail 0.95/2.7 | fail 0.48/1.4 | PASS (DA, foraged) |
+| st08 | scCI0.35 scST3 | PASS 1.49/4.2 | fail 0.97/2.7 | PASS 1.25/3.5 | fail 0.87/2.5 | PASS (DA, cortisol, rewards) |
+Verdict: no self-train arm passes a+b+c; not ported. st07 (scCI0.5 scST6) a PASS, tests not run.
 stA full 500 battery: RPT1 regresses (1.70 -> 0.18); others as Combo A. Trade-off found: strong LC coupling passes (a) but costs HOT3RM/RPT1; weak coupling passes HOT3RM on all 3 blocks + RPT1 but (a) fails. (b) PASS in all (belief-precision weight 0.47 sated vs 0.28 hungry).
 
 ## CQM10 (specialists/CQM10, v01-v10 + h11-h13)
 What C10 measures: fraction of days 2-4 with glucose in (2, 4.5), ATP>1.5, adenosine<0.9; full vs fixed forage probability 0.12. Diagnosis (diag.ts, 8 seeds): full fails only by hyperglycaemia (glcHi 5.8% vs 2.6%) from over-foraging (68 vs 54 forages/day, fat 292 vs 271). See specialists/CQM10/README.md for the table. Behavioural satiety gates (v01-v06, v10) PASS 1.32-1.50 (full reaches ceiling 1.0); physiological fixes (v07-v09) fail because they help both arms. v01 (glucose-sensing satiety) is the non-gaming winner (eats 57/day, fat steady); v03/v05/h11/h12 pass by under-eating (fat falls to ~233) and are rejected as wrong-reason.
 Port status: NOT ported. v01 on Combo A (block 500 battery): C10 PASS 1.40/3.9, HOT3RM/RPT2R/RPT2RL5/UAL/AE2/GWT2 PASS, but RPT1 0.90/2.5 (Combo A 1.70) regresses; integration (a) PASS (NE, ACh, DA, foraging, rewards move), (b) inherent (gate reads blood glucose).
+
+v01 with gain K0.5 (gate from 3.6 mM): C10 PASS 1.27/3.6, RPT1 PASS 1.00/2.8, eats 65.8/day, fat 275: best CQM10 candidate; full battery + integration still to run before any port.
