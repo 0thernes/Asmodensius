@@ -7,11 +7,11 @@ Port integration check (Alex): (a) ablating the ported module moves >=2 other su
 
 | # | P | List | Item | Status | Specialist folder | Standalone | Ported | Integ a/b/c | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | P0 | Butlin | RPT-2 | partial (RPT2R passes with v6hub on dev) | specialists/RPT2R | v6hub d3.76 | combo battery running | pending | fast weights hurt RPT2R |
+| 1 | P0 | Butlin | RPT-2 | partial (RPT2R passes with v6hub on dev) | specialists/RPT2R | v6hub d3.76 | in Combo A (provisional; 10-way method skipped) | pending | Combo A 540: 3.65/10.3 |
 | 2 | P0 | Butlin | GWT-2 | passes dev; R21 fail is ceiling rule | specialists/GWT2 | scGW +0.98 d | - | - | test needs harder distractors |
 | 3 | P0 | Butlin | GWT-3 | partial (R21 A v5.7b) | - | - | - | - |  |
 | 4 | P0 | Butlin | GWT-4 | missing (R21 A v5.7b) | - | - | - | - |  |
-| 5 | P0 | Butlin | HOT-3 | partial (dev: HOT3RM passes with scAIm) | specialists/HOT3RM | 10 variants screened; v01 PASS 3 dev blocks; hybrid A PASS 540 | scAIm+scCI: battery running | a FAIL / b PASS / c running | confidence pathway inert in natural life (trained only by harness) |
+| 5 | P0 | Butlin | HOT-3 | partial (dev: HOT3RM passes with scAIm) | specialists/HOT3RM | st01-08 self-train; st05 PASS 500/520/540 | not kept | st05 a FAIL b PASS c PASS; st08 a PASS c 2/3 | LC-coupling trade-off |
 | 6 | P0 | Frameworks | activeInference | missing (test under-powered) | specialists/AINF | 10 variants, all fail | - | - | paired or longer test needed |
 | 7 | P0 | Frameworks | projective | partial (R21 A v5.7b) | - | - | - | - |  |
 | 8 | P0 | Frameworks | ctm | partial (R21 A v5.7b) | - | - | - | - |  |
@@ -22,7 +22,7 @@ Port integration check (Alex): (a) ablating the ported module moves >=2 other su
 | 13 | P0 | CQM | CQM04 | largely ill-posed | specialists/CQM04 | queued | - | - | selection in harness |
 | 14 | P0 | CQM | CQM06 | missing (R21 A v5.7b) | - | - | - | - |  |
 | 15 | P0 | CQM | CQM08 | partial (R21 A v5.7b) | - | - | - | - |  |
-| 16 | P0 | CQM | CQM10 | missing | specialists/GWT2 | no SC module helps | - | - | queued homeostatic specialist |
+| 16 | P0 | CQM | CQM10 | missing | specialists/CQM10 | 7/13 PASS; best v01 K0.5 1.27/3.6 | not ported | v01 a PASS | gaming variants rejected |
 | 17 | P0 | CQM | CQM18 | missing (R21 A v5.7b) | - | - | - | - |  |
 | 18 | P0 | CQM | CQM20 (=GWT-3) | partial (R21 A v5.7b) | - | - | - | - |  |
 | 19 | P0 | CQM | CQM23 | missing (R21 A v5.7b) | - | - | - | - |  |
