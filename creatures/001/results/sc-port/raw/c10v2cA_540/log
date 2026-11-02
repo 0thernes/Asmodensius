@@ -5,3 +5,4 @@ C10 full=0.9995  fixed foraging drive=0.9648 551s
 HOT3RM metacognitive opt-out=0.8344  random opt-out (matched rate)=0.7795  confidence shuffled=0.7687 153s
 UAL full=0.1391  eligibility traces lesioned=0.02797 84s
 GWT2 full=0.9594  workspace lesioned (action reads module average)=0.5677 104s
+AE2 full=-0.003958  forward model lesioned (gain fixed at prior)=-0.2908 20s

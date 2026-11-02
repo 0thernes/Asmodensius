@@ -4,3 +4,8 @@ AINF full=48.44  epistemic term lesioned=48.69 166s
 C10 full=0.9929  fixed foraging drive=0.9713 285s
 C16R full=0.7099  anticipation lesioned (reactive only)=0.6464 389s
 GWT2 full=0.9594  workspace lesioned (action reads module average)=0.5719 49s
+HOT3RM metacognitive opt-out=0.8449  random opt-out (matched rate)=0.7735  confidence shuffled=0.7813 78s
+RPT1 full=0.3167  recurrent CTX synapses lesioned=0.2521 44s
+RPT2R full=0.8667  cross-module CTX synapses lesioned=0.5313 44s
+RPT2RL5 full=0.8365  cross-module CTX synapses lesioned=0.5333 44s
+UAL full=0.1228  eligibility traces lesioned=0.009129 40s
