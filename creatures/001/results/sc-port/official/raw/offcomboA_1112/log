@@ -7,3 +7,5 @@ HOT3RM metacognitive opt-out=0.8515  random opt-out (matched rate)=0.7848  confi
 GWT2 full=0.9531  workspace lesioned (action reads module average)=0.5865 71s
 AE1 full=0.3181  RPE learning lesioned=0.3001 190s
 AINF full=52.31  epistemic term lesioned=50.81 188s
+C10 full=0.9215  fixed foraging drive=0.9667 225s
+C16R full=0.4583  anticipation lesioned (reactive only)=0.3023 149s
