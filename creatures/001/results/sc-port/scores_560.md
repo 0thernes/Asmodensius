@@ -1,14 +1,40 @@
 # block 560 (16 seeds each). Cell: PASS/fail, weakest within-test control d/t; [vs base full: d]
-| arm | AINF |
-|---|---|
-| aibase | fail 0.38/0.8 |
-| aiv01 | fail 0.24/0.5 |
-| aiv02 | fail 0.27/0.5 |
-| aiv03 | fail 0.16/0.3 |
-| aiv04 | fail 0.07/0.1 |
-| aiv05 | fail 0.10/0.2 |
-| aiv06 | fail 0.22/0.4 |
-| aiv07 | fail 0.31/0.6 |
-| aiv08 | fail 0.30/0.6 |
-| aiv09 | fail 0.12/0.2 |
-| aiv10 | fail 0.03/0.1 |
+| arm | AE2 | AINF | RPT2R |
+|---|---|---|---|
+| ae1 | PASS 3.25/9.2 | . | . |
+| ae2 | PASS 3.25/9.2 | . | . |
+| ae3 | PASS 3.25/9.2 | . | . |
+| ae5 | PASS 3.12/8.8 | . | . |
+| ae6 | PASS 3.02/8.5 | . | . |
+| ae7 | PASS 3.14/8.9 | . | . |
+| ae8 | PASS 3.07/8.7 | . | . |
+| ae9 | PASS 3.23/9.1 | . | . |
+| aibase | . | fail 0.38/0.8 | . |
+| aiv01 | . | fail 0.24/0.5 | . |
+| aiv02 | . | fail 0.27/0.5 | . |
+| aiv03 | . | fail 0.16/0.3 | . |
+| aiv04 | . | fail 0.07/0.1 | . |
+| aiv05 | . | fail 0.10/0.2 | . |
+| aiv06 | . | fail 0.22/0.4 | . |
+| aiv07 | . | fail 0.31/0.6 | . |
+| aiv08 | . | fail 0.30/0.6 | . |
+| aiv09 | . | fail 0.12/0.2 | . |
+| aiv10 | . | fail 0.03/0.1 | . |
+| rp1k1 | . | . | PASS 1.78/5.0 |
+| rp1k3 | . | . | PASS 6.00/17.0 |
+| rp2k1 | . | . | PASS 1.20/3.4 |
+| rp2k3 | . | . | PASS 2.87/8.1 |
+| rp3k1 | . | . | fail -0.41/-1.2 |
+| rp3k3 | . | . | fail -0.60/-1.7 |
+| rp4k1 | . | . | fail 0.77/2.2 |
+| rp4k3 | . | . | PASS 1.20/3.4 |
+| rp5k1 | . | . | PASS 1.33/3.8 |
+| rp5k3 | . | . | PASS 2.81/7.9 |
+| rp6k1 | . | . | fail 0.88/2.5 |
+| rp6k3 | . | . | PASS 1.75/5.0 |
+| rp7k1 | . | . | PASS 2.71/7.7 |
+| rp7k3 | . | . | PASS 6.22/17.6 |
+| rp8k1 | . | . | PASS 3.09/8.7 |
+| rp8k3 | . | . | PASS 6.63/18.8 |
+| rp9k1 | . | . | PASS 4.60/13.0 |
+| rp9k3 | . | . | PASS 3.92/11.1 |
