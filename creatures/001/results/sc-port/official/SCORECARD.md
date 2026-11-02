@@ -16,3 +16,7 @@ Cell: grade / weakest control d/t. Grade A = d≥0.8 and t≥2.75 vs every contr
 | AINF | reported | fail -0.03/-0.2 (n=48) | fail 0.12/0.6 (n=48) | +0.11 |
 | C10 | reported | fail -0.52/-2.5 (n=48) | fail -0.48/-2.3 (n=48) | +0.01 |
 | C16R | reported | fail 0.52/2.6 (n=48) | fail 0.50/2.4 (n=48) | -0.08 |
+
+AE1 detail (frozen bundle sha256 d3e3b973…, no re-runs needed; all 7 blocks present on both arms):
+- n=48 (1112–1159): v5.7b 0.38/1.85, Combo A 0.41/2.03 — fail.
+- n=112 (1112–1223 pooled, prereg claim basis): v5.7b 0.58/4.34, Combo A 0.73/5.48 — fail on d (<0.8). AE1 is not claimed; per kill rule "AE1 pooled d < 0.8 (only if AE1 is claimed)".
