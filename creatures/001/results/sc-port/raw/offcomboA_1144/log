@@ -1,0 +1,10 @@
+RPT2R full=0.8708  cross-module CTX synapses lesioned=0.5021 26s
+RPT2RL5 full=0.8552  cross-module CTX synapses lesioned=0.5115 29s
+RPT1 full=0.3260  recurrent CTX synapses lesioned=0.2615 24s
+UAL full=0.1301  eligibility traces lesioned=0.04566 21s
+HOT3RM metacognitive opt-out=0.8382  random opt-out (matched rate)=0.7680  confidence shuffled=0.7705 42s
+AE2 full=-0.003744  forward model lesioned (gain fixed at prior)=-0.3543 15s
+GWT2 full=0.9708  workspace lesioned (action reads module average)=0.5844 26s
+AE1 full=0.3216  RPE learning lesioned=0.3026 75s
+AINF full=51.38  epistemic term lesioned=47.50 88s
+C10 full=0.9380  fixed foraging drive=0.9757 148s
