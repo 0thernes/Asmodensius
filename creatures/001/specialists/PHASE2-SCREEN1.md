@@ -159,3 +159,13 @@ Integration probe, seeds 600-615 (arm vs its ablation):
 | RPT1 | 580 | fail 0.917/2.59 | **A** 1.277/3.61 | +0.184 [-0.453, +0.760] |
 
 Paired delta-d compares the full arms only (child minus parent, in pooled-SD units); grades are full vs each test's own controls.
+
+## HOT-3 st20 AE1, pooled 640-703 (64 seeds), ADVISORY
+
+| arm | AE1 d/t | full mean | lesion-arm mean |
+|---|---|---|---|
+| comboA | A 1.012/5.72 | 0.3324 | 0.2955 |
+| st20 | A 0.865/4.89 | 0.3360 | 0.2996 |
+
+Paired change st20 vs Combo A: full arm +0.080 [-0.235, +0.415]; RPE-lesion arm +0.125 [-0.197, +0.450].
+Run 2026-11-16 14:35 PST, bundle b07675f (sha 73285ca6e214).

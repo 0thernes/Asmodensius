@@ -1,0 +1,1 @@
+[{"item": "HOT3RM", "arm": "st20", "env": {"ORG_V6": "1", "V40TUNE": "{}", "ORG_MIND": "v40", "M50J": "{\"v6P\": 0, \"v6Ak\": 0, \"scAIm\": 0.5, \"scBM\": 1, \"scCI\": 0.25, \"scST\": 3}", "M41J": "{\"h3\": 20}"}, "tests": ["AE1"], "blocks": [640, 656, 672, 688]}]
