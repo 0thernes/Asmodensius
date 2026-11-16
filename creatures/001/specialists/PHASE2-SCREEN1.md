@@ -131,3 +131,31 @@ Integration probe, seeds 600-615 (arm vs its ablation):
 - h14 vs h14-scBM0: (a) FAIL: 0 moved -; foraged 126.1 vs 124.6; (b) belief weight sated 0.50 vs hungry 0.50
 - h15 vs h15-scBM0: (a) PASS: 2 moved NE(+3.0), DA(+9.3); foraged 119.0 vs 124.6; (b) belief weight sated 0.50 vs hungry 0.50
 - h16 vs h16-scBM0: (a) PASS: 2 moved NE(+5.9), DA(+11.4); foraged 123.1 vs 124.6; (b) belief weight sated 0.50 vs hungry 0.50
+
+# Phase 2 screen 1b (ADVISORY), 2026-11-16 14:33 PST, bundle b07675f (sha 73285ca6e214)
+
+## CQM10 AE1 guard, pooled 640-703 (64 seeds)
+
+| arm | AE1 grade d/t | full mean | paired delta-d vs Combo A [95% CI] |
+|---|---|---|---|
+| comboA | A 1.012/5.72 | 0.3324 | - |
+| v01K0.5 | fail 0.726/4.11 | 0.3302 | -0.050 [-0.382, +0.277] |
+| h14 | fail 0.651/3.68 | 0.3304 | -0.045 [-0.365, +0.278] |
+| h17 | fail 0.676/3.83 | 0.3323 | -0.002 [-0.330, +0.325] |
+
+## HOT-3 st20 check (c): retained battery, block 500 (+ HOT3RM/RPT1 on 580)
+
+| test | block | Combo A d/t | st20 d/t | paired delta-d st20 vs Combo A [95% CI] |
+|---|---|---|---|---|
+| HOT3RM | 500 | **A** 1.309/3.7 | **A** 1.548/4.38 | +0.177 [-0.205, +0.534] |
+| RPT1 | 500 | **A** 1.699/4.81 | **A** 1.19/3.37 | +0.384 [-0.154, +0.922] |
+| AE1 | 500 | fail 0.758/2.14 | fail 0.221/0.62 | -0.231 [-0.977, +0.457] |
+| AE2 | 500 | **A** 2.265/6.41 | **A** 2.654/7.51 | -0.306 [-0.897, +0.191] |
+| RPT2R | 500 | **A** 3.765/10.65 | **A** 3.17/8.97 | -0.086 [-0.380, +0.172] |
+| RPT2RL5 | 500 | **A** 2.46/6.96 | **A** 2.743/7.76 | +0.031 [-0.316, +0.377] |
+| UAL | 500 | **A** 1.955/5.53 | **A** 2.062/5.83 | -0.134 [-0.519, +0.259] |
+| GWT2 | 500 | **A** 6.879/19.46 | **A** 8.409/23.78 | -0.360 [-1.170, +0.360] |
+| HOT3RM | 580 | **A** 1.237/3.5 | **A** 1.251/3.54 | -0.308 [-0.720, +0.103] |
+| RPT1 | 580 | fail 0.917/2.59 | **A** 1.277/3.61 | +0.184 [-0.453, +0.760] |
+
+Paired delta-d compares the full arms only (child minus parent, in pooled-SD units); grades are full vs each test's own controls.
