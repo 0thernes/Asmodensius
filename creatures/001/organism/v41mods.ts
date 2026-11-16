@@ -5,7 +5,7 @@
 //   h3: id or [ids] (11-20), h3K gain           HOT-3 st11-st20: routes from self-trained confidence (confDev) to non-LC targets
 //   c10h: [[id,K],...], c10gate: 0|1            CQM10 hybrids: satiety gate = min over component gates; c10gate scales it down while volU is high
 //   rpX: [ids], rpG: 0|1                        RPT2R hybrids: several binding hubs at once (separate state); rpG = RPT1 guard
-//   e2: id (11-13), e2K gain                    AE2 hybrids: motor babbling in natural life (+ body-model surprise -> NE / contingency -> DA)
+//   e2: id or [ids] (11-13), e2K gain                   AE2 hybrids: motor babbling in natural life (+ body-model surprise -> NE / contingency -> DA)
 // No Math.random: the extra randomness (babbling) uses its own seeded stream, so the creature's own RNG is untouched.
 import { Organism, M50, MT, R0, RN, SITES, mulberry } from "./organism";
 type C = Record<string, any>;
@@ -13,7 +13,7 @@ const cl = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const ids = (v: any): number[] => (v === undefined ? [] : Array.isArray(v) ? v.map(Number) : [Number(v)]);
 export function applyM41(spec: string | undefined): C | null {
   if (!spec) return null; const c: C = JSON.parse(spec); const P: any = Organism.prototype;
-  const A1 = ids(c.ae1), H3 = ids(c.h3), K1 = c.ae1K ?? 1, K3 = c.h3K ?? 1, KE = c.e2K ?? 1, E2 = c.e2 | 0;
+  const A1 = ids(c.ae1), H3 = ids(c.h3), K1 = c.ae1K ?? 1, K3 = c.h3K ?? 1, KE = c.e2K ?? 1, E2L = ids(c.e2), E2 = E2L.length;
   for (const v of A1) if (!(v >= 1 && v <= 10)) throw new Error("ae1 id " + v); for (const v of H3) if (!(v >= 11 && v <= 20)) throw new Error("h3 id " + v);
   const has = (L: number[], v: number) => L.includes(v);
   const step0 = P.step;
@@ -67,6 +67,6 @@ export function applyM41(spec: string | undefined): C | null {
   // ---------------- AE2 hybrids ----------------
   function post2(g: any, H: number) { const m = g.mind; const B: any = m; if (B.bmP === undefined) return; /* body model ablated (scBM 0): no coupling */
     const inn = m.dArmObs - (g.v41bg ?? m.gHat) * H, z = (inn * inn) / (H * H * B.bmP + B.bmR + 1e-9); g.v41z = z;
-    if (E2 === 12) g.nm.NE.E += KE * 0.05 * cl(z / 9); /* h12: unexpected body feedback (innovation outside the model's own uncertainty) -> LC arousal (Blakemore et al. 1998) */
-    if (E2 === 13) g.nm.DA.E += KE * 0.02 * cl(B.bmC ?? 0); /* h13: sensed self-contingency (agency) -> tonic DA / vigour (Redgrave & Gurney 2006) */ }
+    if (has(E2L, 12)) g.nm.NE.E += KE * 0.05 * cl(z / 9); /* h12: unexpected body feedback (innovation outside the model's own uncertainty) -> LC arousal (Blakemore et al. 1998) */
+    if (has(E2L, 13)) g.nm.DA.E += KE * 0.02 * cl(B.bmC ?? 0); /* h13: sensed self-contingency (agency) -> tonic DA / vigour (Redgrave & Gurney 2006) */ }
   return c; }

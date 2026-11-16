@@ -90,4 +90,12 @@ function stages(S: number[]): M {
       out[`S${i + 1} forages per day`].push((g.foraged - f0) / (b - a)); out[`S${i + 1} heat kJ per day`].push((g.heat - h0) / (b - a)); out[`S${i + 1} alive`].push(alive ? 1 : 0); } }
   return out; }
 
-export const TESTS41: Record<string, (S: number[]) => M> = { PAUSE: pause, PERSIST: persist, LASR: lasr, STAGES: stages };
+
+/** C10INTAKE (CQM10 wrong-reason guard, PLAN.md Phase 2): days 1-4 of a natural life, full creature vs the C10 control
+ *  (fixedDrive). Readouts per seed: forages per day and fat at day 4 for each arm. Same window as specialists/CQM10/diag.ts.
+ *  A satiety fix only counts if full intake stays >= the fixed arm and fat stays steady (no under-eating). */
+function c10intake(S: number[]): M {
+  const run = (o: Partial<Opts>) => S.map((s) => { const g = mk(s, o); live(g, D); const f0 = g.foraged; live(g, 4 * D); return { eat: (g.foraged - f0) / 3, fat: g.fat }; });
+  const a = run({}), b = run({ fixedDrive: true } as any);
+  return { "full forages per day": a.map((x) => x.eat), "fixed forages per day": b.map((x) => x.eat), "full fat day 4": a.map((x) => x.fat), "fixed fat day 4": b.map((x) => x.fat) }; }
+export const TESTS41: Record<string, (S: number[]) => M> = { PAUSE: pause, PERSIST: persist, LASR: lasr, STAGES: stages, C10INTAKE: c10intake };
