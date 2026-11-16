@@ -47,11 +47,13 @@ measurement instruments and a fresh-seed governor. Nothing on `v4.1` is an offic
 ```
 bun install                 # typescript + @types/node for typecheck (bun 1.4.4)
 npm run identity            # ID-gate: Combo A 540-543 bit-identical to the frozen output, smoke trajectory identical
-npm run smoke               # 4-day organism smoke, seed 540
+npm run smoke               # 4-day organism smoke, seed 540 (node bundle)
 npm run conformance         # lab conformance + originality
-MODE=dev ARM=comboA SEEDBASE=540 ORG_V6=1 M50J='{"v6P":0,"v6Ak":0,"scAIm":0.5,"scBM":1}' ORG_MIND=v40 \
-  bun creatures/001/organism/run_v41.ts RPT2R
+B=$(bash creatures/001/specialists/tools/build_bundle.sh HEAD)   # node bundle of run_v41.ts
+MODE=dev ARM=comboA SEEDBASE=540 ORG_V6=1 M50J='{"v6P":0,"v6Ak":0,"scAIm":0.5,"scBM":1}' ORG_MIND=v40 node $B RPT2R
 ```
+Run measured work through a **node** bundle. Running the organism `.ts` directly under bun is not reproducible: the same
+seed can give different numbers depending on what else the process imported or ran first (audit F61).
 
 Credits: [Eshkol](https://github.com/tsotchke/eshkol) and [Moonlab](https://github.com/tsotchke/moonlab) by Tsotchke,
 which inspired this work. Moonlab runs in the lab as a simulated-quantum dice source (labelled as such).

@@ -5,15 +5,19 @@
   "description": "Artificial creatures with pre-registered, controlled tests of consciousness-indicator properties (not evidence of consciousness).",
   "license": "MIT",
   "packageManager": "bun@1.4.4",
-  "engines": { "node": ">=20", "bun": "1.4.4" },
+  "engines": {
+    "node": ">=20",
+    "bun": "1.4.4"
+  },
   "scripts": {
     "identity": "bash creatures/001/specialists/tools/identity_gate.sh",
-    "smoke": "bun creatures/001/organism/smoke.ts 540",
+    "smoke": "node $(bash creatures/001/specialists/tools/build_bundle.sh HEAD creatures/001/organism/smoke.ts) 540",
     "smoke:lab": "bun lab/smoke10.ts dice",
     "conformance": "bun lab/conformance/run.ts",
     "typecheck": "tsc -p tsconfig.json",
     "bundle": "bash creatures/001/specialists/tools/build_bundle.sh",
-    "governor": "python3 creatures/001/specialists/tools/governor.py"
+    "governor": "python3 creatures/001/specialists/tools/governor.py",
+    "instruments:summary": "python3 creatures/001/specialists/tools/summarize_v41.py creatures/001/results/v41-instruments"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
