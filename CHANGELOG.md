@@ -1,4 +1,34 @@
 # Changelog
+
+## Unreleased: v4.1 (local branch, not pushed)
+Phase 0 (hygiene) and Phase 1 (instruments) of the v4.1 plan. The organism code is unchanged: the identity gate shows
+Combo A bit-identical to the frozen SC-PORT output on seeds 540-543.
+- `SEEDS.md` seed ledger; `run_v41.ts` refuses to start without `MODE`, `ARM` and `SEEDBASE`, and keeps dev work on 500-999.
+- Reproducible bundles (`specialists/tools/build_bundle.sh`): fixed build path per commit, pinned bun 1.4.4, sha256 record.
+- Identity gate (`specialists/tools/identity_gate.sh`) with goldens made from `bc6ad6a`.
+- Energy meter in every `run_v41` result: metabolic heat (kJ), organism-ticks, CPU-seconds, daily energy-ledger check.
+- Instruments (`tests_v41.ts`): PAUSE, PERSIST (persistence baseline), LASR (action grounding), STAGES (3 life stages).
+- Governor v0 (`specialists/tools/governor.py`): fresh 16-seed blocks from 704-999, paired non-inferiority, gain per energy.
+- Lab fixes: Moonlab wasm path, conformance from any cwd, smoke argv guards; lab dev seeds moved from 2000+ to 500+.
+- Repo: package.json, tsconfig, bun.lock, .gitattributes, .editorconfig, SECURITY.md, CODE_OF_CONDUCT.md; dead runners to `archive/`.
+- `imports/msi-viewer-wip-2026-11-12/`: the MSI copy's uncommitted viewer work, copied read-only for review.
+
+## SC-PORT Combo A official (v4.0 line; prereg frozen cb3aaed, code pin bc6ad6a; scored 6973f19)
+- Seeds 1112-1159 (n = 48), AE1 pooled with 1160-1223 (n = 112).
+- 6 of 7 claims grade A: RPT2R 3.87/19.0, RPT2RL5 3.17/15.5, RPT1 0.92/4.5, UAL 1.11/5.5, HOT3RM 1.43/7.0, AE2 2.65/13.0.
+- AE1 fail (pooled 0.73/5.48; d below 0.8). GWT2 must-hold A 7.73/37.9. AINF, C10, C16R reported, all fail.
+- Caveats in the prereg: HOT-3 confidence still harness-trained (integration (a) not passed); hub and body model came from flag screens.
+
+## Dev rounds B28-B29 (v6.1, v6.2; dev only, not frozen)
+- v6.1 synaptic scaling by fan-in and v6.2 fan-in pooled readouts did not meet their goals on dev seeds (negative results, kept on record in `preregistrations/v4.0.md`).
+
+## Round 21 official (OFFICIAL-R21, prereg f7ff08d; seeds 1064-1111)
+- Arm A v5.7b: Butlin 9/14, frameworks 6/10, CQM 17/25 (with disclosed R variants 12/14, 8/10, 20/25).
+- Arm D v5.7d: Butlin 9/14, frameworks 5/10, CQM 17/25.
+
+## Round 20 official (v3.9; seeds 1016-1063)
+- Butlin 9/14, frameworks 7/10, CQM 17/25. Old test seeds 1000-1015 retired.
+
 ## Round 19: organism v3.8a (energy budget, fasting physiology, viability tests, range-adapted epistemic value)
 Code and prereg were frozen before any test-seed run. The v3.8 freeze is 14c377e. The v3.8a amendment (bb5846f) replaced the 30-day lifespan criterion and added fasting physiology. The aborted first launch is disclosed in the prereg.
 

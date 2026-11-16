@@ -1,78 +1,82 @@
 {
-"Butlin:HOT-3": {
-"status": "partial: st10 (conf->learning rate) fails (a) and (c)",
-"folder": "specialists/HOT3RM",
-"solo": "st01-st08 on Combo A; st05 HOT3RM PASS 500/520/540 + RPT1",
-"port": "not kept (trade-off)",
-"integ": "st10: a FAIL (0 subsystems vs Combo A and vs st10-minus-scCL), b PASS (0.47 sated/0.28 hungry), c FAIL (RPT1 540 0.97/2.7)",
-"note": "LC-coupling strength trades (a) vs HOT3RM/RPT1"
-},
-"Frameworks:activeInference": {
-"status": "missing (test under-powered)",
-"folder": "specialists/AINF",
-"solo": "10 variants, all fail",
-"port": "-",
-"integ": "-",
-"note": "paired or longer test needed"
-},
-"CQM:CQM03": {
-"status": "ill-posed for brain",
-"folder": "specialists/C03R",
-"solo": "not attempted",
-"port": "-",
-"integ": "-",
-"note": "birth rule in harness"
-},
-"CQM:CQM04": {
-"status": "largely ill-posed",
-"folder": "specialists/CQM04",
-"solo": "queued",
-"port": "-",
-"integ": "-",
-"note": "selection in harness"
-},
-"Butlin:GWT-2": {
-"status": "passes dev; R21 fail is ceiling rule",
-"folder": "specialists/GWT2",
-"solo": "scGW +0.98 d",
-"port": "-",
-"integ": "-",
-"note": "test needs harder distractors"
-},
-"CQM:CQM10": {
-"status": "standalone PASS on dev 500 (satiety gates)",
-"folder": "specialists/CQM10",
-"solo": "10 approaches + 3 hybrids; 7 PASS; best non-gaming v01 K0.5 1.27/3.6",
-"port": "not ported",
-"integ": "v01K0.5: AE1 540 0.78/2.2 regression; v01K0.25 AE1 540 0.67/1.9; v02 on Combo A AE1 540 PASS 1.11/3.1 but AE1 500 0.34/1.0; no arm clean yet",
-"note": "v03/v05/v10/h11/h12 pass by under-eating: rejected; forage diag queued (loop_p6)"
-},
-"Butlin:RPT-2": {
-"status": "partial (RPT2R passes with v6hub on dev)",
-"folder": "specialists/RPT2R",
-"solo": "v6hub d3.76",
-"port": "in Combo A (provisional; skipped 10-way method)",
-"integ": "hybrids cArp1/7/8 (Combo A + rp2 v01/v07/v08, K3): RPT2R up to 8.34/23.6 but RPT1 fails on 540 in all three (0.92/0.69/0.21); probes queued (loop_p7)",
-"note": "Combo A PASS 500 3.76/10.6, 540 3.65/10.3; awaiting Alex on redoing via method"
-},
-"SC-PORT:combo": {
-"status": "Combo A leading (provisional); Combo B rejected (RPT1, AE1)",
-"folder": "results/sc-port",
-"solo": "-",
-"port": "-",
-"integ": "-",
-"note": "see SC-PORT.md"
-},
-"AE2": {
-"status": "passes; scBM +4 d AE2 in Combo A (provisional, skipped 10-way method)",
-"folder": "specialists/AE2",
-"solo": "scBM",
-"port": "Combo A",
-"integ": "pending",
-"note": ""
-},
-"Butlin:AE2": {
-"folder": "specialists/AE2",
-"status": "Combo A passes; hybrids aeA1 (RLS) / aeA3 (particle) only change AE2 tracking (+6.12/+5.14 d vs base on 500), every other test bit-identical to Combo A -> (a) expected FAIL; probes queued"
-}
+ "Butlin:HOT-3": {
+  "status": "partial: st10 (conf->learning rate) fails (a) and (c)",
+  "folder": "specialists/HOT3RM",
+  "solo": "st01-st08 on Combo A; st05 HOT3RM PASS 500/520/540 + RPT1",
+  "port": "not kept (trade-off)",
+  "integ": "st10: a FAIL (0 subsystems vs Combo A and vs st10-minus-scCL), b PASS (0.47 sated/0.28 hungry), c FAIL (RPT1 540 0.97/2.7)",
+  "note": "LC-coupling strength trades (a) vs HOT3RM/RPT1 Alex ruling 2026-11-16: must pass a, b and c inside the combo (no unintegrated ship). Phase 2: st11-st20."
+ },
+ "Frameworks:activeInference": {
+  "status": "missing (test under-powered)",
+  "folder": "specialists/AINF",
+  "solo": "10 variants, all fail",
+  "port": "-",
+  "integ": "-",
+  "note": "paired or longer test needed"
+ },
+ "CQM:CQM03": {
+  "status": "ill-posed for brain",
+  "folder": "specialists/C03R",
+  "solo": "not attempted",
+  "port": "-",
+  "integ": "-",
+  "note": "birth rule in harness"
+ },
+ "CQM:CQM04": {
+  "status": "largely ill-posed",
+  "folder": "specialists/CQM04",
+  "solo": "queued",
+  "port": "-",
+  "integ": "-",
+  "note": "selection in harness"
+ },
+ "Butlin:GWT-2": {
+  "status": "passes dev; R21 fail is ceiling rule",
+  "folder": "specialists/GWT2",
+  "solo": "scGW +0.98 d",
+  "port": "-",
+  "integ": "-",
+  "note": "test needs harder distractors"
+ },
+ "CQM:CQM10": {
+  "status": "standalone PASS on dev 500 (satiety gates)",
+  "folder": "specialists/CQM10",
+  "solo": "10 approaches + 3 hybrids; 7 PASS; best non-gaming v01 K0.5 1.27/3.6",
+  "port": "not ported",
+  "integ": "v01K0.5: AE1 540 0.78/2.2 regression; v01K0.25 AE1 540 0.67/1.9; v02 on Combo A AE1 540 PASS 1.11/3.1 but AE1 500 0.34/1.0; no arm clean yet",
+  "note": "v03/v05/v10/h11/h12 pass by under-eating: rejected; forage diag queued (loop_p6)"
+ },
+ "Butlin:RPT-2": {
+  "status": "partial (RPT2R passes with v6hub on dev)",
+  "folder": "specialists/RPT2R",
+  "solo": "v6hub d3.76",
+  "port": "in Combo A (provisional; skipped 10-way method)",
+  "integ": "hybrids cArp1/7/8 (Combo A + rp2 v01/v07/v08, K3): RPT2R up to 8.34/23.6 but RPT1 fails on 540 in all three (0.92/0.69/0.21); probes queued (loop_p7)",
+  "note": "Combo A PASS 500 3.76/10.6, 540 3.65/10.3; awaiting Alex on redoing via method Alex ruling 2026-11-16: PURSUE the hybrids (Phase 2, h11-h15, RPT1 guard)."
+ },
+ "SC-PORT:combo": {
+  "status": "Combo A official: 6/7 claims grade A (AE1 fail); GWT2 must-hold A",
+  "folder": "results/sc-port",
+  "solo": "-",
+  "port": "-",
+  "integ": "-",
+  "note": "see SC-PORT.md"
+ },
+ "Butlin:AE-1": {
+  "status": "FAIL in SC-PORT official (pooled n=112: 0.73/5.48, d below 0.8); the R21 pass did not reproduce",
+  "folder": "specialists/AE1 (Phase 2)",
+  "solo": "-",
+  "port": "-",
+  "integ": "-",
+  "note": "mechanism gap; Phase 2 10-way on pooled dev seeds 640-703"
+ },
+ "Butlin:AE-2": {
+  "status": "Combo A passes (SC-PORT official A 2.65/13.0); hybrids aeA1 (RLS) / aeA3 (particle) change only AE2 tracking (+6.12/+5.14 d vs base on 500); every other test bit-identical to Combo A, so integration (a) currently fails",
+  "folder": "specialists/AE2",
+  "solo": "scBM (flag screen, not the 10-way method)",
+  "port": "Combo A",
+  "integ": "(a) applies to AE2 (Alex ruling 2026-11-16): needs >=2 other subsystems moved; Phase 2 hybrids h11-h12 (body-model uncertainty -> motor vigour, -> NE arousal)",
+  "note": "merged the duplicate 'AE2' entry (F18)"
+ }
 }

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["creatures/001/organism/**/*.ts", "lab/src/**/*.ts", "lab/conformance/**/*.ts"],
+  "exclude": ["node_modules", "archive", "imports", "creatures/001/src", "creatures/001/harness"]
+}

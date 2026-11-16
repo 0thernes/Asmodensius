@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "Asmodensius: pre-registered indicator tests for artificial creatures"
-version: 0.5.0
-date-released: 2026-10-28
+version: 0.6.0-dev
+date-released: 2026-11-16
 license: MIT
 authors:
   - family-names: Donahue

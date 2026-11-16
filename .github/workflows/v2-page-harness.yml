@@ -1,5 +1,5 @@
-name: harness
-on: [push, pull_request]
+name: v2-page-harness (historical v2/v3 browser creature; manual only)
+on: [workflow_dispatch]
 jobs:
   test:
     runs-on: ubuntu-latest
