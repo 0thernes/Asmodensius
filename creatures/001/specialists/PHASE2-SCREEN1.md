@@ -169,3 +169,32 @@ Paired delta-d compares the full arms only (child minus parent, in pooled-SD uni
 
 Paired change st20 vs Combo A: full arm +0.080 [-0.235, +0.415]; RPE-lesion arm +0.125 [-0.197, +0.450].
 Run 2026-11-16 14:35 PST, bundle b07675f (sha 73285ca6e214).
+
+# Phase 2 screen 3 (ADVISORY), finished 2026-11-16 15:04 PST, bundle d4019fd (sha dc9b62f894ec)
+
+## CQM10 AE1 per-seed variance check (pooled 640-703, 64 seeds)
+
+| arm | full mean | full SD | lesion mean | lesion SD | mean gap | sd(full - Combo A full) | sd(lesion - Combo A lesion) |
+|---|---|---|---|---|---|---|---|
+| comboA | 0.3324 | 0.0410 | 0.2955 | 0.0314 | 0.0369 | 0.0000 | 0.0000 |
+| v01K0.5 | 0.3302 | 0.0497 | 0.2970 | 0.0410 | 0.0331 | 0.0613 | 0.0476 |
+| h14 | 0.3304 | 0.0498 | 0.3014 | 0.0385 | 0.0290 | 0.0606 | 0.0469 |
+| h17 | 0.3323 | 0.0490 | 0.3037 | 0.0344 | 0.0286 | 0.0609 | 0.0430 |
+
+Reading: satiety widens both arms (full SD 0.041 -> 0.049-0.050, lesion SD 0.031 -> 0.034-0.041) and narrows the full-lesion gap (0.037 -> 0.029-0.033); the mean of the full arm is unchanged.
+
+## CQM10 soft volatility gate on v01K0.5 (gate = 1 - volU/c10gS; seeds 500 and 540, intake 500)
+| arm | C10 500 | C10 540 | full / fixed forages per day | full / fixed fat day 4 |
+|---|---|---|---|---|
+| v01K0.5 (no gate) | A 1.265/3.58 | A 1.354/3.83 | 71.5 / 60.2 | 282.5 / 274.9 |
+| g0.2 | fail -0.281/-0.80 | fail -0.072/-0.20 | 73.5 / 60.2 | 291.9 / 274.9 |
+| g0.4 | fail -0.014/-0.04 | fail 0.441/1.25 | 70.5 / 60.2 | 288.0 / 274.9 |
+| g0.8 | fail 0.785/2.22 | fail 0.939/2.65 | 69.5 / 60.2 | 283.6 / 274.9 |
+All three eat at least as much as the fixed arm, but none passes C10, so none went on to AE1.
+
+## HOT-3 st20ch (st20 with scCI 0, scCH 1: no LC route)
+| arm | HOT3RM 500/520/540/580 | RPT1 500/520/540/580 |
+|---|---|---|
+| st20 | A 1.548 / A 1.509 / A 1.386 / A 1.251 | A 1.19 / A 1.607 / fail 0.914 / A 1.277 |
+| st20ch | A 1.058 / A 0.989 / A 1.267 / fail 0.884 | A 1.044 / A 1.348 / fail 0.469 / A 1.306 |
+Integration (a) vs Combo A: st20ch 600-615 FAIL (0 moved), 616-631 FAIL (0 moved). st20 600-615 PASS (DA, cortisol) but fresh block 616-631 FAIL (1 moved: NE +3.1). st20ch failed (a) on both blocks, so its AE1 pool run was not started.
