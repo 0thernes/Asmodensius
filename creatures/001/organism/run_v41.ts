@@ -13,6 +13,7 @@ import { TESTS37 } from "./tests_v37";
 import { TESTS39 } from "./tests_v39";
 import { TESTS40 } from "./tests_v40";
 import { TESTS41 } from "./tests_v41";
+import { applyM41 } from "./v41mods"; // Phase 2 specialist mechanisms (prototype wrappers; inert unless M41J is set)
 const fs = require("fs"), path = require("path");
 const E = process.env, key = process.argv[2];
 const die = (m: string): never => { console.error("run_v41: " + m); process.exit(2); };
@@ -27,6 +28,7 @@ const lo = Math.min(...seeds), hi = Math.max(...seeds);
 if (MODE === "dev" && (lo < 500 || hi > 999)) die(`dev seeds must lie in 500-999 (got ${lo}-${hi}); 1000 and up are never used for tuning`);
 if (MODE === "official") { if (lo < 1224 || hi > 1335) die(`official seeds must lie in 1224-1335 (got ${lo}-${hi})`); if (!E.PREREG || !fs.existsSync(E.PREREG)) die("official runs need PREREG=<frozen preregistration file>"); }
 for (const [k, j] of [["V37TUNE", "M37"], ["V38TUNE", "M38"], ["V39TUNE", "M39"]] as const) if (E[k]) { const M = (require("./organism") as any)[j]; const v = JSON.parse(E[k]!); for (const x of Object.keys(v)) if (M[x] !== v[x]) die(`${k} not applied: ${x}`); }
+applyM41(E.M41J);
 const f = TESTS41[key] ?? TESTS40[key] ?? TESTS39[key] ?? TESTS37[key] ?? TESTS36[key] ?? TESTS34[key] ?? TESTS[key];
 if (!f) die("unknown test key " + key);
 // ---- energy meter (read-only wrapper) ----
