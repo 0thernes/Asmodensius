@@ -1,10 +1,10 @@
 // Originality check (conformance, required). Policy (Alex, 2026-10-31): 100% original code, designs and distinctive mechanics. No reuse of other
 // A-Life projects even under MIT/Apache; only published science concepts, cited in ORIGINS.md. Allowed third-party: Alex's/Tsotchke's own
-// Eshkol, Moonlab, quantum_rng; standard libraries (language runtimes, React, three.js) are ALLOWED (Alex, 2026-10-31). Neuralese is Alex's own project. archive/ is quarantined history, excluded.
+// Eshkol, Moonlab, quantum_rng; standard libraries (language runtimes, React, three.js) are ALLOWED (Alex, 2026-10-31). Neuralese is Alex's own project. SUPER CREATURE / CQM (cq5) is Alex's own work, free to reuse (Alex, 2026-10-31; ORIGINS.md). archive/ is quarantined history, excluded.
 // Scans tracked source and data files; prose (*.md), benchmark project lists, results and docs are references, not code, so they are skipped.
 import { execSync } from "child_process"; import { readFileSync } from "fs";
 export type Finding = { file: string; line: number; kind: "FAIL" | "ALLOWED"; why: string; text: string };
-const OWN = /tsotchke|eshkol|moonlab|quantum_rng|neuralese|alex donahue|asmodensius/i;
+const OWN = /tsotchke|eshkol|moonlab|quantum_rng|neuralese|alex donahue|asmodensius|super[ -]?creature|\bcq5\b/i; // v4.1: SUPER CREATURE / CQM is Alex's own work (F64)
 const PROJECTS = /\b(openworm|c302|sibernetic|owmeta|lenia|avida|tierra|polyworld|framsticks|norns?\b|creatures engine|neat-python|neuroevolution of augmenting|biota|darwinbots|evolve 4\.0|bibites|brian2|nest simulator|neuron simulator)\b/i;
 const WORM = /\b(AVA[LR]|AVB[LR]|AVD[LR]|PVC[LR]|loadConn|hermaphrodite connectome)\b/; const CRAWL = /\b(crawl\s*\(|contact-physics crawler|mass-spring chain|undulat\w*|serpentine gait)/i; // worm-style crawler bodies (CAP-B) // C. elegans identified-neuron wiring = literal OpenWorm-derived circuit
 const PORT = /\b(ported from|adapted from|copied from|translated from|based on the code|vendored)\b/i;
