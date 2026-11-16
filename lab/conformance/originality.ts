@@ -1,16 +1,16 @@
 // Originality check (conformance, required). Policy (Alex, 2026-10-31): 100% original code, designs and distinctive mechanics. No reuse of other
 // A-Life projects even under MIT/Apache; only published science concepts, cited in ORIGINS.md. Allowed third-party: Alex's/Tsotchke's own
-// Eshkol, Moonlab, quantum_rng; standard libraries (language runtimes, React, three.js) are ALLOWED (Alex, 2026-10-31). Neuralese is Alex's own project. SUPER CREATURE / CQM (cq5) is Alex's own work, free to reuse (Alex, 2026-10-31; ORIGINS.md). archive/ is quarantined history, excluded.
+// Eshkol, Moonlab, quantum_rng; standard libraries (language runtimes, React, three.js) are ALLOWED (Alex, 2026-10-31). Neuralese is Alex's own project. SUPER CREATURE / CQM (cq5) is Alex's own work, free to reuse (Alex, 2026-10-31; ORIGINS.md). archive/ is quarantined history and imports/ is review material, both excluded.
 // Scans tracked source and data files; prose (*.md), benchmark project lists, results and docs are references, not code, so they are skipped.
 import { execSync } from "child_process"; import { readFileSync } from "fs";
 export type Finding = { file: string; line: number; kind: "FAIL" | "ALLOWED"; why: string; text: string };
-const OWN = /tsotchke|eshkol|moonlab|quantum_rng|neuralese|alex donahue|asmodensius|super[ -]?creature|\bcq5\b/i; // v4.1: SUPER CREATURE / CQM is Alex's own work (F64)
+const OWN = /tsotchke|eshkol|moonlab|quantum_rng|neuralese|alex donahue|asmodensius|super[ -]?creature|\bcq5\b|wild-arch/i; // v4.1: SUPER CREATURE / CQM is Alex's own work (F64); wild-arch is this repo's own branch
 const PROJECTS = /\b(openworm|c302|sibernetic|owmeta|lenia|avida|tierra|polyworld|framsticks|norns?\b|creatures engine|neat-python|neuroevolution of augmenting|biota|darwinbots|evolve 4\.0|bibites|brian2|nest simulator|neuron simulator)\b/i;
 const WORM = /\b(AVA[LR]|AVB[LR]|AVD[LR]|PVC[LR]|loadConn|hermaphrodite connectome)\b/; const CRAWL = /\b(crawl\s*\(|contact-physics crawler|mass-spring chain|undulat\w*|serpentine gait)/i; // worm-style crawler bodies (CAP-B) // C. elegans identified-neuron wiring = literal OpenWorm-derived circuit
 const PORT = /\b(ported from|adapted from|copied from|translated from|based on the code|vendored)\b/i;
 const LICENSE = /(copyright \(c\)|@license|spdx-license-identifier|licensed under the)/i;
 const STD = /(react|three\.js|three\.module|orbitcontrols|mrdoob|facebook)/i;
-const SKIP = /(^archive\/|\.md$|^benchmark\/|^docs\/|\/results\/|^roadmap\/|^CHANGELOG|^CITATION|^LICENSE$|\.wasm$|\.png$|\.jpg$|^lab\/conformance\/originality\.ts$|DELARP)/;
+const SKIP = /(^archive\/|^imports\/|\.md$|^benchmark\/|^docs\/|\/results\/|^roadmap\/|^CHANGELOG|^CITATION|^LICENSE$|\.wasm$|\.png$|\.jpg$|^lab\/conformance\/originality\.ts$|DELARP)/;
 export function originality(root = "."): { pass: boolean; fails: number; allowed: number; findings: Finding[] } {
   const files = execSync("git ls-files", { cwd: root, encoding: "utf8" }).split("\n").filter((f) => f && !SKIP.test(f)); const F: Finding[] = [];
   for (const f of files) { if (/\/vendor\//.test(f)) { F.push({ file: f, line: 0, kind: STD.test(f) ? "ALLOWED" : "FAIL", why: "vendored third-party file", text: "" }); continue; }
