@@ -3,7 +3,7 @@
 // M41J keys (all dev-only, see specialists/<ITEM>/README-v41.md):
 //   ae1: id or [ids] (1-10), ae1K gain          AE1: extra RPE-driven value mechanisms; every one is cut by rpeLesion
 //   h3: id or [ids] (11-20), h3K gain           HOT-3 st11-st20: routes from self-trained confidence (confDev) to non-LC targets
-//   c10h: [[id,K],...], c10gate: 0|1            CQM10 hybrids: satiety gate = min over component gates; c10gate scales it down while volU is high
+//   c10h: [[id,K],...], c10gate: 0|1, c10gS (gate scale, default 0.1)        CQM10 hybrids: satiety gate = min over component gates; c10gate scales it down while volU is high
 //   rpX: [ids], rpG: 0|1                        RPT2R hybrids: several binding hubs at once (separate state); rpG = RPT1 guard
 //   e2: id or [ids] (11-13), e2K gain                   AE2 hybrids: motor babbling in natural life (+ body-model surprise -> NE / contingency -> DA)
 // No Math.random: the extra randomness (babbling) uses its own seeded stream, so the creature's own RNG is untouched.
@@ -57,7 +57,7 @@ export function applyM41(spec: string | undefined): C | null {
   // ---------------- CQM10 hybrids ----------------
   if (c.c10h) { const L: [number, number][] = c.c10h, gate = +(c.c10gate ?? 0), cg0 = P.c10G; P.c10G = function (this: any) { const v0 = M50.c10, k0 = M50.c10K; let x = 1;
       try { for (const [id, K] of L) { M50.c10 = id; M50.c10K = K; x = Math.min(x, cg0.call(this)); } } finally { M50.c10 = v0; M50.c10K = k0; }
-      if (gate) x = 1 - (1 - x) * cl(1 - (this.volU ?? 0) / 0.1); return x; }; } /* gate: satiety relaxes while unexpected uncertainty is high, so re-learning after a reversal is not starved of samples */
+      if (gate) x = 1 - (1 - x) * cl(1 - (this.volU ?? 0) / (c.c10gS ?? 0.1)); return x; }; } /* gate: satiety relaxes while unexpected uncertainty is high, so re-learning after a reversal is not starved of samples */
   // ---------------- RPT2R hybrids ----------------
   if (c.rpX || c.rpG) { const L = ids(c.rpX), guard = +(c.rpG ?? 0), rp0 = P.rp2Step; P.rp2Step = function (this: any, ext: Float32Array | Float64Array) { const W: any = this, c0 = R0.CTX, n = RN.CTX;
       const before = guard ? Float64Array.from(ext.subarray(c0, c0 + n)) : null;
