@@ -2,7 +2,7 @@
 import { make001, Dome, welch, cohenD, spearman, motorLensR } from "./src/index";
 import { BASE_CREATURE, birthOpts, seededDice, type WorldDials } from "./src/biosphere/god";
 import { writeFileSync, mkdirSync } from "fs";
-const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 2000 + i);
+const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 500 + i) /* v4.1: dev seeds moved out of 1000+ (SEEDS.md) */;
 const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
 function life(seed: number, wd: Partial<WorldDials>, metric: string, days = 1, n = 1, cfg: any = {}) {
   const d = new Dome({ seed, ...cfg }, wd); if (cfg.grazerEat) d.grazerEat = cfg.grazerEat; const cs: any[] = [];
@@ -23,7 +23,9 @@ export const DIALS: Dial[] = [
   { id: "learned game: stag hunt vs PD -> coop prob (3 days, 4 creatures)", wd: { ...G, game: "stag" }, ctl: G, metric: "coopP", dir: 1, days: 3, n: 4, cfg: { radius: 3 } },
   { id: "learned game: PD coop prob vs 0.5 start (3 days, 4 creatures)", wd: G, ctl: G, metric: "coopP", dir: -1, days: 3, n: 4, cfg: { radius: 3 }, vsConst: 0.5 },
 ];
-const which = process.argv[2]; const tag = process.argv[3] ?? "dev"; mkdirSync("out", { recursive: true }); let row: any;
+const which = process.argv[2]; const tag = process.argv[3] ?? "dev";
+if (which !== "sweep" && which !== "lens" && !(/^\d+$/.test(which ?? "") && DIALS[+which!])) { console.error(`usage: bun smoke6.ts <0..${DIALS.length - 1}|sweep|lens> [dev|test]`); process.exit(2); } /* v4.1: argv guard (F37) */
+process.chdir(__dirname); mkdirSync("out", { recursive: true }); let row: any;
 if (which === "sweep") { const doses = [0, 0.005, 0.01, 0.02, 0.03, 0.05]; const per = SEEDS.map((s) => doses.map((x) => life(s, { sensoryLinesR: x }, "asleep").v)); const rho = per.map((v) => spearman(doses, v));
   row = { dial: "sensory-lines dose sweep", doses, meanAsleep: doses.map((_, k) => mean(per.map((p) => p[k]))), rho, meanRho: mean(rho), p: welch(rho, rho.map(() => 0)).p, pass: mean(rho) <= -0.8 && welch(rho, rho.map(() => 0)).p < 0.05 };
 } else if (which === "lens") { const PARTS = ["CTX", "HYP", "regionRates", "rateAvg"]; const ml = SEEDS.map((s) => { const c = make001(s); c.step(300); return motorLensR(c, PARTS, 900, 5, s); });

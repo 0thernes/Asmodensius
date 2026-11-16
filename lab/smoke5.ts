@@ -1,7 +1,7 @@
 // v0.4: motor lens R (with oracle ceiling) and QRNG diagnosis/debiasing. argv[2] = "test" -> seeds 1000..1015, else dev 2000..2005.
 import { make001, motorLensR, qrngDiag, welch, cohenD } from "./src/index";
 import { writeFileSync } from "fs";
-const SEEDS = process.argv[2] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 2000 + i);
+const SEEDS = process.argv[2] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 500 + i) /* v4.1: dev seeds moved out of 1000+ (SEEDS.md) */;
 const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length; const PARTS = ["CTX", "HYP", "STR", "MOT", "HIP"];
 const ml = process.argv[3]==="q" ? [] as any[] : SEEDS.map((s) => { const c = make001(s); c.step(300); return motorLensR(c, PARTS, 900, 5, s); });
 if (process.argv[3]==="q") { const q = SEEDS.slice(0,4).map((s)=>{const c=make001(s);c.step(300);return qrngDiag(c,20000);}); console.log(JSON.stringify(q.map((x:any)=>[x.vonNeumann.pass,x.vonNeumannLsbR.pass,x.vonNeumannLsbR.p,x.toeplitz.pass,x.toeplitzR.pass,x.toeplitzR.p,x.vnThenToeplitzR.pass,x.vnThenToeplitzR.p]))); process.exit(0); }

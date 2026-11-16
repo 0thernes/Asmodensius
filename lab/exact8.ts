@@ -2,7 +2,7 @@
 // every creature metric/position and the patch food bit-for-bit. (b) full-state transplant via snapshot/restore (same-seed
 // and cross-seed donors): effect must be 1 (recipient becomes donor), self control 0. seeds from argv: dev 2000-2005 | test 1000-1015.
 import { make001, Dome, transplant } from "./src/index"; import { writeFileSync } from "fs";
-const SEEDS = process.argv[2] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : [2000, 2001, 2002, 2003, 2004, 2005];
+const SEEDS = process.argv[2] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : [500, 501, 502, 503, 504, 505] /* v4.1: dev seeds moved out of 1000+ (SEEDS.md) */;
 const domeRow = (seed: number) => { const mk = () => { const d = new Dome({ seed, radius: 4 }, { quantumKicks: 0.02, wind: 0.05, game: "pd", gameStrategy: "learned" }); for (let k = 0; k < 3; k++) d.add("c" + k, make001(seed + k)); return d; };
   const A = mk(); for (let t = 0; t < 400; t++) A.step(); const S = JSON.parse(JSON.stringify(A.snapshotFull())); const B = Dome.fromSnapshot(S, (_sp, s) => make001(s));
   for (let t = 0; t < 300; t++) { A.step(); B.step(); }

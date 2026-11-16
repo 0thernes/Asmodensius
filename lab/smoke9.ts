@@ -2,7 +2,7 @@
 import { make001, Dome, welch, cohenD, spearman, motorLensR } from "./src/index";
 import { BASE_CREATURE, birthOpts, seededDice, type WorldDials } from "./src/biosphere/god";
 import { writeFileSync, mkdirSync } from "fs";
-const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 2000 + i);
+const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 500 + i) /* v4.1: dev seeds moved out of 1000+ (SEEDS.md) */;
 const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
 function life(seed: number, wd: Partial<WorldDials>, metric: string, days = 1, n = 1, cfg: any = {}) {
   const d = new Dome({ seed, ...cfg }, wd); if (cfg.grazerEat) d.grazerEat = cfg.grazerEat; if (cfg.rewardWindow) { d.rewardWindow = cfg.rewardWindow; d.rewardPhasic = !!cfg.phasic; } if (cfg.lr) d.lr = cfg.lr; const cs: any[] = [];

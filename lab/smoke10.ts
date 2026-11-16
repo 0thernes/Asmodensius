@@ -1,7 +1,7 @@
 // v0.8 preregistered battery DIALS-v5 (preregistrations/DIALS-v5.md): light / day-length dials (dome light drives creature 001 via
 // setLight) and the Moonlab simulated-quantum dice. argv[2] = dial index | "dice"; argv[3] = test (1000..1015) | dev (2000..2005)
 import { make001, Dome, welch, cohenD, moonlabDice, loadMoonlabSim } from "./src/index"; import type { WorldDials } from "./src/biosphere/god"; import { writeFileSync, mkdirSync } from "fs";
-const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 2000 + i);
+const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 500 + i) /* v4.1: dev seeds moved out of 1000+ (SEEDS.md) */;
 const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length; let ML: any = null;
 function life(seed: number, wd: Partial<WorldDials>, metric: string, days = 2, dice = "classical") { const d = new Dome({ seed, radius: 4 }, wd); if (dice === "moonlab") d.dice = moonlabDice(ML, seed + 101); const c = make001(seed); d.add("x", c);
   let acc = 0, mel = 0; const T = 1440 * days; for (let t = 0; t < T; t++) { d.step(); acc += c.metrics().asleep; mel += (c as any).o.melatonin; }
@@ -17,7 +17,9 @@ const DIALS: Dial[] = [
   { id: "coupling check: DD with dome light coupled vs uncoupled (own photoperiod) -> melatonin", wd: { lightMode: "DD", lightToCreatures: true }, ctl: { lightMode: "DD" }, metric: "melatonin", dir: 1 },
   { id: "Moonlab simulated-quantum dice vs classical dice, quantum kicks 0.05 -> kicks count (predicted null)", wd: { quantumKicks: 0.05 }, ctl: { quantumKicks: 0.05 }, metric: "kicks", dir: 0, dice: "moonlab" },
 ];
-(async () => { ML = await loadMoonlabSim(); const which = process.argv[2]; const tag = process.argv[3] ?? "dev"; mkdirSync("out", { recursive: true }); let row: any;
+(async () => { ML = await loadMoonlabSim(); const which = process.argv[2]; const tag = process.argv[3] ?? "dev";
+  if (which !== "dice" && !(/^\d+$/.test(which ?? "") && DIALS[+which!])) { console.error(`usage: bun smoke10.ts <dice|0..${DIALS.length - 1}> [dev|test]`); process.exit(2); } /* v4.1: argv guard (F37) */
+  process.chdir(__dirname); mkdirSync("out", { recursive: true }); let row: any;
   if (which === "dice") { const chi = (x: number[]) => { const b = new Array(16).fill(0); for (const v of x) b[Math.floor(v * 16)]++; const e = x.length / 16; return b.reduce((s, o) => s + (o - e) ** 2 / e, 0); };
     const a = moonlabDice(ML, 1, Math.PI / 2), b = moonlabDice(ML, 1, Math.PI / 2), xs = Array.from({ length: 20000 }, () => a.next()), ys = Array.from({ length: 20000 }, () => b.next());
     const bias = moonlabDice(ML, 2, Math.PI / 3); const p1 = bias.probs.reduce((s, p, k) => s + p * (k & 1), 0);

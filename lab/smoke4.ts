@@ -3,7 +3,7 @@
 import { make001, Dome, welch, cohenD, spearman } from "./src/index";
 import { BASE_CREATURE, birthOpts, seededDice, PRESETS, LADDER, type WorldDials, type CreatureDials } from "./src/biosphere/god";
 import { writeFileSync, mkdirSync } from "fs";
-const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 2000 + i);
+const SEEDS = process.argv[3] === "test" ? Array.from({ length: 16 }, (_, i) => 1000 + i) : Array.from({ length: 6 }, (_, i) => 500 + i) /* v4.1: dev seeds moved out of 1000+ (SEEDS.md) */;
 const TICKS = 1440; const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
 const END = ["eaten", "integrity", "stores", "foraged", "rewards", "ignitions"];
 function life(seed: number, wd: Partial<WorldDials>, cd: Partial<CreatureDials>, metric: string, n = 1, cfg: any = {}) {

@@ -1,5 +1,6 @@
 // Runs the conformance suite on creature 001 (adapter over the read-only organism) and on the template creature.
-import { make001 } from "../src/index"; import { makeTemplate } from "../template/creature"; import { conformance } from "./suite"; import { originality } from "./originality"; import { writeFileSync } from "fs";
+import { make001 } from "../src/index"; import { makeTemplate } from "../template/creature"; import { conformance } from "./suite"; import { originality } from "./originality"; import { writeFileSync, mkdirSync } from "fs";
+process.chdir(require("path").resolve(__dirname, "..")); mkdirSync("out", { recursive: true }); /* v4.1: run from any cwd (F36) */
 const R = [conformance(make001, "001"), conformance(makeTemplate, "template")]; writeFileSync("out/conformance.json", JSON.stringify(R, null, 1));
 for (const r of R) { console.log(`${r.creature}: ${r.pass ? "CONFORMS" : "DOES NOT CONFORM"} (${r.requiredPassed} required)`); for (const c of r.checks) console.log(`  ${c.pass ? "PASS" : "FAIL"}${c.required ? "" : " (optional)"} ${c.id}: ${c.detail}`); }
 // Negative controls: the suite must reject broken creatures.
