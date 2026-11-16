@@ -1,0 +1,244 @@
+diff --git a/lab/src/adapters/c001.ts b/lab/src/adapters/c001.ts
+index a8b5b26..6c9558c 100644
+--- a/lab/src/adapters/c001.ts
++++ b/lab/src/adapters/c001.ts
+@@ -3,7 +3,7 @@ import { Organism, REGIONS, R0, RN, NNEU, MW, CE, CX, mulberry } from "../../../
+ import { Affect } from "../../../creatures/001/organism/affect";
+ import { mutateGenome } from "../../../creatures/001/organism/develop";
+ import { EmbodiedOntogeny, type InheritedOntogenyPack } from "../../../creatures/001/organism/embodied_ontogeny";
+-import type { CreatureLab, Part, Coupling, Vec, BodySpec, WorldSense, Action, Exchange } from "../interface";
++import type { CreatureLab, Part, Coupling, Vec, BodySpec, WorldSense, Action, Exchange, CreatureVisualState, CouplingWeight } from "../interface";
+ const NM = ["DA", "5HT", "NE", "ACh", "Glu", "GABA", "eCB"];
+ 
+ // Fixed zero-bias anatomical cortical ring basis over the CE = 4*MW excitatory cortical neurons.
+@@ -228,6 +228,46 @@ export class Creature001 implements CreatureLab {
+   heptarchTraits() { return this.o.heptarch ? Array.from(this.o.heptarch.heritableTraits) : null; }
+   devGenome() { return (this.o as any).devGenome as Float32Array | null; }
+   affectState() { return this.o.affectState(); }
++  /** v5.1 read-only render hook: copies live body/brain state; never mutates the organism (docs/VISUALS.md). */
++  visualState(): CreatureVisualState {
++    const o = this.o as any;
++    const r3 = (x: number) => (Number.isFinite(x) ? Math.round(x * 1000) / 1000 : 0);
++    const hy = o.csf ? o.csf.hydrostat : null;
++    let shell: number[] | null = null, limbAnchors: number[] | null = null, limbLengths: number[] | null = null, strainKJ = 0, catchSoftness = 0;
++    if (hy) {
++      let cx = 0, cy = 0;
++      for (let i = 0; i < hy.nNodes; i++) { cx += hy.px[i]; cy += hy.py[i]; }
++      cx /= hy.nNodes; cy /= hy.nNodes;
++      shell = [];
++      for (let i = 0; i < hy.nNodes; i++) shell.push(r3(hy.px[i] - cx), r3(hy.py[i] - cy));
++      limbAnchors = Array.from(hy.limbAnchors as Int32Array);
++      limbLengths = Array.from(hy.limbPermMap as Int32Array).map((k: number) => r3(hy.limbRestLengths[k]));
++      strainKJ = r3(hy.elasticKJ + hy.kineticKJ);
++      catchSoftness = r3(hy.catchSoftness);
++    }
++    const ch = o.csf ? o.csf.chemoton : null;
++    const hp = o.heptarchOut;
++    return {
++      hr: r3(o.hr), atpFrac: r3(Math.max(0, Math.min(1.5, o.atp / 2))), hunger: r3(o.regionRate.HYP ?? 0),
++      mass: r3(o.eoOut ? o.eoOut.bodyMass : 1), radius: r3(this.body().radius),
++      shell, limbAnchors, limbLengths, catchSoftness, strainKJ,
++      bioField: hy ? Array.from(hy.somaticBioelectricField as Float64Array).slice(0, 4).map(r3) : [],
++      chemoton: ch ? { a: r3(ch.autocatA), membrane: r3(ch.membraneM), template: r3(ch.templateV) } : null,
++      mode: hp ? String(hp.mode) : null, seat: hp ? String(hp.dominantSeat) : null,
++      regions: REGIONS.map(([r]) => r3(o.regionRate[r] ?? 0)),
++    };
++  }
++  /** v5.1 weight-space readout: per named coupling, statistics of the live synaptic weights and the current lesion gain. */
++  couplingWeights(): CouplingWeight[] {
++    const w = this.o.syn.w, mask = this.o.mask;
++    return [...this.edges].map(([id, ks]) => {
++      const [from, to] = id.split("->");
++      let s = 0, s2 = 0, mn = Infinity, mx = -Infinity, g = 0;
++      for (const k of ks) { const x = w[k]; s += x; s2 += x * x; if (x < mn) mn = x; if (x > mx) mx = x; g += mask[k]; }
++      const n = ks.length, mean = n ? s / n : 0;
++      return { id, from, to, n, meanW: mean, sdW: n ? Math.sqrt(Math.max(0, s2 / n - mean * mean)) : 0, minW: n ? mn : 0, maxW: n ? mx : 0, gain: n ? g / n : 1 };
++    });
++  }
+   /** v4.0: when not heading to a food site, steer toward the most-liked or away from the most-disliked nearby creature */
+   private socialHeading(): number { const a = this.o.affect; if (!a || !this.nb.length) return NaN; let best = 0, hd = NaN; for (const n of this.nb) { const s = a.stance(n.id); if (Math.abs(s) > Math.abs(best) && Math.abs(s) > 0.05) { best = s; hd = Math.atan2(n.dy, n.dx) + (s < 0 ? Math.PI : 0); } } return hd; }
+   act(): Action {
+diff --git a/lab/src/interface.ts b/lab/src/interface.ts
+index e74e621..dc061fe 100644
+--- a/lab/src/interface.ts
++++ b/lab/src/interface.ts
+@@ -54,7 +54,29 @@ export interface CreatureLab {
+   restore?(s: unknown): void;
+   alive?(): boolean;                    // v0.9: false once the organism's own death rule has fired (001: 2 h of hypoglycaemia / ATP failure)
+   setLight?(x: number | null): void;    // v0.8: world light into the creature (null = its own internal photoperiod)                 // v0.4: hand excreted energy back to the world (recycling); returns kJ
++  // v5.1 read-only render hooks: every field is copied from live simulation state (never synthesised for display)
++  visualState?(): CreatureVisualState;
++  couplingWeights?(): CouplingWeight[];
+ }
++/** Read-only snapshot of real body/brain state consumed by the 3D viewer (docs/VISUALS.md binding contract). */
++export interface CreatureVisualState {
++  hr: number;                 // heart rate (beats per sim-minute)
++  atpFrac: number;            // ATP / nominal ATP (2.0), clamped [0, 1.5]
++  hunger: number;             // hypothalamic hunger drive (HYP region rate)
++  mass: number;               // body mass from embodied ontogeny (1 when absent)
++  radius: number;             // body radius used by the biosphere
++  shell: number[] | null;     // 16 XPBD shell nodes, centroid-relative, interleaved [x0, y0, x1, y1, ...]
++  limbAnchors: number[] | null;      // shell node index of each of the 5 limbs
++  limbLengths: number[] | null;      // rest length of each limb (after somatic permutation map)
++  catchSoftness: number;      // mutable-collagen softening in [0, 1]
++  strainKJ: number;           // elastic + kinetic shell energy (kJ)
++  bioField: number[];         // first 4 somatic bioelectric field values
++  chemoton: { a: number; membrane: number; template: number } | null;
++  mode: string | null;        // HEPTARCH phase-portrait mode
++  seat: string | null;        // HEPTARCH dominant seat
++  regions: number[];          // smoothed firing rate per brain region (order = regionIds in the stream)
++}
++export interface CouplingWeight { id: string; from: string; to: string; n: number; meanW: number; sdW: number; minW: number; maxW: number; gain: number; }
+ export interface BodySpec { radius: number; mass: number; maxSpeed: number; habitat: ("land" | "water" | "air")[]; }
+ export interface WorldSense { light: number; foodHere: number; temperature: number; touch: number; t: number; hazardHere?: number; hazardGradAngle?: number; foodPlumeMag?: number; foodPlumeAngle?: number; }
+ export interface Action { heading: number; speed: number; forage: boolean; site: number; }
+diff --git a/lab/template/creature.ts b/lab/template/creature.ts
+index a40c5d2..84512ea 100644
+--- a/lab/template/creature.ts
++++ b/lab/template/creature.ts
+@@ -2,7 +2,7 @@
+ // It is a deliberately small but real spiking creature (LIF neurons, DA modulator, glucose store, foraging, sleep pressure),
+ // so the conformance suite is exercised end to end. Copy this file (scaffold.ts does it), keep the CreatureLab surface,
+ // and replace the brain/body with your own. No tokens, no prompts, no LLM.
+-import type { CreatureLab, Part, Coupling, Vec, BodySpec, WorldSense, Action, Exchange } from "../src/interface";
++import type { CreatureLab, Part, Coupling, Vec, BodySpec, WorldSense, Action, Exchange, CreatureVisualState, CouplingWeight } from "../src/interface";
+ import { mulberry } from "../src/rng";
+ export const TEMPLATE_REGIONS: [string, number][] = [["SENS", 16], ["CORE", 48], ["MOT", 16], ["VTA", 8]];
+ export class TemplateCreature implements CreatureLab {
+@@ -58,5 +58,15 @@ export class TemplateCreature implements CreatureLab {
+   drain(kJ: number) { const d = Math.min(this.stores, kJ); this.stores -= d; this.intake -= d; return d; }
+   give(kJ: number) { this.stores += kJ; this.intake += kJ; }
+   takeWaste() { const w = this.waste; this.waste = 0; this.intake -= w; return w; }
++  /** v5.1 read-only render hook (no shell physics in the template: shell = null, so the viewer draws a plain body). */
++  visualState(): CreatureVisualState {
++    const reg = (g: string) => { const o = this.off[g]; let s = 0; for (let i = 0; i < this.size(g); i++) s += this.rate[o + i]; return Math.round((s / this.size(g)) * 1000) / 1000; };
++    return { hr: 0, atpFrac: Math.max(0, Math.min(1.5, this.stores / 500)), hunger: Math.max(0, 1 - this.stores / 600), mass: 0.6, radius: 0.4, shell: null, limbAnchors: null, limbLengths: null, catchSoftness: 0, strainKJ: 0, bioField: [], chemoton: null, mode: null, seat: null, regions: TEMPLATE_REGIONS.map(([g]) => reg(g)) };
++  }
++  couplingWeights(): CouplingWeight[] {
++    const acc: Record<string, number[]> = {};
++    for (let e = 0; e < this.W.length; e++) (acc[this.cid(e)] ??= []).push(this.W[e]);
++    return Object.keys(this.gain).map((id) => { const xs = acc[id] ?? [], n = xs.length, m = n ? xs.reduce((a, b) => a + b, 0) / n : 0; return { id, from: id.split("->")[0], to: id.split("->")[1], n, meanW: m, sdW: n ? Math.sqrt(Math.max(0, xs.reduce((a, b) => a + b * b, 0) / n - m * m)) : 0, minW: n ? Math.min(...xs) : 0, maxW: n ? Math.max(...xs) : 0, gain: this.gain[id] }; });
++  }
+ }
+ export const makeTemplate = (seed: number, opts: Record<string, unknown> = {}) => new TemplateCreature(seed, opts);
+diff --git a/lab/viewer/server.ts b/lab/viewer/server.ts
+index 191b99b..e405e4a 100644
+--- a/lab/viewer/server.ts
++++ b/lab/viewer/server.ts
+@@ -11,8 +11,20 @@ import { join, resolve, sep } from "path";
+ import { makeTemplate } from "../template/creature";
+ import { Dome, make001, motorLensR, pci, qrngDiag } from "../src/index";
+ import { BASE_WORLD, LADDER, PRESETS, type WorldDials } from "../src/biosphere/god";
++import { CREVICE_REFUGIA_CENTERS, CREVICE_REFUGIA_RADIUS, SAFE_OASIS_CENTERS, SAFE_OASIS_RADIUS, TOXIC_VENT_CENTERS, TOXIC_VENT_RADIUS } from "../src/biosphere/dome";
+ import type { CreatureLab } from "../src/interface";
+ 
++/** Static habitat geometry streamed to the viewer so terrain features are drawn exactly where the simulation places them. */
++const HABITAT_GEOMETRY = {
++  crevices: CREVICE_REFUGIA_CENTERS.map(([x, y]) => [x, y]),
++  creviceRadius: CREVICE_REFUGIA_RADIUS,
++  vents: TOXIC_VENT_CENTERS.map(([x, y]) => [x, y]),
++  ventRadius: TOXIC_VENT_RADIUS,
++  oases: SAFE_OASIS_CENTERS.map(([x, y]) => [x, y]),
++  oasisRadius: SAFE_OASIS_RADIUS,
++};
++const RENDER_MODULE_RE = /^[a-z0-9-]{1,48}\.mjs$/;
++
+ export const SERVER_VERSION = "5.0.0";
+ export const MAX_BODY_BYTES = 65_536;
+ export const MAX_SSE_CLIENTS = 32;
+@@ -424,6 +436,7 @@ export function createViewerServer(opts: ViewerServerOptions = {}): ViewerServer
+ 
+   const snap = () => {
+     const L = dome.ledger();
++    const firstVis = dome.pop.find((h) => typeof h.c.visualState === "function");
+     return {
+       t: dome.t,
+       light: dome.light(),
+@@ -433,13 +446,22 @@ export function createViewerServer(opts: ViewerServerOptions = {}): ViewerServer
+       n: dome.n,
+       radius: dome.cfg.radius,
+       cell: dome.cfg.cell,
++      habitat: HABITAT_GEOMETRY,
++      regionIds: firstVis ? firstVis.c.parts().filter((p) => p.kind === "region").map((p) => p.id) : [],
+       food: dome.patches.map((p) => Math.round(p.food * 10) / 10),
++      soil: dome.patches.map((p) => Math.round((p.soil ?? 0) * 10) / 10),
++      windDir: dome.windDir,
++      neoMarks: Array.from(dome.neoMarks, (v) => Math.round(v * 1000) / 1000),
+       grazers: dome.grazersXY,
+       detritus: dome.detritus,
+       parasite: dome.parasiteBiomass,
+       grazerBiomass: dome.grazerBiomass,
+       teleports: dome.teleports,
+       games: dome.games,
++      coop: dome.coop,
++      signalsEmitted: dome.signalsEmitted,
++      buds: dome.buds,
++      creviceEntries: dome.creviceEntries,
+       worldLedgerError: L.worldLedgerError,
+       species: dome.speciesStats(),
+       restoredAt,
+@@ -467,6 +489,7 @@ export function createViewerServer(opts: ViewerServerOptions = {}): ViewerServer
+           eaten: m.eaten,
+           ledgerError: m.ledgerError,
+           coopP: dome.coopProb(h.id),
++          vis: h.c.visualState ? h.c.visualState() : null,
+         };
+       }),
+     };
+@@ -625,6 +648,24 @@ export function createViewerServer(opts: ViewerServerOptions = {}): ViewerServer
+         return res.end(js);
+       }
+ 
++      if (decodedPath.startsWith("/render/") && req.method === "GET") {
++        const rel = decodedPath.slice("/render/".length);
++        if (!RENDER_MODULE_RE.test(rel)) {
++          return sendJson({ error: "forbidden render module path" }, 403);
++        }
++        const renderDir = resolve(viewerDir, "render");
++        const fullRenderPath = resolve(renderDir, rel);
++        if (!fullRenderPath.startsWith(renderDir + sep) || !existsSync(fullRenderPath)) {
++          return sendJson({ error: "render module not found" }, 404);
++        }
++        res.writeHead(200, {
++          "content-type": "text/javascript; charset=utf-8",
++          "cache-control": "no-cache",
++          ...buildSecurityHeaders(undefined, origin, incomingReqId, incomingTrace),
++        });
++        return res.end(readFileSync(fullRenderPath));
++      }
++
+       if (decodedPath.startsWith("/vendor/") && req.method === "GET") {
+         const rel = decodedPath.slice("/vendor/".length);
+         const fullVendorPath = resolve(vendorDir, rel);
+@@ -905,7 +946,15 @@ export function createViewerServer(opts: ViewerServerOptions = {}): ViewerServer
+             v40: c.v40State ? c.v40State() : null,
+           });
+         }
+-        return sendJson({ error: "tools: state, viability, apex, motorLens, pci, qrng" }, 400);
++        if (tool === "weights") {
++          return sendJson({
++            id: h.id,
++            t: c.t(),
++            note: "Live synaptic weight statistics per named coupling; gain is the current lesion mask (POST /god act=lesion sets it in [0, 2]).",
++            couplings: c.couplingWeights ? c.couplingWeights() : [],
++          });
++        }
++        return sendJson({ error: "tools: state, viability, apex, weights, motorLens, pci, qrng" }, 400);
+       }
+ 
+       if (decodedPath === "/client-error" && req.method === "POST") {
+diff --git a/package.json b/package.json
+index 0856f49..d89f2d8 100644
+--- a/package.json
++++ b/package.json
+@@ -8,8 +8,8 @@
+     "node": ">=22.0.0"
+   },
+   "scripts": {
+-    "start": "node --experimental-strip-types lab/viewer/server.ts",
+-    "dev": "node --experimental-strip-types lab/viewer/server.ts",
++    "start": "node scripts/start-viewer.mjs",
++    "dev": "node scripts/start-viewer.mjs",
+     "build": "node scripts/build-bundles.mjs",
+     "format": "node scripts/lint.mjs",
+     "lint": "node scripts/lint.mjs",

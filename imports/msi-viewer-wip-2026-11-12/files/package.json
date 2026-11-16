@@ -1,0 +1,31 @@
+{
+  "name": "asmodensius",
+  "version": "5.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Asmodensius v5.0: Preregistered, falsifiable artificial-life biosphere, stoichiometric reversible Chemoton, branchless XPBD hydrostat, nested multi-precision cognition, and Nobel/Fields/Turing/Santa Fe proof suite.",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node scripts/start-viewer.mjs",
+    "dev": "node scripts/start-viewer.mjs",
+    "build": "node scripts/build-bundles.mjs",
+    "format": "node scripts/lint.mjs",
+    "lint": "node scripts/lint.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node tests/run_grade_a_tests.mjs",
+    "test:browser": "node tests/verify_browser_cwv_a11y.mjs",
+    "test:pipeline": "node pipeline/run_all.mjs",
+    "audit:python": "node scripts/run-python-audit.mjs",
+    "secret-scan": "node scripts/secret-scan.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "repo-check": "node scripts/repo-check.mjs . --pre-release",
+    "verify:all": "npm run lint && npm run typecheck && npm test && npm run secret-scan && npm run check:links && npm run repo-check"
+  },
+  "devDependencies": {
+    "@types/node": "25.0.10",
+    "esbuild": "0.28.1",
+    "typescript": "5.9.3"
+  }
+}
