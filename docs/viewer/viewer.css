@@ -1,0 +1,16 @@
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#0b1020;color:#dde3f5;font:13px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:8px 10px;background:#121a33;border-bottom:1px solid #223}
+.brand b{color:#ffb35c}.muted{color:#8a93b0}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.small{font-size:12px}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+select,button,input{font:inherit;color:#dde3f5;background:#1b2547;border:1px solid #2d3a6a;border-radius:6px;padding:4px 7px}button{cursor:pointer;min-width:36px}button:hover{background:#26336a}
+#main{display:flex;height:calc(100% - 48px)}#stage{flex:1;display:flex;position:relative;min-width:0}
+.pane{flex:1;position:relative;min-width:0;border-right:1px solid #223}.pane canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}.hidden{display:none}
+.tag{position:absolute;left:8px;top:6px;background:#0009;padding:3px 6px;border-radius:4px;font-size:12px;pointer-events:none}
+#hint{position:absolute;bottom:6px;left:8px;color:#8a93b0;font-size:11px;pointer-events:none}
+#side{width:340px;overflow:auto;padding:8px 10px;background:#121a33;border-left:1px solid #223}
+#transport{display:flex;gap:4px;align-items:center;flex-wrap:wrap}#scrub{width:100%;margin:8px 0 2px}
+details{margin-top:8px;border-top:1px solid #223;padding-top:6px}summary{cursor:pointer;color:#9bf;font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;margin-top:4px}.grid2 label{display:flex;gap:4px;align-items:center}
+#insp{white-space:pre;overflow:auto;max-height:240px;background:#0006;padding:5px;margin:4px 0;border-radius:4px}
+.chart{position:relative;margin-top:4px}.chart canvas{width:100%;height:60px;display:block;background:#0006;border-radius:4px}.chart .x{position:absolute;right:3px;top:1px;background:none;border:0;padding:0 4px;min-width:0;color:#8a93b0}
+.chart .lbl{position:absolute;left:5px;top:2px;font-size:11px;color:#aab;pointer-events:none}
+@media (max-width:760px){#main{flex-direction:column;height:auto}#stage{height:62vh;flex:none}#side{width:100%;border-left:0}#stage.cmp{flex-direction:column;height:86vh}.pane{min-height:0}.pane{border-right:0;border-bottom:1px solid #223}header{padding:6px}}

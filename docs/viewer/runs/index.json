@@ -1,0 +1,230 @@
+{
+ "format": "asmodensius-replay-index/1",
+ "codeCommit": "bc6ad6a",
+ "runs": [
+  {
+   "file": "run-500-baseline.json",
+   "seed": 500,
+   "variant": "baseline",
+   "creatureSeeds": [
+    500,
+    501,
+    502
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 656337
+  },
+  {
+   "file": "run-510-baseline.json",
+   "seed": 510,
+   "variant": "baseline",
+   "creatureSeeds": [
+    510,
+    511,
+    512
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 656875
+  },
+  {
+   "file": "run-520-baseline.json",
+   "seed": 520,
+   "variant": "baseline",
+   "creatureSeeds": [
+    520,
+    521,
+    522
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 654846
+  },
+  {
+   "file": "run-530-baseline.json",
+   "seed": 530,
+   "variant": "baseline",
+   "creatureSeeds": [
+    530,
+    531,
+    532
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 658754
+  },
+  {
+   "file": "run-540-baseline.json",
+   "seed": 540,
+   "variant": "baseline",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 656253
+  },
+  {
+   "file": "run-540-grazers.json",
+   "seed": 540,
+   "variant": "grazers",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 925841
+  },
+  {
+   "file": "run-540-harsh.json",
+   "seed": 540,
+   "variant": "harsh",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 606092
+  },
+  {
+   "file": "run-540-hazard.json",
+   "seed": 540,
+   "variant": "hazard",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 652719
+  },
+  {
+   "file": "run-540-hell.json",
+   "seed": 540,
+   "variant": "hell",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 580403
+  },
+  {
+   "file": "run-540-lush.json",
+   "seed": 540,
+   "variant": "lush",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 600945
+  },
+  {
+   "file": "run-540-sparse.json",
+   "seed": 540,
+   "variant": "sparse",
+   "creatureSeeds": [
+    540,
+    541,
+    542
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 655639
+  },
+  {
+   "file": "run-550-baseline.json",
+   "seed": 550,
+   "variant": "baseline",
+   "creatureSeeds": [
+    550,
+    551,
+    552
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 659388
+  },
+  {
+   "file": "run-560-baseline.json",
+   "seed": 560,
+   "variant": "baseline",
+   "creatureSeeds": [
+    560,
+    561,
+    562
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 653959
+  },
+  {
+   "file": "run-570-baseline.json",
+   "seed": 570,
+   "variant": "baseline",
+   "creatureSeeds": [
+    570,
+    571,
+    572
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 658278
+  },
+  {
+   "file": "run-580-baseline.json",
+   "seed": 580,
+   "variant": "baseline",
+   "creatureSeeds": [
+    580,
+    581,
+    582
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 655915
+  },
+  {
+   "file": "run-590-baseline.json",
+   "seed": 590,
+   "variant": "baseline",
+   "creatureSeeds": [
+    590,
+    591,
+    592
+   ],
+   "ticks": 4320,
+   "frames": 433,
+   "deaths": 0,
+   "bytes": 653300
+  }
+ ]
+}

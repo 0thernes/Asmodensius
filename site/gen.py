@@ -23,7 +23,7 @@ main{max-width:1180px;margin:0 auto;padding:24px 28px 60px}h1{font-size:26px;mar
 
 PAGES = [("index.html","Home"),("results.html","Results"),("tests.html","Tests"),("diagrams.html","Diagrams"),("docs.html","Docs"),("glossary.html","Glossary"),
          ("versions.html","Versions"),("stack.html","Tech stack"),("benchmark.html","Benchmark"),("rankings.html","Rankings"),("roadmap.html","Roadmap to being alive"),
-         ("grounding.html","Biological grounding"),("systems.html","Systems"),("sitemap.html","Index")]
+         ("grounding.html","Biological grounding"),("systems.html","Systems"),("sitemap.html","Index"),("viewer/index.html","Viewer")]
 
 def page(fn, title, body):
     nav = "".join(f'<a href="{f}">{E(t)}</a>' for f, t in PAGES)

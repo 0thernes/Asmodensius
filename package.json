@@ -17,7 +17,9 @@
     "typecheck": "tsc -p tsconfig.json",
     "bundle": "bash creatures/001/specialists/tools/build_bundle.sh",
     "governor": "python3 creatures/001/specialists/tools/governor.py",
-    "instruments:summary": "python3 creatures/001/specialists/tools/summarize_v41.py creatures/001/results/v41-instruments"
+    "instruments:summary": "python3 creatures/001/specialists/tools/summarize_v41.py creatures/001/results/v41-instruments",
+    "viewer:record": "bash viewer/tools/record_all.sh",
+    "viewer:test": "node viewer/tools/test_viewer.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
