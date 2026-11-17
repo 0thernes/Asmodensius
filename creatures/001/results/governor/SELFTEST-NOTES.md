@@ -25,3 +25,7 @@ logged in `ledger.jsonl` and `SEEDS.md` before the runs). Raw outputs: `20261116
   (d) extend the reservoir (it must stay below 1000, so only by re-allocating unused dev ranges such as 596-599 or 632-639).
 - Also seen: RPT1 on block 720 graded fail for Combo A (0.89/2.52) and A for v5.7b, while both are A officially (n = 48).
   At n = 16 grades near d = 1 flip between blocks, which is the known winner's-curse risk.
+
+
+## Decision rule set by Alex (2026-11-17)
+F63 resolved: binding decisions use 96 fresh seeds per decision (6 x 16-seed reservoir blocks), NI margin stays -0.3. Encoded in governor.py as DECISION_BLOCKS = 6 / RULE; `governor.py run` allocates all 6 blocks to the ledger before running, runs parent and child on each block, pools the 96 paired seeds per test and decides once.

@@ -27,6 +27,8 @@ GOV = os.path.join(C1, "results/governor"); LEDGER = os.path.join(GOV, "ledger.j
 RESERVOIR = list(range(704, 977, 16)); SELFTEST_BLOCKS = [704, 720]
 RETAINED = ["HOT3RM", "RPT2R", "AE1", "AE2", "RPT1", "RPT2RL5", "UAL", "GWT2"]
 NI_MARGIN = -0.3; BOOT = 10000
+# Binding decision rule (Alex, 2026-11-17): 96 fresh seeds per decision = 6 reservoir blocks of 16, non-inferiority margin -0.3.
+DECISION_BLOCKS = 6; RULE = "96 fresh seeds (6 x 16) per decision, NI margin -0.3 (Alex, 2026-11-17); binding"
 PRESETS = {
     "comboA": {"ORG_V6": "1", "M50J": '{"v6P":0,"v6Ak":0,"scAIm":0.5,"scBM":1}', "V40TUNE": "{}", "ORG_MIND": "v40"},
     "v57b": {"ORG_V5": "11", "M50J": "{}", "V40TUNE": "{}", "ORG_MIND": "v40"},
@@ -39,6 +41,21 @@ def cfg(x):
 
 def ledger():
     return [json.loads(l) for l in open(LEDGER)] if os.path.exists(LEDGER) else []
+
+def allocate_n(purpose, n):
+    used = {e["block"] for e in ledger()}
+    free = [b for b in RESERVOIR if b not in used and b not in SELFTEST_BLOCKS]
+    if len(free) < n: sys.exit(f"governor: only {len(free)} reservoir blocks left, need {n}")
+    return [allocate(f"{purpose} [{i + 1}/{n}]", b) for i, b in enumerate(free[:n])]
+
+def merge(dirs, out, tests):
+    """concatenate per-block results (block order) into one result per test, so compare() sees 96 paired seeds"""
+    os.makedirs(out, exist_ok=True)
+    for t in tests:
+        J = [json.load(open(os.path.join(d, f"dev_{t}.json"))) for d in dirs]
+        m = dict(J[0]); m["seeds"] = sum((j["seeds"] for j in J), []); m["arms"] = {k: sum((j["arms"][k] for j in J), []) for k in J[0]["arms"]}
+        m["energy"] = {k: (max(j["energy"][k] for j in J) if k == "ledgerMaxDaily" else sum(j["energy"][k] for j in J)) for k in J[0]["energy"]}
+        m["blocks"] = [j["seeds"][0] for j in J]; json.dump(m, open(os.path.join(out, f"dev_{t}.json"), "w"))
 
 def allocate(purpose, block=None):
     used = {e["block"] for e in ledger()}
@@ -73,7 +90,7 @@ def run_arms(bpath, bsha, specs, jobs):
     def one(w):
         env, arm, block, t, out = w; dst = os.path.join(out, f"dev_{t}.json")
         if os.path.exists(dst): return
-        e = {k: v for k, v in os.environ.items() if not k.startswith(("ORG_", "M5", "V3", "V4", "PROBE"))}
+        e = {k: v for k, v in os.environ.items() if not k.startswith(("ORG_", "M4", "M5", "V3", "V4", "PROBE"))}
         e.update(env); e.update({"MODE": "dev", "ARM": arm, "SEEDBASE": str(block), "NSEEDS": "16", "OUT": out, "BUNDLE_SHA256": bsha})
         r = subprocess.run(["nice", "-n", "10", "node", bpath, t], env=e, capture_output=True, text=True)
         if r.returncode: raise RuntimeError(f"{arm} {t}: {r.stderr[-800:]}")
