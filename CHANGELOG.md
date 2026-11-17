@@ -1,5 +1,10 @@
 # Changelog
 
+## Governor finals (2026-11-16, binding: 96 fresh seeds per decision, NI margin -0.3)
+- AE1 v07 **REJECT** (seeds 752-847): target AE1 delta-d +0.162 [-0.111, +0.435], no gain; GWT2 NI lower CI -0.328 < -0.3.
+- CQM10 v01 K0.5 **REJECT** (seeds 848-943): C10 gain +0.834 [+0.577, +1.117], but NI fails on HOT3RM, AE1, AE2 (CI [-0.577, -0.049]) and RPT2RL5.
+- Block 736-751 voided (aborted single-block start; consumed, no decision). Combo A unchanged; AE1 still fails.
+
 ## Unreleased: Dome replay viewer (2026-11-17)
 - `docs/viewer/`: static interactive replay viewer (GitHub Pages ready). Replays recorded numbers only; no organism code in the browser.
 - `viewer/tools/record.ts` + `record_all.sh`: record Combo A runs headless (refuses unless `organism.ts` is byte-identical to `bc6ad6a`

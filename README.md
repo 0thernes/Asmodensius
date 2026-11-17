@@ -32,6 +32,12 @@ every control.
 Work in progress is on the local `v4.1` branch (see `CHANGELOG.md`): seed ledger, reproducible bundles, identity gate,
 measurement instruments and a fresh-seed governor. Nothing on `v4.1` is an official result.
 
+**Governor finals (2026-11-16, binding rule: 96 fresh reservoir seeds per decision, non-inferiority margin -0.3).** Both
+candidates were **rejected**, so Combo A stays as it is:
+- AE1 v07 (seeds 752-847): no AE1 gain (delta-d +0.162 [-0.111, +0.435]) and GWT2 non-inferiority failed (lower CI -0.328).
+- CQM10 v01 K0.5 (seeds 848-943): C10 improved (+0.834 [+0.577, +1.117]) but non-inferiority failed on HOT3RM, AE1, AE2 and RPT2RL5.
+AE1 therefore still does not pass.
+
 ## Dome replay viewer (play with recorded runs)
 `docs/viewer/` is a static, interactive replay of **recorded** runs of Creature #1 (frozen Combo A, code pin `bc6ad6a`) in
 the lab Dome. The creature is computed headless in Node ahead of time (`viewer/tools/record.ts`); the browser only replays the
