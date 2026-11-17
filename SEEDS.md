@@ -34,4 +34,5 @@ append-only (`governor.py` refuses a block that appears in the ledger).
 |---|---|---|
 | 704-719 | 2026-11-16 12:28 PST | governor v0 self-test (Phase 1.1) |
 | 720-735 | 2026-11-16 12:28 PST | governor v0 self-test (Phase 1.1) |
+| 736-751 | 2026-11-16 16:23 PST | VOID (consumed, no decision): final-AE1-v07 started as a single-block run because the 96-seed patch to the run path did not apply; aborted at 16:24 PT after 3 test files; seeds seen, never reused |
 <!-- GOVERNOR-BLOCKS:END -->

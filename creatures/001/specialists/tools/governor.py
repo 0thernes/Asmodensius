@@ -173,10 +173,14 @@ def main():
     if a.cmd == "run":
         tests = a.tests.split(","); pn, pe = cfg(a.parent); cn, ce = cfg(a.child)
         if a.target and a.target not in tests: tests.append(a.target)
-        blk = allocate(f"run {a.name}: {pn} -> {cn}, target {a.target or '-'}")
+        blks = allocate_n(f"run {a.name}: {pn} -> {cn}, target {a.target or '-'}", DECISION_BLOCKS)
         base = os.path.join(GOV, f"{stamp}_{a.name}", "raw"); pd, cd = os.path.join(base, "parent"), os.path.join(base, "child")
-        run_arms(bpath, meta["sha256"], [(pe, "parent", blk, tests, pd), (ce, "child", blk, tests, cd)], a.jobs)
-        save(f"{stamp}_{a.name}", [compare(pd, cd, tests, a.target, a.name, blk, pn, cn, meta)])
+        specs = [x for b in blks for x in ((pe, "parent", b, tests, os.path.join(pd, str(b))), (ce, "child", b, tests, os.path.join(cd, str(b))))]
+        run_arms(bpath, meta["sha256"], specs, a.jobs)
+        merge([os.path.join(pd, str(b)) for b in blks], os.path.join(pd, "all"), tests); merge([os.path.join(cd, str(b)) for b in blks], os.path.join(cd, "all"), tests)
+        v = compare(os.path.join(pd, "all"), os.path.join(cd, "all"), tests, a.target, a.name, blks[0], pn, cn, meta)
+        v["seeds"] = ", ".join(f"{b}-{b + 15}" for b in blks); v["n_seeds"] = 16 * len(blks); v["rule"] = RULE
+        save(f"{stamp}_{a.name}", [v], extra=f"Rule: {RULE}. Seeds: {v['seeds']} ({v['n_seeds']} paired seeds).\n\n")
     else:
         used = {e["block"] for e in ledger()}
         for b in SELFTEST_BLOCKS:
