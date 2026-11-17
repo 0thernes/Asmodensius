@@ -1,0 +1,207 @@
+[
+ {
+  "label": "final-AE1-v07",
+  "verdict": "REJECT",
+  "block": 752,
+  "seeds": "752-767, 768-783, 784-799, 800-815, 816-831, 832-847",
+  "parent": "comboA",
+  "child": "custom-aad76ece",
+  "target": "AE1",
+  "non_inferior_all": false,
+  "target_gain": false,
+  "rows": [
+   {
+    "test": "HOT3RM",
+    "parent": {
+     "grade": "A",
+     "d": 1.306,
+     "t": 9.05
+    },
+    "child": {
+     "grade": "A",
+     "d": 1.241,
+     "t": 8.6
+    },
+    "delta_d": 0.027,
+    "ci95": [
+     -0.188,
+     0.246
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "RPT2R",
+    "parent": {
+     "grade": "A",
+     "d": 4.113,
+     "t": 28.49
+    },
+    "child": {
+     "grade": "A",
+     "d": 4.113,
+     "t": 28.5
+    },
+    "delta_d": -0.027,
+    "ci95": [
+     -0.155,
+     0.097
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "AE1",
+    "parent": {
+     "grade": "A",
+     "d": 0.936,
+     "t": 6.49
+    },
+    "child": {
+     "grade": "A",
+     "d": 1.077,
+     "t": 7.46
+    },
+    "delta_d": 0.162,
+    "ci95": [
+     -0.111,
+     0.435
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "AE2",
+    "parent": {
+     "grade": "A",
+     "d": 2.409,
+     "t": 16.69
+    },
+    "child": {
+     "grade": "A",
+     "d": 2.359,
+     "t": 16.35
+    },
+    "delta_d": -0.017,
+    "ci95": [
+     -0.293,
+     0.265
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "RPT1",
+    "parent": {
+     "grade": "fail",
+     "d": 0.713,
+     "t": 4.94
+    },
+    "child": {
+     "grade": "A",
+     "d": 0.842,
+     "t": 5.83
+    },
+    "delta_d": -0.029,
+    "ci95": [
+     -0.289,
+     0.233
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "RPT2RL5",
+    "parent": {
+     "grade": "A",
+     "d": 3.859,
+     "t": 26.74
+    },
+    "child": {
+     "grade": "A",
+     "d": 4.13,
+     "t": 28.61
+    },
+    "delta_d": -0.024,
+    "ci95": [
+     -0.204,
+     0.152
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "UAL",
+    "parent": {
+     "grade": "A",
+     "d": 1.519,
+     "t": 10.52
+    },
+    "child": {
+     "grade": "A",
+     "d": 1.35,
+     "t": 9.35
+    },
+    "delta_d": 0.021,
+    "ci95": [
+     -0.122,
+     0.164
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "GWT2",
+    "parent": {
+     "grade": "A",
+     "d": 8.44,
+     "t": 58.47
+    },
+    "child": {
+     "grade": "A",
+     "d": 7.352,
+     "t": 50.94
+    },
+    "delta_d": -0.057,
+    "ci95": [
+     -0.328,
+     0.221
+    ],
+    "non_inferior": false,
+    "identical": false
+   }
+  ],
+  "cost": {
+   "parent": {
+    "kJ_per_org_day": 91.86509598585215,
+    "cpu_s_per_org_day": 2.1948920973168655,
+    "cpu_s_total": 3435.737763,
+    "ledger_max": 7.529738285299642e-15,
+    "nonfinite": 0
+   },
+   "child": {
+    "kJ_per_org_day": 91.86150743806631,
+    "cpu_s_per_org_day": 2.866944639480409,
+    "cpu_s_total": 4487.724009,
+    "ledger_max": 6.428771876989097e-15,
+    "nonfinite": 0
+   }
+  },
+  "efficiency": {
+   "delta_d_per_kJ_org_day": 0.0017635242934503504,
+   "delta_d_per_cpu_s_org_day": 0.05650614866053364,
+   "metabolic_cost_change_pct": -0.003906323448887861,
+   "compute_cost_change_pct": 30.618933066691078
+  },
+  "bundle": {
+   "commit": "91891e65d735119d830a82322762a7488c46bc79",
+   "entry": "creatures/001/organism/run_v41.ts",
+   "bun": "1.4.4",
+   "buildPath": "/var/tmp/asm-build/91891e65d735119d830a82322762a7488c46bc79/src",
+   "sha256": "dc9b62f894ecc323658f9e6a0243cc193741d282d09192f3c2c55b8ef507ac02"
+  },
+  "decided": "2026-11-16 16:42 PST",
+  "n_seeds": 96,
+  "rule": "96 fresh seeds (6 x 16) per decision, NI margin -0.3 (Alex, 2026-11-17); binding"
+ }
+]
