@@ -35,4 +35,16 @@ append-only (`governor.py` refuses a block that appears in the ledger).
 | 704-719 | 2026-11-16 12:28 PST | governor v0 self-test (Phase 1.1) |
 | 720-735 | 2026-11-16 12:28 PST | governor v0 self-test (Phase 1.1) |
 | 736-751 | 2026-11-16 16:23 PST | VOID (consumed, no decision): final-AE1-v07 started as a single-block run because the 96-seed patch to the run path did not apply; aborted at 16:24 PT after 3 test files; seeds seen, never reused |
+| 752-767 | 2026-11-16 16:24 PST | run final-AE1-v07: comboA -> custom-aad76ece, target AE1 [1/6] |
+| 768-783 | 2026-11-16 16:24 PST | run final-AE1-v07: comboA -> custom-aad76ece, target AE1 [2/6] |
+| 784-799 | 2026-11-16 16:24 PST | run final-AE1-v07: comboA -> custom-aad76ece, target AE1 [3/6] |
+| 800-815 | 2026-11-16 16:24 PST | run final-AE1-v07: comboA -> custom-aad76ece, target AE1 [4/6] |
+| 816-831 | 2026-11-16 16:24 PST | run final-AE1-v07: comboA -> custom-aad76ece, target AE1 [5/6] |
+| 832-847 | 2026-11-16 16:24 PST | run final-AE1-v07: comboA -> custom-aad76ece, target AE1 [6/6] |
+| 848-863 | 2026-11-16 16:42 PST | run final-CQM10-v01K05: comboA -> custom-07e0a577, target C10 [1/6] |
+| 864-879 | 2026-11-16 16:42 PST | run final-CQM10-v01K05: comboA -> custom-07e0a577, target C10 [2/6] |
+| 880-895 | 2026-11-16 16:42 PST | run final-CQM10-v01K05: comboA -> custom-07e0a577, target C10 [3/6] |
+| 896-911 | 2026-11-16 16:42 PST | run final-CQM10-v01K05: comboA -> custom-07e0a577, target C10 [4/6] |
+| 912-927 | 2026-11-16 16:42 PST | run final-CQM10-v01K05: comboA -> custom-07e0a577, target C10 [5/6] |
+| 928-943 | 2026-11-16 16:42 PST | run final-CQM10-v01K05: comboA -> custom-07e0a577, target C10 [6/6] |
 <!-- GOVERNOR-BLOCKS:END -->

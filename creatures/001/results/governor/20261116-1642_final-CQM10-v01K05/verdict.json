@@ -1,0 +1,227 @@
+[
+ {
+  "label": "final-CQM10-v01K05",
+  "verdict": "REJECT",
+  "block": 848,
+  "seeds": "848-863, 864-879, 880-895, 896-911, 912-927, 928-943",
+  "parent": "comboA",
+  "child": "custom-07e0a577",
+  "target": "C10",
+  "non_inferior_all": false,
+  "target_gain": true,
+  "rows": [
+   {
+    "test": "HOT3RM",
+    "parent": {
+     "grade": "A",
+     "d": 1.15,
+     "t": 7.97
+    },
+    "child": {
+     "grade": "A",
+     "d": 1.335,
+     "t": 9.25
+    },
+    "delta_d": -0.156,
+    "ci95": [
+     -0.366,
+     0.061
+    ],
+    "non_inferior": false,
+    "identical": false
+   },
+   {
+    "test": "RPT2R",
+    "parent": {
+     "grade": "A",
+     "d": 4.002,
+     "t": 27.73
+    },
+    "child": {
+     "grade": "A",
+     "d": 3.721,
+     "t": 25.78
+    },
+    "delta_d": -0.112,
+    "ci95": [
+     -0.249,
+     0.025
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "AE1",
+    "parent": {
+     "grade": "fail",
+     "d": 0.722,
+     "t": 5.0
+    },
+    "child": {
+     "grade": "A",
+     "d": 0.889,
+     "t": 6.16
+    },
+    "delta_d": -0.156,
+    "ci95": [
+     -0.398,
+     0.088
+    ],
+    "non_inferior": false,
+    "identical": false
+   },
+   {
+    "test": "AE2",
+    "parent": {
+     "grade": "A",
+     "d": 2.218,
+     "t": 15.36
+    },
+    "child": {
+     "grade": "A",
+     "d": 2.093,
+     "t": 14.5
+    },
+    "delta_d": -0.313,
+    "ci95": [
+     -0.577,
+     -0.049
+    ],
+    "non_inferior": false,
+    "identical": false
+   },
+   {
+    "test": "RPT1",
+    "parent": {
+     "grade": "A",
+     "d": 0.853,
+     "t": 5.91
+    },
+    "child": {
+     "grade": "A",
+     "d": 0.904,
+     "t": 6.27
+    },
+    "delta_d": 0.011,
+    "ci95": [
+     -0.188,
+     0.207
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "RPT2RL5",
+    "parent": {
+     "grade": "A",
+     "d": 3.555,
+     "t": 24.63
+    },
+    "child": {
+     "grade": "A",
+     "d": 3.6,
+     "t": 24.94
+    },
+    "delta_d": -0.165,
+    "ci95": [
+     -0.312,
+     -0.018
+    ],
+    "non_inferior": false,
+    "identical": false
+   },
+   {
+    "test": "UAL",
+    "parent": {
+     "grade": "A",
+     "d": 1.441,
+     "t": 9.99
+    },
+    "child": {
+     "grade": "A",
+     "d": 0.976,
+     "t": 6.76
+    },
+    "delta_d": 0.17,
+    "ci95": [
+     0.028,
+     0.309
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "GWT2",
+    "parent": {
+     "grade": "A",
+     "d": 7.984,
+     "t": 55.32
+    },
+    "child": {
+     "grade": "A",
+     "d": 7.034,
+     "t": 48.74
+    },
+    "delta_d": 0.109,
+    "ci95": [
+     -0.148,
+     0.389
+    ],
+    "non_inferior": true,
+    "identical": false
+   },
+   {
+    "test": "C10",
+    "parent": {
+     "grade": "fail",
+     "d": -0.498,
+     "t": -3.45
+    },
+    "child": {
+     "grade": "A",
+     "d": 0.858,
+     "t": 5.94
+    },
+    "delta_d": 0.834,
+    "ci95": [
+     0.577,
+     1.117
+    ],
+    "non_inferior": true,
+    "identical": false
+   }
+  ],
+  "cost": {
+   "parent": {
+    "kJ_per_org_day": 88.56487086571273,
+    "cpu_s_per_org_day": 2.188117734,
+    "cpu_s_total": 5105.608046,
+    "ledger_max": 1.0338326217998092e-14,
+    "nonfinite": 0
+   },
+   "child": {
+    "kJ_per_org_day": 85.52999712695797,
+    "cpu_s_per_org_day": 2.570833116857143,
+    "cpu_s_total": 5998.610606,
+    "ledger_max": 1.0338326217998092e-14,
+    "nonfinite": 0
+   }
+  },
+  "efficiency": {
+   "delta_d_per_kJ_org_day": 0.009750964901378837,
+   "delta_d_per_cpu_s_org_day": 0.3244084551935325,
+   "metabolic_cost_change_pct": -3.42672406010327,
+   "compute_cost_change_pct": 17.490621135706363
+  },
+  "bundle": {
+   "commit": "91891e65d735119d830a82322762a7488c46bc79",
+   "entry": "creatures/001/organism/run_v41.ts",
+   "bun": "1.4.4",
+   "buildPath": "/var/tmp/asm-build/91891e65d735119d830a82322762a7488c46bc79/src",
+   "sha256": "dc9b62f894ecc323658f9e6a0243cc193741d282d09192f3c2c55b8ef507ac02"
+  },
+  "decided": "2026-11-16 17:12 PST",
+  "n_seeds": 96,
+  "rule": "96 fresh seeds (6 x 16) per decision, NI margin -0.3 (Alex, 2026-11-17); binding"
+ }
+]
