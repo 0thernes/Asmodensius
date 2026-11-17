@@ -1,7 +1,8 @@
 # Asmodensius
 
+[![ci](https://github.com/0thernes/Asmodensius/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/0thernes/Asmodensius/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-5b9cf6)](LICENSE)
-[![viewer: Dome replay](https://img.shields.io/badge/viewer-Dome%20replay-ffaa44)](docs/viewer/index.html)
+[![viewer: Dome replay](https://img.shields.io/badge/viewer-Dome%20replay-ffaa44)](https://0thernes.github.io/Asmodensius/viewer/)
 [![creature: frozen Combo A bc6ad6a](https://img.shields.io/badge/creature-Combo%20A%20bc6ad6a-8a93b0)](creatures/001/preregistrations/SC-PORT.md)
 [![not evidence of consciousness](https://img.shields.io/badge/claims-not%20evidence%20of%20consciousness-f5b041)](docs/index.html)
 
@@ -29,7 +30,7 @@ confidence monitor is still trained only by the test harness (integration check 
 modules came from flag screens rather than the full specialist method. Grade A = d >= 0.8 and Welch t >= 2.75 against
 every control.
 
-Work in progress is on the local `v4.1` branch (see `CHANGELOG.md`): seed ledger, reproducible bundles, identity gate,
+Work in progress from the `v4.1` line (now on `main`) (see `CHANGELOG.md`): seed ledger, reproducible bundles, identity gate,
 measurement instruments and a fresh-seed governor. Nothing on `v4.1` is an official result.
 
 **Governor finals (2026-11-16, binding rule: 96 fresh reservoir seeds per decision, non-inferiority margin -0.3).** Both
@@ -45,7 +46,7 @@ numbers and never runs organism code. 16 runs ship with it: dome seeds 500-590 (
 variants (lush, sparse, harsh, hazard, grazers, hell); 3 creatures per run, 3 simulated days each, dev seeds only.
 Controls: run picker, side-by-side compare, play/pause/step/speed/scrub, pan and zoom (mouse or pinch), overlays (trail,
 heading, mood, emotion, energy/fat, stress, limb drive, brain glow, follow), tap a creature to inspect it, live charts.
-Open it locally with `cd docs && python3 -m http.server 8000` and visit `http://localhost:8000/viewer/`.
+Live: https://0thernes.github.io/Asmodensius/viewer/ . Or open it locally with `cd docs && python3 -m http.server 8000` and visit `http://localhost:8000/viewer/`.
 Rebuild the run library with `npm run viewer:record`; headless browser check with `npm run viewer:test`.
 
 ## Layout

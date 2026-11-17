@@ -20,7 +20,7 @@
 - Supersedes the MSI viewer WIP in `imports/msi-viewer-wip-2026-11-12/` for the purpose of testing (that patch stays unapplied).
 - Status unchanged: Combo A official has 6 of 7 claims at grade A plus GWT2 must-hold at A; **AE1 does not pass** (0.73 / 5.48).
 
-## Unreleased: v4.1 (local branch, not pushed)
+## v4.1 line (pushed to main 2026-11-17; nothing here is an official result)
 Phase 0 (hygiene) and Phase 1 (instruments) of the v4.1 plan. The organism code is unchanged: the identity gate shows
 Combo A bit-identical to the frozen SC-PORT output on seeds 540-543.
 - `SEEDS.md` seed ledger; `run_v41.ts` refuses to start without `MODE`, `ARM` and `SEEDBASE`, and keeps dev work on 500-999.
